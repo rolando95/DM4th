@@ -14,10 +14,34 @@ complex::operator=(long double a){
     return 0;
 }
 
-// Sobrecarga del operador +
-complex operator+(const complex &p1,const complex &p2)
+// Suma de numeros complejos
+complex operator+(const complex &n1,const complex &n2)
 {
-  return complex(p1.r + p2.r, p1.i + p2.i);
+    return complex(n1.r + n2.r, n1.i + n2.i);
+}
+
+// Resta de numeros complejos
+complex operator-(const complex &n1,const complex &n2)
+{
+    return complex(n1.r - n2.r, n1.i - n2.i);
+}
+
+// Multiplicacion de numeros complejos
+complex operator*(const complex &n1,const complex &n2)
+{
+    return complex(
+      n1.r*n2.r - n1.i*n2.i, 
+      n1.r*n2.i + n1.i*n2.r
+    );
+}
+
+// Division de numeros complejos
+complex operator/(const complex &n1,const complex &n2)
+{
+    return complex(
+        (n1.r*n2.r + n1.i*n2.i)/(pow(n2.r,2) + pow(n2.i,2)),
+        (n1.i*n2.r - n1.r*n2.i)/(pow(n2.r,2) + pow(n2.i,2))  
+    );
 }
 
 
