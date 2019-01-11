@@ -52,7 +52,11 @@ ostream& operator<<(ostream& stream, number n){
     else{
         if(n.r != 0) stream<<n.r;
         if(n.i > 0 && n.r!=0)  stream<<"+";
-        if(n.i != 0) stream<<n.i<<"i";
+        if(n.i != 0) {
+            if(n.i != 1 && n.i != -1) stream<<n.i;
+            if(n.i == -1) stream<<"-";
+            stream<<"i";
+        }
     }
     return stream;
 }

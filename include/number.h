@@ -27,6 +27,9 @@ public:
     operator%=(number n);
 };
 
+//Define como constante el valor de i
+static const number i(0,1);
+
 //Conversion de expresion literal <double>i a tipo numero
 number operator""i(long double a);
 
