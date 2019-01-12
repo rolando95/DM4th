@@ -8,6 +8,12 @@ number::number(const double a,const double b)
     this->i = b;
 }
 
+double number::real(){return this->r;}
+double number::real(double a){this->r = a; return this->r;}
+
+double number::imag(){return this->i;}
+double number::imag(double a){this->i = a; return this->i;}
+
 number::operator=(double a){
     this->r = a;
     return 0;
