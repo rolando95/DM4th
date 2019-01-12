@@ -1,8 +1,14 @@
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 #include <iostream>
+#include <complex>
+#include <float.h>
+using namespace std::complex_literals;
 using namespace std;
 
-class number {
+constexpr double pi = 3.14159265358979323846264338327950288419716939937510;
+
+class number{
 public:
     double r, i;
 
@@ -10,6 +16,15 @@ public:
 
     //Asignacion de un valor numerico
     operator=(double n);
+
+    //Asignacion de un valor complex
+    operator=(complex<double> n);
+
+    //Asignacion de un valor complex 2 ?????????
+    //complex<double>& operator=(const number & a);
+
+    //Conversion al complex<double> de c++
+    operator const complex<double>();
 
     //Asignacion aditiva
     operator+=(number n);
@@ -59,3 +74,13 @@ number operator/(const number &n1,const number &n2);
 
 // Residuo de numeros enteros?
 number operator%(const number &n1,const number &n2);
+
+// Math
+number rad(const number &n1);
+number deg(const number &n1);
+
+number pow(number n1,number n2);
+
+number sin(number n1);
+
+number tan(number n1);
