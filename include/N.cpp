@@ -92,8 +92,8 @@ N operator-(N a){
 
 //Impresion en pantalla de numeros complejos
 ostream& operator<<(ostream& stream, N n){
-    if(n.r == INFINITY) stream<<"INF";
-    else if(n.r == -INFINITY) stream<<"-INF";
+    if(n.r == INF) stream<<"INF";
+    else if(n.r == -INF) stream<<"-INF";
     else if(isnan(n.r)) stream<<"NAN";
     else{
         //Round
@@ -162,7 +162,7 @@ N operator*(const N &n1,const N &n2)
 N operator/(const N &n1,const N &n2)
 {
     // n/INF
-    if(n2.r == INFINITY && n1.r != INFINITY)
+    if(n2.r == INF && n1.r != INF)
         return N(0,0);
     // real/real
     else if(n1.i==0 && n2.i==0 && n2.r != 0){
@@ -179,8 +179,8 @@ N operator/(const N &n1,const N &n2)
             );
         // n/0
         else
-            if(n1.r != INFINITY)
-                return N(INFINITY,0);
+            if(n1.r != INF)
+                return N(INF,0);
             else
                 return N(NAN,0);
     }
@@ -276,7 +276,7 @@ N sqrt(const N &n){
 }
 
 N ln(const N &n){
-    if(n==0) return N(-INFINITY,0);
+    if(n==0) return N(-INF,0);
     else{
         return log(mod(n).r)+arg(n)*i;
     }
@@ -286,12 +286,12 @@ N logn(const N &n, const N &base){
     return ln(n)/ln(base);
 }
 
-N sin(const N &n){return (n.i==0)?sin(n.r) : sin(n.r)*cosh(n.i)+cos(n.r)*sinh(n.i)*i;}
-N cos(const N &n){return (n.i==0)?cos(n.r) : cos(n.r)*cosh(n.i)-sin(n.r)*sinh(n.i)*i;}
+N sin(const N &n){return (n.i==0)?sin(n.r) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
+N cos(const N &n){return (n.i==0)?cos(n.r) : (pow(e,i*n)+pow(e,-i*n))/2;}
 N tan(const N &n){
     N c = cos(n);
     if(round(c,15)==0){
-        return N(INFINITY,0);
+        return N(INF,0);
     }else
         return sin(n)/c;}
 N cot(const N &n){return 1/tan(n);}
@@ -305,16 +305,16 @@ N acot(const N &n){return atan(1/n);}
 N asec(const N &n){return acos(1/n);}
 N acsc(const N &n){return asin(1/n);}
 
-N sinh(const N &n){return sinh(n.r)*cos(n.i)+i*cosh(n.r)*sin(n.i);}
-N cosh(const N &n){return cosh(n.r)*cos(n.i)+i*sinh(n.r)*sin(n.i);}
+N sinh(const N &n){return (pow(e,n)-pow(e,-n))/2;}
+N cosh(const N &n){return (pow(e,n)+pow(e,-n))/2;}
 N tanh(const N &n){return sinh(n)/cosh(n);}
 N coth(const N &n){return cosh(n)/sinh(n);}
 N sech(const N &n){return 1/cosh(n);}
 N csch(const N &n){return 1/sinh(n);}
 
-N asinh(const N &n){return i*asin(-i*n);}
-N acosh(const N &n){return i*acos(n);}
-N atanh(const N &n){return atan(i*n)/i;}
+N asinh(const N &n){return ln(n+sqrt(n*n+1));}
+N acosh(const N &n){return ln(n+sqrt(n*n-1));}
+N atanh(const N &n){return 0.5*ln((1+n)/(1-n));}
 N acoth(const N &n){return atanh(1/n);}
 N asech(const N &n){return acosh(1/n);}
 N acsch(const N &n){return asinh(1/n);}
@@ -324,7 +324,7 @@ N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     x1 = x1.r;
     N y1 = (x1.i==0)?i:x1.i;
 
-    N err(INFINITY,INFINITY);
+    N err(INF,INF);
     for(int n=0; n<maxIter.r && abs(f(x1)).r>tolerance.r && abs(f(y1)).r>tolerance.r ; n++){
         x1 = x1 - f(x1)/fd(x1);
         y1 = y1 - f(y1)/fd(y1);

@@ -13,7 +13,7 @@ N fd(N x){
 int main()
 {
     N::precision = 5;
-    N A=10, B=2, C, D;
+    N A=0.5, B=2, C, D;
     
     cout<<"A   : "<<A<<endl;//" "<<(std::complex<double>)A<<endl;
     cout<<"B   : "<< B      <<endl;
