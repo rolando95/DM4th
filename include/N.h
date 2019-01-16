@@ -53,6 +53,7 @@ public:
 
     // Residuo
     operator%=(N);
+
 };
 
 // Define como constante el valor de i
@@ -93,11 +94,17 @@ N operator*(const N&,const N&);
 // Division de numeros complejos
 N operator/(const N&,const N&);
 
+
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
 N operator%(const N&,const N&);
 
 // Relacional
 bool operator==(const N&, const N&);
+bool operator!=(const N&, const N&);
+bool operator>=(const N&, const N&);
+bool operator<=(const N&, const N&);
+bool operator>(const N&, const N&);
+bool operator<(const N&, const N&);
 
 // Math
 N rad(const N&);
@@ -128,6 +135,6 @@ N csc(const N&);
 // Aproximacion de raices
 typedef N (* function)(N x);
 //NewtonRaphson(f, f', x0=seed, max iterations, tolerance)
-N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=100, N tolerance=0.000001);
+N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=100, N tolerance=0.00001);
 //NewtonRaphson(f, x0=seed, x1=seed2, max iterations, tolerance)
 //N secantMethod(function f, N x0=0.01, N x1=1.01, N maxIter=100, N tolerance=0.0001);

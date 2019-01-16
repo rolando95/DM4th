@@ -89,6 +89,7 @@ N operator-(N a){
     return N(-a.r,-a.i);
 }
 
+
 //Impresion en pantalla de numeros complejos
 ostream& operator<<(ostream& stream, N n){
     if(n.r == INFINITY) stream<<"INF";
@@ -117,14 +118,17 @@ ostream& operator<<(ostream& stream, N n){
 istream& operator>>(istream& stream, N &n){
     double x;
     while(stream.peek()!='\n' && stream>>x){
-        if(stream.peek()=='i')
+        if(stream.peek()=='i'){
             n.i = x;
-        else
+            break;
+        }else{
             n.r = x;
+        }
     }
+    fflush(stdin);
+    cout<<"";
     return stream;
 }
-
 
 // Suma de numeros complejos
 N operator+(const N &n1,const N &n2)
@@ -193,17 +197,30 @@ N operator%(const N &n1,const N &n2)
     }else{
         return 0;
     }
-    /*
-    if(int(n2.r) != 0)
-        return N( int(n1.r) % int(n2.r),0);  
-    else
-        return 0;
-    */
 }
 
 // Relacional
 bool operator==(const N &n1, const N &n2){
     return (n1.r==n2.r && n1.i==n2.i);
+}
+
+bool operator!=(const N &n1, const N &n2){
+    return (n1.r!=n2.r || n1.i!=n2.i);
+}
+bool operator>(const N &n1, const N &n2){
+    bool result=false; 
+    if(n1.r > n2.r) result=true;
+    else if(n1.r==n2.r && n1.i > n2.i) result=true;
+    return result;
+}
+bool operator<(const N &n1, const N &n2){
+    return !(n1>=n2);
+}
+bool operator>=(const N &n1, const N &n2){
+    return n1>n2||n1==n2;
+}
+bool operator<=(const N &n1, const N &n2){
+    return !(n1>n2);
 }
 
 // Math

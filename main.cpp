@@ -3,18 +3,19 @@
 #include <N.h>
 
 N f(N x){
-    return pow(x,4) - 3*pow(x,3) + pow(x,2) + 5;
+    return pow(x,3) - 2*pow(x,2) + 3;
 }
 
 N fd(N x){
-    return 4*pow(x,3) - 9*pow(x,2) + 2*x;
+    return 3*pow(x,2) - 4*x;
 }
 
 int main()
 {
     N::precision = 2;
-    N A=5, B=2;
-    cout<<"A   : "<< A      <<endl;//" "<<(std::complex<double>)A<<endl;
+    N A=5, B=2, C, D;
+    /*
+    cout<<"A   : "<<A<<endl;//" "<<(std::complex<double>)A<<endl;
     cout<<"B   : "<< B      <<endl;
     cout<<"A%B : "<< A%B    <<endl;
     cout<<"sin : "<< sin(A) <<endl;//" "<<sin((std::complex<double>)A)<<endl;
@@ -27,6 +28,14 @@ int main()
     cout<<"logn: "<< logn(A)<<endl;//" "<<log10(A.r)<<endl;
     cout<<"pow : "<< pow(A,B)<<endl;//" "<<pow2(A,B)<<endl;
     cout<<"sqrt: "<< sqrt(A)<<endl;//" "<<sqrt((std::complex<double>)A)<<endl;
-    N root = newtonRaphson(f,fd, 10+i);
-    cout<<root<<" "<<f(root);
+    cout<<"Newt: "<< newtonRaphson(f,fd)<<endl;
+    */
+    cin>>C;
+    cin>>D;
+    if(C==D)cout<<C<<"=="<<D<<endl;
+    if(C!=D)cout<<C<<"!="<<D<<endl;
+    if(C>=D)cout<<C<<">="<<D<<endl;
+    if(C<=D)cout<<C<<"<="<<D<<endl;
+    if(C> D)cout<<C<<"> "<<D<<endl;
+    if(C< D)cout<<C<<"< "<<D<<endl;
 }
