@@ -1,14 +1,13 @@
 #pragma once
-//#include <math.h>
 #include <cmath>
 #include <iostream>
-#include <complex>
 #include <float.h>
 #include <stdio.h>
+
 using namespace std;
 
-constexpr double pi = 3.14159265358979323846264338327950288419716939937510;
-constexpr double e = 2.718281828459045235360;
+constexpr double pi = 3.141592653589793238462;
+constexpr double e  = 2.718281828459045235360;
 
 class number{
 public:
@@ -27,15 +26,6 @@ public:
     
     // Asignacion de un valor numerico
     operator=(double);
-
-    // Asignacion de un valor complex
-    operator=(std::complex<double>);
-
-    // Asignacion de un valor complex 2 ?????????
-    // complex<double>& operator=(const number & a);
-
-    // Conversion al complex<double> de c++
-    operator const std::complex<double>();
 
     // Incremento prefijo
     number operator ++();
@@ -119,7 +109,12 @@ number mod(const number&);
 number norm(const number&);
 number arg(const number&);
 
-number pow(number,number);
+number pow2(number,number);
+number pow(const number&,const number&);
+number sqrt(const number&);
+number ln(const number&);
+//logn(number, base)
+number logn(const number&, const number &base=10);
 
 number sin(const number&);
 number cos(const number&);

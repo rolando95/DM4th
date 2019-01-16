@@ -8,7 +8,7 @@ number::number(const double a,const double b)
     this->i = b;
 }
 
-int number::precision =  15;
+int number::precision =  5;
 
 double number::real(){return this->r;}
 double number::real(double a){this->r = a; return this->r;}
@@ -20,26 +20,6 @@ number::operator=(double a){
     this->r = a;
     return 0;
 }
-number::operator=(std::complex<double> n){
-    this->r = n.real();
-    this->i = n.imag();
-}
-
-/*/?????????
-complex<double>& number::operator=(const number & a){
-    std::complex<double> n;
-    n.real(this->r);
-    n.imag(this->i);
-    return n;
-}*/
-
-number::operator const std::complex<double>(){
-    std::complex<double> n;
-    n.real(this->r);
-    n.imag(this->i);
-    return n;
-}
-
 
 // Incremento prefijo
 number number::operator ++(){
@@ -112,13 +92,14 @@ number operator-(number a){
 //Impresion en pantalla de numeros complejos
 ostream& operator<<(ostream& stream, number n){
     if(n.r == INFINITY) stream<<"INF";
+    else if(n.r == -INFINITY) stream<<"-INF";
     else if(isnan(n.r)) stream<<"NAN";
     else{
         //Round
         n = round(n,number::precision);
 
         //stream
-        if(n.i==0 && n.r==0) stream<<"0";
+        if(n==0) stream<<"0";
         else{
             if(n.r != 0) stream<<n.r;
             if(n.i > 0 && n.r!=0)  stream<<"+";
@@ -236,9 +217,24 @@ number arg(const number &n){
     return number(NAN, 0);
 }
 
-number pow(number n1,number n2){
-    std::complex<double> n = pow((std::complex<double>)n1, (std::complex<double>)n2);
-    return number(n.real(),n.imag());
+number pow(const number &n1,const number &n2){
+    number exponent = n2*ln(n1);
+    return pow(e,exponent.r)*(cos(exponent.i)+sin(exponent.i)*i);
+}
+
+number sqrt(const number &n){
+    return pow(n,0.5);
+}
+
+number ln(const number &n){
+    if(n==0) return number(-INFINITY,0);
+    else{
+        return log(mod(n).r)+arg(n)*i;
+    }
+}
+
+number logn(const number &n, const number &base){
+    return ln(n)/ln(base);
 }
 
 number sin(const number &n1){return sin(n1.r)*cosh(n1.i)+cos(n1.r)*sinh(n1.i)*i;}
