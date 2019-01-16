@@ -298,6 +298,27 @@ N cot(const N &n){return 1/tan(n);}
 N sec(const N &n){return 1/cos(n);}
 N csc(const N &n){return 1/sin(n);}
 
+N asin(const N &n){return -i*ln(i*n+sqrt(1-n*n));}
+N acos(const N &n){return pi/2-asin(n);}
+N atan(const N &n){return i/2*(ln(1-i*n)-ln(1+i*n));}
+N acot(const N &n){return atan(1/n);}
+N asec(const N &n){return acos(1/n);}
+N acsc(const N &n){return asin(1/n);}
+
+N sinh(const N &n){return sinh(n.r)*cos(n.i)+i*cosh(n.r)*sin(n.i);}
+N cosh(const N &n){return cosh(n.r)*cos(n.i)+i*sinh(n.r)*sin(n.i);}
+N tanh(const N &n){return sinh(n)/cosh(n);}
+N coth(const N &n){return cosh(n)/sinh(n);}
+N sech(const N &n){return 1/cosh(n);}
+N csch(const N &n){return 1/sinh(n);}
+
+N asinh(const N &n){return i*asin(-i*n);}
+N acosh(const N &n){return i*acos(n);}
+N atanh(const N &n){return atan(i*n)/i;}
+N acoth(const N &n){return atanh(1/n);}
+N asech(const N &n){return acosh(1/n);}
+N acsch(const N &n){return asinh(1/n);}
+
 // Aproximaciones de raices
 N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     x1 = x1.r;

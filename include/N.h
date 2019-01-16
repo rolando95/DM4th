@@ -3,7 +3,7 @@
 #include <iostream>
 #include <float.h>
 #include <stdio.h>
-
+#define INF INFINITY
 using namespace std;
 
 constexpr double pi = 3.141592653589793238462;
@@ -131,6 +131,27 @@ N tan(const N&);
 N cot(const N&);
 N sec(const N&);
 N csc(const N&);
+
+N asin(const N&);
+N acos(const N&);
+N atan(const N&);
+N acot(const N&);
+N asec(const N&);
+N acsc(const N&);
+
+N sinh(const N&);
+N cosh(const N&);
+N tanh(const N&);
+N coth(const N&);
+N sech(const N&);
+N csch(const N&);
+
+N asinh(const N&);
+N acosh(const N&);
+N atanh(const N&);
+N acoth(const N&);
+N asech(const N&);
+N acsch(const N&);
 
 // Aproximacion de raices
 typedef N (* function)(N x);
