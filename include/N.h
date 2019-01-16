@@ -104,6 +104,7 @@ N rad(const N&);
 N deg(const N&);
 
 N round(const N&, int p=0);
+N abs(const N&);
 
 N mod(const N&);
 N norm(const N&);
@@ -123,3 +124,10 @@ N tan(const N&);
 N cot(const N&);
 N sec(const N&);
 N csc(const N&);
+
+// Aproximacion de raices
+typedef N (* function)(N x);
+//NewtonRaphson(f, f', x0=seed, max iterations, tolerance)
+N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=100, N tolerance=0.000001);
+//NewtonRaphson(f, x0=seed, x1=seed2, max iterations, tolerance)
+//N secantMethod(function f, N x0=0.01, N x1=1.01, N maxIter=100, N tolerance=0.0001);

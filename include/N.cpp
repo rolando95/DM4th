@@ -223,6 +223,10 @@ N round(const N &n, int p){
         return n1;
 }
 
+N abs(const N &n){
+    return N(abs(n.r),abs(n.i));
+}
+
 N mod(const N &n){
     return(sqrt(n.r*n.r + n.i*n.i));
 }
@@ -276,3 +280,22 @@ N tan(const N &n){
 N cot(const N &n){return 1/tan(n);}
 N sec(const N &n){return 1/cos(n);}
 N csc(const N &n){return 1/sin(n);}
+
+// Aproximaciones de raices
+N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
+    x1 = x1.r;
+    N y1 = (x1.i==0)?i:x1.i;
+
+    N err(INFINITY,INFINITY);
+    for(int n=0; n<maxIter.r && abs(f(x1)).r>tolerance.r && abs(f(y1)).r>tolerance.r ; n++){
+        x1 = x1 - f(x1)/fd(x1);
+        y1 = y1 - f(y1)/fd(y1);
+    }
+    if(f(x1).r > f(y1).r) x1 = y1;
+    return x1;
+}
+
+/*
+N secantMethod(function f, N x0,N x1, N maxIter, N tolerance){
+    return x1;
+}*/
