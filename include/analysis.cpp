@@ -36,8 +36,15 @@ N product(const N &value, const N &begin, const N &end, const N interval){
     return x;
 }
 // Derivative
-N derivative(function f, const N &x0, const N h){
-    return (f(x0+h)-f(x0-h))/(2*h);
+N derivative(function f, const N &x0, const N order, const N h){
+    N o(abs(floor(order.r)));
+    if(order<=0){
+        return f(x0);
+    }else if(order==1){
+        return (f(x0+h/2)-f(x0-h/2))/h;
+    }else{
+        return (derivative(f,x0+h/2,o-1,1.75*h) - derivative(f,x0-h/2,o-1,1.75*h) )/h;
+    }
 }
 // Integral
 N integral(function f, const N &a, const N &b, const N subintervals){

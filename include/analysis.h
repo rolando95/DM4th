@@ -8,13 +8,12 @@ N factorial(const N&);
 N sumatory(function f, const N&, const N&, const N interval=1); 
 // sumatory(value, begin, end) 
 N sumatory(const N&, const N&, const N&, const N interval=1);
-
 // product(f, begin, end)
 N product(function f, const N&, const N&, const N interval=1); 
 // product(value, begin, end) 
 N product(const N&, const N&, const N&, const N interval=1);
-// derivative(f,x0,h)
-N derivative(function f, const N&, const N h=1e-5);
+// derivative(f, x0, order=1)
+N derivative(function f, const N&, const N order=1, const N h=1e-2);
 // integral(f, begin, end, subintervals=99)
 N integral(function f, const N&, const N&, const N subintervals=999);
 // newtonRaphson(f, f', x0=seed, max iterations, tolerance)
