@@ -39,7 +39,10 @@ N product(const N &value, const N &begin, const N &end, const N interval){
     }
     return x;
 }
-
+// Derivative
+N derivative(function f, const N &x0, const N h){
+    return (f(x0+h)-f(x0-h))/(2*h);
+}
 // Integral
 N integral(function f, const N &a, const N &b, const N subintervals){
     N n = int(round(subintervals).r)/3*3;
@@ -89,8 +92,6 @@ N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     }
     return x1;
 }
-
-
 N secantMethod(function f, N x0,N x1, N maxIter, N tolerance){
     x0 = x0.r; x1 = x1.r;
     N x2;

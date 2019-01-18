@@ -20,76 +20,58 @@ N::operator=(double a){
     this->r = a;
     return 0;
 }
-
 // Incremento prefijo
 N N::operator ++(){
     this->r += 1;
     return *this;
 }
-
 // Incremento postfijo
 N N::operator ++(int){
     N a = *this;
     this->r += 1;
     return a;
 }
-
 // Decremento prefijo
 N N::operator --(){
     this->r -= 1;
     return *this;
 }
-
 // Decremento postfijo
 N N::operator --(int){
     N a = *this;
     this->r -= 1;
     return a;
 }
-
 N::operator+=(N n){
     *this = *this + n;
 }
-
 N::operator-=(N n){
     *this = *this - n;
 }
-
 N::operator*=(N n){
     *this = *this * n;
 }
-
 N::operator/=(N n){
     *this = *this / n;
 }
-
 N::operator%=(N n){
     *this = *this % n;
 }
-
-
 N operator""_i(long double a){
     return N(0,a);
 }
-
 N operator""_i(unsigned long long int a){
     return N(0,a);
 }
-
-
 N operator""i(unsigned long long int a){
     return N(0,a);
 }
-
 N operator""i(long double a){
     return N(0,a);
 }
-
 N operator-(N a){
     return N(-a.r,-a.i);
 }
-
-
 //Impresion en pantalla de numeros complejos
 ostream& operator<<(ostream& stream, N n){
     if(n.r == INF) stream<<"INF";
@@ -113,7 +95,6 @@ ostream& operator<<(ostream& stream, N n){
     }
     return stream;
 }
-
 //Lectura en pantalla de numeros complejos
 istream& operator>>(istream& stream, N &n){
     double x;
@@ -129,19 +110,16 @@ istream& operator>>(istream& stream, N &n){
     cout<<"";
     return stream;
 }
-
 // Suma de numeros complejos
 N operator+(const N &n1,const N &n2)
 {
     return N(n1.r + n2.r, n1.i + n2.i);
 }
-
 // Resta de numeros complejos
 N operator-(const N &n1,const N &n2)
 {
     return N(n1.r - n2.r, n1.i - n2.i);
 }
-
 // Multiplicacion de numeros complejos
 N operator*(const N &n1,const N &n2)
 {
@@ -157,7 +135,6 @@ N operator*(const N &n1,const N &n2)
         );
     }
 }
-
 // Division de numeros complejos
 N operator/(const N &n1,const N &n2)
 {
@@ -185,7 +162,6 @@ N operator/(const N &n1,const N &n2)
                 return N(NAN,0);
     }
 }
-
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
 N operator%(const N &n1,const N &n2)
 {
@@ -203,7 +179,6 @@ N operator%(const N &n1,const N &n2)
 bool operator==(const N &n1, const N &n2){
     return (n1.r==n2.r && n1.i==n2.i);
 }
-
 bool operator!=(const N &n1, const N &n2){
     return (n1.r!=n2.r || n1.i!=n2.i);
 }
@@ -227,11 +202,9 @@ bool operator<=(const N &n1, const N &n2){
 N rad(const N &n1){
     return N(n1.r*pi/180, n1.i*pi/(double)180.0);
 }
-
 N deg(const N &n1){
     return N(n1.r*pi/180, n1.i*(double)180.0/pi);
 }
-
 N round(const N &n, int p){
         N n1 = N(
             round(n.r * pow(10,p)) / pow(10,p),
@@ -239,15 +212,12 @@ N round(const N &n, int p){
         );
         return n1;
 }
-
 N abs(const N &n){
     return sqrt(norm(n));
 }
-
 N norm(const N &n){
     return n.r*n.r + n.i*n.i;
 }
-
 N arg(const N &n){
     if(n.r>0 || n.i != 0){
         return N(2*atan(n.i/(sqrt(n.r*n.r + n.i*n.i)+n.r)),0);
@@ -256,11 +226,9 @@ N arg(const N &n){
     }
     return N(NAN, 0);
 }
-
 N conjugate(const N &n){
     return N(n.r, -n.i);
 }
-
 N pow(const N &n1,const N &n2){
     if(n1.i==0 && n2.i==0 && n1.r >= 0)
         return pow(n1.r,n2.r);
@@ -269,11 +237,9 @@ N pow(const N &n1,const N &n2){
         return pow(e,exponent.r)*(cos(exponent.i)+sin(exponent.i)*i);
     }
 }
-
 N sqrt(const N &n){
     return pow(n,0.5);
 }
-
 N ln(const N &n){
     if(n==0) return N(-INF,0);
     else{
@@ -281,9 +247,7 @@ N ln(const N &n){
     }
 }
 
-N log(const N &n, const N &base){
-    return ln(n)/ln(base);
-}
+N log(const N &n, const N &base){return ln(n)/ln(base);}
 
 N sin(const N &n){return (n.i==0)?sin(n.r) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
 N cos(const N &n){return (n.i==0)?cos(n.r) : (pow(e,i*n)+pow(e,-i*n))/2;}
