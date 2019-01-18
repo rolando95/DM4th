@@ -41,9 +41,11 @@ N derivative(function f, const N &x0, const N order, const N h){
     if(order<=0){
         return f(x0);
     }else if(order==1){
-        return (f(x0+h/2)-f(x0-h/2))/h;
+        return (f(x0+h)-f(x0-h))/(2*h);
+    }else if(order==2){
+        return (f(x0+h) - 2*f(x0) + f(x0-h))/pow(h,2);
     }else{
-        return (derivative(f,x0+h/2,o-1,1.75*h) - derivative(f,x0-h/2,o-1,1.75*h) )/h;
+        return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
 // Integral
