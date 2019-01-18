@@ -94,7 +94,6 @@ N operator*(const N&,const N&);
 // Division de numeros complejos
 N operator/(const N&,const N&);
 
-
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
 N operator%(const N&,const N&);
 
@@ -111,19 +110,18 @@ N rad(const N&);
 N deg(const N&);
 
 N round(const N&, int p=0);
-N abs(const N&);
 
-N mod(const N&);
+N abs(const N&);
 N norm(const N&);
 N arg(const N&);
+N conjugate(const N&);
 
 N pow2(N,N);
 N pow(const N&,const N&);
 N sqrt(const N&);
 N ln(const N&);
-
-//logn(N, base)
-N logn(const N&, const N &base=10);
+//logs(N, base)
+N log(const N&, const N &base=e);
 
 N sin(const N&);
 N cos(const N&);
@@ -152,10 +150,3 @@ N atanh(const N&);
 N acoth(const N&);
 N asech(const N&);
 N acsch(const N&);
-
-// Aproximacion de raices
-typedef N (* function)(N x);
-//NewtonRaphson(f, f', x0=seed, max iterations, tolerance)
-N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=100, N tolerance=0.00001);
-//NewtonRaphson(f, x0=seed, x1=seed2, max iterations, tolerance)
-//N secantMethod(function f, N x0=0.01, N x1=1.01, N maxIter=100, N tolerance=0.0001);
