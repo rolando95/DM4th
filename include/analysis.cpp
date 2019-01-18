@@ -7,7 +7,6 @@ N factorial(const N &n){
     }
     return x;
 }
-
 N sumatory(function f, const N &begin, const N &end, const N interval){
     N x=0;
     for(auto i=begin; i<=end; i+=interval){
@@ -15,7 +14,6 @@ N sumatory(function f, const N &begin, const N &end, const N interval){
     }
     return x;
 }
-
 N sumatory(const N &value, const N &begin, const N &end, const N interval){
     N x=0;
     for(auto i=begin; i<=end; i+= interval){
@@ -23,7 +21,6 @@ N sumatory(const N &value, const N &begin, const N &end, const N interval){
     }
     return x;
 }
-
 N product(function f, const N &begin, const N &end, const N interval){
     N x=1;
     for(auto i=begin; i<=end; i+=interval){
@@ -31,7 +28,6 @@ N product(function f, const N &begin, const N &end, const N interval){
     }
     return x;
 }
-
 N product(const N &value, const N &begin, const N &end, const N interval){
     N x=1;
     for(auto i=begin; i<=end; i+=interval){
@@ -74,7 +70,6 @@ N integral(function f, const N &a, const N &b, const N subintervals){
     return 3*h/8*s;
     */
 }
-
 // Aproximaciones de raices
 N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     x1 = x1.r;
@@ -86,6 +81,23 @@ N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     if(abs(f(x1))>tolerance){
         for(int n=0; n<maxIter.r && abs(f(y1))>tolerance; n++){
             y1 = y1 - f(y1)/fd(y1);
+        }
+        if(abs(f(y1))>tolerance) x1 = NAN;
+        else x1 = y1;
+    }
+    return x1;
+}
+// Aproximaciones de raices
+N newtonRaphson(function f, N x1, N maxIter, N tolerance){
+    x1 = x1.r;
+    N y1 = (x1.i==0)? 1.00i : x1.i;
+    
+    for(int n=0; n<maxIter.r && abs(f(x1))>tolerance; n++){
+        x1 = x1 - f(x1)/derivative(f,x1);
+    }
+    if(abs(f(x1))>tolerance){
+        for(int n=0; n<maxIter.r && abs(f(y1))>tolerance; n++){
+            y1 = y1 - f(y1)/derivative(f,y1);
         }
         if(abs(f(y1))>tolerance) x1 = NAN;
         else x1 = y1;
