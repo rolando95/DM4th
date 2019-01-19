@@ -3,7 +3,9 @@
 #include <iostream>
 #include <float.h>
 #include <stdio.h>
+
 #define INF INFINITY
+
 using namespace std;
 
 constexpr double pi = 3.141592653589793238462;
@@ -13,7 +15,6 @@ class N{
 public:
     static int precision;
     double r, i;
-
     N(const double=0,const double=0);
 
     // get set parte real

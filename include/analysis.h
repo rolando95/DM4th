@@ -1,4 +1,5 @@
 #include "N.h"
+#include "V.h"
 
 typedef N (* function)(N x);
 

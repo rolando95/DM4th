@@ -138,6 +138,7 @@ N operator*(const N &n1,const N &n2)
 // Division de numeros complejos
 N operator/(const N &n1,const N &n2)
 {
+
     // n/INF
     if(n2.r == INF && n1.r != INF)
         return N(0,0);
@@ -156,9 +157,12 @@ N operator/(const N &n1,const N &n2)
             );
         // n/0
         else
-            if(n1.r != INF)
-                return N(INF,0);
-            else
+            if(n1.r != INF){
+                if(n1.r>0)
+                    return N(INF,0);
+                else    
+                    return N(-INF,0);
+            }else
                 return N(NAN,0);
     }
 }
