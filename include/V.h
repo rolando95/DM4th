@@ -9,6 +9,7 @@ class V{
 
 public:
     V();
+    V(const V&);
     std::vector<N> data;
 
     /* 
@@ -34,10 +35,12 @@ public:
 };
 
 
-V array();
-V array(const N& first,auto... args){
-    V n = array(args ...);
+V list();
+V list(const N& first,auto... args){
+    V n = list(args ...);
     n.push(first,0);
     return n;
 }
+
+V range(const N&, const N&, N=1);
 #endif

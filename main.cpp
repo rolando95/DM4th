@@ -4,11 +4,12 @@
 
 int main(){
     V a,b;
-    a = array(10,10,10);
-    b = array(6,7,8,9);
+    a = list(10,10,10);
+    b = range(10,-1,-1.5);
     a.push(b);
+    V d(a);
     for(auto n=0; n<a.length(); n++){
-        print(a.data[n], 3+6i);
+        print(a.data[n]);
     }
     return 0;
 }

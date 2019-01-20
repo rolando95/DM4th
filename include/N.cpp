@@ -8,6 +8,11 @@ N::N(const double a,const double b)
     this->i = b;
 }
 
+N::N(const N& n){
+    this->r = n.r;
+    this->i = n.i;
+}
+
 int N::precision =  5;
 
 double N::real(){return this->r;}

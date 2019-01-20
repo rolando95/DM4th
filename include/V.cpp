@@ -4,6 +4,10 @@ V::V(){
     data.reserve(1);
 }
 
+V::V(const V &v){
+    *this = v;
+}
+
 N V::push(const N &n, const N position){
     int pos = position.r;
     if(pos<0) {data.push_back(n);count++;}
@@ -46,4 +50,20 @@ void V::resize(const N &pos){
     }
 }
 
-V array(){return V();}
+V list(){return V();}
+
+V range(const N &begin, const N &end, N value){
+    V v;
+    if(value>0 && end>begin){
+        for(N j=begin; j<=end; j+=value){
+            v.push(j);
+        }
+    }else if(value<0 && begin>end){
+        for(N j=begin; j>=end; j+=value){
+            cout<<j<<" ";
+            v.push(j);
+        }
+    }else{
+        return v;
+    }
+}

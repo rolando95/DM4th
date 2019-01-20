@@ -1,8 +1,6 @@
 #pragma once
 #include <cmath>
 #include <iostream>
-#include <float.h>
-#include <stdio.h>
 
 #define INF INFINITY
 
@@ -15,7 +13,9 @@ class N{
 public:
     static int precision;
     double r, i;
+
     N(const double=0,const double=0);
+    N(const N&);
 
     // get set parte real
     double real();
