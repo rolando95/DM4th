@@ -19,22 +19,6 @@ N V::push(const N &n, const N position){
         }
     }
 }
-/*
-V V::push(const V &v, const N position){
-    int pos = position.r;
-    if(pos<0) {data.push_back(V);count++;}
-    else {
-        if(pos<=count){
-            vector<N>::iterator ni=data.begin() + pos;
-            data.insert(ni,V);
-            count++;
-        }else{
-            data.resize(pos-1);
-            data.push_back(V);
-            count = pos;
-        }
-    }
-}*/
 
 N V::length(){
     return this->count;
@@ -47,3 +31,5 @@ void V::resize(const N &pos){
         count = c;
     }
 }
+
+V array(){return V();}
