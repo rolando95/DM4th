@@ -18,6 +18,20 @@ N V::push(const N &n, const N position){
             count = pos;
         }
     }
+    return n;
+}
+
+V V::push(const V& v, const N position){
+    int pos = position.r;
+    if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
+    else{
+        if(pos<=count){
+            vector<N>::iterator ni=data.begin() + pos;
+            data.insert(ni,v.data.begin(), v.data.end());
+        }
+    }
+    this->count += v.count;
+    return v;
 }
 
 N V::length(){

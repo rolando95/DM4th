@@ -17,6 +17,7 @@ public:
      vector.pop(N, position) <- Inserta el valor N en la posicion dada dentro del vector
     */
     N push(const N&,N=-1);
+    V push(const V&,N=-1);
     /* 
      Elimina un elemento del vector
      vector.pop()         <- Elimina el ultimo elemento del vector

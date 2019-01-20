@@ -7,7 +7,7 @@ IF %errorlevel%==0 (
 )
 
 IF %errorlevel%==0 (
-    REM cls
+    cls
     main.exe
 )
 
