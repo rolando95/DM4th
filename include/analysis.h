@@ -3,7 +3,7 @@
 
 typedef N (* function)(N x);
 
-//
+// factorial(value)
 N factorial(const N&);
 // sumatory(f, begin, end, interval)
 N sumatory(function f, const N&, const N&, const N interval=1); 
@@ -17,6 +17,8 @@ N product(const N&, const N&, const N&, const N interval=1);
 N derivative(function f, const N&, const N order=1, const N h=1e-2);
 // integral(f, begin, end, subintervals=99)
 N integral(function f, const N&, const N&, const N subintervals=999);
+// quadratic(a,b,c)
+V quadratic(const N&, const N&, const N&);
 // newtonRaphson(f, f', x0=seed, max iterations, tolerance)
 N newtonRaphson(function f, N x0=1.01, N maxIter=1000, N tolerance=1e-5);
 // newtonRaphson(f, f', x0=seed, max iterations, tolerance)

@@ -79,6 +79,14 @@ N integral(function f, const N &a, const N &b, const N subintervals){
     return 3*h/8*s;
     */
 }
+// cuadratica
+V quadratic(const N &a, const N &b, const N &c){
+    V roots;
+    N square = sqrt(b*b - 4*a*c);
+    roots.append((-b+square)/(2*a));
+    roots.append((-b-square)/(2*a));
+    return roots;
+}
 // Aproximaciones de raices
 N newtonRaphson(function f, N x1, N maxIter, N tolerance){
     x1 = x1.r;

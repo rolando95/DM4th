@@ -10,20 +10,25 @@ public:
     V();
     V(const V&);
     V(const N& first,auto... args){    
-        push(first);
-        push(V(args...));
+        append(first);
+        append(V(args...));
     }
 
     std::vector<N> data;
 
     N& operator[](N);
     /* 
-     Inserta un numero en el vector
-     vector.pop(N)           <- Inserta el valor N al final del vector
-     vector.pop(N, position) <- Inserta el valor N en la posicion dada dentro del vector
+     Adjunta un numero en el vector
+     vector.append(N)           <- Adjunta el valor N al final del vector
+     vector.append(N, position) <- Adjunta el valor N en la posicion dada dentro del vector
     */
-    N push(const N&,N=-1);
-    V push(const V&,N=-1);
+    N append(const N&,N=-1);
+    /* 
+     Adjunta un vector
+     vector.append(V)           <- Adjunta el valor V al final del vector
+     vector.append(V, position) <- Adjunta el valor V en la posicion dada dentro del vector
+    */
+    V append(const V&,N=-1);
     /* 
      Elimina un elemento del vector
      vector.pop()         <- Elimina el ultimo elemento del vector
@@ -32,6 +37,16 @@ public:
     N pop(const N=-1);
     // Obtiene el numero de elementos que contiene el vector
     N length();
+    /*
+     Busca la posicion de los elementos en el vector que coincidan con el valor de argumento. 
+     Devuelve un vector vacio de no encontrar coincidencias
+    */
+    V find(const N&);
+    /*
+     Busca la posicion de los elementos en el vector que coincidan con alguno de los valores del vector de argumento. 
+     Devuelve un vector vacio de no encontrar coincidencias
+    */
+    V find(V);
     /* 
      Reescala el vector con el numero de elementos dados.
      Definir un tamanio mayor al actual rellenara de ceros automaticamente, uno menor eliminara los ultimos elementos.
@@ -49,7 +64,7 @@ istream& operator>>(istream&, V&);
 V list();
 V list(const N& first,auto... args){
     V n = list(args ...);
-    n.push(first,0);
+    n.append(first,0);
     return n;
 }
 

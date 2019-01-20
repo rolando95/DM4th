@@ -1,12 +1,8 @@
 #pragma once
-
 #include <iostream>
 #include "constants.h"
 
-
 using namespace std;
-
-
 
 class N{
 public:

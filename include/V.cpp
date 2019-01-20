@@ -14,7 +14,7 @@ N& V::operator[](N n){
     return data[pos];
 }
 
-N V::push(const N &n, const N position){
+N V::append(const N &n, const N position){
     int pos = position.r;
     if(pos<0 || pos>=this->count) {data.push_back(n);count++;}
     else {
@@ -24,7 +24,7 @@ N V::push(const N &n, const N position){
     return n;
 }
 
-V V::push(const V& v, const N position){
+V V::append(const V& v, const N position){
     int pos = position.r;
     if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
     else{
@@ -52,6 +52,22 @@ N V::pop(const N position){
 
 N V::length(){
     return this->count;
+}
+
+V V::find(const N &value){
+    V result;
+    for(int j=0; j<count; j++){
+        if(value==this->data[j]) result.append(j);
+    }
+    return result;
+}
+
+V V::find(V value){
+    V result;
+    for(int j=0; j<value.count; j++){
+        result.append(find(value[j]));
+    }
+    return result;
 }
 
 void V::resize(const N &pos){
@@ -86,11 +102,11 @@ V range(const N &begin, const N &end, N value){
     V v;
     if(value>0 && end>begin){
         for(N j=begin; j<=end; j+=value){
-            v.push(j);
+            v.append(j);
         }
     }else if(value<0 && begin>end){
         for(N j=begin; j>=end; j+=value){
-            v.push(j);
+            v.append(j);
         }
     }else{
         return v;
