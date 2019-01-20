@@ -6,12 +6,17 @@
 
 class V{
     int count = 0;
-
 public:
     V();
     V(const V&);
+    V(const N& first,auto... args){    
+        push(first);
+        push(V(args...));
+    }
+
     std::vector<N> data;
 
+    N& operator[](N);
     /* 
      Inserta un numero en el vector
      vector.pop(N)           <- Inserta el valor N al final del vector
@@ -34,6 +39,12 @@ public:
     void resize(const N&);
 };
 
+// Impresion en pantalla de vector
+ostream& operator<<(ostream&, V);
+
+
+// Lectura en pantalla del vector
+istream& operator>>(istream&, V&);
 
 V list();
 V list(const N& first,auto... args){

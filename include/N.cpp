@@ -2,8 +2,7 @@
 
 using namespace std;
 
-N::N(const double a,const double b)
-{
+N::N(const double a,const double b){
     this->r = a;
     this->i = b;
 }
@@ -103,31 +102,39 @@ ostream& operator<<(ostream& stream, N n){
 //Lectura en pantalla de numeros complejos
 istream& operator>>(istream& stream, N &n){
     double x;
+    
+    // Verifica si se ha ingresado la parte real/imaginaria en consola
+    bool isR = false;
+    bool isI = false;
+
     while(stream.peek()!='\n' && stream>>x){
         if(stream.peek()=='i'){
             n.i = x;
+            isI = true;
             break;
         }else{
             n.r = x;
+            isR = true;
         }
     }
+
+    if(!isR) n.r = 0;
+    if(!isI) n.i = 0;
+
     fflush(stdin);
     cout<<"";
     return stream;
 }
 // Suma de numeros complejos
-N operator+(const N &n1,const N &n2)
-{
+N operator+(const N &n1,const N &n2){
     return N(n1.r + n2.r, n1.i + n2.i);
 }
 // Resta de numeros complejos
-N operator-(const N &n1,const N &n2)
-{
+N operator-(const N &n1,const N &n2){
     return N(n1.r - n2.r, n1.i - n2.i);
 }
 // Multiplicacion de numeros complejos
-N operator*(const N &n1,const N &n2)
-{
+N operator*(const N &n1,const N &n2){
     //real*real
     if(n1.i==0 && n2.i==0){
         return n1.r*n2.r;
@@ -141,8 +148,7 @@ N operator*(const N &n1,const N &n2)
     }
 }
 // Division de numeros complejos
-N operator/(const N &n1,const N &n2)
-{
+N operator/(const N &n1,const N &n2){
 
     // n/INF
     if(n2.r == INF && n1.r != INF)
@@ -172,8 +178,7 @@ N operator/(const N &n1,const N &n2)
     }
 }
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
-N operator%(const N &n1,const N &n2)
-{
+N operator%(const N &n1,const N &n2){
     if(floor(n1.r)==n1.r && floor(n2.r)==n2.r && n1.i==0 && n2.i==0){
         if(n2.r != 0)
             return int(n1.r)%int(n2.r);
@@ -255,7 +260,6 @@ N ln(const N &n){
         return log(abs(n).r)+arg(n)*i;
     }
 }
-
 N log(const N &n, const N &base){return ln(n)/ln(base);}
 
 N sin(const N &n){return (n.i==0)?sin(n.r) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
