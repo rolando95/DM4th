@@ -48,6 +48,20 @@ N derivative(function f, const N &x0, const N order, const N h){
         return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
+V diff(V v, N iter){
+    if(iter<=0) return v;
+    else{
+        V diffV;
+        if(v.length().r >= 2){
+            for(auto j=0; j<v.length().r -1; j++){
+                diffV.append(v[j+1] - v[j]);
+            }
+            return diff(diffV,iter - 1);
+        }else{
+            return V(0);
+        }
+    }
+}
 // Integral
 N integral(function f, const N &a, const N &b, const N subintervals){
     N n = int(round(subintervals).r)/3*3;

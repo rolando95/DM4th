@@ -15,6 +15,12 @@ N product(function f, const N&, const N&, const N interval=1);
 N product(const N&, const N&, const N&, const N interval=1);
 // derivative(f, x0, order=1)
 N derivative(function f, const N&, const N order=1, const N h=1e-2);
+/*
+ Difference between adjacent elements of vector.
+ Returns n-1 values of the vector for each iteration
+ diff(vector, iterations)
+*/
+V diff(V, N=1);
 // integral(f, begin, end, subintervals=99)
 N integral(function f, const N&, const N&, const N subintervals=999);
 // quadratic(a,b,c)

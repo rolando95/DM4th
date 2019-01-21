@@ -16,6 +16,7 @@ public:
 
     std::vector<N> data;
 
+
     N& operator[](N);
     /* 
      Adjunta un numero en el vector
@@ -69,4 +70,63 @@ V list(const N& first,auto... args){
 }
 
 V range(const N&, const N&, N=1);
+
+
+/* 
+    Conversion de V a array de lenguaje C 
+    Si se desea adjuntar los numeros imaginarios de V, imaginary=true
+    vToArray(array, V, incluirNumerosImaginarios?);
+
+    vToArray(array, V, false)
+    (1+3i, 2+4i) ==> [1, 2]
+
+    vToArray(array, V, true)
+    (1+3i, 2+4i) ==> [1, 2, 3, 4]
+
+    NOTA: Es importante reservar memoria del array para la conversion 
+    antes de llamar la funcion
+*/
+template<class T>
+void vToArray(V &v, T *array, bool imaginary=false){
+    int size, midSize;
+    if(imaginary){
+        size = v.length().r*2;
+        midSize = size/2;
+    }else{
+        size = v.length().r;
+        midSize = size;
+    }
+
+    for(int j=0; j<size; j++){
+        if(j<midSize){ 
+            array[j] = (T)v[j].r;
+        }
+        else array[j] = (T)v[j-midSize].i;
+    }
+}
+
+/*
+    Conversion de array en lenguaje C a V
+    Si la segunda mitad del array contiene el valor imaginario de la parte real. imaginary=true
+    arrayToV(array, V, tamanio, tieneNumerosImaginarios?);
+
+    arrayToV(array, V, 4, false)
+    [1,2,3,4] ==> (1, 2, 3, 4)
+
+    arrayToV(array, V, 4, true)
+    [1,2,3,4] ==> (1+3i, 2+4i)
+*/
+template<class T>
+void arrayToV(T* array, V &v, int N, bool imaginary=false){
+    v.resize(0);
+    if(!imaginary){
+        for(int j=0; j<N; j++){
+            v.append(array[j]);
+        }
+    }else{
+        for(int j=0; j<N/2; j++){
+            v.append(array[j]+array[j+N/2]*i);
+        }
+    }
+}
 #endif

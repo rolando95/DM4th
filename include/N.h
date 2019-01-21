@@ -23,6 +23,9 @@ public:
     // Asignacion de un valor numerico
     operator=(double);
 
+    template<class T>
+    explicit operator T(){return (T)this->r;}
+
     // Incremento prefijo
     N operator ++();
 

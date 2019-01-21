@@ -6,7 +6,6 @@ V::V(const V &v){
     *this = v;
 }
 
-
 N& V::operator[](N n){
     int pos = n.r;
     if(pos<0) pos = 0;
@@ -25,12 +24,14 @@ N V::append(const N &n, const N position){
 }
 
 V V::append(const V& v, const N position){
-    int pos = position.r;
-    if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
-    else{
-        data.insert(data.begin() + pos, v.data.begin(), v.data.end());
+    if(v.count > 0){
+        int pos = position.r;
+        if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
+        else{
+            data.insert(data.begin() + pos, v.data.begin(), v.data.end());
+        }
+        this->count += v.count;
     }
-    this->count += v.count;
     return v;
 }
 

@@ -24,6 +24,7 @@ N::operator=(double a){
     this->r = a;
     return 0;
 }
+
 // Incremento prefijo
 N N::operator ++(){
     this->r += 1;
