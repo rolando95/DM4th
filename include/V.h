@@ -7,13 +7,16 @@
 class V{
     int count = 0;
 public:
+    // Inicializacion sin valores
     V();
+    // Inicializacion con un vector como argumento en el constructor
     V(const V&);
-    V(const N& first,auto... args){    
+    // Inicializacion con un numero indefinido de elementos en el constructor
+    template<class ... T>
+    V(const N& first,T... args){    
         append(first);
         append(V(args...));
     }
-
     std::vector<N> data;
 
 
@@ -63,7 +66,8 @@ ostream& operator<<(ostream&, V);
 istream& operator>>(istream&, V&);
 
 V list();
-V list(const N& first,auto... args){
+template<class ... T>
+V list(const N& first,T... args){
     V n = list(args ...);
     n.append(first,0);
     return n;
@@ -75,40 +79,24 @@ V range(const N&, const N&, N=1);
 /* 
     Conversion de V a array de lenguaje C 
     Si se desea adjuntar los numeros imaginarios de V, imaginary=true
-    vToArray(array, V, incluirNumerosImaginarios?);
+    vToArray(array, V, tamanio del array, incluirNumerosImaginarios);
 
-    vToArray(array, V, false)
+    vToArray(array, V, 2, false)
     (1+3i, 2+4i) ==> [1, 2]
 
-    vToArray(array, V, true)
+    vToArray(array, V, 4, true)
     (1+3i, 2+4i) ==> [1, 2, 3, 4]
 
     NOTA: Es importante reservar memoria del array para la conversion 
     antes de llamar la funcion
 */
 template<class T>
-void vToArray(V &v, T *array, bool imaginary=false){
-    int size, midSize;
-    if(imaginary){
-        size = v.length().r*2;
-        midSize = size/2;
-    }else{
-        size = v.length().r;
-        midSize = size;
-    }
-
-    for(int j=0; j<size; j++){
-        if(j<midSize){ 
-            array[j] = (T)v[j].r;
-        }
-        else array[j] = (T)v[j-midSize].i;
-    }
-}
+void vToArray(V &v, T *array, int n, bool imaginary=false);
 
 /*
     Conversion de array en lenguaje C a V
     Si la segunda mitad del array contiene el valor imaginario de la parte real. imaginary=true
-    arrayToV(array, V, tamanio, tieneNumerosImaginarios?);
+    arrayToV(array, V, tamanio del array, incluirNumerosImaginarios);
 
     arrayToV(array, V, 4, false)
     [1,2,3,4] ==> (1, 2, 3, 4)
@@ -117,16 +105,5 @@ void vToArray(V &v, T *array, bool imaginary=false){
     [1,2,3,4] ==> (1+3i, 2+4i)
 */
 template<class T>
-void arrayToV(T* array, V &v, int N, bool imaginary=false){
-    v.resize(0);
-    if(!imaginary){
-        for(int j=0; j<N; j++){
-            v.append(array[j]);
-        }
-    }else{
-        for(int j=0; j<N/2; j++){
-            v.append(array[j]+array[j+N/2]*i);
-        }
-    }
-}
+void arrayToV(T* array, V &v, int n, bool imaginary=false);
 #endif

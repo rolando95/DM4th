@@ -13,8 +13,6 @@ void print(const T& first, const Types& ... args){
 }
 
 // Entrada de un numero por consola
-N input(string msg="");
-
 template<class T>
 void input(T &var,string msg=""){
     cout<<msg;

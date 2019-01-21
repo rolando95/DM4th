@@ -99,6 +99,7 @@ istream& operator>>(istream& stream, V &v){
 
 V list(){return V();}
 
+
 V range(const N &begin, const N &end, N value){
     V v;
     if(value>0 && end>begin){
@@ -113,3 +114,45 @@ V range(const N &begin, const N &end, N value){
         return v;
     }
 }
+
+template<class T>
+void vToArray(V &v, T *array, int n, bool imaginary){
+    int lenV = (int)v.length();
+    if(!imaginary){
+        if(lenV<n) n = lenV;
+        for(int j=0; j<n; j++){
+            array[j] = (T)v[j].r;
+        }
+    }else{
+        if(lenV*2<n) n = lenV*2;
+        for(int j=0; j<n/2; j++){
+            array[j] = (T)v[j].r;
+            array[j+n/2] = (T)v[j].i;
+        }
+    }
+}
+template void vToArray(V&, int*     , int, bool);
+template void vToArray(V&, long int*, int, bool);
+template void vToArray(V&, float*   , int, bool);
+template void vToArray(V&, double*  , int, bool);
+template void vToArray(V&, N*       , int, bool);
+
+template<class T>
+void arrayToV(T* array, V &v, int n, bool imaginary){
+    v.resize(0);
+    if(!imaginary){
+        for(int j=0; j<n; j++){
+            v.append(array[j]);
+        }
+    }else{
+        for(int j=0; j<n/2; j++){
+            v.append(array[j]+array[j+n/2]*i);
+        }
+    }
+}
+
+template void arrayToV(int*,      V&, int, bool);
+template void arrayToV(long int*, V&, int, bool);
+template void arrayToV(float*,    V&, int, bool);
+template void arrayToV(double*,   V&, int, bool);
+template void arrayToV(N*,        V&, int, bool);
