@@ -1,7 +1,11 @@
 #include <string>
 #include <iostream>
 #include <number.h>
-#define SIZE 4
+
 int main(){
+    N a, b=10;
+    a=b;
+    a = a*b;
+    print(a);
     return 0;
 }
