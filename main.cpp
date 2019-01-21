@@ -3,9 +3,7 @@
 #include <number.h>
 
 int main(){
-    N a, b=10;
-    a=b;
-    a = a*b;
-    print(a);
+    V b = range(1,5);
+    print(sumatory(b));
     return 0;
 }

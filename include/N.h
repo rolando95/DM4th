@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __N_H__
+#define __N_H__
+
 #include <iostream>
 #include "constants.h"
 
@@ -149,3 +151,5 @@ N atanh(const N&);
 N acoth(const N&);
 N asech(const N&);
 N acsch(const N&);
+
+#endif

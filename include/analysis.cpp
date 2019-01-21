@@ -1,5 +1,28 @@
 #include "analysis.h"
 
+N maximum(const N a){return a;}
+N maximum(V v){
+    N value = -INF;
+    if(v.length()>0){
+        value = v[0];
+        for(int j=1; j<v.length(); j++){
+            if(v[j]>value) value = v[j];
+        }
+    }
+    return value;
+}
+N minimum(const N a){return a;}
+N minimum(V v){
+    N value = INF;
+    if(v.length()>0){
+        value = v[0];
+        for(int j=1; j<v.length(); j++){
+            if(v[j]<value) value = v[j];
+        }
+    }
+    return value;
+}
+
 N factorial(const N &n){
     N x = 1;
     for(auto i=1; i<=n; i++){
@@ -9,29 +32,37 @@ N factorial(const N &n){
 }
 N sumatory(function f, const N &begin, const N &end, const N interval){
     N x=0;
-    for(auto i=begin; i<=end; i+=interval){
+    for(N j=begin; j>=begin && j<=end; j+=interval){
         x += f(i);
     }
     return x;
 }
-N sumatory(const N &value, const N &begin, const N &end, const N interval){
+N sumatory(V v, N begin, N end, N interval){
     N x=0;
-    for(auto i=begin; i<=end; i+= interval){
-        x += value;
+    if(v.length()>0){
+        if(begin<0) begin = 0;
+        if(end<0 || end>v.length()) end = v.length();
+        for(N j=begin; j>=begin && j<end; j+= interval){
+            x += v[j];
+        }
     }
     return x;
 }
 N product(function f, const N &begin, const N &end, const N interval){
     N x=1;
-    for(auto i=begin; i<=end; i+=interval){
-        x *= f(i);
+    for(N j=begin; j>=begin && j<=end; j+=interval){
+        x *= f(j);
     }
     return x;
 }
-N product(const N &value, const N &begin, const N &end, const N interval){
+N product(V v, N begin, N end, N interval){
     N x=1;
-    for(auto i=begin; i<=end; i+=interval){
-        x *= value;
+    if(v.length()>0){
+        if(begin<0) begin = 0;
+        if(end<0 || end>v.length()) end = v.length();
+        for(N j=begin; j>=begin && j<end; j+= interval){
+            x *= v[j];
+        }
     }
     return x;
 }
@@ -118,7 +149,7 @@ N newtonRaphson(function f, N x1, N maxIter, N tolerance){
     }
     return x1;
 }
-N newtonRaphson2(function f, function fd, N x1, N maxIter, N tolerance){
+N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     x1 = x1.r;
     N y1 = (x1.i==0)? 1.00i : x1.i;
     

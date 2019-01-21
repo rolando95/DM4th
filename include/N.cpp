@@ -22,6 +22,7 @@ double N::imag(double a){this->i = a; return this->i;}
 
 N::operator=(double a){
     this->r = a;
+    this->i = 0;
     return 0;
 }
 

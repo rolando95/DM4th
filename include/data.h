@@ -1,3 +1,6 @@
+#ifndef __DATA_H__
+#define __DATA_H__
+
 #include <iostream>
 #include <string>
 #include "N.h"
@@ -18,3 +21,5 @@ void input(T &var,string msg=""){
     cout<<msg;
     cin>>var;
 }
+
+#endif

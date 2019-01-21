@@ -1,8 +1,8 @@
+#ifndef __V_H__
+#define __V_H__
+
 #include "N.h"
 #include <vector>
-
-#ifndef _V_H
-#define _V_H
 
 class V{
     int count = 0;
@@ -40,7 +40,7 @@ public:
     */
     N pop(const N=-1);
     // Obtiene el numero de elementos que contiene el vector
-    N length();
+    N length() const;
     /*
      Busca la posicion de los elementos en el vector que coincidan con el valor de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
@@ -106,4 +106,5 @@ void vToArray(V &v, T *array, int n, bool imaginary=false);
 */
 template<class T>
 void arrayToV(T* array, V &v, int n, bool imaginary=false);
+
 #endif

@@ -10,7 +10,7 @@ N& V::operator[](N n){
     int pos = n.r;
     if(pos<0) pos = 0;
     if(pos>=this->count) resize(pos+1);
-    return data[pos];
+    return this->data[pos];
 }
 
 N V::append(const N &n, const N position){
@@ -51,7 +51,7 @@ N V::pop(const N position){
     return value;
 }
 
-N V::length(){
+N V::length() const{
     return this->count;
 }
 
