@@ -144,6 +144,9 @@ V operator*(V v,const N &n){
     result*=n;
     return result;
 }
+V operator*(const N &n, V v){
+    return v*n;
+}
 
 // Division entre vector y escalar
 V operator/(V v,const N &n){

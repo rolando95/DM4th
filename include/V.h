@@ -87,6 +87,7 @@ N operator*(V,V);
 
 // Producto entre vector y escalar
 V operator*(V,const N&);
+V operator*(const N&,V);
 // Division entre vector y escalar
 V operator/(V,const N&);
 
