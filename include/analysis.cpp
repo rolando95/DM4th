@@ -202,3 +202,64 @@ N secantMethod(function f, N x0, N x1, N maxIter, N tolerance){
     }
     return x2;
 }
+V bairstowsMethod(V v,N r,N s, N maxIter, N tolerance){
+
+    // Conserva los valores semilla iniciales para futuras iteraciones
+    N ra = r; 
+    N sa = s;
+    V roots;
+    N degree = v.length()-1;
+    
+    if(degree==1) roots = V(-v[1]/v[0]); // Polinomio de grado 1
+    else if(degree==2) roots = quadratic(v[0],v[1],v[2]); // Polinomio de grado 2
+    else if(degree>2){ // Polinomio de grado superior a 2
+        
+        // 
+        V b; b.resize(v.length());
+        V c; c.resize(v.length()-1);
+        N errorR, errorS;
+        N dr, ds;
+
+        // Empieza el ciclo para calcular las nuevas raices
+        for(int k=0; k<maxIter; k++){
+
+            // Calcula los coeficientes de b
+            b[0] = v[0];
+            b[1] = v[1] + b[0]*r;
+            for(int j=2; j<=degree; j++){
+                b[j] = v[j] + b[j-1]*r + b[j-2]*s;
+            }
+
+            // Calcula los coeficientes de c
+            c[0] = b[0];
+            c[1] = b[1] + c[0]*r;
+            for(int j=2; j< degree; j++){
+                c[j] = b[j] + c[j-1]*r + c[j-2]*s;  
+            }
+
+            // Calcula delta s y delta r
+            dr = (b[degree]  *c[degree-3] - b[degree-1]*c[degree-2])/
+                (c[degree-2]*c[degree-2] - c[degree-1]*c[degree-3]);
+            ds = (b[degree-1]*c[degree-1] - b[degree]  *c[degree-2])/
+                (c[degree-2]*c[degree-2] - c[degree-1]*c[degree-3]);
+            
+            // Calcula el error
+            errorS = (s==0)?(ds+0.01)/(s+0.01):ds/s;
+            errorR = (r==0)?(dr+0.01)/(r+0.01):dr/r;
+
+            // Rompe el ciclo si el error es menor a la tolerancia, de otro modo asigna la nueva r y s
+            if(abs(errorS)<tolerance && abs(errorR)<tolerance){
+                roots = quadratic(1,-r,-s); // Obtiene las nuevas raices
+                break;
+            }else{
+                r = r+dr; s=s+ds;
+            }
+        }
+
+        b.resize(b.length()-2);
+        roots.append(bairstowsMethod(b,ra,sa,maxIter,tolerance)); // Adjunta las raices que calculara en la llamada recursiva
+
+    }
+
+    return roots;
+}

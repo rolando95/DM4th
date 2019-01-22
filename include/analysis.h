@@ -49,14 +49,20 @@ N derivative(function f, const N&, const N order=1, const N h=1e-2);
 */
 V diff(V, N=1);
 // integral(f, begin, end, subintervals=99)
-N integral(function f, const N&, const N&, const N subintervals=999);
+N integral(function f, const N&, const N&, const N subintervals=1000);
 // quadratic(a,b,c)
 V quadratic(const N&, const N&, const N&);
 // newtonRaphson(f, x0=seed, max iterations, tolerance)
-N newtonRaphson(function f, N x0=1.01, N maxIter=1000, N tolerance=1e-5);
+N newtonRaphson(function f, N x0=1.01, N maxIter=100, N tolerance=1e-5);
 // newtonRaphson(f, f', x0=seed, max iterations, tolerance)
-N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=1000, N tolerance=1e-5);
+N newtonRaphson(function f, function fd, N x0=1.01, N maxIter=100, N tolerance=1e-5);
 // secantMethod(f, x0=seed, x1=seed2, max iterations, tolerance)
-N secantMethod(function f, N x0=0.01, N x1=1.01, N maxIter=1000, N tolerance=1e-5);
+N secantMethod(function f, N x0=0.01, N x1=1.01, N maxIter=100, N tolerance=1e-5);
+/*
+ Returns all roots of a polynomial function
+ x^2-1 ==> bairstowMethod( V(1, 0,-1) ); ==> returns (-1, 1)
+ bairstowMethod(polynomial coefficients, r=seed, s=seed2, max iterations, tolerance)
+*/
+V bairstowsMethod(V,N r=0.1,N s=0.1, N maxIter=100, N tolerance=1e-5);
 
 #endif
