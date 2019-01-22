@@ -30,10 +30,17 @@ N factorial(const N &n){
     }
     return x;
 }
+N sumatory(function f, V v, const N interval){
+    N x=0;
+    for(N j=0; j>=0 && j<v.length(); j+=interval){
+        x += f(v[j]);
+    }
+    return x;
+}
 N sumatory(function f, const N &begin, const N &end, const N interval){
     N x=0;
     for(N j=begin; j>=begin && j<=end; j+=interval){
-        x += f(i);
+        x += f(j);
     }
     return x;
 }
@@ -45,6 +52,13 @@ N sumatory(V v, N begin, N end, N interval){
         for(N j=begin; j>=begin && j<end; j+= interval){
             x += v[j];
         }
+    }
+    return x;
+}
+N product(function f, V v, const N interval){
+    N x=1;
+    for(N j=0; j>=0 && j<v.length(); j+=interval){
+        x *= f(v[j]);
     }
     return x;
 }
@@ -165,7 +179,7 @@ N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     }
     return x1;
 }
-N secantMethod(function f, N x0,N x1, N maxIter, N tolerance){
+N secantMethod(function f, N x0, N x1, N maxIter, N tolerance){
     x0 = x0.r; x1 = x1.r;
     N x2;
 

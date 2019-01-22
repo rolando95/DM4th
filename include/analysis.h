@@ -28,11 +28,15 @@ N minimum(const N a, const T ... b){
 
 // factorial(value)
 N factorial(const N&);
+// sumatory(f, V(xn...) , interval)
+N sumatory(function f, V, const N interval=1); 
 // sumatory(f, begin, end, interval)
 N sumatory(function f, const N&, const N&, const N interval=1); 
 // sumatory(V, begin, end, interval) 
 N sumatory(V, N begin=0, N end=-1, const N interval=1);
-// product(f, begin, end)
+// product(f, V(xn...), interval)
+N product(function f, V, const N interval=1); 
+// product(f, begin, end, interval)
 N product(function f, const N&, const N&, const N interval=1); 
 // product(V, begin, end, interval) 
 N product(V, N begin=0, N end=-1, const N interval=1);

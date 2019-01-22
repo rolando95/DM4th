@@ -30,28 +30,20 @@ public:
 
     // Incremento prefijo
     N operator ++();
-
     // Incremento postfijo
     N operator++(int);
-
     // Decremento prefijo
     N operator --();
-
     // Decremento postfijo
     N operator --(int);
-
     // Asignacion aditiva
     operator+=(N);
-
     // Asignacion sustractiva
     operator-=(N);
-
     // Asignacion multiplicativa
     operator*=(N);
-
     // Asignacion divisiva
     operator/=(N);
-
     // Residuo
     operator%=(N);
 

@@ -56,6 +56,17 @@ public:
      Definir un tamanio mayor al actual rellenara de ceros automaticamente, uno menor eliminara los ultimos elementos.
     */
     void resize(const N&);
+
+    // Asignacion aditiva
+    operator+=(V);
+    // Asignacion sustractiva
+    operator-=(V);
+    // Asignacion multiplicativa
+    operator*=(N);
+    // Asignacion divisiva
+    operator/=(N);
+    // Residuo
+    operator%=(N);
 };
 
 // Impresion en pantalla de vector
@@ -65,13 +76,20 @@ ostream& operator<<(ostream&, V);
 // Lectura en pantalla del vector
 istream& operator>>(istream&, V&);
 
-V list();
-template<class ... T>
-V list(const N& first,T... args){
-    V n = list(args ...);
-    n.append(first,0);
-    return n;
-}
+// Suma de vectores
+V operator+(V,V);
+
+// Resta de vectores
+V operator-(V,V);
+
+// Producto escalar
+N operator*(V,V);
+
+// Producto entre vector y escalar
+V operator*(V,const N&);
+// Division entre vector y escalar
+V operator/(V,const N&);
+
 
 V range(const N&, const N&, N=1);
 

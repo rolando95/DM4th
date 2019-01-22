@@ -1,5 +1,4 @@
 #include "V.h"
-
 V::V(){}
 
 V::V(const V &v){
@@ -79,6 +78,24 @@ void V::resize(const N &pos){
     }
 }
 
+V::operator+=(V v){
+    N max = min(this->length(), v.length());
+    for(int j=0; j<max; j++){ this->data[j] += v[j];}
+}
+V::operator-=(V v){
+    N max = min(this->length(), v.length());
+    for(int j=0; j<max; j++){ this->data[j] -= v[j];}
+}
+V::operator*=(N n){
+    for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
+}
+V::operator/=(N n){
+    for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
+}
+V::operator%=(N n){
+    for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
+}
+
 ostream& operator<<(ostream& stream, V v){
     stream<<"(";
     for(int n=0; n<v.length(); n++){
@@ -97,8 +114,43 @@ istream& operator>>(istream& stream, V &v){
     return stream;
 }
 
-V list(){return V();}
+// Suma de vectores
+V operator+(V v1,V v2){
+    V result = v1;
+    result += v2;
+    return result;
+}
 
+// Resta de vectores
+V operator-(V v1,V v2){
+    V result = v1;
+    result -= v2;
+    return result;
+}
+
+// Producto escalar
+N operator*(V v1,V v2){
+    N result = 0;
+    N max = min(v1.length(), v2.length());
+    for(int j=0; j<max; j++){
+        result += v1[j]*v2[j];
+    }
+    return result;
+}
+
+// Producto entre vector y escalar
+V operator*(V v,const N &n){
+    V result = v;
+    result*=n;
+    return result;
+}
+
+// Division entre vector y escalar
+V operator/(V v,const N &n){
+    V result = v;
+    result/=n;
+    return result;
+}
 
 V range(const N &begin, const N &end, N value){
     V v;
