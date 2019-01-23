@@ -78,21 +78,21 @@ void V::resize(const N &pos){
     }
 }
 
-V::operator+=(V v){
+void V::operator+=(V v){
     N max = min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
 }
-V::operator-=(V v){
+void V::operator-=(V v){
     N max = min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] -= v[j];}
 }
-V::operator*=(N n){
+void V::operator*=(N n){
     for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
 }
-V::operator/=(N n){
+void V::operator/=(N n){
     for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
 }
-V::operator%=(N n){
+void V::operator%=(N n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
 }
 
@@ -165,9 +165,22 @@ V range(const N &begin, const N &end, N value){
         for(N j=begin; j>=end; j+=value){
             v.append(j);
         }
-    }else{
-        return v;
     }
+    return v;
+}
+
+V range(V v, const N &begin, const N &end, N value){
+    V result;
+    if(value>0 && end>begin){
+        for(N j=begin; j<=end; j+=value){
+            result.append(v[j]);
+        }
+    }else if(value<0 && begin>end){
+        for(N j=begin; j>=end; j+=value){
+            result.append(v[j]);
+        }
+    }
+    return result;
 }
 
 template<class T>

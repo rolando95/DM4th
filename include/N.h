@@ -37,15 +37,15 @@ public:
     // Decremento postfijo
     N operator --(int);
     // Asignacion aditiva
-    operator+=(N);
+    void operator+=(N);
     // Asignacion sustractiva
-    operator-=(N);
+    void operator-=(N);
     // Asignacion multiplicativa
-    operator*=(N);
+    void operator*=(N);
     // Asignacion divisiva
-    operator/=(N);
+    void operator/=(N);
     // Residuo
-    operator%=(N);
+    void operator%=(N);
 
 };
 

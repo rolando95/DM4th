@@ -19,7 +19,6 @@ public:
     }
     std::vector<N> data;
 
-
     N& operator[](N);
     /* 
      Adjunta un numero en el vector
@@ -58,15 +57,15 @@ public:
     void resize(const N&);
 
     // Asignacion aditiva
-    operator+=(V);
+    void operator+=(V);
     // Asignacion sustractiva
-    operator-=(V);
+    void operator-=(V);
     // Asignacion multiplicativa
-    operator*=(N);
+    void operator*=(N);
     // Asignacion divisiva
-    operator/=(N);
+    void operator/=(N);
     // Residuo
-    operator%=(N);
+    void operator%=(N);
 };
 
 // Impresion en pantalla de vector
@@ -93,6 +92,7 @@ V operator/(V,const N&);
 
 
 V range(const N&, const N&, N=1);
+V range(V, const N&, const N&, N=1);
 
 
 /* 

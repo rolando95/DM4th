@@ -48,19 +48,19 @@ N N::operator --(int){
     this->r -= 1;
     return a;
 }
-N::operator+=(N n){
+void N::operator+=(N n){
     *this = *this + n;
 }
-N::operator-=(N n){
+void N::operator-=(N n){
     *this = *this - n;
 }
-N::operator*=(N n){
+void N::operator*=(N n){
     *this = *this * n;
 }
-N::operator/=(N n){
+void N::operator/=(N n){
     *this = *this / n;
 }
-N::operator%=(N n){
+void N::operator%=(N n){
     *this = *this % n;
 }
 N operator""_i(long double a){
