@@ -26,6 +26,11 @@ N minimum(const N a, const T ... b){
     return a<value?a:value;
 }
 
+// 
+V zeros(const N&);
+//
+V ones(const N&);
+
 // factorial(value)
 N factorial(const N&);
 // sumatory(f, V(xn...) , interval)

@@ -22,7 +22,16 @@ N minimum(V v){
     }
     return value;
 }
+V zeros(const N &n){
+    V z; z.resize(n);
+    return z;
+}
 
+V ones(const N &n){
+    V o;
+    for(int j=0; j<n; j++) o.append(1);
+    return o;
+}
 N factorial(const N &n){
     N x = 1;
     for(auto i=1; i<=n; i++){
