@@ -66,6 +66,10 @@ public:
     void operator/=(N);
     // Residuo
     void operator%=(N);
+
+    // inicio y final de vector (De utilidad para for each de c++)
+    std::vector<N>::iterator begin();
+    std::vector<N>::iterator end();
 };
 
 // Impresion en pantalla de vector

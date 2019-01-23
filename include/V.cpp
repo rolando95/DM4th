@@ -96,6 +96,9 @@ void V::operator%=(N n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
 }
 
+std::vector<N>::iterator V::begin(){return data.begin();}
+std::vector<N>::iterator V::end(){ return data.end();}
+
 ostream& operator<<(ostream& stream, V v){
     stream<<"(";
     for(int n=0; n<v.length(); n++){
