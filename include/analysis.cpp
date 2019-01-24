@@ -77,8 +77,14 @@ N exp(N x){
     return pow(e,x);
 }
 
+/*
+N zeta(N s, N tolerance){
+}*/
+N PI(N z, N tolerance){
+    return gamma(z+1,tolerance);
+}
 // From Wikipedia https://es.wikipedia.org/wiki/Aproximaci%C3%B3n_de_Lanczos
-N gamma(N z){
+N gamma(N z, N tolerance){
     N result;
     N x;
     N t;
@@ -103,7 +109,7 @@ N gamma(N z){
         result = sqrt(2*pi) *pow(t,z+0.5) * exp(-t) * x;
     }
 
-    if (abs(result.i - abs(result.i))<=0.0000001){
+    if (abs(result.i - abs(result.i))<=tolerance){
         return result.r;
     }
     return result;

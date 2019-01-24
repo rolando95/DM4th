@@ -38,8 +38,12 @@ V range(V, const N&, const N&, N=1);
 V range(function, const N&, const N&, N=1);
 // e^x
 N exp(N x);
+// PI function
+N PI(N z, N tolerance=1e-7);
 // gamma function
-N gamma(N x);
+N gamma(N z, N tolerance=1e-7);
+// Rieman's zeta function
+//N zeta(N z, N tolerance=1e-7);
 // factorial(value)
 N factorial(const N&);
 // sumatory(f, V(xn...) , interval)
@@ -54,8 +58,8 @@ N product(function f, V, const N interval=1);
 N product(function f, const N&, const N&, const N interval=1); 
 // product(V, begin, end, interval) 
 N product(V, N begin=0, N end=-1, const N interval=1);
-// derivative(f, x0, order=1)
-N derivative(function f, const N&, const N order=1, const N h=1e-2);
+// derivative(f, x0, order=1, tolerance)
+N derivative(function f, const N&, const N order=1, const N tolerance=1e-2);
 /*
  Difference between adjacent elements of vector.
  Returns n-1 values of the vector for each iteration
