@@ -97,10 +97,6 @@ V operator*(const N&,V);
 V operator/(V,const N&);
 
 
-V range(const N&, const N&, N=1);
-V range(V, const N&, const N&, N=1);
-
-
 /* 
     Conversion de V a array de lenguaje C 
     Si se desea adjuntar los numeros imaginarios de V, imaginary=true

@@ -165,33 +165,7 @@ V operator/(V v,const N &n){
     return result;
 }
 
-V range(const N &begin, const N &end, N value){
-    V v;
-    if(value>0 && end>begin){
-        for(N j=begin; j<=end; j+=value){
-            v.append(j);
-        }
-    }else if(value<0 && begin>end){
-        for(N j=begin; j>=end; j+=value){
-            v.append(j);
-        }
-    }
-    return v;
-}
 
-V range(V v, const N &begin, const N &end, N value){
-    V result;
-    if(value>0 && end>begin){
-        for(N j=begin; j<=end; j+=value){
-            result.append(v[j]);
-        }
-    }else if(value<0 && begin>end){
-        for(N j=begin; j>=end; j+=value){
-            result.append(v[j]);
-        }
-    }
-    return result;
-}
 
 template<class T>
 void vToArray(V &v, T *array, int n, bool imaginary){

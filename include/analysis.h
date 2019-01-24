@@ -30,6 +30,12 @@ N minimum(const N a, const T ... b){
 V zeros(const N&);
 //
 V ones(const N&);
+// range(begin, end, interval)
+V range(const N&, const N&, N=1);
+// range(vector, pos begin, pos end, interval)
+V range(V, const N&, const N&, N=1);
+// range(f, x0=begin, xn=end, interval)
+V range(function, const N&, const N&, N=1);
 
 // factorial(value)
 N factorial(const N&);
