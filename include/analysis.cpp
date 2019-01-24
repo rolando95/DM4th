@@ -73,10 +73,30 @@ V range(function f, const N &begin, const N &end, N value){
     return result;
 }
 
+N _GAMMA(N t, N x){
+    return pow(t,x-1)*pow(e,-t);
+}
+
+// Falta arreglar el rango 
+N gamma(N x,N b,N subintervals){
+    N n = int(round(subintervals).r)/3*3;
+    N h = b/n;
+    
+    N s=0;
+    for(N i=0; i<n; i++){
+        s+=_GAMMA(h*(i+0.5), x);
+    }
+    return s*h;
+}
+
 N factorial(const N &n){
     N x = 1;
-    for(auto i=1; i<=n; i++){
-        x *= i;
+    if(floor(n.r)==n && n>=0){ // Es numero entero positivo 
+        for(auto i=1; i<=n; i++){
+            x *= i;
+        }
+    }else{
+        x = gamma(n+1);
     }
     return x;
 }
@@ -161,7 +181,6 @@ V diff(V v, N iter){
 N integral(function f, const N &a, const N &b, const N subintervals){
     N n = int(round(subintervals).r)/3*3;
     N h = (b-a)/n;
-
     
     N s=0;
     for(N i=0; i<n; i++){

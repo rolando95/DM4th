@@ -10,8 +10,8 @@ typedef N (* function)(N x);
 
 N maximum(const N a);
 N maximum(V);
-// get maximum value of list
 template<class ... T>
+// get maximum value of list
 N maximum(const N a, const T ... b){
     N value = max(b...);
     return a>value?a:value;
@@ -19,8 +19,8 @@ N maximum(const N a, const T ... b){
 
 N minimum(const N a);
 N minimum(V);
-// get minimum value of list
 template<class ... T>
+// get minimum value of list
 N minimum(const N a, const T ... b){
     N value = max(b...);
     return a<value?a:value;
@@ -37,6 +37,9 @@ V range(V, const N&, const N&, N=1);
 // range(f, x0=begin, xn=end, interval)
 V range(function, const N&, const N&, N=1);
 
+N _GAMMA(N x);
+// gamma function
+N gamma(N x, const N end=100, const N subintervals=1000);
 // factorial(value)
 N factorial(const N&);
 // sumatory(f, V(xn...) , interval)

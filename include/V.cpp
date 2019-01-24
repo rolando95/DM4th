@@ -166,7 +166,6 @@ V operator/(V v,const N &n){
 }
 
 
-
 template<class T>
 void vToArray(V &v, T *array, int n, bool imaginary){
     int lenV = (int)v.length();

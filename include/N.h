@@ -143,5 +143,4 @@ N atanh(const N&);
 N acoth(const N&);
 N asech(const N&);
 N acsch(const N&);
-
 #endif

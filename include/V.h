@@ -97,9 +97,11 @@ V operator*(const N&,V);
 V operator/(V,const N&);
 
 
+
+template<class T>
 /* 
-    Conversion de V a array de lenguaje C 
-    Si se desea adjuntar los numeros imaginarios de V, imaginary=true
+    Conversion de V a array de lenguaje C.      
+    Si se desea adjuntar los numeros imaginarios de V, imaginary=true       
     vToArray(array, V, tamanio del array, incluirNumerosImaginarios);
 
     vToArray(array, V, 2, false)
@@ -111,9 +113,10 @@ V operator/(V,const N&);
     NOTA: Es importante reservar memoria del array para la conversion 
     antes de llamar la funcion
 */
-template<class T>
 void vToArray(V &v, T *array, int n, bool imaginary=false);
 
+
+template<class T>
 /*
     Conversion de array en lenguaje C a V
     Si la segunda mitad del array contiene el valor imaginario de la parte real. imaginary=true
@@ -125,7 +128,6 @@ void vToArray(V &v, T *array, int n, bool imaginary=false);
     arrayToV(array, V, 4, true)
     [1,2,3,4] ==> (1+3i, 2+4i)
 */
-template<class T>
 void arrayToV(T* array, V &v, int n, bool imaginary=false);
 
 #endif
