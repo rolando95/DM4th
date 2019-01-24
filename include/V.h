@@ -4,8 +4,10 @@
 #include "N.h"
 #include <vector>
 
+
 class V{
     int count = 0;
+    std::vector<N> data;
 public:
     // Inicializacion sin valores
     V();
@@ -17,9 +19,9 @@ public:
         append(first);
         append(V(args...));
     }
-    std::vector<N> data;
 
     N& operator[](N);
+    const V operator[](V) const;
     /* 
      Adjunta un numero en el vector
      vector.append(N)           <- Adjunta el valor N al final del vector

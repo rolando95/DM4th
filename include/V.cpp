@@ -11,6 +11,13 @@ N& V::operator[](N n){
     if(pos>=this->count) resize(pos+1);
     return this->data[pos];
 }
+const V V::operator[](V v)const {
+    V result;
+    for(int j=0; j<v.length(); j++){
+        result.append(this->data[(int)v[j]]);
+    }
+    return result;
+}
 
 N V::append(const N &n, const N position){
     int pos = position.r;
@@ -103,7 +110,7 @@ ostream& operator<<(ostream& stream, V v){
     stream<<"(";
     for(int n=0; n<v.length(); n++){
         if(n!=0) stream<<", ";
-        stream<<v.data[n];
+        stream<<v[n];
     }
     stream<<")";
     return stream;
