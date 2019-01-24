@@ -73,22 +73,41 @@ V range(function f, const N &begin, const N &end, N value){
     return result;
 }
 
-N _GAMMA(N t, N x){
-    return pow(t,x-1)*pow(e,-t);
+N exp(N x){
+    return pow(e,x);
 }
 
-// Falta arreglar el rango 
-N gamma(N x,N b,N subintervals){
-    N n = int(round(subintervals).r)/3*3;
-    N h = b/n;
-    
-    N s=0;
-    for(N i=0; i<n; i++){
-        s+=_GAMMA(h*(i+0.5), x);
+// From Wikipedia https://es.wikipedia.org/wiki/Aproximaci%C3%B3n_de_Lanczos
+N gamma(N z){
+    N result;
+    N x;
+    N t;
+    V p(676.5203681218851,  
+        -1259.1392167224028,  
+        771.32342877765313,
+        -176.61502916214059,     
+        12.507343278686905, 
+        -0.13857109526572012,
+        9.9843695780195716e-6, 
+        1.5056327351493116e-7
+    );
+
+    if(z<0.5) result = pi/(sin(pi*z)*gamma(1-z));
+    else{
+        z -= 1;
+        x = 0.99999999999980993;
+        for(N j=0; j<p.length(); j++){
+            x += p[j]/(z+j+1);
+        }
+        t = z + p.length() - 0.5;
+        result = sqrt(2*pi) *pow(t,z+0.5) * exp(-t) * x;
     }
-    return s*h;
-}
 
+    if (abs(result.i - abs(result.i))<=0.0000001){
+        return result.r;
+    }
+    return result;
+}
 N factorial(const N &n){
     N x = 1;
     if(floor(n.r)==n && n>=0){ // Es numero entero positivo 

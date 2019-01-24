@@ -36,10 +36,10 @@ V range(const N&, const N&, N=1);
 V range(V, const N&, const N&, N=1);
 // range(f, x0=begin, xn=end, interval)
 V range(function, const N&, const N&, N=1);
-
-N _GAMMA(N x);
+// e^x
+N exp(N x);
 // gamma function
-N gamma(N x, const N end=100, const N subintervals=1000);
+N gamma(N x);
 // factorial(value)
 N factorial(const N&);
 // sumatory(f, V(xn...) , interval)
