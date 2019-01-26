@@ -52,6 +52,7 @@ N V::pop(const N position){
             value = this->data[pos];
             data.erase(data.begin()+pos);
         }
+        count-=1;
     }else
         return 0;
     return value;
@@ -107,12 +108,12 @@ std::vector<N>::iterator V::begin(){return data.begin();}
 std::vector<N>::iterator V::end(){ return data.end();}
 
 ostream& operator<<(ostream& stream, V v){
-    stream<<"(";
+    stream<<"[";
     for(int n=0; n<v.length(); n++){
         if(n!=0) stream<<", ";
         stream<<v[n];
     }
-    stream<<")";
+    stream<<"]";
     return stream;
 }
 
