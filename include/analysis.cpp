@@ -1,7 +1,7 @@
 #include "analysis.h"
 
 Number maximum(const Number a){return a;}
-Number maximum(V v){
+Number maximum(Vector v){
     Number value = -INF;
     if(v.length()>0){
         value = v[0];
@@ -12,7 +12,7 @@ Number maximum(V v){
     return value;
 }
 Number minimum(const Number a){return a;}
-Number minimum(V v){
+Number minimum(Vector v){
     Number value = INF;
     if(v.length()>0){
         value = v[0];
@@ -22,19 +22,19 @@ Number minimum(V v){
     }
     return value;
 }
-V zeros(const Number &n){
-    V z; z.resize(n);
+Vector zeros(const Number &n){
+    Vector z; z.resize(n);
     return z;
 }
 
-V ones(const Number &n){
-    V o;
+Vector ones(const Number &n){
+    Vector o;
     for(int j=0; j<n; j++) o.append(1);
     return o;
 }
 
-V range(const Number &begin, const Number &end, Number value){
-    V v;
+Vector range(const Number &begin, const Number &end, Number value){
+    Vector v;
     if(value>0 && end>begin){
         for(Number j=begin; j<=end; j+=value){
             v.append(j);
@@ -46,8 +46,8 @@ V range(const Number &begin, const Number &end, Number value){
     }
     return v;
 }
-V range(V v, const Number &begin, const Number &end, Number value){
-    V result;
+Vector range(Vector v, const Number &begin, const Number &end, Number value){
+    Vector result;
     if(value>0 && end>begin){
         for(Number j=begin; j<=end; j+=value){
             result.append(v[j]);
@@ -59,8 +59,8 @@ V range(V v, const Number &begin, const Number &end, Number value){
     }
     return result;
 }
-V range(function f, const Number &begin, const Number &end, Number value){
-        V result;
+Vector range(Function f, const Number &begin, const Number &end, Number value){
+        Vector result;
     if(value>0 && end>begin){
         for(Number j=begin; j<=end; j+=value){
             result.append(f(j));
@@ -88,7 +88,7 @@ Number gamma(Number z, Number tolerance){
     Number result;
     Number x;
     Number t;
-    V p(676.5203681218851,  
+    Vector p(676.5203681218851,  
         -1259.1392167224028,  
         771.32342877765313,
         -176.61502916214059,     
@@ -125,21 +125,21 @@ Number factorial(const Number &n){
     }
     return x;
 }
-Number sumatory(function f, V v, const Number interval){
+Number sumatory(Function f, Vector v, const Number interval){
     Number x=0;
     for(Number j=0; j>=0 && j<v.length(); j+=interval){
         x += f(v[j]);
     }
     return x;
 }
-Number sumatory(function f, const Number &begin, const Number &end, const Number interval){
+Number sumatory(Function f, const Number &begin, const Number &end, const Number interval){
     Number x=0;
     for(Number j=begin; j>=begin && j<=end; j+=interval){
         x += f(j);
     }
     return x;
 }
-Number sumatory(V v, Number begin, Number end, Number interval){
+Number sumatory(Vector v, Number begin, Number end, Number interval){
     Number x=0;
     if(v.length()>0){
         if(begin<0) begin = 0;
@@ -150,21 +150,21 @@ Number sumatory(V v, Number begin, Number end, Number interval){
     }
     return x;
 }
-Number product(function f, V v, const Number interval){
+Number product(Function f, Vector v, const Number interval){
     Number x=1;
     for(Number j=0; j>=0 && j<v.length(); j+=interval){
         x *= f(v[j]);
     }
     return x;
 }
-Number product(function f, const Number &begin, const Number &end, const Number interval){
+Number product(Function f, const Number &begin, const Number &end, const Number interval){
     Number x=1;
     for(Number j=begin; j>=begin && j<=end; j+=interval){
         x *= f(j);
     }
     return x;
 }
-Number product(V v, Number begin, Number end, Number interval){
+Number product(Vector v, Number begin, Number end, Number interval){
     Number x=1;
     if(v.length()>0){
         if(begin<0) begin = 0;
@@ -176,7 +176,7 @@ Number product(V v, Number begin, Number end, Number interval){
     return x;
 }
 // Derivative
-Number derivative(function f, const Number &x0, const Number order, const Number h){
+Number derivative(Function f, const Number &x0, const Number order, const Number h){
     Number o(abs(floor(order.r)));
     if(order<=0){
         return f(x0);
@@ -188,22 +188,22 @@ Number derivative(function f, const Number &x0, const Number order, const Number
         return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
-V diff(V v, Number iter){
+Vector diff(Vector v, Number iter){
     if(iter<=0) return v;
     else{
-        V diffV;
+        Vector diffV;
         if(v.length().r >= 2){
             for(auto j=0; j<v.length().r -1; j++){
                 diffV.append(v[j+1] - v[j]);
             }
             return diff(diffV,iter - 1);
         }else{
-            return V(0);
+            return Vector(0);
         }
     }
 }
 // Integral
-Number integral(function f, const Number &a, const Number &b, const Number subintervals){
+Number integral(Function f, const Number &a, const Number &b, const Number subintervals){
     Number n = int(round(subintervals).r)/3*3;
     Number h = (b-a)/n;
     
@@ -233,15 +233,15 @@ Number integral(function f, const Number &a, const Number &b, const Number subin
     */
 }
 // cuadratica
-V quadratic(const Number &a, const Number &b, const Number &c){
-    V roots;
+Vector quadratic(const Number &a, const Number &b, const Number &c){
+    Vector roots;
     Number square = sqrt(b*b - 4*a*c);
     roots.append((-b+square)/(2*a));
     roots.append((-b-square)/(2*a));
     return roots;
 }
 // Aproximaciones de raices
-Number newtonRaphson(function f, Number x1, Number maxIter, Number tolerance){
+Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
     x1 = x1.r;
     Number y1 = (x1.i==0)? 1.00i : x1.i;
     
@@ -257,7 +257,7 @@ Number newtonRaphson(function f, Number x1, Number maxIter, Number tolerance){
     }
     return x1;
 }
-Number newtonRaphson(function f, function fd, Number x1, Number maxIter, Number tolerance){
+Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number tolerance){
     x1 = x1.r;
     Number y1 = (x1.i==0)? 1.00i : x1.i;
     
@@ -273,7 +273,7 @@ Number newtonRaphson(function f, function fd, Number x1, Number maxIter, Number 
     }
     return x1;
 }
-Number secantMethod(function f, Number x0, Number x1, Number maxIter, Number tolerance){
+Number secantMethod(Function f, Number x0, Number x1, Number maxIter, Number tolerance){
     x0 = x0.r; x1 = x1.r;
     Number x2;
 
@@ -296,21 +296,21 @@ Number secantMethod(function f, Number x0, Number x1, Number maxIter, Number tol
     }
     return x2;
 }
-V bairstowsMethod(V v, Number r, Number s, Number maxIter, Number tolerance){
+Vector bairstowsMethod(Vector v, Number r, Number s, Number maxIter, Number tolerance){
 
     // Conserva los valores semilla iniciales para futuras iteraciones
     Number ra = r; 
     Number sa = s;
-    V roots;
+    Vector roots;
     Number degree = v.length()-1;
     
-    if(degree==1) roots = V(-v[1]/v[0]); // Polinomio de grado 1
+    if(degree==1) roots = Vector(-v[1]/v[0]); // Polinomio de grado 1
     else if(degree==2) roots = quadratic(v[0],v[1],v[2]); // Polinomio de grado 2
     else if(degree>2){ // Polinomio de grado superior a 2
         
         // 
-        V b; b.resize(v.length());
-        V c; c.resize(v.length()-1);
+        Vector b; b.resize(v.length());
+        Vector c; c.resize(v.length()-1);
         Number errorR, errorS;
         Number dr, ds;
 

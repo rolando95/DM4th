@@ -79,7 +79,7 @@ Number operator-(Number a){
     return Number(-a.r,-a.i);
 }
 //Impresion en pantalla de numeros complejos
-ostream& operator<<(ostream& stream, Number n){
+std::ostream& operator<<(std::ostream& stream, Number n){
     if(n.r == INF) stream<<"INF";
     else if(n.r == -INF) stream<<"-INF";
     else if(isnan(n.r)) stream<<"NAN";
@@ -102,7 +102,7 @@ ostream& operator<<(ostream& stream, Number n){
     return stream;
 }
 //Lectura en pantalla de numeros complejos
-istream& operator>>(istream& stream, Number &n){
+std::istream& operator>>(std::istream& stream, Number &n){
     double x;
     
     // Verifica si se ha ingresado la parte real/imaginaria en consola

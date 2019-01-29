@@ -1,25 +1,25 @@
 #include "V.h"
-V::V(){}
+Vector::Vector(){}
 
-V::V(const V &v){
+Vector::Vector(const Vector &v){
     *this = v;
 }
 
-Number& V::operator[](Number n){
+Number& Vector::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
     if(pos>=this->count) resize(pos+1);
     return this->data[pos];
 }
-const V V::operator[](V v)const {
-    V result;
+const Vector Vector::operator[](Vector v)const {
+    Vector result;
     for(int j=0; j<v.length(); j++){
         result.append(this->data[(int)v[j]]);
     }
     return result;
 }
 
-Number V::append(const Number &n, const Number position){
+Number Vector::append(const Number &n, const Number position){
     int pos = position.r;
     if(pos<0 || pos>=this->count) {data.push_back(n);count++;}
     else {
@@ -29,7 +29,7 @@ Number V::append(const Number &n, const Number position){
     return n;
 }
 
-V V::append(const V& v, const Number position){
+Vector Vector::append(const Vector& v, const Number position){
     if(v.count > 0){
         int pos = position.r;
         if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
@@ -41,7 +41,7 @@ V V::append(const V& v, const Number position){
     return v;
 }
 
-Number V::pop(const Number position){
+Number Vector::pop(const Number position){
     Number value;
     int pos = position.r;
     if(this->count > 0){
@@ -58,27 +58,27 @@ Number V::pop(const Number position){
     return value;
 }
 
-Number V::length() const{
+Number Vector::length() const{
     return this->count;
 }
 
-V V::find(const Number &value){
-    V result;
+Vector Vector::find(const Number &value){
+    Vector result;
     for(int j=0; j<count; j++){
         if(value==this->data[j]) result.append(j);
     }
     return result;
 }
 
-V V::find(V value){
-    V result;
+Vector Vector::find(Vector value){
+    Vector result;
     for(int j=0; j<value.count; j++){
         result.append(find(value[j]));
     }
     return result;
 }
 
-void V::resize(const Number &pos){
+void Vector::resize(const Number &pos){
     int c = int(pos.r);
     if(c>=0){
         data.resize(c);
@@ -86,28 +86,28 @@ void V::resize(const Number &pos){
     }
 }
 
-void V::operator+=(V v){
-    Number max = min(this->length(), v.length());
+void Vector::operator+=(Vector v){
+    Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
 }
-void V::operator-=(V v){
-    Number max = min(this->length(), v.length());
+void Vector::operator-=(Vector v){
+    Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] -= v[j];}
 }
-void V::operator*=(Number n){
+void Vector::operator*=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
 }
-void V::operator/=(Number n){
+void Vector::operator/=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
 }
-void V::operator%=(Number n){
+void Vector::operator%=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
 }
 
-std::vector<Number>::iterator V::begin(){return data.begin();}
-std::vector<Number>::iterator V::end(){ return data.end();}
+std::vector<Number>::iterator Vector::begin(){return data.begin();}
+std::vector<Number>::iterator Vector::end(){ return data.end();}
 
-ostream& operator<<(ostream& stream, V v){
+std::ostream& operator<<(std::ostream& stream, Vector v){
     stream<<"[";
     for(int n=0; n<v.length(); n++){
         if(n!=0) stream<<", ";
@@ -117,32 +117,32 @@ ostream& operator<<(ostream& stream, V v){
     return stream;
 }
 
-istream& operator>>(istream& stream, V &v){
+std::istream& operator>>(std::istream& stream, Vector &v){
     for(int n=0; n<v.length(); n++){
-        cout<<"["<<n<<"]: ";
+        std::cout<<"["<<n<<"]: ";
         stream>>v[n];
     }
     return stream;
 }
 
 // Suma de vectores
-V operator+(V v1,V v2){
-    V result = v1;
+Vector operator+(Vector v1,Vector v2){
+    Vector result = v1;
     result += v2;
     return result;
 }
 
 // Resta de vectores
-V operator-(V v1,V v2){
-    V result = v1;
+Vector operator-(Vector v1,Vector v2){
+    Vector result = v1;
     result -= v2;
     return result;
 }
 
 // Producto escalar
-Number operator*(V v1,V v2){
+Number operator*(Vector v1,Vector v2){
     Number result = 0;
-    Number max = min(v1.length(), v2.length());
+    Number max = std::min(v1.length(), v2.length());
     for(int j=0; j<max; j++){
         result += v1[j]*v2[j];
     }
@@ -150,25 +150,25 @@ Number operator*(V v1,V v2){
 }
 
 // Producto entre vector y escalar
-V operator*(V v,const Number &n){
-    V result = v;
+Vector operator*(Vector v,const Number &n){
+    Vector result = v;
     result*=n;
     return result;
 }
-V operator*(const Number &n, V v){
+Vector operator*(const Number &n, Vector v){
     return v*n;
 }
 
 // Division entre vector y escalar
-V operator/(V v,const Number &n){
-    V result = v;
+Vector operator/(Vector v,const Number &n){
+    Vector result = v;
     result/=n;
     return result;
 }
 
 
 template<class T>
-void vToArray(V &v, T *array, int n, bool imaginary){
+void vectorToArray(Vector &v, T *array, int n, bool imaginary){
     int lenV = (int)v.length();
     if(!imaginary){
         if(lenV<n) n = lenV;
@@ -183,14 +183,14 @@ void vToArray(V &v, T *array, int n, bool imaginary){
         }
     }
 }
-template void vToArray(V&, int*     , int, bool);
-template void vToArray(V&, long int*, int, bool);
-template void vToArray(V&, float*   , int, bool);
-template void vToArray(V&, double*  , int, bool);
-template void vToArray(V&, Number*  , int, bool);
+template void vectorToArray(Vector&, int*     , int, bool);
+template void vectorToArray(Vector&, long int*, int, bool);
+template void vectorToArray(Vector&, float*   , int, bool);
+template void vectorToArray(Vector&, double*  , int, bool);
+template void vectorToArray(Vector&, Number*  , int, bool);
 
 template<class T>
-void arrayToV(T* array, V &v, int n, bool imaginary){
+void arrayToVector(T* array, Vector &v, int n, bool imaginary){
     v.resize(0);
     if(!imaginary){
         for(int j=0; j<n; j++){
@@ -203,8 +203,8 @@ void arrayToV(T* array, V &v, int n, bool imaginary){
     }
 }
 
-template void arrayToV(int*,      V&, int, bool);
-template void arrayToV(long int*, V&, int, bool);
-template void arrayToV(float*,    V&, int, bool);
-template void arrayToV(double*,   V&, int, bool);
-template void arrayToV(Number*,   V&, int, bool);
+template void arrayToVector(int*,      Vector&, int, bool);
+template void arrayToVector(long int*, Vector&, int, bool);
+template void arrayToVector(float*,    Vector&, int, bool);
+template void arrayToVector(double*,   Vector&, int, bool);
+template void arrayToVector(Number*,   Vector&, int, bool);

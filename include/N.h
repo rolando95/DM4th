@@ -4,8 +4,6 @@
 #include <iostream>
 #include "constants.h"
 
-using namespace std;
-
 class Number{
 public:
     static int precision;
@@ -70,10 +68,10 @@ Number operator""i(unsigned long long int);
 Number operator-(Number);
 
 // Impresion en pantalla de numeros complejos
-ostream& operator<<(ostream&, Number);
+std::ostream& operator<<(std::ostream&, Number);
 
 // Lectura en pantalla de numeros complejos
-istream& operator>>(istream&, Number&);
+std::istream& operator>>(std::istream&, Number&);
 
 // Suma de numeros complejos
 Number operator+(const Number&,const Number&);

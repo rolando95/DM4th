@@ -1,2 +1,2 @@
 #include "data.h"
-void print(){cout<<endl;}
+void print(){std::cout<<std::endl;}
