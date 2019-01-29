@@ -5,7 +5,7 @@ V::V(const V &v){
     *this = v;
 }
 
-N& V::operator[](N n){
+Number& V::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
     if(pos>=this->count) resize(pos+1);
@@ -19,7 +19,7 @@ const V V::operator[](V v)const {
     return result;
 }
 
-N V::append(const N &n, const N position){
+Number V::append(const Number &n, const Number position){
     int pos = position.r;
     if(pos<0 || pos>=this->count) {data.push_back(n);count++;}
     else {
@@ -29,7 +29,7 @@ N V::append(const N &n, const N position){
     return n;
 }
 
-V V::append(const V& v, const N position){
+V V::append(const V& v, const Number position){
     if(v.count > 0){
         int pos = position.r;
         if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
@@ -41,8 +41,8 @@ V V::append(const V& v, const N position){
     return v;
 }
 
-N V::pop(const N position){
-    N value;
+Number V::pop(const Number position){
+    Number value;
     int pos = position.r;
     if(this->count > 0){
         if(pos>=this->count) {
@@ -58,11 +58,11 @@ N V::pop(const N position){
     return value;
 }
 
-N V::length() const{
+Number V::length() const{
     return this->count;
 }
 
-V V::find(const N &value){
+V V::find(const Number &value){
     V result;
     for(int j=0; j<count; j++){
         if(value==this->data[j]) result.append(j);
@@ -78,7 +78,7 @@ V V::find(V value){
     return result;
 }
 
-void V::resize(const N &pos){
+void V::resize(const Number &pos){
     int c = int(pos.r);
     if(c>=0){
         data.resize(c);
@@ -87,25 +87,25 @@ void V::resize(const N &pos){
 }
 
 void V::operator+=(V v){
-    N max = min(this->length(), v.length());
+    Number max = min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
 }
 void V::operator-=(V v){
-    N max = min(this->length(), v.length());
+    Number max = min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] -= v[j];}
 }
-void V::operator*=(N n){
+void V::operator*=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
 }
-void V::operator/=(N n){
+void V::operator/=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
 }
-void V::operator%=(N n){
+void V::operator%=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
 }
 
-std::vector<N>::iterator V::begin(){return data.begin();}
-std::vector<N>::iterator V::end(){ return data.end();}
+std::vector<Number>::iterator V::begin(){return data.begin();}
+std::vector<Number>::iterator V::end(){ return data.end();}
 
 ostream& operator<<(ostream& stream, V v){
     stream<<"[";
@@ -140,9 +140,9 @@ V operator-(V v1,V v2){
 }
 
 // Producto escalar
-N operator*(V v1,V v2){
-    N result = 0;
-    N max = min(v1.length(), v2.length());
+Number operator*(V v1,V v2){
+    Number result = 0;
+    Number max = min(v1.length(), v2.length());
     for(int j=0; j<max; j++){
         result += v1[j]*v2[j];
     }
@@ -150,17 +150,17 @@ N operator*(V v1,V v2){
 }
 
 // Producto entre vector y escalar
-V operator*(V v,const N &n){
+V operator*(V v,const Number &n){
     V result = v;
     result*=n;
     return result;
 }
-V operator*(const N &n, V v){
+V operator*(const Number &n, V v){
     return v*n;
 }
 
 // Division entre vector y escalar
-V operator/(V v,const N &n){
+V operator/(V v,const Number &n){
     V result = v;
     result/=n;
     return result;
@@ -187,7 +187,7 @@ template void vToArray(V&, int*     , int, bool);
 template void vToArray(V&, long int*, int, bool);
 template void vToArray(V&, float*   , int, bool);
 template void vToArray(V&, double*  , int, bool);
-template void vToArray(V&, N*       , int, bool);
+template void vToArray(V&, Number*  , int, bool);
 
 template<class T>
 void arrayToV(T* array, V &v, int n, bool imaginary){
@@ -207,4 +207,4 @@ template void arrayToV(int*,      V&, int, bool);
 template void arrayToV(long int*, V&, int, bool);
 template void arrayToV(float*,    V&, int, bool);
 template void arrayToV(double*,   V&, int, bool);
-template void arrayToV(N*,        V&, int, bool);
+template void arrayToV(Number*,   V&, int, bool);

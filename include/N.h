@@ -1,18 +1,18 @@
-#ifndef __N_H__
-#define __N_H__
+#ifndef __NUMBER_H__
+#define __NUMBER_H__
 
 #include <iostream>
 #include "constants.h"
 
 using namespace std;
 
-class N{
+class Number{
 public:
     static int precision;
     double r, i;
 
-    N(const double=0,const double=0);
-    N(const N&);
+    Number(const double=0,const double=0);
+    Number(const Number&);
 
     // get set parte real
     double real();
@@ -29,118 +29,117 @@ public:
     explicit operator T(){return (T)this->r;}
 
     // Incremento prefijo
-    N operator ++();
+    Number operator ++();
     // Incremento postfijo
-    N operator++(int);
+    Number operator++(int);
     // Decremento prefijo
-    N operator --();
+    Number operator --();
     // Decremento postfijo
-    N operator --(int);
+    Number operator --(int);
     // Asignacion aditiva
-    void operator+=(N);
+    void operator+=(Number);
     // Asignacion sustractiva
-    void operator-=(N);
+    void operator-=(Number);
     // Asignacion multiplicativa
-    void operator*=(N);
+    void operator*=(Number);
     // Asignacion divisiva
-    void operator/=(N);
+    void operator/=(Number);
     // Residuo
-    void operator%=(N);
+    void operator%=(Number);
 
 };
 
 // Define como constante el valor de i
-static const N i(0,1);
-static const N _i(0,1);
+static const Number i(0,1);
+static const Number _i(0,1);
 
 
 // Conversion de expresion literal <double>i a tipo numero
-N operator""_i(long double);
+Number operator""_i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-N operator""_i(unsigned long long int);
+Number operator""_i(unsigned long long int);
 
 // Conversion de expresion literal <double>i a tipo numero
-N operator""i(long double);
+Number operator""i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-N operator""i(unsigned long long int);
+Number operator""i(unsigned long long int);
 
 // Cambio a signo negativo
-N operator-(N);
+Number operator-(Number);
 
 // Impresion en pantalla de numeros complejos
-ostream& operator<<(ostream&, N);
+ostream& operator<<(ostream&, Number);
 
 // Lectura en pantalla de numeros complejos
-istream& operator>>(istream&, N&);
+istream& operator>>(istream&, Number&);
 
 // Suma de numeros complejos
-N operator+(const N&,const N&);
+Number operator+(const Number&,const Number&);
 
 // Resta de numeros complejos
-N operator-(const N&,const N&);
+Number operator-(const Number&,const Number&);
 
 // Multiplicacion de numeros complejos
-N operator*(const N&,const N&);
+Number operator*(const Number&,const Number&);
 
 // Division de numeros complejos
-N operator/(const N&,const N&);
+Number operator/(const Number&,const Number&);
 
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
-N operator%(const N&,const N&);
+Number operator%(const Number&,const Number&);
 
 // Relacional
-bool operator==(const N&, const N&);
-bool operator!=(const N&, const N&);
-bool operator>=(const N&, const N&);
-bool operator<=(const N&, const N&);
-bool operator>(const N&, const N&);
-bool operator<(const N&, const N&);
+bool operator==(const Number&, const Number&);
+bool operator!=(const Number&, const Number&);
+bool operator>=(const Number&, const Number&);
+bool operator<=(const Number&, const Number&);
+bool operator>(const Number&, const Number&);
+bool operator<(const Number&, const Number&);
 
 // Math
-N rad(const N&);
-N deg(const N&);
+Number rad(const Number&);
+Number deg(const Number&);
 
-N round(const N&, int p=0);
+Number round(const Number&, int p=0);
 
-N abs(const N&);
-N norm(const N&);
-N arg(const N&);
-N conjugate(const N&);
+Number abs(const Number&);
+Number norm(const Number&);
+Number arg(const Number&);
+Number conjugate(const Number&);
 
-N pow2(N,N);
-N pow(const N&,const N&);
-N sqrt(const N&);
-N ln(const N&);
+Number pow(const Number&,const Number&);
+Number sqrt(const Number&);
+Number ln(const Number&);
 //logs(N, base)
-N log(const N&, const N &base=e);
+Number log(const Number&, const Number &base=e);
 
-N sin(const N&);
-N cos(const N&);
-N tan(const N&);
-N cot(const N&);
-N sec(const N&);
-N csc(const N&);
+Number sin(const Number&);
+Number cos(const Number&);
+Number tan(const Number&);
+Number cot(const Number&);
+Number sec(const Number&);
+Number csc(const Number&);
 
-N asin(const N&);
-N acos(const N&);
-N atan(const N&);
-N acot(const N&);
-N asec(const N&);
-N acsc(const N&);
+Number asin(const Number&);
+Number acos(const Number&);
+Number atan(const Number&);
+Number acot(const Number&);
+Number asec(const Number&);
+Number acsc(const Number&);
 
-N sinh(const N&);
-N cosh(const N&);
-N tanh(const N&);
-N coth(const N&);
-N sech(const N&);
-N csch(const N&);
+Number sinh(const Number&);
+Number cosh(const Number&);
+Number tanh(const Number&);
+Number coth(const Number&);
+Number sech(const Number&);
+Number csch(const Number&);
 
-N asinh(const N&);
-N acosh(const N&);
-N atanh(const N&);
-N acoth(const N&);
-N asech(const N&);
-N acsch(const N&);
+Number asinh(const Number&);
+Number acosh(const Number&);
+Number atanh(const Number&);
+Number acoth(const Number&);
+Number asech(const Number&);
+Number acsch(const Number&);
 #endif

@@ -1,8 +1,8 @@
 #include "analysis.h"
 
-N maximum(const N a){return a;}
-N maximum(V v){
-    N value = -INF;
+Number maximum(const Number a){return a;}
+Number maximum(V v){
+    Number value = -INF;
     if(v.length()>0){
         value = v[0];
         for(int j=1; j<v.length(); j++){
@@ -11,9 +11,9 @@ N maximum(V v){
     }
     return value;
 }
-N minimum(const N a){return a;}
-N minimum(V v){
-    N value = INF;
+Number minimum(const Number a){return a;}
+Number minimum(V v){
+    Number value = INF;
     if(v.length()>0){
         value = v[0];
         for(int j=1; j<v.length(); j++){
@@ -22,72 +22,72 @@ N minimum(V v){
     }
     return value;
 }
-V zeros(const N &n){
+V zeros(const Number &n){
     V z; z.resize(n);
     return z;
 }
 
-V ones(const N &n){
+V ones(const Number &n){
     V o;
     for(int j=0; j<n; j++) o.append(1);
     return o;
 }
 
-V range(const N &begin, const N &end, N value){
+V range(const Number &begin, const Number &end, Number value){
     V v;
     if(value>0 && end>begin){
-        for(N j=begin; j<=end; j+=value){
+        for(Number j=begin; j<=end; j+=value){
             v.append(j);
         }
     }else if(value<0 && begin>end){
-        for(N j=begin; j>=end; j+=value){
+        for(Number j=begin; j>=end; j+=value){
             v.append(j);
         }
     }
     return v;
 }
-V range(V v, const N &begin, const N &end, N value){
+V range(V v, const Number &begin, const Number &end, Number value){
     V result;
     if(value>0 && end>begin){
-        for(N j=begin; j<=end; j+=value){
+        for(Number j=begin; j<=end; j+=value){
             result.append(v[j]);
         }
     }else if(value<0 && begin>end){
-        for(N j=begin; j>=end; j+=value){
+        for(Number j=begin; j>=end; j+=value){
             result.append(v[j]);
         }
     }
     return result;
 }
-V range(function f, const N &begin, const N &end, N value){
+V range(function f, const Number &begin, const Number &end, Number value){
         V result;
     if(value>0 && end>begin){
-        for(N j=begin; j<=end; j+=value){
+        for(Number j=begin; j<=end; j+=value){
             result.append(f(j));
         }
     }else if(value<0 && begin>end){
-        for(N j=begin; j>=end; j+=value){
+        for(Number j=begin; j>=end; j+=value){
             result.append(f(j));
         }
     }
     return result;
 }
 
-N exp(N x){
+Number exp(Number x){
     return pow(e,x);
 }
 
 /*
-N zeta(N s, N tolerance){
+Number zeta(Number s, Number tolerance){
 }*/
-N PI(N z, N tolerance){
+Number PI(Number z, Number tolerance){
     return gamma(z+1,tolerance);
 }
 // From Wikipedia https://es.wikipedia.org/wiki/Aproximaci%C3%B3n_de_Lanczos
-N gamma(N z, N tolerance){
-    N result;
-    N x;
-    N t;
+Number gamma(Number z, Number tolerance){
+    Number result;
+    Number x;
+    Number t;
     V p(676.5203681218851,  
         -1259.1392167224028,  
         771.32342877765313,
@@ -102,7 +102,7 @@ N gamma(N z, N tolerance){
     else{
         z -= 1;
         x = 0.99999999999980993;
-        for(N j=0; j<p.length(); j++){
+        for(Number j=0; j<p.length(); j++){
             x += p[j]/(z+j+1);
         }
         t = z + p.length() - 0.5;
@@ -114,8 +114,8 @@ N gamma(N z, N tolerance){
     }
     return result;
 }
-N factorial(const N &n){
-    N x = 1;
+Number factorial(const Number &n){
+    Number x = 1;
     if(floor(n.r)==n && n>=0){ // Es numero entero positivo 
         for(auto i=1; i<=n; i++){
             x *= i;
@@ -125,59 +125,59 @@ N factorial(const N &n){
     }
     return x;
 }
-N sumatory(function f, V v, const N interval){
-    N x=0;
-    for(N j=0; j>=0 && j<v.length(); j+=interval){
+Number sumatory(function f, V v, const Number interval){
+    Number x=0;
+    for(Number j=0; j>=0 && j<v.length(); j+=interval){
         x += f(v[j]);
     }
     return x;
 }
-N sumatory(function f, const N &begin, const N &end, const N interval){
-    N x=0;
-    for(N j=begin; j>=begin && j<=end; j+=interval){
+Number sumatory(function f, const Number &begin, const Number &end, const Number interval){
+    Number x=0;
+    for(Number j=begin; j>=begin && j<=end; j+=interval){
         x += f(j);
     }
     return x;
 }
-N sumatory(V v, N begin, N end, N interval){
-    N x=0;
+Number sumatory(V v, Number begin, Number end, Number interval){
+    Number x=0;
     if(v.length()>0){
         if(begin<0) begin = 0;
         if(end<0 || end>v.length()) end = v.length();
-        for(N j=begin; j>=begin && j<end; j+= interval){
+        for(Number j=begin; j>=begin && j<end; j+= interval){
             x += v[j];
         }
     }
     return x;
 }
-N product(function f, V v, const N interval){
-    N x=1;
-    for(N j=0; j>=0 && j<v.length(); j+=interval){
+Number product(function f, V v, const Number interval){
+    Number x=1;
+    for(Number j=0; j>=0 && j<v.length(); j+=interval){
         x *= f(v[j]);
     }
     return x;
 }
-N product(function f, const N &begin, const N &end, const N interval){
-    N x=1;
-    for(N j=begin; j>=begin && j<=end; j+=interval){
+Number product(function f, const Number &begin, const Number &end, const Number interval){
+    Number x=1;
+    for(Number j=begin; j>=begin && j<=end; j+=interval){
         x *= f(j);
     }
     return x;
 }
-N product(V v, N begin, N end, N interval){
-    N x=1;
+Number product(V v, Number begin, Number end, Number interval){
+    Number x=1;
     if(v.length()>0){
         if(begin<0) begin = 0;
         if(end<0 || end>v.length()) end = v.length();
-        for(N j=begin; j>=begin && j<end; j+= interval){
+        for(Number j=begin; j>=begin && j<end; j+= interval){
             x *= v[j];
         }
     }
     return x;
 }
 // Derivative
-N derivative(function f, const N &x0, const N order, const N h){
-    N o(abs(floor(order.r)));
+Number derivative(function f, const Number &x0, const Number order, const Number h){
+    Number o(abs(floor(order.r)));
     if(order<=0){
         return f(x0);
     }else if(order==1){
@@ -188,7 +188,7 @@ N derivative(function f, const N &x0, const N order, const N h){
         return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
-V diff(V v, N iter){
+V diff(V v, Number iter){
     if(iter<=0) return v;
     else{
         V diffV;
@@ -203,12 +203,12 @@ V diff(V v, N iter){
     }
 }
 // Integral
-N integral(function f, const N &a, const N &b, const N subintervals){
-    N n = int(round(subintervals).r)/3*3;
-    N h = (b-a)/n;
+Number integral(function f, const Number &a, const Number &b, const Number subintervals){
+    Number n = int(round(subintervals).r)/3*3;
+    Number h = (b-a)/n;
     
-    N s=0;
-    for(N i=0; i<n; i++){
+    Number s=0;
+    for(Number i=0; i<n; i++){
         s+=f(a+h*(i+0.5));
     }
     return s*h;
@@ -233,17 +233,17 @@ N integral(function f, const N &a, const N &b, const N subintervals){
     */
 }
 // cuadratica
-V quadratic(const N &a, const N &b, const N &c){
+V quadratic(const Number &a, const Number &b, const Number &c){
     V roots;
-    N square = sqrt(b*b - 4*a*c);
+    Number square = sqrt(b*b - 4*a*c);
     roots.append((-b+square)/(2*a));
     roots.append((-b-square)/(2*a));
     return roots;
 }
 // Aproximaciones de raices
-N newtonRaphson(function f, N x1, N maxIter, N tolerance){
+Number newtonRaphson(function f, Number x1, Number maxIter, Number tolerance){
     x1 = x1.r;
-    N y1 = (x1.i==0)? 1.00i : x1.i;
+    Number y1 = (x1.i==0)? 1.00i : x1.i;
     
     for(int n=0; n<maxIter.r && abs(f(x1))>tolerance; n++){
         x1 = x1 - f(x1)/derivative(f,x1);
@@ -257,9 +257,9 @@ N newtonRaphson(function f, N x1, N maxIter, N tolerance){
     }
     return x1;
 }
-N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
+Number newtonRaphson(function f, function fd, Number x1, Number maxIter, Number tolerance){
     x1 = x1.r;
-    N y1 = (x1.i==0)? 1.00i : x1.i;
+    Number y1 = (x1.i==0)? 1.00i : x1.i;
     
     for(int n=0; n<maxIter.r && abs(f(x1))>tolerance; n++){
         x1 = x1 - f(x1)/fd(x1);
@@ -273,13 +273,13 @@ N newtonRaphson(function f, function fd, N x1, N maxIter, N tolerance){
     }
     return x1;
 }
-N secantMethod(function f, N x0, N x1, N maxIter, N tolerance){
+Number secantMethod(function f, Number x0, Number x1, Number maxIter, Number tolerance){
     x0 = x0.r; x1 = x1.r;
-    N x2;
+    Number x2;
 
-    N y0 = x0.i==0? 1.00i : x0.i;
-    N y1 = x1.i==0? 1.01i : x1.i;
-    N y2;
+    Number y0 = x0.i==0? 1.00i : x0.i;
+    Number y1 = x1.i==0? 1.01i : x1.i;
+    Number y2;
 
     for(int n=0; n<maxIter && abs(f(x1))>tolerance; n++){
         x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));
@@ -296,13 +296,13 @@ N secantMethod(function f, N x0, N x1, N maxIter, N tolerance){
     }
     return x2;
 }
-V bairstowsMethod(V v,N r,N s, N maxIter, N tolerance){
+V bairstowsMethod(V v, Number r, Number s, Number maxIter, Number tolerance){
 
     // Conserva los valores semilla iniciales para futuras iteraciones
-    N ra = r; 
-    N sa = s;
+    Number ra = r; 
+    Number sa = s;
     V roots;
-    N degree = v.length()-1;
+    Number degree = v.length()-1;
     
     if(degree==1) roots = V(-v[1]/v[0]); // Polinomio de grado 1
     else if(degree==2) roots = quadratic(v[0],v[1],v[2]); // Polinomio de grado 2
@@ -311,8 +311,8 @@ V bairstowsMethod(V v,N r,N s, N maxIter, N tolerance){
         // 
         V b; b.resize(v.length());
         V c; c.resize(v.length()-1);
-        N errorR, errorS;
-        N dr, ds;
+        Number errorR, errorS;
+        Number dr, ds;
 
         // Empieza el ciclo para calcular las nuevas raices
         for(int k=0; k<maxIter; k++){

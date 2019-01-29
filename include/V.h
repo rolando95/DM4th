@@ -7,7 +7,7 @@
 
 class V{
     int count = 0;
-    std::vector<N> data;
+    std::vector<Number> data;
 public:
     // Inicializacion sin valores
     V();
@@ -15,38 +15,38 @@ public:
     V(const V&);
     // Inicializacion con un numero indefinido de elementos en el constructor
     template<class ... T>
-    V(const N& first,T... args){    
+    V(const Number& first,T... args){    
         append(first);
         append(V(args...));
     }
 
-    N& operator[](N);
+    Number& operator[](Number);
     const V operator[](V) const;
     /* 
      Adjunta un numero en el vector
-     vector.append(N)           <- Adjunta el valor N al final del vector
+     vector.append(Number)           <- Adjunta el valor N al final del vector
      vector.append(N, position) <- Adjunta el valor N en la posicion dada dentro del vector
     */
-    N append(const N&,N=-1);
+    Number append(const Number&,Number=-1);
     /* 
      Adjunta un vector
      vector.append(V)           <- Adjunta el valor V al final del vector
      vector.append(V, position) <- Adjunta el valor V en la posicion dada dentro del vector
     */
-    V append(const V&,N=-1);
+    V append(const V&,Number=-1);
     /* 
      Elimina un elemento del vector
      vector.pop()         <- Elimina el ultimo elemento del vector
      vector.pop(position) <- Elimina el elemento del vector de la posicion dada
     */
-    N pop(const N=-1);
+    Number pop(const Number=-1);
     // Obtiene el numero de elementos que contiene el vector
-    N length() const;
+    Number length() const;
     /*
      Busca la posicion de los elementos en el vector que coincidan con el valor de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
     */
-    V find(const N&);
+    V find(const Number&);
     /*
      Busca la posicion de los elementos en el vector que coincidan con alguno de los valores del vector de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
@@ -56,22 +56,22 @@ public:
      Reescala el vector con el numero de elementos dados.
      Definir un tamanio mayor al actual rellenara de ceros automaticamente, uno menor eliminara los ultimos elementos.
     */
-    void resize(const N&);
+    void resize(const Number&);
 
     // Asignacion aditiva
     void operator+=(V);
     // Asignacion sustractiva
     void operator-=(V);
     // Asignacion multiplicativa
-    void operator*=(N);
+    void operator*=(Number);
     // Asignacion divisiva
-    void operator/=(N);
+    void operator/=(Number);
     // Residuo
-    void operator%=(N);
+    void operator%=(Number);
 
     // inicio y final de vector (De utilidad para for each de c++)
-    std::vector<N>::iterator begin();
-    std::vector<N>::iterator end();
+    std::vector<Number>::iterator begin();
+    std::vector<Number>::iterator end();
 };
 
 // Impresion en pantalla de vector
@@ -88,13 +88,13 @@ V operator+(V,V);
 V operator-(V,V);
 
 // Producto escalar
-N operator*(V,V);
+Number operator*(V,V);
 
 // Producto entre vector y escalar
-V operator*(V,const N&);
-V operator*(const N&,V);
+V operator*(V,const Number&);
+V operator*(const Number&,V);
 // Division entre vector y escalar
-V operator/(V,const N&);
+V operator/(V,const Number&);
 
 
 
