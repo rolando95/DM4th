@@ -3,8 +3,9 @@
 
 #include "N.h"
 #include "V.h"
-#define max maximum
-#define min minimum
+
+//#define max maximum
+//#define min minimum
 
 typedef Number (* Function)(Number x);
 
@@ -13,7 +14,7 @@ Number maximum(Vector);
 template<class ... T>
 // get maximum value of list
 Number maximum(const Number a, const T ... b){
-    Number value = max(b...);
+    Number value = maximum(b...);
     return a>value?a:value;
 }
 
@@ -22,7 +23,7 @@ Number minimum(Vector);
 template<class ... T>
 // get minimum value of list
 Number minimum(const Number a, const T ... b){
-    Number value = max(b...);
+    Number value = minimum(b...);
     return a<value?a:value;
 }
 

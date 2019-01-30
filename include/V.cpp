@@ -24,7 +24,7 @@ Number Vector::append(const Number &n, const Number position){
     if(pos<0 || pos>=this->count) {data.push_back(n);count++;}
     else {
         data.insert(data.begin() + pos,n);
-        count++;
+        count=count+1;
     }
     return n;
 }
