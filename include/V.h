@@ -4,7 +4,6 @@
 #include "N.h"
 #include <vector>
 
-
 class Vector{
     int count = 0;
     std::vector<Number> data;

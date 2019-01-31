@@ -26,6 +26,23 @@ Number::operator=(double a){
     return 0;
 }
 
+Number::operator=(std::string str){
+    *this = strToNumber(str);
+}
+
+Number::operator char*(){
+    std::string str = (string)*this;
+    char *cstr = new char[str.length()+1];
+    sprintf(cstr,"%s",str.c_str());
+    return cstr;
+}
+Number::operator std::string(){
+    std::ostringstream strs;
+    strs << *this;
+    std::string str = strs.str();
+    return str;
+}
+
 // Incremento prefijo
 Number Number::operator ++(){
     this->r += 1;
@@ -63,6 +80,14 @@ void Number::operator/=(Number n){
 void Number::operator%=(Number n){
     *this = *this % n;
 }
+
+Number strToNumber(std::string str){
+    Number result;
+    stringstream ss(str);
+    ss>>result;
+    return result;
+}
+
 Number operator""_i(long double a){
     return Number(0,a);
 }

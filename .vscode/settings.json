@@ -56,6 +56,7 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "cstdarg": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "list": "cpp"
     }
 }

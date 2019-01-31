@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "constants.h"
+#include <sstream>
 
 class Number{
 public:
@@ -23,8 +24,12 @@ public:
     // Asignacion de un valor numerico
     operator=(double);
 
+    operator=(std::string);
+
     template<class T>
     explicit operator T(){return (T)this->r;}
+    explicit operator char *();
+    explicit operator std::string();
 
     // Incremento prefijo
     Number operator ++();
@@ -44,13 +49,14 @@ public:
     void operator/=(Number);
     // Residuo
     void operator%=(Number);
-
 };
 
 // Define como constante el valor de i
 static const Number i(0,1);
 static const Number _i(0,1);
 
+// Convert string to Number
+Number strToNumber(std::string);
 
 // Conversion de expresion literal <double>i a tipo numero
 Number operator""_i(long double);
