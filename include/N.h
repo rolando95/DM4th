@@ -22,9 +22,7 @@ public:
     double imag(double);
     
     // Asignacion de un valor numerico
-    operator=(double);
-
-    operator=(std::string);
+    Number operator=(double);
 
     template<class T>
     explicit operator T(){return (T)this->r;}
@@ -40,15 +38,15 @@ public:
     // Decremento postfijo
     Number operator --(int);
     // Asignacion aditiva
-    void operator+=(Number);
+    Number operator+=(Number);
     // Asignacion sustractiva
-    void operator-=(Number);
+    Number operator-=(Number);
     // Asignacion multiplicativa
-    void operator*=(Number);
+    Number operator*=(Number);
     // Asignacion divisiva
-    void operator/=(Number);
+    Number operator/=(Number);
     // Residuo
-    void operator%=(Number);
+    Number operator%=(Number);
 };
 
 // Define como constante el valor de i

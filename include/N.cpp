@@ -20,14 +20,10 @@ double Number::real(double a){this->r = a; return this->r;}
 double Number::imag(){return this->i;}
 double Number::imag(double a){this->i = a; return this->i;}
 
-Number::operator=(double a){
+Number Number::operator=(double a){
     this->r = a;
     this->i = 0;
-    return 0;
-}
-
-Number::operator=(std::string str){
-    *this = strToNumber(str);
+    return *this;
 }
 
 Number::operator char*(){
@@ -65,20 +61,25 @@ Number Number::operator --(int){
     this->r -= 1;
     return a;
 }
-void Number::operator+=(Number n){
+Number Number::operator+=(Number n){
     *this = *this + n;
+    return *this;
 }
-void Number::operator-=(Number n){
+Number Number::operator-=(Number n){
     *this = *this - n;
+    return *this;
 }
-void Number::operator*=(Number n){
+Number Number::operator*=(Number n){
     *this = *this * n;
+    return *this;
 }
-void Number::operator/=(Number n){
+Number Number::operator/=(Number n){
     *this = *this / n;
+    return *this;
 }
-void Number::operator%=(Number n){
+Number Number::operator%=(Number n){
     *this = *this % n;
+    return *this;
 }
 
 Number strToNumber(std::string str){

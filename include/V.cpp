@@ -103,22 +103,27 @@ void Vector::swap(Number p1, Number p2, Number c){
     }
 }
 
-void Vector::operator+=(Vector v){
+Vector Vector::operator+=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
+    return *this;
 }
-void Vector::operator-=(Vector v){
+Vector Vector::operator-=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] -= v[j];}
+    return *this;
 }
-void Vector::operator*=(Number n){
+Vector Vector::operator*=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
+    return *this;
 }
-void Vector::operator/=(Number n){
+Vector Vector::operator/=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
+    return *this;
 }
-void Vector::operator%=(Number n){
+Vector Vector::operator%=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
+    return *this;
 }
 
 std::vector<Number>::iterator Vector::begin(){return data.begin();}

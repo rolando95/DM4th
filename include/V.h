@@ -62,15 +62,15 @@ public:
     void swap(Number, Number, Number=1);
 
     // Asignacion aditiva
-    void operator+=(Vector);
+    Vector operator+=(Vector);
     // Asignacion sustractiva
-    void operator-=(Vector);
+    Vector operator-=(Vector);
     // Asignacion multiplicativa
-    void operator*=(Number);
+    Vector operator*=(Number);
     // Asignacion divisiva
-    void operator/=(Number);
+    Vector operator/=(Number);
     // Residuo
-    void operator%=(Number);
+    Vector operator%=(Number);
 
     // inicio y final de vector (De utilidad para for each de c++)
     std::vector<Number>::iterator begin();
