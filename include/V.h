@@ -45,17 +45,21 @@ public:
      Busca la posicion de los elementos en el vector que coincidan con el valor de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
     */
-    Vector find(const Number&);
+    Vector index(const Number&);
     /*
      Busca la posicion de los elementos en el vector que coincidan con alguno de los valores del vector de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
     */
-    Vector find(Vector);
+    Vector index(Vector);
     /* 
      Reescala el vector con el numero de elementos dados.
      Definir un tamanio mayor al actual rellenara de ceros automaticamente, uno menor eliminara los ultimos elementos.
     */
     void resize(const Number&);
+    /*
+     Intercambia 2 elementos del vector
+    */
+    void swap(Number, Number, Number=1);
 
     // Asignacion aditiva
     void operator+=(Vector);

@@ -63,7 +63,7 @@ Number Vector::length() const{
     return this->count;
 }
 
-Vector Vector::find(const Number &value){
+Vector Vector::index(const Number &value){
     Vector result;
     for(int j=0; j<count; j++){
         if(value==this->data[j]) result.append(j);
@@ -71,10 +71,10 @@ Vector Vector::find(const Number &value){
     return result;
 }
 
-Vector Vector::find(Vector value){
+Vector Vector::index(Vector value){
     Vector result;
     for(int j=0; j<value.count; j++){
-        result.append(find(value[j]));
+        result.append(index(value[j]));
     }
     return result;
 }
@@ -84,6 +84,22 @@ void Vector::resize(const Number &pos){
     if(c>=0){
         data.resize(c);
         count = c;
+    }
+}
+
+void Vector::swap(Number p1, Number p2, Number c){
+    int pos1 = (int)p1, pos2 = (int)p2, count = (int)c;
+    if(count <= 1){
+        Number tmp = this->data[pos1];
+        this->data[pos1] = this->data[pos2];
+        this->data[pos2] = tmp;
+    }else{
+        Vector tmp; tmp.resize(count);
+        for(int j=0; j<count; j++){
+            tmp[j] = this->data[pos1+j];
+            this->data[pos1+j] = this->data[pos2+j];
+            this->data[pos2+j] = tmp[j];
+        }
     }
 }
 
