@@ -9,6 +9,7 @@ Vector& Matrix::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
     //if(pos>= this->rows)  /* TODO resize */
+    if(this->data[pos].length() != cols) this->data[pos].resize(cols);
     return this->data[pos];
 }
 
