@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "N.h"
+#include "_Number.h"
 
 //Expresiones con numero de aurgumentos infinitos
 void print();

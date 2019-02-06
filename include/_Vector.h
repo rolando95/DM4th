@@ -1,7 +1,7 @@
-#ifndef __V_H__
-#define __V_H__
+#ifndef __VECTOR_H__
+#define __VECTOR_H__
 
-#include "N.h"
+#include "_Number.h"
 #include <vector>
 
 class Vector{
@@ -19,8 +19,10 @@ public:
         append(Vector(args...));
     }
 
+    // Acceso a elemento de vector
     Number& operator[](Number);
     const Vector operator[](Vector) const;
+
     /* 
      Adjunta un numero en el vector
      vector.append(Number)           <- Adjunta el valor N al final del vector
@@ -77,7 +79,7 @@ public:
     std::vector<Number>::iterator end();
 };
 
-// Impresion en pantalla de vector
+// Impresion en pantalla del vector
 std::ostream& operator<<(std::ostream&, Vector);
 
 

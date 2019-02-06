@@ -1,4 +1,4 @@
-#include "V.h"
+#include "_Vector.h"
 
 Vector::Vector(){}
 
@@ -9,7 +9,7 @@ Vector::Vector(const Vector &v){
 Number& Vector::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
-    if(pos>=this->count) resize(pos+1);
+    //if(pos>=this->count) resize(pos+1);
     return this->data[pos];
 }
 const Vector Vector::operator[](Vector v)const {

@@ -1,8 +1,8 @@
 #ifndef __ANALISIS_H__
 #define __ANALISIS_H__
 
-#include "N.h"
-#include "V.h"
+#include "_Number.h"
+#include "_Vector.h"
 
 //#define max maximum
 //#define min minimum

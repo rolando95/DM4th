@@ -36,11 +36,11 @@ Vector ones(const Number &n){
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;
     if(value>0 && end>begin){
-        for(Number j=begin; j<=end; j+=value){
+        for(Number j=begin; j<end; j+=value){
             v.append(j);
         }
     }else if(value<0 && begin>end){
-        for(Number j=begin; j>=end; j+=value){
+        for(Number j=begin; j>end; j+=value){
             v.append(j);
         }
     }
@@ -316,7 +316,7 @@ Vector bairstowsMethod(Vector v, Number r, Number s, Number maxIter, Number tole
 
         // Empieza el ciclo para calcular las nuevas raices
         for(int k=0; k<maxIter; k++){
-
+            
             // Calcula los coeficientes de b
             b[0] = v[0];
             b[1] = v[1] + b[0]*r;
