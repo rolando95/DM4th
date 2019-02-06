@@ -26,18 +26,73 @@ void Matrix::resize(const Number &posR,Number posC){
     }   
 }
 
-Number Matrix::lengthRows()const{
+Number Matrix::rowsLength()const{
     return this->rows;
 }
 
-Number Matrix::lengthCols()const{
+Number Matrix::colsLength()const{
     return this->cols;
 }
 
+Vector Matrix::appendRow(const Vector &v, Number position){
+    int pos = position.r;
+    if(pos<0 || pos>= this->rows) {
+        data.push_back(v); 
+        pos = rows;
+    }else{
+        data.insert(data.begin() + pos, v);
+    }
+    if(v.length()!=cols) data[pos].resize(cols);
+    rows++;
+    return v;
+}
+
+Vector Matrix::appendCol(const Vector &vec, Number position){
+    int pos = position.r;
+    Vector v = vec;
+    if(v.length() != cols) v.resize(cols);
+    for(int j=0; j<rows; j++){
+        data[j].append(v[j], pos);
+    }
+    cols++;
+    return vec;
+}
+
+Vector Matrix::popRow(const Number position){
+    Vector value;
+    int pos = position.r;
+    if(this->rows > 0){
+        if(pos>=this->rows) {
+            value = this->data[rows-1];
+            data.pop_back();
+        }else{
+            value = this->data[pos];
+            data.erase(data.begin()+pos);
+        }
+        rows-=1;
+    }
+    return value;
+}  
+
+Vector Matrix::popCol(const Number position){
+    Vector value;
+    int pos = position.r;
+    if(this->cols>0){
+        if(pos<0 || pos>=this->cols){
+            pos = cols-1;
+        }
+        value.resize(rows);
+        for(int j=0; j<rows; j++){
+            value[j] = data[j].pop(pos);
+        }
+        cols -= 1;
+    }
+    return value;
+}
 
 std::ostream& operator<<(std::ostream& stream, Matrix m){
     stream<<"[";
-    for(int n=0; n<m.lengthRows(); n++){
+    for(int n=0; n<m.rowsLength(); n++){
         if(n!=0) stream<<",\n ";
         stream<<m[n];
     }
@@ -46,8 +101,8 @@ std::ostream& operator<<(std::ostream& stream, Matrix m){
 }
 
 std::istream& operator>>(std::istream& stream, Matrix &m){
-    for(int j=0; j<m.lengthRows(); j++){
-        for(int k=0; k<m.lengthCols(); k++){
+    for(int j=0; j<m.rowsLength(); j++){
+        for(int k=0; k<m.colsLength(); k++){
             std::cout<<"["<<j<<"]["<<k<<"]: ";
             stream>>m[j][k];
         }

@@ -22,11 +22,11 @@ const Vector Vector::operator[](Vector v)const {
 
 Number Vector::append(const Number &n, const Number position){
     int pos = position.r;
-    if(pos<0 || pos>=this->count) {data.push_back(n);count++;}
+    if(pos<0 || pos>=this->count) {data.push_back(n);}
     else {
         data.insert(data.begin() + pos,n);
-        count=count+1;
     }
+    count++;
     return n;
 }
 
@@ -46,9 +46,9 @@ Number Vector::pop(const Number position){
     Number value;
     int pos = position.r;
     if(this->count > 0){
-        if(pos>=this->count) {
+        if(pos<0 || pos>=this->count) {
             value = this->data[count-1];
-            data.pop_back();count--;
+            data.pop_back();
         }else{
             value = this->data[pos];
             data.erase(data.begin()+pos);

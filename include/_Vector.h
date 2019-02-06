@@ -25,14 +25,14 @@ public:
 
     /* 
      Adjunta un numero en el vector
-     vector.append(Number)           <- Adjunta el valor N al final del vector
-     vector.append(N, position) <- Adjunta el valor N en la posicion dada dentro del vector
+     vector.append(Number)           <- Adjunta el valor Number al final del Vector
+     vector.append(Number, position) <- Adjunta el valor Number en la posicion dada dentro del Vector
     */
     Number append(const Number&,Number=-1);
     /* 
      Adjunta un vector
-     vector.append(Vector)           <- Adjunta el valor V al final del vector
-     vector.append(Vector, position) <- Adjunta el valor V en la posicion dada dentro del vector
+     vector.append(Vector)           <- Adjunta el valor Vector al final del Vector
+     vector.append(Vector, position) <- Adjunta el valor Vector en la posicion dada dentro del Vector
     */
     Vector append(const Vector&,Number=-1);
     /* 
