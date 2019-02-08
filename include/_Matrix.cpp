@@ -42,7 +42,8 @@ Vector Matrix::appendRow(const Vector &v, Number position){
     }else{
         data.insert(data.begin() + pos, v);
     }
-    if(v.length()!=cols) data[pos].resize(cols);
+    if(v.length()!=cols && cols>0) data[pos].resize(cols);
+    if(cols==0) cols = (int)v.length();
     rows++;
     return v;
 }
@@ -50,7 +51,8 @@ Vector Matrix::appendRow(const Vector &v, Number position){
 Vector Matrix::appendCol(const Vector &vec, Number position){
     int pos = position.r;
     Vector v = vec;
-    if(v.length() != cols) v.resize(cols);
+    if(v.length() != cols && rows>0) v.resize(cols);
+    if(rows==0) rows = (int)v.length();
     for(int j=0; j<rows; j++){
         data[j].append(v[j], pos);
     }

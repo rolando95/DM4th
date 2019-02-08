@@ -108,19 +108,23 @@ Vector Vector::operator+=(Vector v){
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
     return *this;
 }
+
 Vector Vector::operator-=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] -= v[j];}
     return *this;
 }
+
 Vector Vector::operator*=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
     return *this;
 }
+
 Vector Vector::operator/=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
     return *this;
 }
+
 Vector Vector::operator%=(Number n){
     for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
     return *this;
@@ -177,6 +181,7 @@ Vector operator*(Vector v,const Number &n){
     result*=n;
     return result;
 }
+
 Vector operator*(const Number &n, Vector v){
     return v*n;
 }
