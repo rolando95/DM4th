@@ -100,8 +100,12 @@ Vector operator*(Vector,const Number&);
 Vector operator*(const Number&,Vector);
 // Division entre vector y escalar
 Vector operator/(Vector,const Number&);
+// Residuo
+Vector operator%(Vector,const Number&);
 
-
+Vector zeros(const Number&);
+//
+Vector ones(const Number&);
 
 template<class T>
 /* 

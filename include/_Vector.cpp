@@ -12,6 +12,7 @@ Number& Vector::operator[](Number n){
     //if(pos>=this->count) resize(pos+1);
     return this->data[pos];
 }
+
 const Vector Vector::operator[](Vector v)const {
     Vector result;
     for(int j=0; j<v.length(); j++){
@@ -192,7 +193,24 @@ Vector operator/(Vector v,const Number &n){
     result/=n;
     return result;
 }
+// Residuo
+Vector operator%(Vector v,const Number &n){
+    Vector result = v;
+    result%=n;
+    return result;
+}
 
+Vector zeros(const Number &n){
+    Vector z; z.resize(n);
+    return z;
+}
+
+Vector ones(const Number &n){
+    Vector o;
+    o.resize(n);
+    for(int j=0; j<n; j++) o[j] = 1;
+    return o;
+}
 
 template<class T>
 void vectorToArray(Vector &v, T *array, int n, bool imaginary){

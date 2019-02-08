@@ -22,16 +22,6 @@ Number minimum(Vector v){
     }
     return value;
 }
-Vector zeros(const Number &n){
-    Vector z; z.resize(n);
-    return z;
-}
-
-Vector ones(const Number &n){
-    Vector o;
-    for(int j=0; j<n; j++) o.append(1);
-    return o;
-}
 
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;

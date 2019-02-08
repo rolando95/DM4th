@@ -36,14 +36,19 @@ Number Matrix::colsLength()const{
 
 Vector Matrix::appendRow(const Vector &v, Number position){
     int pos = position.r;
+
+    // Insercion de vector en matriz
     if(pos<0 || pos>= this->rows) {
         data.push_back(v); 
         pos = rows;
     }else{
         data.insert(data.begin() + pos, v);
     }
-    if(v.length()!=cols && cols>0) data[pos].resize(cols);
+
+    // Reescala el numero de columnas si anteriormente era igual a 0
     if(cols==0) cols = (int)v.length();
+    // Verifica que el numero de elementos del vector insertado es igual al numero de columnas de la matriz
+    else if(v.length() != cols) data[pos].resize(cols);
     rows++;
     return v;
 }
@@ -51,8 +56,12 @@ Vector Matrix::appendRow(const Vector &v, Number position){
 Vector Matrix::appendCol(const Vector &vec, Number position){
     int pos = position.r;
     Vector v = vec;
-    if(v.length() != cols && rows>0) v.resize(cols);
+
+    // Reescala el numero de filas si anteriormente era igual a 0
     if(rows==0) rows = (int)v.length();
+    // Verifica que el numero de elementos del vector insertado es igual al numero de filas de la matriz
+    else if(v.length() != rows) v.resize(rows);
+    
     for(int j=0; j<rows; j++){
         data[j].append(v[j], pos);
     }
@@ -92,6 +101,81 @@ Vector Matrix::popCol(const Number position){
     return value;
 }
 
+Matrix Matrix::operator+=(Matrix m){
+    int maxj = (int)this->rowsLength();
+    int maxk = (int)this->colsLength();
+    for(int j=0; j<maxj; j++){
+        for(int k=0; k<maxj; k++){
+            this->data[j][k] += m[j][k];
+        }
+    }
+    return *this;
+}
+
+Matrix Matrix::operator-=(Matrix m){
+    int maxj = (int)this->rowsLength();
+    int maxk = (int)this->colsLength();
+    for(int j=0; j<maxj; j++){
+        for(int k=0; k<maxj; k++){
+            this->data[j][k] -= m[j][k];
+        }
+    }
+    return *this;
+}
+
+Matrix Matrix::operator*=(Matrix m){
+    int maxX = (int)this->rowsLength();
+    int maxY = (int)m.colsLength();
+    int maxZ = (int)m.rowsLength();
+    Matrix result = zeros(maxX,maxY);
+    for(int x=0; x<maxX; x++){
+        for(int y=0; y<maxY; y++){
+            for(int z=0;z<maxZ; z++){
+                result[x][y] += this->data[x][z] * m[z][y];
+            }
+        }
+    }
+    *this = result;
+    return *this;
+    
+}
+
+Matrix Matrix::operator*=(Number n){
+    int maxJ = (int)this->rowsLength();
+    int maxK = (int)this->colsLength();
+    for(int j=0; j<maxJ; j++){
+        for(int k=0; k<maxK; k++){
+            this->data[j][k] *= n;
+        }
+    }
+    return *this;
+}
+
+Matrix Matrix::operator/=(Number n){
+    int maxJ = (int)this->rowsLength();
+    int maxK = (int)this->colsLength();
+    for(int j=0; j<maxJ; j++){
+        for(int k=0; k<maxK; k++){
+            this->data[j][k] /= n;
+        }
+    }
+    return *this;
+}
+
+Matrix Matrix::operator%=(Number n){
+    int maxJ = (int)this->rowsLength();
+    int maxK = (int)this->colsLength();
+    for(int j=0; j<maxJ; j++){
+        for(int k=0; k<maxK; k++){
+            this->data[j][k] %= n;
+        }
+    }
+    return *this;
+}
+
+std::vector<Vector>::iterator Matrix::begin(){return data.begin();}
+std::vector<Vector>::iterator Matrix::end(){ return data.end();}
+
 std::ostream& operator<<(std::ostream& stream, Matrix m){
     stream<<"[";
     for(int n=0; n<m.rowsLength(); n++){
@@ -110,4 +194,76 @@ std::istream& operator>>(std::istream& stream, Matrix &m){
         }
     }
     return stream;
+}
+
+// Suma de Matrices
+Matrix operator+(Matrix m1,Matrix m2){
+    Matrix result = m1;
+    result += m2;
+    return result;
+}
+
+// Resta de Matrices
+Matrix operator-(Matrix m1,Matrix m2){
+    Matrix result = m1;
+    result -= m2;
+    return result;
+}
+
+// Multiplicacion de Matrices
+Matrix operator*(Matrix m1,Matrix m2){
+    Matrix result = m1;
+    result *= m2;
+    return result;
+}
+
+// Producto entre Matriz y escalar
+Matrix operator*(Matrix m,const Number &n){
+    Matrix result = m;
+    result*=n;
+    return result;
+}
+
+Matrix operator*(const Number &n, Matrix m){
+    Matrix result = m;
+    result*=n;
+    return result;
+}
+
+Matrix operator/(Matrix m,const Number &n){
+    Matrix result = m;
+    result/=n;
+    return result;
+}
+
+Matrix operator%(Matrix m,const Number &n){
+    Matrix result = m;
+    result%=n;
+    return result;
+}
+
+Matrix zeros(const Number &r, const Number &c){
+    Matrix result;
+    for(int j=0; j<r.r;j++){
+        result.appendRow(zeros(c));
+    }
+    return result;
+}
+
+Matrix ones(const Number &r, const Number &c){
+    Matrix o;
+    o.resize(r,c);
+    for(int j=0; j<r; j++) 
+        for(int k=0; k<c; k++) o[j][k] = 1;
+    return o;
+}
+
+Matrix identity(Number r, Number c){
+    Matrix result;
+    if(c<0) c = r;
+    for(int j=0; j<r.r;j++){
+        result.appendRow(zeros(c));
+        if(j<c) result[j][j] = 1;
+    }
+    return result;
 }

@@ -17,6 +17,7 @@ public:
     // Acceso a fila de matriz
     Vector& operator[](Number);
 
+    // Resize matrix resize(rows, cols)
     void resize(const Number&, Number=-1);
     
     Number rowsLength() const;
@@ -46,14 +47,61 @@ public:
      matrix.popCol(position) <- Elimina la columna de la matriz de la posicion dada
     */
     Vector popCol(const Number=-1);
+
+    // Asignacion aditiva
+    Matrix operator+=(Matrix);
+    // Asignacion sustractiva
+    Matrix operator-=(Matrix);
+    // Asignacion multiplicativa (por otra matriz)
+    Matrix operator*=(Matrix);
+    // Asignacion multiplicativa (por un escalar)
+    Matrix operator*=(Number);
+    // Asignacion divisiva (por un escalar)
+    Matrix operator/=(Number);
+    // Residuo
+    Matrix operator%=(Number);
+
+    // inicio y final de Matrix (De utilidad para for each de c++)
+    std::vector<Vector>::iterator begin();
+    std::vector<Vector>::iterator end();
 };
 
 // Impresion en pantalla de la Matriz
 std::ostream& operator<<(std::ostream&, Matrix);
 
-
-
 // Lectura en pantalla de la Matriz
 std::istream& operator>>(std::istream&, Matrix&);
 
+// Suma de Matrices
+Matrix operator+(Matrix,Matrix);
+// Resta de Matrices
+Matrix operator-(Matrix,Matrix);
+// Multiplicacion de Matrices
+Matrix operator*(Matrix,Matrix);
+// Producto entre Matriz y escalar
+Matrix operator*(Matrix,const Number&);
+Matrix operator*(const Number&,Matrix);
+// Division entre Matriz y escalar
+Matrix operator/(Matrix,const Number&);
+// Residuo
+Matrix operator%(Matrix,const Number&);
+
+/*
+ Devuelve una matriz de ceros con numero de filas y columnas dadas
+ zeros(2,2) ==> [[0,0]
+                 [0,0]]
+*/
+Matrix zeros(const Number&, const Number&);
+/*
+ Devuelve una matriz de unos con numero de filas y columnas dadas
+ ones(2,2) ==> [[1,1]
+                [1,1]]
+*/
+Matrix ones(const Number&, const Number&);
+/*
+ Devuelve la matriz identidad numero de filas y columnas dadas
+ identity(2) ==> [[1,0]
+                  [0,1]]
+*/
+Matrix identity(Number, Number c=-1);
 #endif

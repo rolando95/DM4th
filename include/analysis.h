@@ -3,6 +3,7 @@
 
 #include "_Number.h"
 #include "_Vector.h"
+#include "_Matrix.h"
 
 //#define max maximum
 //#define min minimum
@@ -27,10 +28,6 @@ Number minimum(const Number a, const T ... b){
     return a<value?a:value;
 }
 
-// 
-Vector zeros(const Number&);
-//
-Vector ones(const Number&);
 // range(begin, end, interval)
 Vector range(const Number&, const Number&, Number=1);
 // range(vector, pos begin, pos end, interval)
