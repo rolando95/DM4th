@@ -67,6 +67,17 @@ Number exp(Number x){
     return pow(e,x);
 }
 
+Vector polar(Number n){
+    Vector result; result.resize(2);
+    result[0] = sqrt(n.r*n.r+n.i*n.i);
+    if(n.r!=0){
+        result[1] = atan(n.i/n.r);
+    }else{
+        if(n.i>0) result[1] = pi/2;
+        else result[1] = 3*pi/2;
+    }
+    return result;
+}
 /*
 Number zeta(Number s, Number tolerance){
 }*/

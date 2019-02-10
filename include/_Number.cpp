@@ -245,7 +245,7 @@ Number rad(const Number &n1){
     return Number(n1.r*pi/180, n1.i*pi/(double)180.0);
 }
 Number deg(const Number &n1){
-    return Number(n1.r*pi/180, n1.i*(double)180.0/pi);
+    return Number(n1.r*180/pi, n1.i*(double)180.0/pi);
 }
 Number round(const Number &n, int p){
         Number n1 = Number(

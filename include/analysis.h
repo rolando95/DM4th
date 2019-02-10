@@ -36,6 +36,8 @@ Vector range(Vector, const Number&, const Number&, Number=1);
 Vector range(Function, const Number&, const Number&, Number=1);
 // e^x
 Number exp(Number x);
+// Convert Complex number to polar expresion
+Vector polar(Number n);
 // PI Function
 Number PI(Number z, Number tolerance=1e-7);
 // gamma Function
