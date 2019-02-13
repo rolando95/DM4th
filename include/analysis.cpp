@@ -22,6 +22,11 @@ Number minimum(Vector v){
     }
     return value;
 }
+// Fibonacci number 
+// from https://en.wikipedia.org/wiki/Generalizations_of_Fibonacci_numbers#Extension_to_all_real_or_complex_numbers
+Number fibonacci(Number n){
+    return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/sqrt(5);
+}
 
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;

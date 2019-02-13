@@ -27,8 +27,9 @@ Number minimum(const Number a, const T ... b){
     Number value = minimum(b...);
     return a<value?a:value;
 }
-
-// range(begin, end, interval)
+// Fibonacci number 
+Number fibonacci(Number);
+// Fibonaci number (golden ratio)
 Vector range(const Number&, const Number&, Number=1);
 // range(vector, pos begin, pos end, interval)
 Vector range(Vector, const Number&, const Number&, Number=1);
