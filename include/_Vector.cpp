@@ -133,6 +133,17 @@ Vector sort(Vector v){
     return v.sort();
 }
 
+Vector Vector::reverse(){
+    for(Number j=0; j<this->length()/2; j++){
+        this->swap(j,this->length()-j-1);
+    }
+    return *this;
+}
+
+Vector reverse(Vector v){
+    return v.reverse();
+}
+
 Vector Vector::operator+=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}

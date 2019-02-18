@@ -66,8 +66,13 @@ public:
     /*
      Ordena elementos del vector
     */
-   Vector sort(Number begin=0, Number end=-1);
-    
+    Vector sort(Number begin=0, Number end=-1);
+
+    /*
+    Invierte los elementos del vector
+    */
+    Vector reverse();
+
     // Asignacion aditiva
     Vector operator+=(Vector);
     // Asignacion sustractiva
@@ -115,6 +120,7 @@ Vector ones(const Number&);
 // range(vector, pos begin, pos end, interval)
 Vector range(Vector, const Number&, const Number&, Number=1);
 Vector sort(Vector);
+Vector reverse(Vector);
 
 template<class T>
 /* 
