@@ -104,6 +104,35 @@ void Vector::swap(Number p1, Number p2, Number c){
     }
 }
 
+
+/*Quicksort*/
+Number partition(Vector &v, Number &lo, Number &hi){
+    Number pivot = v[hi];
+    Number i = lo;
+    for(Number j=lo; j<=hi-1; j++){
+        if(v[j]<pivot){
+            v.swap(i,j);
+            i+=1;
+        }
+    }
+    v.swap(i,hi);
+    return i;
+}
+
+Vector Vector::sort(Number lo, Number hi){
+    if(hi<=-1)hi = this->length()-1;
+    if(lo<hi){ 
+        Number p = partition(*this,lo,hi);
+        this->sort(lo, p-1);
+        this->sort(p+1,hi);
+    }
+    return *this;
+}
+
+Vector sort(Vector v){
+    return v.sort();
+}
+
 Vector Vector::operator+=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}
@@ -210,6 +239,20 @@ Vector ones(const Number &n){
     o.resize(n);
     for(int j=0; j<n; j++) o[j] = 1;
     return o;
+}
+
+Vector range(Vector v, const Number &begin, const Number &end, Number value){
+    Vector result;
+    if(value>0 && end>begin){
+        for(Number j=begin; j<=end; j+=value){
+            result.append(v[j]);
+        }
+    }else if(value<0 && begin>end){
+        for(Number j=begin; j>=end; j+=value){
+            result.append(v[j]);
+        }
+    }
+    return result;
 }
 
 template<class T>

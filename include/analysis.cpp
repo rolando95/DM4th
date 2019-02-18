@@ -41,19 +41,7 @@ Vector range(const Number &begin, const Number &end, Number value){
     }
     return v;
 }
-Vector range(Vector v, const Number &begin, const Number &end, Number value){
-    Vector result;
-    if(value>0 && end>begin){
-        for(Number j=begin; j<=end; j+=value){
-            result.append(v[j]);
-        }
-    }else if(value<0 && begin>end){
-        for(Number j=begin; j>=end; j+=value){
-            result.append(v[j]);
-        }
-    }
-    return result;
-}
+
 Vector range(Function f, const Number &begin, const Number &end, Number value){
         Vector result;
     if(value>0 && end>begin){

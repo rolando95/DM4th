@@ -31,8 +31,7 @@ Number minimum(const Number a, const T ... b){
 Number fibonacci(Number);
 // Fibonaci number (golden ratio)
 Vector range(const Number&, const Number&, Number=1);
-// range(vector, pos begin, pos end, interval)
-Vector range(Vector, const Number&, const Number&, Number=1);
+
 // range(f, x0=begin, xn=end, interval)
 Vector range(Function, const Number&, const Number&, Number=1);
 // e^x

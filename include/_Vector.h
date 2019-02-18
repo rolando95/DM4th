@@ -63,6 +63,11 @@ public:
     */
     void swap(Number, Number, Number=1);
 
+    /*
+     Ordena elementos del vector
+    */
+   Vector sort(Number begin=0, Number end=-1);
+    
     // Asignacion aditiva
     Vector operator+=(Vector);
     // Asignacion sustractiva
@@ -106,6 +111,10 @@ Vector operator%(Vector,const Number&);
 Vector zeros(const Number&);
 //
 Vector ones(const Number&);
+
+// range(vector, pos begin, pos end, interval)
+Vector range(Vector, const Number&, const Number&, Number=1);
+Vector sort(Vector);
 
 template<class T>
 /* 
