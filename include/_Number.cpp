@@ -1,4 +1,5 @@
 #include "_Number.h"
+#include <regex>
 
 using namespace std;
 
@@ -129,29 +130,34 @@ std::ostream& operator<<(std::ostream& stream, Number n){
 }
 //Lectura en pantalla de numeros complejos
 std::istream& operator>>(std::istream& stream, Number &n){
-    double x;
-    
-    // Verifica si se ha ingresado la parte real/imaginaria en consola
-    bool isR = false;
-    bool isI = false;
+    std::string s;
+    stream>>s;
 
-    while(stream.peek()!='\n' && stream>>x){
-        if(stream.peek()=='i'){
-            n.i = x;
-            isI = true;
-            break;
+    n = 0;
+
+    static const std::string intR = R"([+-]?[0-9]+)";
+    static const std::string floatR = R"([+-]?([0-9]*[.])?[0-9]+)";
+    static const std::string expR = R"([eE])"+intR;
+    static const std::string doubleR = floatR + "(" + expR + ")?";
+    static const std::regex numberRegex(doubleR+"i?|i");
+    static auto numberBegin = std::sregex_iterator(s.begin(), s.end(), numberRegex);
+    static auto numberEnd = std::sregex_iterator();
+    for (std::sregex_iterator j = numberBegin; j != numberEnd; ++j) {
+        std::smatch match = *j;                                                 
+        std::string match_str = match.str(); 
+        if(match_str.back()=='i'){
+            if(match_str != "i"){
+                match_str.pop_back();
+                n += Number(0,atof(match_str.c_str()));
+            }else
+            {
+                n += i;
+            }
         }else{
-            n.r = x;
-            isR = true;
+            n += Number(atof(match_str.c_str()),0);
         }
-    }
-
-    if(!isR) n.r = 0;
-    if(!isI) n.i = 0;
-
-    fflush(stdin);
-    cout<<"";
-    return stream;
+    } 
+    return stream; 
 }
 // Suma de numeros complejos
 Number operator+(const Number &n1,const Number &n2){
