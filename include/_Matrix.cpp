@@ -188,13 +188,11 @@ std::ostream& operator<<(std::ostream& stream, Matrix m){
 std::istream& operator>>(std::istream& stream, Matrix &m){
     // Pregunta por numero de elementos filas/columnas de la matriz si no fue definido previamente
     if(m.rowsLength()==0 || m.colsLength()==0) {
-        int countC, countR;
+        Number countC, countR;
         std::cout<<"Rows: ";
         std::cin>>countR;
-        fflush(stdin);
         std::cout<<"Columns: ";
         std::cin>>countC;
-        fflush(stdin);
         m.resize(countR,countC);   
     }
 

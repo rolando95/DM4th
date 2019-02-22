@@ -1,5 +1,4 @@
 #include "_Vector.h"
-
 Vector::Vector(){}
 
 Vector::Vector(const Vector &v){
@@ -188,10 +187,9 @@ std::istream& operator>>(std::istream& stream, Vector &v){
 
     // Pregunta por numero de elementos del vector si no fue definido previamente
     if(v.length()==0) {
-        int count;
+        Number count;
         std::cout<<"Vector size: ";
         std::cin>>count;
-        fflush(stdin);
         v.resize(count);
     }
 
@@ -200,7 +198,6 @@ std::istream& operator>>(std::istream& stream, Vector &v){
         std::cout<<"["<<n<<"]: ";
         stream>>v[n];
     }
-
     return stream;
 }
 
