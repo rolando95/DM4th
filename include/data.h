@@ -18,5 +18,6 @@ template<class T>
 void input(T &var,std::string msg=""){
     std::cout<<msg;
     std::cin>>var;
+    fflush(stdin);
 }
 #endif

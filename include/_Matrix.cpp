@@ -21,7 +21,6 @@ void Matrix::resize(const Number &posR,Number posC){
         for(int j=0; j<r; j++){
             data[j].resize(c);
         }
-
         rows = r; cols = c;
     }   
 }
@@ -187,6 +186,18 @@ std::ostream& operator<<(std::ostream& stream, Matrix m){
 }
 
 std::istream& operator>>(std::istream& stream, Matrix &m){
+    // Pregunta por numero de elementos filas/columnas de la matriz si no fue definido previamente
+    if(m.rowsLength()==0 || m.colsLength()==0) {
+        int countC, countR;
+        std::cout<<"Rows: ";
+        std::cin>>countR;
+        fflush(stdin);
+        std::cout<<"Columns: ";
+        std::cin>>countC;
+        fflush(stdin);
+        m.resize(countR,countC);   
+    }
+
     for(int j=0; j<m.rowsLength(); j++){
         for(int k=0; k<m.colsLength(); k++){
             std::cout<<"["<<j<<"]["<<k<<"]: ";
