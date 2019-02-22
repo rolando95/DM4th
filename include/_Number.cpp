@@ -128,30 +128,120 @@ std::ostream& operator<<(std::ostream& stream, Number n){
     return stream;
 }
 //Lectura en pantalla de numeros complejos
+/*
+Es funcional, pero inestable (la funcion stream.peek() tiende a llamar caracteres mas alla del buffer)
+Se necesita: Escribir el automata de tal forma que al leer los caracteres
+solo se lleve el '\n' si lo tiene. Debe evitar llevarse cualquier otro caracter
+si no pertenece a una expresion Number. 
+*/
 std::istream& operator>>(std::istream& stream, Number &n){
+    /*
     double x;
     
     // Verifica si se ha ingresado la parte real/imaginaria en consola
-    bool isR = false;
-    bool isI = false;
-
+    n=0;
     while(stream.peek()!='\n' && stream>>x){
         if(stream.peek()=='i'){
             n.i = x;
-            isI = true;
             break;
         }else{
             n.r = x;
-            isR = true;
         }
     }
-
-    if(!isR) n.r = 0;
-    if(!isI) n.i = 0;
 
     fflush(stdin);
     cout<<"";
     return stream;
+    */
+
+    //Maquina de estado para la lectura de valores complejos
+    n=0;
+    int state = 1;
+    int nextState;
+    char next=' ';
+    int count=0;
+    char value[100];
+
+    bool ok = true;
+    while(ok){
+        next = stream.peek();
+        nextState = -1;
+
+        switch (state){
+            case 1:
+                if(next==' ') nextState = 1;
+                else if(next=='+' || next=='-') nextState = 2;
+                else if(next=='.') nextState = 3;
+                else if(next>='0' && next<='9') nextState = 4;
+                else if(next=='i'){ value[count++] = '1'; nextState = 9;}
+            break;
+
+            case 2:
+                if(next=='.') nextState = 3;
+                else if(next>='0' && next<='9') nextState = 4;
+                else if(next=='i'){ value[count++] = '1'; nextState = 9;}
+            break;
+
+            case 3:
+                if(next>='0' && next<='9') nextState = 5;
+            break;
+
+            case 4:
+                if(next=='.')nextState = 3;
+                else if(next>='0' && next<='9') nextState = 4;
+                else if(next=='e' || next=='E') nextState = 6;
+                else if(next=='i') nextState = 9;
+                else nextState = 10;
+            break;
+        
+            case 5:
+                if(next>='0'&& next<='9') nextState = 5;
+                else if(next=='e' || next=='E') nextState = 6;
+                else if(next=='i') nextState = 9;
+                else nextState = 10;
+            break;
+
+            case 6:
+                if(next=='+'||next=='-') nextState = 7;
+                else if(next>='0' && next<='9') nextState = 8;
+            break;
+
+            case 7:
+                if(next>='0' && next<='9') nextState = 8;
+            break;
+
+            case 8:
+                if(next>='0' && next<='9') nextState = 8;
+                else if(next=='i') nextState = 9;
+                else nextState = 10;
+            break;
+
+        }
+
+        if(nextState==9 || nextState==10){
+            value[count] = '\0';
+            if(nextState==9) n.i =  strtod(value,NULL);
+            else n.r = strtod(value,NULL);
+            count = 0;
+
+            if(next=='\n' || next==',') nextState = -1;
+            else if(next==' ') nextState = 1;
+            else if(next=='+'||next=='-')nextState = 2;
+        }
+
+        if(nextState >= 0 && count<100 ){
+            state = nextState;
+            if(next!='\n' || next != ',') stream>>value[count++];
+            else value[count++] = '\0';
+        }else{
+            ok = false;
+        }
+    }
+
+    //
+    if(stream.peek()=='\n') {fflush(stdin); std::cout<<"";}
+    return stream;
+
 }
 // Suma de numeros complejos
 Number operator+(const Number &n1,const Number &n2){
