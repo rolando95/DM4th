@@ -110,9 +110,6 @@ std::ostream& operator<<(std::ostream& stream, Number n){
     else if(n.r == -INF) stream<<"-INF";
     else if(isnan(n.r)) stream<<"NAN";
     else{
-        //Round
-        n = round(n,Number::precision);
-
         //stream
         if(n==0) stream<<"0";
         else{
@@ -132,21 +129,19 @@ std::istream& operator>>(std::istream& stream, Number &n){
     n=0;
     int state = 1;
     int nextState;
-    char next=' ';
+    char next;
     int count=0;
     char value[100];
-
     bool ok = true;
 
     //Maquina de estado para la lectura de valores complejos
     while(ok){
         next = stream.peek();
         nextState = -1;
-
         switch (state){
             case 1:
                 if(next==' ') nextState = 1;
-                else if(next=='+' || next=='-') nextState = 2;
+                if(next=='+' || next=='-') nextState = 2;
                 else if(next=='.') nextState = 3;
                 else if(next>='0' && next<='9') nextState = 4;
                 else if(next=='i'){ value[count++] = '1'; nextState = 9;}
