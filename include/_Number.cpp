@@ -202,14 +202,14 @@ std::istream& operator>>(std::istream& stream, Number &n){
             count = 0;
 
             //Vuelve a estados anteriores si es un numero complejo
-            if(next=='\n') nextState = -1;
+            if(next=='\n' || next==',') nextState = -1;
             else if(next==' ') nextState = 1;
             else if(next=='+'||next=='-')nextState = 2;
         }
 
         if(nextState >= 0 && count<100 ){
             state = nextState;
-            if(next!='\n') stream>>value[count++];
+            if(next!='\n' && next!=',') stream>>value[count++];
             else value[count++] = '\0'; // Fuerza fin de lectura de numero complejo
         }else{
             ok = false;
@@ -263,7 +263,7 @@ Number operator/(const Number &n1,const Number &n2){
             );
         // n/0
         else
-            if(n1.r != INF){
+            if(n1.r != INF && n1 != 0){
                 if(n1.r>0)
                     return Number(INF,0);
                 else    

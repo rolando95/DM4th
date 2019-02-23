@@ -184,21 +184,19 @@ std::ostream& operator<<(std::ostream& stream, Vector v){
 }
 
 std::istream& operator>>(std::istream& stream, Vector &v){
-
-    // Pregunta por numero de elementos del vector si no fue definido previamente
-    if(v.length()==0) {
-        Number count;
-        std::cout<<"Vector size: ";
-        std::cin>>count;
-        v.resize(count);
+    v.resize(0);
+    Number value;
+    while(stream>>value){
+        v.append(value);
+        /*
+        gcount() Cuenta al final el \n leido al obtener stream>>value
+        Es necesario encontrar una forma mas elegante para determinar si no hay ningun caracter al final del stream y reemplazar
+        stream.gcount()
+        */
+        if(stream.gcount() || stream.peek()!=',') break;
+        else stream.get();
     }
-
-    // Lectura de datos
-    for(int n=0; n<v.length(); n++){
-        std::cout<<"["<<n<<"]: ";
-        stream>>v[n];
-    }
-    return stream;
+    return stream;   
 }
 
 // Suma de vectores

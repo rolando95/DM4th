@@ -15,8 +15,12 @@ void print(const T& first, const Types& ... args){
 
 // Entrada de un numero por consola
 template<class T>
-void input(T &var,std::string msg=""){
-    std::cout<<msg;
-    std::cin>>var;
+void input(T& last){
+    std::cin>>last;
+}
+template<class T, class ... Types>
+void input(T& first, Types& ... args){
+    std::cin>>first;
+    input(args...);
 }
 #endif
