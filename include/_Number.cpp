@@ -133,9 +133,10 @@ std::istream& operator>>(std::istream& stream, Number &n){
     int count=0;
     char value[100];
     bool ok = true;
-
+    //stream>>std::ws;
     //Maquina de estado para la lectura de valores complejos
     while(ok){
+        if(stream.peek()==' ')stream>>std::ws;
         next = stream.peek();
         nextState = -1;
         switch (state){
@@ -188,7 +189,7 @@ std::istream& operator>>(std::istream& stream, Number &n){
             break;
 
         }
-        
+        //std::cout<<state<<" '"<<next<<"' "<<nextState<<std::endl;
         //El proximo estado es de aceptacion
         if(nextState==9 || nextState==10){
             value[count] = '\0';
@@ -210,7 +211,7 @@ std::istream& operator>>(std::istream& stream, Number &n){
             ok = false;
         }
     }
-
+    if(stream.peek()==' ')stream>>std::ws;
     if(stream.peek()=='\n') stream.get();
     return stream;
 
