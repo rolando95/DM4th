@@ -194,7 +194,7 @@ std::istream& operator>>(std::istream& stream, Matrix &m){
     if(stream.peek()=='['){
         stream.get(); // Captura el corchete abierto
         while(stream>>value){
-            m.appendRow(value);
+            if(value.length()>0) m.appendRow(value);
             if(stream.peek()==']')break;
             else if(stream.peek()==',')stream.get(); //Captura la comma
         }
