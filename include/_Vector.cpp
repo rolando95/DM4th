@@ -197,7 +197,6 @@ std::istream& operator>>(std::istream& stream, Vector &v){
         stream.get(); // Captura el corchete cerrado
     }
     //if(stream.peek()==' ') stream>>std::ws;
-    //std::cout<<"'"<<(char)stream.peek()<<"'"<<std::endl;
     if(stream.peek()=='\n') stream.get();
     return stream;   
 }

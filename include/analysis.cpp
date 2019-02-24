@@ -108,6 +108,7 @@ Number gamma(Number z, Number tolerance){
     }
     return result;
 }
+
 Number factorial(const Number &n){
     Number x = 1;
     if(floor(n.r)==n && n>=0){ // Es numero entero positivo 
@@ -119,6 +120,7 @@ Number factorial(const Number &n){
     }
     return x;
 }
+
 Number sumatory(Function f, Vector v, const Number interval){
     Number x=0;
     for(Number j=0; j>=0 && j<v.length(); j+=interval){

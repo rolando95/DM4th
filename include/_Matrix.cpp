@@ -176,32 +176,31 @@ std::vector<Vector>::iterator Matrix::begin(){return data.begin();}
 std::vector<Vector>::iterator Matrix::end(){ return data.end();}
 
 std::ostream& operator<<(std::ostream& stream, Matrix m){
+    stream<<"\n";
     stream<<"[";
     for(int n=0; n<m.rowsLength(); n++){
         if(n!=0) stream<<",\n ";
         stream<<m[n];
     }
     stream<<"]";
+    stream<<"\n";
     return stream;
 }
 
 std::istream& operator>>(std::istream& stream, Matrix &m){
-    // Pregunta por numero de elementos filas/columnas de la matriz si no fue definido previamente
-    if(m.rowsLength()==0 || m.colsLength()==0) {
-        Number countC, countR;
-        std::cout<<"Rows: ";
-        std::cin>>countR;
-        std::cout<<"Columns: ";
-        std::cin>>countC;
-        m.resize(countR,countC);   
-    }
-
-    for(int j=0; j<m.rowsLength(); j++){
-        for(int k=0; k<m.colsLength(); k++){
-            std::cout<<"["<<j<<"]["<<k<<"]: ";
-            stream>>m[j][k];
+    m.resize(0,0);
+    Vector value;
+    if(stream.peek()==' ')stream>>std::ws;
+    if(stream.peek()=='['){
+        stream.get(); // Captura el corchete abierto
+        while(stream>>value){
+            m.appendRow(value);
+            if(stream.peek()==']')break;
+            else if(stream.peek()==',')stream.get(); //Captura la comma
         }
+        stream.get(); // Captura el corchete cerrado
     }
+    if(stream.peek()=='\n')stream.get();
     return stream;
 }
 

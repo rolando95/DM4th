@@ -110,6 +110,7 @@ std::ostream& operator<<(std::ostream& stream, Number n){
     else if(n.r == -INF) stream<<"-INF";
     else if(isnan(n.r)) stream<<"NAN";
     else{
+        n = round(n,15); // Es necesario corregir problemas de redondeo
         //stream
         if(n==0) stream<<"0";
         else{

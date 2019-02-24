@@ -3,9 +3,7 @@
 #include <iostream>
 
 int main(){
-    Vector a,b,c;
-    print("Ingresa valores de los vectores a, b y c");
-    input(a,b,c);
-    print("Vector: ",a,b,c);
+    Number a = -25;
+    print(sqrt(a));
     return 0;
 }
