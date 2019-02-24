@@ -205,7 +205,7 @@ std::istream& operator>>(std::istream& stream, Number &n){
 
         if(nextState >= 0 && count<100 ){
             state = nextState;
-            if(next!='\n' && next!=',') stream>>value[count++];
+            if(next!='\n' && next!=',' && next!=']') stream>>value[count++];
             else value[count++] = '\0'; // Fuerza fin de lectura de numero complejo
         }else{
             ok = false;

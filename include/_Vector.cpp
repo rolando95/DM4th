@@ -186,16 +186,18 @@ std::ostream& operator<<(std::ostream& stream, Vector v){
 std::istream& operator>>(std::istream& stream, Vector &v){
     v.resize(0);
     Number value;
-    while(stream>>value){
-        v.append(value);
-        /*
-        gcount() Cuenta al final el \n leido al obtener stream>>value
-        Es necesario encontrar una forma mas elegante para determinar si no hay ningun caracter al final del stream y reemplazar
-        stream.gcount()
-        */
-        if(stream.gcount() || stream.peek()!=',') break;
-        else stream.get();
+    if(stream.peek()==' ') stream>>std::ws;
+    if(stream.peek()=='['){
+        stream.get(); // Captura el corchete abierto
+        while(stream>>value){
+            v.append(value);
+            if(stream.peek()==']') break;
+            else if(stream.peek()==',') stream.get(); // Captura la comma
+        }
+        stream.get(); // Captura el corchete cerrado
     }
+    if(stream.peek()==' ') stream>>std::ws;
+    if(stream.peek()=='\n') stream.get();
     return stream;   
 }
 
