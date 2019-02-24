@@ -3,9 +3,9 @@
 #include <iostream>
 
 int main(){
-    Vector a,b;
-    print("Ingresa valores de los vectores a y b");
-    input(a,b);
-    print("Vector: ",a,b);
+    Vector a,b,c;
+    print("Ingresa valores de los vectores a, b y c");
+    input(a,b,c);
+    print("Vector: ",a,b,c);
     return 0;
 }

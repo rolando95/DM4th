@@ -191,12 +191,13 @@ std::istream& operator>>(std::istream& stream, Vector &v){
         stream.get(); // Captura el corchete abierto
         while(stream>>value){
             v.append(value);
-            if(stream.peek()==']') break;
+            if(stream.peek()==']')break;
             else if(stream.peek()==',') stream.get(); // Captura la comma
         }
         stream.get(); // Captura el corchete cerrado
     }
-    if(stream.peek()==' ') stream>>std::ws;
+    //if(stream.peek()==' ') stream>>std::ws;
+    //std::cout<<"'"<<(char)stream.peek()<<"'"<<std::endl;
     if(stream.peek()=='\n') stream.get();
     return stream;   
 }
