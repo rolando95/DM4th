@@ -33,6 +33,18 @@ Number Matrix::colsLength()const{
     return this->cols;
 }
 
+Matrix Matrix::appendRow(Matrix m, Number position){
+    if(m.rows > 0){
+        int pos = position.r;
+        if(pos<0 || pos>=this->rows) {data.insert(data.end(), m.data.begin(), m.data.end());}
+        else{
+            data.insert(data.begin() + pos, m.data.begin(), m.data.end());
+        }
+        this->rows += m.rows;
+    }
+    return m;
+}
+
 Vector Matrix::appendRow(const Vector &v, Number position){
     int pos = position.r;
 

@@ -12,7 +12,11 @@ public:
     Matrix(const Matrix&);
 
     // Inicializacion con numero indefinido de vectores como argumento en el constructor
-    /* -- TODO -- */
+    template<class ... T>
+    Matrix(const Vector& first, T... args){
+        appendRow(first);
+        appendRow(Matrix(args...));
+    }
 
     // Acceso a fila de matriz
     Vector& operator[](Number);
@@ -23,6 +27,13 @@ public:
     Number rowsLength() const;
     Number colsLength() const;
 
+    
+    /* 
+     Adjunta como parametro Matrix una fila en la matriz
+     matrix.appendRow(Matrix)           <- Adjunta el valor Matrix al final de la matriz 
+     matrix.appendRow(Matrix, position) <- Adjunta el valor Matrix en la posicion dada dentro de la matriz
+    */
+    Matrix appendRow(Matrix, Number=-1);
     /* 
      Adjunta como parametro Vector una fila en la matriz
      matrix.appendRow(Vector)           <- Adjunta el valor Vector al final de la matriz 
