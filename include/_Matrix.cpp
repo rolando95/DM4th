@@ -80,6 +80,21 @@ Vector Matrix::appendCol(const Vector &vec, Number position){
     return vec;
 }
 
+Matrix Matrix::appendCol(Matrix mat, Number position){
+    int pos = position.r;
+    Matrix m = mat;
+    if(rows==0){
+        this->resize(m.rowsLength());
+    } 
+    if(m.rowsLength()!= rows) m.resize(rows);
+
+    for(int j=0; j<rows; j++){
+        data[j].append(m[j],pos);
+    }
+    cols += (int)mat.colsLength();
+    return mat;
+}
+
 Vector Matrix::popRow(const Number position){
     Vector value;
     int pos = position.r;

@@ -32,21 +32,21 @@ public:
     // Incremento prefijo
     Number operator ++();
     // Incremento postfijo
-    Number operator++(int);
+    Number operator ++(int);
     // Decremento prefijo
     Number operator --();
     // Decremento postfijo
     Number operator --(int);
     // Asignacion aditiva
-    Number operator+=(Number);
+    Number operator +=(Number);
     // Asignacion sustractiva
-    Number operator-=(Number);
+    Number operator -=(Number);
     // Asignacion multiplicativa
-    Number operator*=(Number);
+    Number operator *=(Number);
     // Asignacion divisiva
-    Number operator/=(Number);
+    Number operator /=(Number);
     // Residuo
-    Number operator%=(Number);
+    Number operator %=(Number);
 };
 
 // Define como constante el valor de i
