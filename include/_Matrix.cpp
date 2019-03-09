@@ -14,8 +14,8 @@ Matrix::Matrix(std::string str){
 Vector& Matrix::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
-    //if(pos>= this->rows)  /* TODO resize */
-    if(this->data[pos].length() != cols) this->data[pos].resize(cols);
+    //if(pos>= this->_rows)  /* TODO resize */
+    if(this->data[pos].length() != _cols) this->data[pos].resize(_cols);
     return this->data[pos];
 }
 
@@ -27,26 +27,26 @@ void Matrix::resize(const Number &posR,Number posC){
         for(int j=0; j<r; j++){
             data[j].resize(c);
         }
-        rows = r; cols = c;
+        _rows = r; _cols = c;
     }   
 }
 
 Number Matrix::rowsLength()const{
-    return this->rows;
+    return this->_rows;
 }
 
 Number Matrix::colsLength()const{
-    return this->cols;
+    return this->_cols;
 }
 
 Matrix Matrix::appendRow(Matrix m, Number position){
-    if(m.rows > 0){
+    if(m._rows > 0){
         int pos = position.r;
-        if(pos<0 || pos>=this->rows) {data.insert(data.end(), m.data.begin(), m.data.end());}
+        if(pos<0 || pos>=this->_rows) {data.insert(data.end(), m.data.begin(), m.data.end());}
         else{
             data.insert(data.begin() + pos, m.data.begin(), m.data.end());
         }
-        this->rows += m.rows;
+        this->_rows += m._rows;
     }
     return m;
 }
@@ -55,18 +55,18 @@ Vector Matrix::appendRow(const Vector &v, Number position){
     int pos = position.r;
 
     // Insercion de vector en matriz
-    if(pos<0 || pos>= this->rows) {
+    if(pos<0 || pos>= this->_rows) {
         data.push_back(v); 
-        pos = rows;
+        pos = _rows;
     }else{
         data.insert(data.begin() + pos, v);
     }
 
     // Reescala el numero de columnas si anteriormente era igual a 0
-    if(cols==0) cols = (int)v.length();
+    if(_cols==0) _cols = (int)v.length();
     // Verifica que el numero de elementos del vector insertado es igual al numero de columnas de la matriz
-    else if(v.length() != cols) data[pos].resize(cols);
-    rows++;
+    else if(v.length() != _cols) data[pos].resize(_cols);
+    _rows++;
     return v;
 }
 
@@ -75,44 +75,44 @@ Vector Matrix::appendCol(const Vector &vec, Number position){
     Vector v = vec;
 
     // Reescala el numero de filas si anteriormente era igual a 0
-    if(rows==0) rows = (int)v.length();
+    if(_rows==0) _rows = (int)v.length();
     // Verifica que el numero de elementos del vector insertado es igual al numero de filas de la matriz
-    else if(v.length() != rows) v.resize(rows);
+    else if(v.length() != _rows) v.resize(_rows);
     
-    for(int j=0; j<rows; j++){
+    for(int j=0; j<_rows; j++){
         data[j].append(v[j], pos);
     }
-    cols++;
+    _cols++;
     return vec;
 }
 
 Matrix Matrix::appendCol(Matrix mat, Number position){
     int pos = position.r;
     Matrix m = mat;
-    if(rows==0){
+    if(_rows==0){
         this->resize(m.rowsLength());
     } 
-    if(m.rowsLength()!= rows) m.resize(rows);
+    if(m.rowsLength()!= _rows) m.resize(_rows);
 
-    for(int j=0; j<rows; j++){
+    for(int j=0; j<_rows; j++){
         data[j].append(m[j],pos);
     }
-    cols += (int)mat.colsLength();
+    _cols += (int)mat.colsLength();
     return mat;
 }
 
 Vector Matrix::popRow(const Number position){
     Vector value;
     int pos = position.r;
-    if(this->rows > 0){
-        if(pos>=this->rows) {
-            value = this->data[rows-1];
+    if(this->_rows > 0){
+        if(pos>=this->_rows) {
+            value = this->data[_rows-1];
             data.pop_back();
         }else{
             value = this->data[pos];
             data.erase(data.begin()+pos);
         }
-        rows-=1;
+        _rows-=1;
     }
     return value;
 }  
@@ -120,15 +120,15 @@ Vector Matrix::popRow(const Number position){
 Vector Matrix::popCol(const Number position){
     Vector value;
     int pos = position.r;
-    if(this->cols>0){
-        if(pos<0 || pos>=this->cols){
-            pos = cols-1;
+    if(this->_cols>0){
+        if(pos<0 || pos>=this->_cols){
+            pos = _cols-1;
         }
-        value.resize(rows);
-        for(int j=0; j<rows; j++){
+        value.resize(_rows);
+        for(int j=0; j<_rows; j++){
             value[j] = data[j].pop(pos);
         }
-        cols -= 1;
+        _cols -= 1;
     }
     return value;
 }

@@ -4,7 +4,7 @@
 #include "_Vector.h"
 
 class Matrix{
-    int rows=0, cols=0;
+    int _rows=0, _cols=0;
     std::vector<Vector> data;
 public:
     // Inicializacion sin valores

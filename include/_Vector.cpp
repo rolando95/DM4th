@@ -14,7 +14,7 @@ Vector::Vector(std::string str){
 Number& Vector::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
-    //if(pos>=this->count) resize(pos+1);
+    //if(pos>=this->_rows) resize(pos+1);
     return this->data[pos];
 }
 
@@ -28,22 +28,22 @@ const Vector Vector::operator[](Vector v)const {
 
 Number Vector::append(const Number &n, const Number position){
     int pos = position.r;
-    if(pos<0 || pos>=this->count) {data.push_back(n);}
+    if(pos<0 || pos>=this->_rows) {data.push_back(n);}
     else {
         data.insert(data.begin() + pos,n);
     }
-    count++;
+    _rows++;
     return n;
 }
 
 Vector Vector::append(const Vector& v, const Number position){
-    if(v.count > 0){
+    if(v._rows > 0){
         int pos = position.r;
-        if(pos<0 || pos>=this->count) {data.insert(data.end(), v.data.begin(), v.data.end());}
+        if(pos<0 || pos>=this->_rows) {data.insert(data.end(), v.data.begin(), v.data.end());}
         else{
             data.insert(data.begin() + pos, v.data.begin(), v.data.end());
         }
-        this->count += v.count;
+        this->_rows += v._rows;
     }
     return v;
 }
@@ -51,27 +51,27 @@ Vector Vector::append(const Vector& v, const Number position){
 Number Vector::pop(const Number position){
     Number value;
     int pos = position.r;
-    if(this->count > 0){
-        if(pos<0 || pos>=this->count) {
-            value = this->data[count-1];
+    if(this->_rows > 0){
+        if(pos<0 || pos>=this->_rows) {
+            value = this->data[_rows-1];
             data.pop_back();
         }else{
             value = this->data[pos];
             data.erase(data.begin()+pos);
         }
-        count-=1;
+        _rows-=1;
     }else
         return 0;
     return value;
 }
 
 Number Vector::length() const{
-    return this->count;
+    return this->_rows;
 }
 
 Vector Vector::index(const Number &value){
     Vector result;
-    for(int j=0; j<count; j++){
+    for(int j=0; j<_rows; j++){
         if(value==this->data[j]) result.append(j);
     }
     return result;
@@ -79,7 +79,7 @@ Vector Vector::index(const Number &value){
 
 Vector Vector::index(Vector value){
     Vector result;
-    for(int j=0; j<value.count; j++){
+    for(int j=0; j<value._rows; j++){
         result.append(index(value[j]));
     }
     return result;
@@ -89,19 +89,19 @@ void Vector::resize(const Number &pos){
     int c = int(pos.r);
     if(c>=0){
         data.resize(c);
-        count = c;
+        _rows = c;
     }
 }
 
 void Vector::swap(Number p1, Number p2, Number c){
-    int pos1 = (int)p1, pos2 = (int)p2, count = (int)c;
-    if(count <= 1){
+    int pos1 = (int)p1, pos2 = (int)p2, _rows = (int)c;
+    if(_rows <= 1){
         Number tmp = this->data[pos1];
         this->data[pos1] = this->data[pos2];
         this->data[pos2] = tmp;
     }else{
-        Vector tmp; tmp.resize(count);
-        for(int j=0; j<count; j++){
+        Vector tmp; tmp.resize(_rows);
+        for(int j=0; j<_rows; j++){
             tmp[j] = this->data[pos1+j];
             this->data[pos1+j] = this->data[pos2+j];
             this->data[pos2+j] = tmp[j];

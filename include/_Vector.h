@@ -5,7 +5,7 @@
 #include <vector>
 
 class Vector{
-    int count = 0;
+    int _rows = 0;
     std::vector<Number> data;
 public:
     // Inicializacion sin valores
