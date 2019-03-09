@@ -18,6 +18,8 @@ public:
         appendRow(Matrix(args...));
     }
 
+    Matrix(std::string);
+
     // Acceso a fila de matriz
     Vector& operator[](Number);
 

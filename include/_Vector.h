@@ -19,6 +19,8 @@ public:
         append(Vector(args...));
     }
 
+    Vector(std::string);
+
     // Acceso a elemento de vector
     Number& operator[](Number);
     const Vector operator[](Vector) const;

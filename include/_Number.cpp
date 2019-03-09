@@ -12,6 +12,12 @@ Number::Number(const Number& n){
     this->i = n.i;
 }
 
+Number::Number(std::string str){
+    std::stringstream ss;
+    ss << str;
+    ss >> *this;
+}
+
 int Number::precision =  5;
 
 double Number::real(){return this->r;}
@@ -32,6 +38,7 @@ Number::operator char*(){
     sprintf(cstr,"%s",str.c_str());
     return cstr;
 }
+
 Number::operator std::string(){
     std::ostringstream strs;
     strs << *this;

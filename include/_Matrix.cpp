@@ -5,6 +5,12 @@ Matrix::Matrix(const Matrix &m){
     *this = m;
 }
 
+Matrix::Matrix(std::string str){
+    std::stringstream ss;
+    ss << str;
+    ss >> *this;
+}
+
 Vector& Matrix::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;

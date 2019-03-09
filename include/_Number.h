@@ -12,6 +12,7 @@ public:
 
     Number(const double=0,const double=0);
     Number(const Number&);
+    Number(std::string);
 
     // get set parte real
     double real();

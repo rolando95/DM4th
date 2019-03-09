@@ -5,6 +5,12 @@ Vector::Vector(const Vector &v){
     *this = v;
 }
 
+Vector::Vector(std::string str){
+    std::stringstream ss;
+    ss << str;
+    ss >> *this;
+}
+
 Number& Vector::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
