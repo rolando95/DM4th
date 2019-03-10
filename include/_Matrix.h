@@ -68,6 +68,11 @@ public:
     */
     Vector popCol(const Number=-1);
 
+    // Carga valor de tipo Matrix desde un fichero
+    Matrix loadFile(std::string url);
+    // Guarda valor de tipo Matrix en un fichero
+    Matrix saveFile(std::string url);
+
     // Asignacion aditiva
     Matrix operator+=(Matrix);
     // Asignacion sustractiva

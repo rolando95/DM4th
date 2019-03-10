@@ -133,6 +133,28 @@ Vector Matrix::popCol(const Number position){
     return value;
 }
 
+Matrix Matrix::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        this->resize(0);
+    }else{
+        file>>*this;
+    }
+    file.close();
+    return *this;
+}
+Matrix Matrix::saveFile(std::string url){
+    // Crear ruta si no existe
+    
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
+    return *this;
+}
+
 Matrix Matrix::operator+=(Matrix m){
     int maxj = (int)this->rowsLength();
     int maxk = (int)this->colsLength();
@@ -209,14 +231,14 @@ std::vector<Vector>::iterator Matrix::begin(){return data.begin();}
 std::vector<Vector>::iterator Matrix::end(){ return data.end();}
 
 std::ostream& operator<<(std::ostream& stream, Matrix m){
-    stream<<"\n";
+    //stream<<"\n";
     stream<<"[";
     for(int n=0; n<m.rowsLength(); n++){
         if(n!=0) stream<<",\n ";
         stream<<m[n];
     }
     stream<<"]";
-    stream<<"\n";
+    //stream<<"\n";
     return stream;
 }
 

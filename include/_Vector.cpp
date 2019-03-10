@@ -149,6 +149,28 @@ Vector reverse(Vector v){
     return v.reverse();
 }
 
+Vector Vector::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        this->resize(0);
+    }else{
+        file>>*this;
+    }
+    file.close();
+    return *this;
+}
+Vector Vector::saveFile(std::string url){
+    // Crear ruta si no existe
+    
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
+    return *this;
+}
+
 Vector Vector::operator+=(Vector v){
     Number max = std::min(this->length(), v.length());
     for(int j=0; j<max; j++){ this->data[j] += v[j];}

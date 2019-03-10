@@ -1,7 +1,5 @@
 #include "_Number.h"
 
-using namespace std;
-
 Number::Number(const double a,const double b){
     this->r = a;
     this->i = b;
@@ -33,7 +31,7 @@ Number Number::operator=(double a){
 }
 
 Number::operator char*(){
-    std::string str = (string)*this;
+    std::string str = (std::string)*this;
     char *cstr = new char[str.length()+1];
     sprintf(cstr,"%s",str.c_str());
     return cstr;
@@ -44,6 +42,28 @@ Number::operator std::string(){
     strs << *this;
     std::string str = strs.str();
     return str;
+}
+
+Number Number::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        *this = 0;
+    }else{
+        file>>*this;
+    }
+    file.close();
+    return *this;
+}
+Number Number::saveFile(std::string url){
+    // Crear ruta si no existe
+
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
+    return *this;
 }
 
 // Incremento prefijo
@@ -91,7 +111,7 @@ Number Number::operator%=(Number n){
 
 Number strToNumber(std::string str){
     Number result;
-    stringstream ss(str);
+    std::stringstream ss(str);
     ss>>result;
     return result;
 }
@@ -115,7 +135,7 @@ Number operator-(Number a){
 std::ostream& operator<<(std::ostream& stream, Number n){
     if(n.r == INF) stream<<"INF";
     else if(n.r == -INF) stream<<"-INF";
-    else if(isnan(n.r)) stream<<"NAN";
+    else if(std::isnan(n.r)) stream<<"NAN";
     else{
         n = round(n,15); // Es necesario corregir problemas de redondeo
         //stream

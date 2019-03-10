@@ -4,6 +4,7 @@
 #include <iostream>
 #include "constants.h"
 #include <sstream>
+#include <fstream>
 
 class Number{
 public:
@@ -29,6 +30,11 @@ public:
     explicit operator T(){return (T)this->r;}
     explicit operator char *();
     explicit operator std::string();
+
+    // Carga valor de tipo Number desde un fichero
+    Number loadFile(std::string url);
+    // Guarda valor de tipo Number en un fichero
+    Number saveFile(std::string url);
 
     // Incremento prefijo
     Number operator ++();

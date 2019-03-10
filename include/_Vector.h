@@ -75,6 +75,11 @@ public:
     */
     Vector reverse();
 
+    // Carga valor de tipo Vector desde un fichero
+    Vector loadFile(std::string url);
+    // Guarda valor de tipo Vector en un fichero
+    Vector saveFile(std::string url);
+
     // Asignacion aditiva
     Vector operator+=(Vector);
     // Asignacion sustractiva
