@@ -105,7 +105,12 @@ Matrix operator-(Matrix,Matrix);
 Matrix operator*(Matrix,Matrix);
 // Producto entre Matriz y escalar
 Matrix operator*(Matrix,const Number&);
+// Producto entre escalar y Matriz
 Matrix operator*(const Number&,Matrix);
+// Producto entre Vector y Matriz
+Vector operator*(Vector, Matrix);
+// Producto entre Matriz y Vector
+Vector operator*(Matrix, Vector);
 // Division entre Matriz y escalar
 Matrix operator/(Matrix,const Number&);
 // Residuo

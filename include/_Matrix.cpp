@@ -293,6 +293,31 @@ Matrix operator*(const Number &n, Matrix m){
     return result;
 }
 
+// Producto entre Vector y Matriz
+Vector operator*(Vector v, Matrix m){
+    Vector result;
+    int len = (int)m.colsLength();
+    result.resize(len);
+    int lenV = (int)v.length();
+    for(int k=0; k<len; k++){
+        result[k] = 0;
+        for(int j=0; j<lenV; j++){
+            result[k] += v[j]*m[j][k];
+        }
+    }
+    return result;
+}
+// Producto entre Matriz y Vector
+Vector operator*(Matrix m, Vector v){
+        Vector result;
+    int len = (int)m.rowsLength();
+    result.resize(len);
+    for(int j=0; j<len; j++){
+        result[j] = m[j]*v;
+    }
+    return result;
+}
+
 Matrix operator/(Matrix m,const Number &n){
     Matrix result = m;
     result/=n;
