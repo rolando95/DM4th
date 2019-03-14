@@ -327,14 +327,16 @@ template void vectorToArray(Vector&, Number*  , int, bool);
 
 template<class T>
 void arrayToVector(T* array, Vector &v, int n, bool imaginary){
-    v.resize(0);
+    
     if(!imaginary){
+        v.resize(n);
         for(int j=0; j<n; j++){
-            v.append(array[j]);
+            v[j] = array[j];
         }
     }else{
+        v.resize(n/2);
         for(int j=0; j<n/2; j++){
-            v.append(array[j]+array[j+n/2]*i);
+            v[j]= array[j]+array[j+n/2]*i;
         }
     }
 }

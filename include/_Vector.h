@@ -131,34 +131,34 @@ Vector reverse(Vector);
 
 template<class T>
 /* 
-    Conversion de V a array de lenguaje C.      
-    Si se desea adjuntar los numeros imaginarios de V, imaginary=true       
-    vToArray(array, V, tamanio del array, incluirNumerosImaginarios);
+    Conversion de Vector a array de lenguaje C.      
+    Si se desea adjuntar los numeros imaginarios de Vector, imaginary=true       
+    vectorToArray(array, Vector, Numero de elementos del C array, incluirNumerosImaginarios);
 
     vectorToArray(array, Vector, 2, false)
-    (1+3i, 2+4i) ==> [1, 2]
+    [1+3i, 2+4i] ==> {1, 2}
 
-    vToArray(array, V, 4, true)
-    (1+3i, 2+4i) ==> [1, 2, 3, 4]
+    vectorToArray(array, Vector, 4, true)
+    [1+3i, 2+4i] ==> {1, 2, 3, 4}
 
     NOTA: Es importante reservar memoria del array para la conversion 
     antes de llamar la funcion
 */
-void vectorToArray(Vector &v, T *array, int n, bool imaginary=false);
+void vectorToArray(Vector &v, T *CArray, int N, bool imaginary=false);
 
 
 template<class T>
 /*
-    Conversion de array en lenguaje C a V
-    Si la segunda mitad del array contiene el valor imaginario de la parte real. imaginary=true
-    arrayToVector(array, V, tamanio del array, incluirNumerosImaginarios);
+    Conversion de array en lenguaje C a Vector
+    Si la segunda mitad del array contiene el valor imaginario de la parte real, imaginary=true
+    arrayToVector(array, Vector, Numero de elementos del C array, incluirNumerosImaginarios);
 
-    arrayToVector(array, V, 4, false)
-    [1,2,3,4] ==> (1, 2, 3, 4)
+    arrayToVector(array, Vector, 4, false)
+    {1,2,3,4} ==> [1, 2, 3, 4]
 
-    arrayToVector(array, V, 4, true)
-    [1,2,3,4] ==> (1+3i, 2+4i)
+    arrayToVector(array, Vector, 4, true)
+    {1,2,3,4} ==> [1+3i, 2+4i]
 */
-void arrayToVector(T* array, Vector &v, int n, bool imaginary=false);
+void arrayToVector(T* CArray, Vector &v, int N, bool imaginary=false);
 
 #endif

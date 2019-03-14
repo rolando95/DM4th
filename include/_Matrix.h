@@ -3,6 +3,7 @@
 
 #include "_Vector.h"
 
+
 class Matrix{
     int _rows=0, _cols=0;
     std::vector<Vector> data;
@@ -134,4 +135,43 @@ Matrix ones(const Number&, const Number&);
                   [0,1]]
 */
 Matrix identity(Number, Number c=-1);
+
+template<class T>
+/* 
+    Conversion de Matrix a array de lenguaje C.      
+    Si se desea adjuntar los numeros imaginarios de Matrix, imaginary=true       
+    matrixToArray(array, Matrix, Numero de filas del C array, Numero de columnas del C array, incluirNumerosImaginarios);
+
+    matrixToArray(array, Matrix, 2, 2, false)
+    [[1+3i, 2+4i],  ==> {{1, 2},
+     [5+7i, 6+8i]]       {5, 6}}
+
+    matrixToArray(array, V, 4, 2, true)
+    [[1+3i, 2+4i],  ==> {{1, 2},
+     [5+7i, 6+8i]]       {5, 6},
+                         {3, 4},
+                         {7, 8}}
+
+    NOTA: Es importante reservar memoria del array para la conversion 
+    antes de llamar la funcion
+*/
+void matrixToArray(Matrix &m, T *CArray, int N, int M, bool imaginary=false);
+
+template<class T>
+/*
+    Conversion de array de lenguaje C a Matrix
+    Si la segunda mitad del array contiene el valor imaginario de la parte real, imaginary=true
+    matrixToArray(Matrix, array, Numero de filas del C array, Numero de columnas del C array, incluirNumerosImaginarios);
+
+    arrayToMatrix(array, Matrix, 2, 2, false)
+    {{1, 2},  ==>  [[1, 2],
+     {3, 4}}        [3, 4]]       
+
+    arrayToMatrix(array, Matrix, 4, 2, true)
+    {{1, 2},  ==>  [[1+3i, 2+4i], 
+     {5, 6},        [5+7i, 6+8i]]
+     {3, 4},
+     {7, 8}}
+*/
+void arrayToMatrix(T *CArray, Matrix &m, int N, int M, bool imaginary=false);
 #endif

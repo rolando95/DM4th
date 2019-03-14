@@ -355,3 +355,59 @@ Matrix identity(Number r, Number c){
     }
     return result;
 }
+
+template<class T>
+void matrixToArray(Matrix &m, T *array, int N, int M, bool imaginary){
+    int lenR = (int)m.rowsLength();
+    int lenC = (int)m.colsLength();
+    if(!imaginary){
+        if(lenR<N) N = lenR;
+        if(lenC<M) M = lenC;
+        for(int j=0; j<N; j++){
+            for(int k=0; k<M; k++){
+                array[j*M+k] = (T)m[j][k].r;
+            }
+        }
+    }else
+    {
+        if(lenR*2<N) N = lenR*2;
+        if(lenC<M) M = lenC;
+        for(int j=0; j<N/2; j++){
+            for(int k=0; k<M; k++){
+                array[j*M+k] = (T)m[j][k].r;
+                array[(j+N/2)*M+k] = (T)m[j][k].i;
+            }
+        }
+    }
+    
+}
+
+template void matrixToArray(Matrix&, int*     , int, int, bool);
+template void matrixToArray(Matrix&, long int*, int, int, bool);
+template void matrixToArray(Matrix&, float*   , int, int, bool);
+template void matrixToArray(Matrix&, double*  , int, int, bool);
+template void matrixToArray(Matrix&, Number*  , int, int, bool);
+template<class T>
+void arrayToMatrix(T *array, Matrix &m, int N, int M, bool imaginary){
+
+    if(!imaginary){
+        m.resize(N,M);
+        for(int j=0; j<N; j++){
+            for(int k=0; k<M; k++){
+                m[j][k] = array[j*M+k];
+            }
+        }
+    }else{
+        m.resize(N/2,M);
+        for(int j=0; j<N/2; j++){
+            for(int k=0; k<M; k++){
+                m[j][k] = array[j*M+k] + array[(j+N/2)*M+k]*i;
+            }
+        }
+    }
+}
+template void arrayToMatrix(int*,      Matrix&, int, int, bool);
+template void arrayToMatrix(long int*, Matrix&, int, int, bool);
+template void arrayToMatrix(float*,    Matrix&, int, int, bool);
+template void arrayToMatrix(double*,   Matrix&, int, int, bool);
+template void arrayToMatrix(Number*,   Matrix&, int, int, bool);
