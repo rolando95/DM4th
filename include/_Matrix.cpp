@@ -159,7 +159,7 @@ Matrix Matrix::operator+=(Matrix m){
     int maxj = (int)this->rowsLength();
     int maxk = (int)this->colsLength();
     for(int j=0; j<maxj; j++){
-        for(int k=0; k<maxj; k++){
+        for(int k=0; k<maxk; k++){
             this->data[j][k] += m[j][k];
         }
     }
@@ -170,7 +170,7 @@ Matrix Matrix::operator-=(Matrix m){
     int maxj = (int)this->rowsLength();
     int maxk = (int)this->colsLength();
     for(int j=0; j<maxj; j++){
-        for(int k=0; k<maxj; k++){
+        for(int k=0; k<maxk; k++){
             this->data[j][k] -= m[j][k];
         }
     }
@@ -348,10 +348,11 @@ Matrix ones(const Number &r, const Number &c){
 
 Matrix identity(Number r, Number c){
     Matrix result;
+    result.resize(r,c);
     if(c<0) c = r;
     for(int j=0; j<r.r;j++){
-        result.appendRow(zeros(c));
         if(j<c) result[j][j] = 1;
+        else break;
     }
     return result;
 }

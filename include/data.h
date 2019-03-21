@@ -5,7 +5,7 @@
 #include <string>
 #include "_Number.h"
 
-//Expresiones con numero de aurgumentos infinitos
+//Expresiones con numero de argumentos infinitos
 void print();
 template<class T, class ... Types>
 void print(const T& first, const Types& ... args){
