@@ -241,6 +241,47 @@ Number rungeKutta(Function2 f, Number x0, Number y0, Number xf, Number subinterv
     }
     return y0;
 }
+
+// Determinante
+Number determinante(Matrix matriz, Number orden)
+{
+   Number det = 0.0;
+   
+   if (orden == 1) {
+      det = Number(matriz[0][0]);
+   } else {
+      for (Number j = 0; j < orden; j++) {
+         det = det + Number(matriz[0][j]) * cofactor(matriz, orden, 0, j);
+      }
+   }
+   
+   return det;
+}
+
+//cofactor necesario para calcular determinante
+Number cofactor(Matrix matriz, Number orden, Number fila, Number columna)
+{
+   Matrix submatriz;
+   Number n = orden - 1;
+   
+   Number x = 0;
+   Number y = 0;
+   for (int i = 0; i < orden; i++) {
+      for (int j = 0; j < orden; j++) {
+         if (i != fila && j != columna) {
+            submatriz[x][y] = matriz[i][j];
+            y++;
+            if (y >= n) {
+               x++;
+               y = 0;
+            }
+         }
+      }
+   }
+   
+   return Number(pow(-1.0, fila + columna)) * determinante(submatriz, n);
+}
+
 // cuadratica
 Vector quadratic(const Number &a, const Number &b, const Number &c){
     Vector roots;

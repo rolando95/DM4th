@@ -79,6 +79,10 @@ Number integral(Function f, const Number&, const Number&, const Number subinterv
  rungeKutta(f, x0, y0, xf, subintervals=1000)
 */
 Number rungeKutta(Function2 f, Number x0, Number y0, Number xf, Number subintervals=1000);
+//determinante(matriz, orden)
+Number determinante(Matrix matriz, Number orden)
+//cofactor(matriz, orden, fila, columna)
+Number cofactor(Matrix matriz, Number orden, Number fila, Number columna)
 // quadratic(a,b,c)
 Vector quadratic(const Number&, const Number&, const Number&);
 // newtonRaphson(f, x0=seed, max iterations, tolerance)
