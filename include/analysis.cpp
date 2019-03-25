@@ -228,6 +228,19 @@ Number integral(Function f, const Number &a, const Number &b, const Number subin
     return 3*h/8*s;
     */
 }
+Number rungeKutta(Function2 f, Number x0, Number y0, Number xf, Number subintervals){
+    Number yf, k1, k2, k3, k4, h, n=subintervals;
+    h = (xf - x0)/n;
+    for(int j=0; j<(int)n; j++){
+        k1 = f(x0,y0);
+        k2 = f(x0+h/2, y0+h*k1/2);
+        k3 = f(x0+h/2, y0+h*k2/2);
+        k4 = f(x0+h  , y0+h*k3);
+        y0 = y0 + (k1 + 2*k2 + 2*k3 + k4)*h/6;
+        x0 = x0 + h;
+    }
+    return y0;
+}
 // cuadratica
 Vector quadratic(const Number &a, const Number &b, const Number &c){
     Vector roots;
