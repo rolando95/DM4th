@@ -9,6 +9,7 @@
 //#define min minimum
 
 typedef Number (* Function)(Number x);
+typedef Number (* Function2)(Number x, Number y);
 
 Number maximum(const Number a);
 Number maximum(Vector);
@@ -66,8 +67,22 @@ Number derivative(Function f, const Number&, const Number order=1, const Number 
  diff(vector, iterations)
 */
 Vector diff(Vector, Number=1);
-// integral(f, begin, end, subintervals=99)
+// integral(f, begin, end, subintervals=1000)
 Number integral(Function f, const Number&, const Number&, const Number subintervals=1000);
+/* Ordinary differential equations
+ 
+ f(x,y) = y'
+ Number f(Number x, Number y){
+     ...
+     return yf;
+ }
+ rungeKutta(f, x0, y0, xf, subintervals=1000)
+*/
+Number rungeKutta(Function2 f, Number x0, Number y0, Number xf, Number subintervals=1000);
+//determinante(matriz, orden)
+Number determinante(Matrix matriz, Number orden)
+//cofactor(matriz, orden, fila, columna)
+Number cofactor(Matrix matriz, Number orden, Number fila, Number columna)
 // quadratic(a,b,c)
 Vector quadratic(const Number&, const Number&, const Number&);
 // newtonRaphson(f, x0=seed, max iterations, tolerance)
