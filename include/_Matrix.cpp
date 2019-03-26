@@ -1,5 +1,4 @@
-#include "_Matrix.h"
-
+#include "_Matrix.h" 
 Matrix::Matrix(){}
 Matrix::Matrix(const Matrix &m){
     *this = m;
@@ -13,8 +12,8 @@ Matrix::Matrix(std::string str){
 
 Vector& Matrix::operator[](Number n){
     int pos = n.r;
-    if(pos<0) pos = 0;
-    //if(pos>= this->_rows)  /* TODO resize */
+    //if(pos<0) pos = 0;
+    assert(pos<this->rowsLength());
     if(this->data[pos].length() != _cols) this->data[pos].resize(_cols);
     return this->data[pos];
 }

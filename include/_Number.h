@@ -5,7 +5,7 @@
 #include "constants.h"
 #include <sstream>
 #include <fstream>
-
+#include <assert.h> 
 class Number{
 public:
     static int precision;

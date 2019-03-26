@@ -14,6 +14,7 @@ Vector::Vector(std::string str){
 Number& Vector::operator[](Number n){
     int pos = n.r;
     if(pos<0) pos = 0;
+    assert(pos<this->length());
     //if(pos>=this->_rows) resize(pos+1);
     return this->data[pos];
 }

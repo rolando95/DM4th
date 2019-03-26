@@ -1,2 +1,4 @@
 main.exe
+bin/*
+!bin/ignore.txt
 .vscode/
