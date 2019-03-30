@@ -62,11 +62,11 @@ Number exp(Number x){
 
 Vector polar(Number n){
     Vector result; result.resize(2);
-    result[0] = sqrt(n.r*n.r+n.i*n.i);
-    if(n.r!=0){
-        result[1] = atan(n.i/n.r);
+    result[0] = sqrt(n.real()*n.real()+n.imag()*n.imag());
+    if(n.real()!=0){
+        result[1] = atan(n.imag()/n.real());
     }else{
-        if(n.i>0) result[1] = pi/2;
+        if(n.imag()>0) result[1] = pi/2;
         else result[1] = 3*pi/2;
     }
     return result;
@@ -103,15 +103,15 @@ Number gamma(Number z, Number tolerance){
         result = sqrt(2*pi) *pow(t,z+0.5) * exp(-t) * x;
     }
 
-    if (abs(result.i - abs(result.i))<=tolerance){
-        return result.r;
+    if (abs(result.imag() - abs(result.imag()))<=tolerance){
+        return result.real();
     }
     return result;
 }
 
 Number factorial(const Number &n){
     Number x = 1;
-    if(floor(n.r)==n && n>=0){ // Es numero entero positivo 
+    if(floor(n.real())==n && n>=0){ // Es numero entero positivo 
         for(auto i=1; i<=n; i++){
             x *= i;
         }
@@ -173,7 +173,7 @@ Number product(Vector v, Number begin, Number end, Number interval){
 }
 // Derivative
 Number derivative(Function f, const Number &x0, const Number order, const Number h){
-    Number o(abs(floor(order.r)));
+    Number o(abs(floor(order.real())));
     if(order<=0){
         return f(x0);
     }else if(order==1){
@@ -188,8 +188,8 @@ Vector diff(Vector v, Number iter){
     if(iter<=0) return v;
     else{
         Vector diffV;
-        if(v.length().r >= 2){
-            for(auto j=0; j<v.length().r -1; j++){
+        if(v.length().real() >= 2){
+            for(auto j=0; j<v.length().real() -1; j++){
                 diffV.append(v[j+1] - v[j]);
             }
             return diff(diffV,iter - 1);
@@ -200,12 +200,12 @@ Vector diff(Vector v, Number iter){
 }
 // Integral
 Number integral(Function f, const Number &a, const Number &b, const Number subintervals){
-    Number n = int(round(subintervals).r)/3*3;
+    Number n = int(round(subintervals).real())/3*3;
     Number h = (b-a)/n;
     
     Number s=0;
-    for(Number i=0; i<n; i++){
-        s+=f(a+h*(i+0.5));
+    for(Number j=0; j<n; j++){
+        s+=f(a+h*(j+0.5));
     }
     return s*h;
     
@@ -238,14 +238,14 @@ Vector quadratic(const Number &a, const Number &b, const Number &c){
 }
 // Aproximaciones de raices
 Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
-    x1 = x1.r;
-    Number y1 = (x1.i==0)? 1.00i : x1.i;
+    x1 = x1.real();
+    Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
-    for(int n=0; n<maxIter.r && abs(f(x1))>tolerance; n++){
+    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; n++){
         x1 = x1 - f(x1)/derivative(f,x1);
     }
     if(abs(f(x1))>tolerance){
-        for(int n=0; n<maxIter.r && abs(f(y1))>tolerance; n++){
+        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; n++){
             y1 = y1 - f(y1)/derivative(f,y1);
         }
         if(abs(f(y1))>tolerance) x1 = NAN;
@@ -254,14 +254,14 @@ Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
     return x1;
 }
 Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number tolerance){
-    x1 = x1.r;
-    Number y1 = (x1.i==0)? 1.00i : x1.i;
+    x1 = x1.real();
+    Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
-    for(int n=0; n<maxIter.r && abs(f(x1))>tolerance; n++){
+    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; n++){
         x1 = x1 - f(x1)/fd(x1);
     }
     if(abs(f(x1))>tolerance){
-        for(int n=0; n<maxIter.r && abs(f(y1))>tolerance; n++){
+        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; n++){
             y1 = y1 - f(y1)/fd(y1);
         }
         if(abs(f(y1))>tolerance) x1 = NAN;
@@ -270,11 +270,11 @@ Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number 
     return x1;
 }
 Number secantMethod(Function f, Number x0, Number x1, Number maxIter, Number tolerance){
-    x0 = x0.r; x1 = x1.r;
+    x0 = x0.real(); x1 = x1.real();
     Number x2;
 
-    Number y0 = x0.i==0? 1.00i : x0.i;
-    Number y1 = x1.i==0? 1.01i : x1.i;
+    Number y0 = x0.imag()==0? 1.00i : x0.imag();
+    Number y1 = x1.imag()==0? 1.01i : x1.imag();
     Number y2;
 
     for(int n=0; n<maxIter && abs(f(x1))>tolerance; n++){

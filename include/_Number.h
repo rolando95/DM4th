@@ -7,20 +7,21 @@
 #include <fstream>
 #include <assert.h> 
 class Number{
+    double r, i;
 public:
     static int precision;
-    double r, i;
+    
 
     Number(const double=0,const double=0);
     Number(const Number&);
     Number(std::string);
 
     // get set parte real
-    double real();
+    double real() const;
     double real(double);
 
     // get set parte imaginaria
-    double imag();
+    double imag() const;
     double imag(double);
     
     // Asignacion de un valor numerico

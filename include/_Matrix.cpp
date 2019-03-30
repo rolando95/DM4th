@@ -11,7 +11,7 @@ Matrix::Matrix(std::string str){
 }
 
 Vector& Matrix::operator[](Number n){
-    int pos = n.r;
+    int pos = n.real();
     //if(pos<0) pos = 0;
     assert(pos<this->rowsLength());
     if(this->data[pos].length() != _cols) this->data[pos].resize(_cols);
@@ -19,14 +19,14 @@ Vector& Matrix::operator[](Number n){
 }
 
 void Matrix::resize(const Number &posR,Number posC){
-    int r = int(posR.r), c = int(posC.r);
+    int r = posR.real(), c = posC.real();
     if (c<0) c = r;
     if(r>=0 && c>=0){
         data.resize(r);
         for(int j=0; j<r; j++){
             data[j].resize(c);
         }
-        _rows = r; _cols = c;
+        this->_rows = r; this->_cols = c;
     }   
 }
 
@@ -40,7 +40,7 @@ Number Matrix::colsLength()const{
 
 Matrix Matrix::appendRow(Matrix m, Number position){
     if(m._rows > 0){
-        int pos = position.r;
+        int pos = position.real();
         if(pos<0 || pos>=this->_rows) {data.insert(data.end(), m.data.begin(), m.data.end());}
         else{
             data.insert(data.begin() + pos, m.data.begin(), m.data.end());
@@ -51,7 +51,7 @@ Matrix Matrix::appendRow(Matrix m, Number position){
 }
 
 Vector Matrix::appendRow(const Vector &v, Number position){
-    int pos = position.r;
+    int pos = position.real();
 
     // Insercion de vector en matriz
     if(pos<0 || pos>= this->_rows) {
@@ -70,7 +70,7 @@ Vector Matrix::appendRow(const Vector &v, Number position){
 }
 
 Vector Matrix::appendCol(const Vector &vec, Number position){
-    int pos = position.r;
+    int pos = position.real();
     Vector v = vec;
 
     // Reescala el numero de filas si anteriormente era igual a 0
@@ -86,7 +86,7 @@ Vector Matrix::appendCol(const Vector &vec, Number position){
 }
 
 Matrix Matrix::appendCol(Matrix mat, Number position){
-    int pos = position.r;
+    int pos = position.real();
     Matrix m = mat;
     if(_rows==0){
         this->resize(m.rowsLength());
@@ -102,7 +102,7 @@ Matrix Matrix::appendCol(Matrix mat, Number position){
 
 Vector Matrix::popRow(const Number position){
     Vector value;
-    int pos = position.r;
+    int pos = position.real();
     if(this->_rows > 0){
         if(pos>=this->_rows) {
             value = this->data[_rows-1];
@@ -111,23 +111,23 @@ Vector Matrix::popRow(const Number position){
             value = this->data[pos];
             data.erase(data.begin()+pos);
         }
-        _rows-=1;
+        this->_rows-=1;
     }
     return value;
 }  
 
 Vector Matrix::popCol(const Number position){
     Vector value;
-    int pos = position.r;
+    int pos = position.real();
     if(this->_cols>0){
         if(pos<0 || pos>=this->_cols){
-            pos = _cols-1;
+            pos = this->_cols-1;
         }
         value.resize(_rows);
         for(int j=0; j<_rows; j++){
             value[j] = data[j].pop(pos);
         }
-        _cols -= 1;
+        this->_cols -= 1;
     }
     return value;
 }
@@ -331,7 +331,7 @@ Matrix operator%(Matrix m,const Number &n){
 
 Matrix zeros(const Number &r, const Number &c){
     Matrix result;
-    for(int j=0; j<r.r;j++){
+    for(int j=0; j<r.real();j++){
         result.appendRow(zeros(c));
     }
     return result;
@@ -349,7 +349,7 @@ Matrix identity(Number r, Number c){
     Matrix result;
     result.resize(r,c);
     if(c<0) c = r;
-    for(int j=0; j<r.r;j++){
+    for(int j=0; j<r.real();j++){
         if(j<c) result[j][j] = 1;
         else break;
     }
@@ -365,7 +365,7 @@ void matrixToArray(Matrix &m, T *array, int N, int M, bool imaginary){
         if(lenC<M) M = lenC;
         for(int j=0; j<N; j++){
             for(int k=0; k<M; k++){
-                array[j*M+k] = (T)m[j][k].r;
+                array[j*M+k] = (T)m[j][k].real();
             }
         }
     }else
@@ -374,8 +374,8 @@ void matrixToArray(Matrix &m, T *array, int N, int M, bool imaginary){
         if(lenC<M) M = lenC;
         for(int j=0; j<N/2; j++){
             for(int k=0; k<M; k++){
-                array[j*M+k] = (T)m[j][k].r;
-                array[(j+N/2)*M+k] = (T)m[j][k].i;
+                array[j*M+k] = (T)m[j][k].real();
+                array[(j+N/2)*M+k] = (T)m[j][k].imag();
             }
         }
     }

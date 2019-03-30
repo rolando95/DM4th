@@ -12,7 +12,7 @@ Vector::Vector(std::string str){
 }
 
 Number& Vector::operator[](Number n){
-    int pos = n.r;
+    int pos = n.real();
     if(pos<0) pos = 0;
     assert(pos<this->length());
     //if(pos>=this->_rows) resize(pos+1);
@@ -28,7 +28,7 @@ const Vector Vector::operator[](Vector v)const {
 }
 
 Number Vector::append(const Number &n, const Number position){
-    int pos = position.r;
+    int pos = position.real();
     if(pos<0 || pos>=this->_rows) {data.push_back(n);}
     else {
         data.insert(data.begin() + pos,n);
@@ -39,7 +39,7 @@ Number Vector::append(const Number &n, const Number position){
 
 Vector Vector::append(const Vector& v, const Number position){
     if(v._rows > 0){
-        int pos = position.r;
+        int pos = position.real();
         if(pos<0 || pos>=this->_rows) {data.insert(data.end(), v.data.begin(), v.data.end());}
         else{
             data.insert(data.begin() + pos, v.data.begin(), v.data.end());
@@ -51,7 +51,7 @@ Vector Vector::append(const Vector& v, const Number position){
 
 Number Vector::pop(const Number position){
     Number value;
-    int pos = position.r;
+    int pos = position.real();
     if(this->_rows > 0){
         if(pos<0 || pos>=this->_rows) {
             value = this->data[_rows-1];
@@ -87,7 +87,7 @@ Vector Vector::index(Vector value){
 }
 
 void Vector::resize(const Number &pos){
-    int c = int(pos.r);
+    int c = int(pos.real());
     if(c>=0){
         data.resize(c);
         _rows = c;
@@ -310,13 +310,13 @@ void vectorToArray(Vector &v, T *array, int n, bool imaginary){
     if(!imaginary){
         if(lenV<n) n = lenV;
         for(int j=0; j<n; j++){
-            array[j] = (T)v[j].r;
+            array[j] = (T)v[j].real();
         }
     }else{
         if(lenV*2<n) n = lenV*2;
         for(int j=0; j<n/2; j++){
-            array[j] = (T)v[j].r;
-            array[j+n/2] = (T)v[j].i;
+            array[j] = (T)v[j].real();
+            array[j+n/2] = (T)v[j].imag();
         }
     }
 }

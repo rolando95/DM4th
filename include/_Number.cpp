@@ -6,8 +6,7 @@ Number::Number(const double a,const double b){
 }
 
 Number::Number(const Number& n){
-    this->r = n.r;
-    this->i = n.i;
+    *this = n;
 }
 
 Number::Number(std::string str){
@@ -18,10 +17,10 @@ Number::Number(std::string str){
 
 int Number::precision =  5;
 
-double Number::real(){return this->r;}
+double Number::real()const {return this->r;}
 double Number::real(double a){this->r = a; return this->r;}
 
-double Number::imag(){return this->i;}
+double Number::imag()const {return this->i;}
 double Number::imag(double a){this->i = a; return this->i;}
 
 Number Number::operator=(double a){
@@ -129,23 +128,23 @@ Number operator""i(long double a){
     return Number(0,a);
 }
 Number operator-(Number a){
-    return Number(-a.r,-a.i);
+    return Number(-a.real(),-a.imag());
 }
 //Impresion en pantalla de numeros complejos
 std::ostream& operator<<(std::ostream& stream, Number n){
-    if(n.r == INF) stream<<"INF";
-    else if(n.r == -INF) stream<<"-INF";
-    else if(std::isnan(n.r)) stream<<"NAN";
+    if(n.real() == INF) stream<<"INF";
+    else if(n.real() == -INF) stream<<"-INF";
+    else if(std::isnan(n.real())) stream<<"NAN";
     else{
         n = round(n,15); // Es necesario corregir problemas de redondeo
         //stream
         if(n==0) stream<<"0";
         else{
-            if(n.r != 0) stream<<n.r;
-            if(n.i > 0 && n.r!=0)  stream<<"+";
-            if(n.i != 0) {
-                if(n.i != 1 && n.i != -1) stream<<n.i;
-                if(n.i == -1) stream<<"-";
+            if(n.real() != 0) stream<<n.real();
+            if(n.imag() > 0 && n.real()!=0)  stream<<"+";
+            if(n.imag() != 0) {
+                if(n.imag() != 1 && n.imag() != -1) stream<<n.imag();
+                if(n.imag() == -1) stream<<"-";
                 stream<<"i";
             }
         }
@@ -221,8 +220,8 @@ std::istream& operator>>(std::istream& stream, Number &n){
         //El proximo estado es de aceptacion
         if(nextState==9 || nextState==10){
             value[count] = '\0';
-            if(nextState==9) n.i =  strtod(value,NULL);
-            else n.r = strtod(value,NULL);
+            if(nextState==9) n.imag(strtod(value,NULL));
+            else n.real(strtod(value,NULL));
             count = 0;
 
             //Vuelve a estados anteriores si es un numero complejo
@@ -246,23 +245,23 @@ std::istream& operator>>(std::istream& stream, Number &n){
 }
 // Suma de numeros complejos
 Number operator+(const Number &n1,const Number &n2){
-    return Number(n1.r + n2.r, n1.i + n2.i);
+    return Number(n1.real() + n2.real(), n1.imag() + n2.imag());
 }
 // Resta de numeros complejos
 Number operator-(const Number &n1,const Number &n2){
-    return Number(n1.r - n2.r, n1.i - n2.i);
+    return Number(n1.real() - n2.real(), n1.imag() - n2.imag());
 }
 // Multiplicacion de numeros complejos
 Number operator*(const Number &n1,const Number &n2){
     //real*real
-    if(n1.i==0 && n2.i==0){
-        return n1.r*n2.r;
+    if(n1.imag()==0 && n2.imag()==0){
+        return n1.real()*n2.real();
     }
     //im*im
     else{
         return Number(
-            n1.r*n2.r - n1.i*n2.i, 
-            n1.r*n2.i + n1.i*n2.r
+            n1.real()*n2.real() - n1.imag()*n2.imag(), 
+            n1.real()*n2.imag() + n1.imag()*n2.real()
         );
     }
 }
@@ -270,25 +269,25 @@ Number operator*(const Number &n1,const Number &n2){
 Number operator/(const Number &n1,const Number &n2){
 
     // n/INF
-    if(n2.r == INF && n1.r != INF)
+    if(n2.real() == INF && n1.real() != INF)
         return Number(0,0);
     // real/real
-    else if(n1.i==0 && n2.i==0 && n2.r != 0){
-        return Number(n1.r/n2.r,0);
+    else if(n1.imag()==0 && n2.imag()==0 && n2.real() != 0){
+        return Number(n1.real()/n2.real(),0);
     // im/im
     }else{
-        double denominator = pow(n2.r,2) + pow(n2.i,2);
+        double denominator = pow(n2.real(),2) + pow(n2.imag(),2);
         
         // n1/n2
         if(denominator != 0)
             return Number(
-                (n1.r*n2.r + n1.i*n2.i)/ denominator,
-                (n1.i*n2.r - n1.r*n2.i)/ denominator  
+                (n1.real()*n2.real() + n1.imag()*n2.imag())/ denominator,
+                (n1.imag()*n2.real() - n1.real()*n2.imag())/ denominator  
             );
         // n/0
         else
-            if(n1.r != INF && n1 != 0){
-                if(n1.r>0)
+            if(n1.real() != INF && n1 != 0){
+                if(n1.real()>0)
                     return Number(INF,0);
                 else    
                     return Number(-INF,0);
@@ -296,29 +295,29 @@ Number operator/(const Number &n1,const Number &n2){
                 return Number(NAN,0);
     }
 }
-// Residuo de numeros complejos (Solo trabaja como numeros enteros)
+// Residuo de numeros complejos
 Number operator%(const Number &n1,const Number &n2){
-    if(floor(n1.r)==n1.r && floor(n2.r)==n2.r && n1.i==0 && n2.i==0){
-        if(n2.r != 0)
-            return int(n1.r)%int(n2.r);
-        else
-            return 0;
-    }else{
-        return 0;
-    }
+    Number result;
+    if(n2.real()!=0) result.real(fmod(n1.real(),n2.real()));
+     else if(n1.real()==0) result.real(0);
+    else return NAN;
+    if(n2.imag()!=0) result.imag(fmod(n1.imag(),n2.imag()));
+    else if(n1.imag()==0) result.imag(0);
+    else return NAN;
+    return result;
 }
 
 // Relacional
 bool operator==(const Number &n1, const Number &n2){
-    return (n1.r==n2.r && n1.i==n2.i);
+    return (n1.real()==n2.real() && n1.imag()==n2.imag());
 }
 bool operator!=(const Number &n1, const Number &n2){
-    return (n1.r!=n2.r || n1.i!=n2.i);
+    return (n1.real()!=n2.real() || n1.imag()!=n2.imag());
 }
 bool operator>(const Number &n1, const Number &n2){
     bool result=false; 
-    if(n1.r > n2.r) result=true;
-    else if(n1.r==n2.r && n1.i > n2.i) result=true;
+    if(n1.real() > n2.real()) result=true;
+    else if(n1.real()==n2.real() && n1.imag() > n2.imag()) result=true;
     return result;
 }
 bool operator<(const Number &n1, const Number &n2){
@@ -333,15 +332,15 @@ bool operator<=(const Number &n1, const Number &n2){
 
 // Math
 Number rad(const Number &n1){
-    return Number(n1.r*pi/180, n1.i*pi/(double)180.0);
+    return Number(n1.real()*pi/180, n1.imag()*pi/(double)180.0);
 }
 Number deg(const Number &n1){
-    return Number(n1.r*180/pi, n1.i*(double)180.0/pi);
+    return Number(n1.real()*180/pi, n1.imag()*(double)180.0/pi);
 }
 Number round(const Number &n, int p){
         Number n1 = Number(
-            round(n.r * pow(10,p)) / pow(10,p),
-            round(n.i * pow(10,p)) / pow(10,p)
+            round(n.real() * pow(10,p)) / pow(10,p),
+            round(n.imag() * pow(10,p)) / pow(10,p)
         );
         return n1;
 }
@@ -349,25 +348,25 @@ Number abs(const Number &n){
     return sqrt(norm(n));
 }
 Number norm(const Number &n){
-    return n.r*n.r + n.i*n.i;
+    return n.real()*n.real() + n.imag()*n.imag();
 }
 Number arg(const Number &n){
-    if(n.r>0 || n.i != 0){
-        return Number(2*atan(n.i/(sqrt(n.r*n.r + n.i*n.i)+n.r)),0);
-    }else if(n.r<0 && n.i == 0){
+    if(n.real()>0 || n.imag() != 0){
+        return Number(2*atan(n.imag()/(sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())),0);
+    }else if(n.real()<0 && n.imag() == 0){
         return Number(pi,0);
     }
     return Number(NAN, 0);
 }
 Number conjugate(const Number &n){
-    return Number(n.r, -n.i);
+    return Number(n.real(), -n.imag());
 }
 Number pow(const Number &n1,const Number &n2){
-    if(n1.i==0 && n2.i==0 && n1.r >= 0)
-        return pow(n1.r,n2.r);
+    if(n1.imag()==0 && n2.imag()==0 && n1.real() >= 0)
+        return pow(n1.real(),n2.real());
     else{
         Number exponent = n2*ln(n1);
-        return pow(e,exponent.r)*(cos(exponent.i)+sin(exponent.i)*i);
+        return pow(e,exponent.real())*(cos(exponent.imag())+sin(exponent.imag())*i);
     }
 }
 Number sqrt(const Number &n){
@@ -376,13 +375,13 @@ Number sqrt(const Number &n){
 Number ln(const Number &n){
     if(n==0) return Number(-INF,0);
     else{
-        return log(abs(n).r)+arg(n)*i;
+        return log(abs(n).real())+arg(n)*i;
     }
 }
 Number log(const Number &n, const Number &base){return ln(n)/ln(base);}
 
-Number sin(const Number &n){return (n.i==0)?sin(n.r) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
-Number cos(const Number &n){return (n.i==0)?cos(n.r) : (pow(e,i*n)+pow(e,-i*n))/2;}
+Number sin(const Number &n){return (n.imag()==0)?sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
+Number cos(const Number &n){return (n.imag()==0)?cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
 Number tan(const Number &n){
     Number c = cos(n);
     if(round(c,15)==0){
