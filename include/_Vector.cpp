@@ -1,9 +1,48 @@
 #include "_Vector.h"
-Vector::Vector(){}
+#include <time.h>
+
+void Vector::alloc(){
+    //std::cout<<"create ref"<<std::endl;
+    _ref = new int(1);
+    _rows = new int(0);
+}
+
+void Vector::free(){
+    if(_ref != nullptr){
+        *_ref -= 1;
+        if(*_ref<=0){ 
+            //std::cout<<"No reference to this object"<<std::endl;   
+
+            //No resized vector (this->_data = nullptr)
+            if(_data){
+                _data->freeArray();
+                delete _data;
+                _data = nullptr;
+
+                if(_ref){
+                    delete _ref;
+                    _ref = nullptr;
+                }
+
+                if(_rows){
+                    delete _rows;
+                    _rows = nullptr;
+                }
+            }else{
+                //std::cout<<"!"<<std::endl;
+            }
+        }
+    }
+}
+
+Vector::Vector(){
+    this->alloc();
+}
 
 Vector::Vector(const Vector &v){
     *this = v;
 }
+
 
 Vector::Vector(std::string str){
     std::stringstream ss;
@@ -11,108 +50,132 @@ Vector::Vector(std::string str){
     ss >> *this;
 }
 
-Number& Vector::operator[](Number n){
-    int pos = n.real();
-    if(pos<0) pos = 0;
-    assert(pos<this->length());
-    //if(pos>=this->_rows) resize(pos+1);
-    return this->data[pos];
-}
-
-const Vector Vector::operator[](Vector v)const {
-    Vector result;
-    for(int j=0; j<v.length(); j++){
-        result.append(this->data[(int)v[j]]);
+Number Vector::append(const Number &n, Number idx){
+    int pos = idx.real();
+    assert(pos>=-1 && pos<= *_rows);
+    this->resize(*_rows+1);
+    //Append
+    if(pos<0 || pos >= *_rows) {
+        _data->array[*_rows-1] = n;
     }
-    return result;
-}
-
-Number Vector::append(const Number &n, const Number position){
-    int pos = position.real();
-    if(pos<0 || pos>=this->_rows) {data.push_back(n);}
+    //Insert
     else {
-        data.insert(data.begin() + pos,n);
+        for(int j=*_rows-1; j > pos; j--){
+            _data->array[j] = _data->array[j-1];
+        }
+        _data->array[pos] = n;
     }
-    _rows++;
     return n;
 }
 
-Vector Vector::append(const Vector& v, const Number position){
-    if(v._rows > 0){
-        int pos = position.real();
-        if(pos<0 || pos>=this->_rows) {data.insert(data.end(), v.data.begin(), v.data.end());}
-        else{
-            data.insert(data.begin() + pos, v.data.begin(), v.data.end());
+Vector Vector::append(Vector v,Number idx){
+    int pos = (int)idx.real();
+    int size = v.length();
+    int end = *_rows;
+    assert(pos>=-1 && pos<=*_rows);
+    this->resize(*_rows+size);
+
+    //Append
+    if(pos<0||pos==*_rows){
+        for(int j=0; j<size; j++){
+            _data->array[end+j] = v[j];
         }
-        this->_rows += v._rows;
+    //Insert
+    }else{
+        for(int j=end+size-1; j>=pos+size; j--){
+            _data->array[j] = _data->array[j-size];
+        }
+        for(int j=pos; j<pos+size; j++){
+            _data->array[j] = v[j-pos];
+        }
     }
+
     return v;
 }
 
-Number Vector::pop(const Number position){
+Number Vector::pop(const Number idx){
     Number value;
-    int pos = position.real();
-    if(this->_rows > 0){
-        if(pos<0 || pos>=this->_rows) {
-            value = this->data[_rows-1];
-            data.pop_back();
-        }else{
-            value = this->data[pos];
-            data.erase(data.begin()+pos);
+    int pos = idx.real();
+    assert(pos>=-1 && pos<=*_rows && *_rows>0);
+
+    if(pos<0 || pos>=*_rows) {
+        value = _data->array[*_rows-1];
+    }else{
+        value = _data->array[pos];
+        for(int j=pos; j<*_rows-1; j++){
+            _data->array[j] = _data->array[j+1];
         }
-        _rows-=1;
-    }else
-        return 0;
+    }
+
+    this->resize(*_rows-1);
+
     return value;
 }
 
-Number Vector::length() const{
-    return this->_rows;
-}
-
-Vector Vector::index(const Number &value){
-    Vector result;
-    for(int j=0; j<_rows; j++){
-        if(value==this->data[j]) result.append(j);
-    }
-    return result;
-}
-
-Vector Vector::index(Vector value){
-    Vector result;
-    for(int j=0; j<value._rows; j++){
-        result.append(index(value[j]));
+int Vector::index(const Number &value){
+    int result = -1;
+    for(int j=0; j<*_rows; j++){
+        if(value==_data->array[j]) {
+            result = j;
+            break;
+        }
     }
     return result;
 }
 
 void Vector::resize(const Number &pos){
-    int c = int(pos.real());
-    if(c>=0){
-        data.resize(c);
-        _rows = c;
+    int size = (int)pos.real();
+    assert(size>=0);
+    if(size != *_rows){
+        //Malloc data first time
+        if(!this->_data){
+            this->_data = new Node<Number>();
+            assert(_data);
+
+            this->_data->resizeArray(size);
+        //Realloc data
+        }else if(size>0){
+            this->_data->resizeArray(size);
+        }else if(size==0){
+            this->_data->resizeArray(1);
+        }
+        //Initialize values
+        if(size>*_rows){
+            for(int j=*_rows; j<size;j++){
+                _data->array[j] = 0 ;
+            }
+        }
+        *_rows = size;
     }
 }
 
 void Vector::swap(Number p1, Number p2, Number c){
-    int pos1 = (int)p1, pos2 = (int)p2, _rows = (int)c;
-    if(_rows <= 1){
-        Number tmp = this->data[pos1];
-        this->data[pos1] = this->data[pos2];
-        this->data[pos2] = tmp;
+    int idx1 = (int)p1, idx2 = (int)p2, count = (int)c;
+    int size = *_rows;
+    
+    assert(
+        idx1>=0 && idx1+count <= size &&
+        idx2>=0 && idx2+count <= size &&
+        count>0
+    );
+    if(count == 1){
+        Number tmp = _data->array[idx1];
+        _data->array[idx1] = _data->array[idx2];
+        _data->array[idx2] = tmp;
+        //std::cout<<*this<<std::endl;
     }else{
-        Vector tmp; tmp.resize(_rows);
-        for(int j=0; j<_rows; j++){
-            tmp[j] = this->data[pos1+j];
-            this->data[pos1+j] = this->data[pos2+j];
-            this->data[pos2+j] = tmp[j];
+        Vector tmp; tmp.resize(count);
+        for(int j=0; j<count; j++){
+            tmp[j] = _data->array[idx1+j];
+            _data->array[idx1+j] = _data->array[idx2+j];
+            _data->array[idx2+j] = tmp[j];
         }
     }
+    
 }
 
-
 /*Quicksort*/
-Number partition(Vector &v, Number &lo, Number &hi){
+Number partition(Vector v, Number &lo, Number &hi){
     Number pivot = v[hi];
     Number i = lo;
     for(Number j=lo; j<=hi-1; j++){
@@ -126,7 +189,7 @@ Number partition(Vector &v, Number &lo, Number &hi){
 }
 
 Vector Vector::sort(Number lo, Number hi){
-    if(hi<=-1)hi = this->length()-1;
+    if(hi<=-1) hi = *_rows-1;
     if(lo<hi){ 
         Number p = partition(*this,lo,hi);
         this->sort(lo, p-1);
@@ -135,19 +198,12 @@ Vector Vector::sort(Number lo, Number hi){
     return *this;
 }
 
-Vector sort(Vector v){
-    return v.sort();
-}
-
 Vector Vector::reverse(){
-    for(Number j=0; j<this->length()/2; j++){
-        this->swap(j,this->length()-j-1);
+    int size = *_rows/2;
+    for(Number j=0; j<size; j++){
+        this->swap(j,*_rows-j-1);
     }
     return *this;
-}
-
-Vector reverse(Vector v){
-    return v.reverse();
 }
 
 Vector Vector::loadFile(std::string url){
@@ -172,39 +228,53 @@ Vector Vector::saveFile(std::string url){
     return *this;
 }
 
-Vector Vector::operator+=(Vector v){
-    Number max = std::min(this->length(), v.length());
-    for(int j=0; j<max; j++){ this->data[j] += v[j];}
-    return *this;
+void Vector::operator=(const Vector &D) {
+    this->free();
+    this->_data = D._data;
+    this->_rows = D._rows;
+    this->_ref = D._ref;
+    this->_ref[0] += 1;
 }
 
-Vector Vector::operator-=(Vector v){
-    Number max = std::min(this->length(), v.length());
-    for(int j=0; j<max; j++){ this->data[j] -= v[j];}
-    return *this;
+void Vector::operator+=(Vector v){
+    assert(*_rows == v.length());
+    for(int j=0; j<*_rows; j++){ _data->array[j] += v[j];}
 }
 
-Vector Vector::operator*=(Number n){
-    for(int j=0; j<this->length(); j++){ this->data[j] *= n;}
-    return *this;
+void Vector::operator-=(Vector v){
+    assert(*_rows == v.length());
+    for(int j=0; j<*_rows; j++){ _data->array[j] -= v[j];}
 }
 
-Vector Vector::operator/=(Number n){
-    for(int j=0; j<this->length(); j++){ this->data[j] /= n;}
-    return *this;
+void Vector::operator*=(Number n){
+    for(int j=0; j<*_rows; j++){ _data->array[j] *= n;}
 }
 
-Vector Vector::operator%=(Number n){
-    for(int j=0; j<this->length(); j++){ this->data[j] %= n;}
-    return *this;
+void Vector::operator/=(Number n){
+    for(int j=0; j<*_rows; j++){ _data->array[j] /= n;}
 }
 
-std::vector<Number>::iterator Vector::begin(){return data.begin();}
-std::vector<Number>::iterator Vector::end(){ return data.end();}
+void Vector::operator%=(Number n){
+    for(int j=0; j<*_rows; j++){ _data->array[j] %= n;}
+}
+
+Vector Vector::getCopy(){
+    Vector result;
+    result.resize(*_rows);
+    int size = result.length();
+    for(int j=0;j<size; j++){
+        result[j] = _data->array[j];
+    }
+    return result;
+}
+Vector::~Vector(){
+    this->free();
+}
 
 std::ostream& operator<<(std::ostream& stream, Vector v){
+    int size = v.length();
     stream<<"[";
-    for(int n=0; n<v.length(); n++){
+    for(int n=0; n<size; n++){
         if(n!=0) stream<<", ";
         stream<<v[n];
     }
@@ -213,7 +283,7 @@ std::ostream& operator<<(std::ostream& stream, Vector v){
 }
 
 std::istream& operator>>(std::istream& stream, Vector &v){
-    v.resize(0);
+    v = Vector();
     Number value;
     if(stream.peek()==' ') stream>>std::ws;
     if(stream.peek()=='['){
@@ -232,14 +302,14 @@ std::istream& operator>>(std::istream& stream, Vector &v){
 
 // Suma de vectores
 Vector operator+(Vector v1,Vector v2){
-    Vector result = v1;
+    Vector result = v1.getCopy();
     result += v2;
     return result;
 }
 
 // Resta de vectores
 Vector operator-(Vector v1,Vector v2){
-    Vector result = v1;
+    Vector result = v1.getCopy();
     result -= v2;
     return result;
 }
@@ -247,8 +317,8 @@ Vector operator-(Vector v1,Vector v2){
 // Producto escalar
 Number operator*(Vector v1,Vector v2){
     Number result = 0;
-    Number max = std::min(v1.length(), v2.length());
-    for(int j=0; j<max; j++){
+    assert(v1.length() == v2.length());
+    for(int j=0; j<v1.length(); j++){
         result += v1[j]*v2[j];
     }
     return result;
@@ -256,7 +326,7 @@ Number operator*(Vector v1,Vector v2){
 
 // Producto entre vector y escalar
 Vector operator*(Vector v,const Number &n){
-    Vector result = v;
+    Vector result = v.getCopy();
     result*=n;
     return result;
 }
@@ -267,13 +337,13 @@ Vector operator*(const Number &n, Vector v){
 
 // Division entre vector y escalar
 Vector operator/(Vector v,const Number &n){
-    Vector result = v;
+    Vector result = v.getCopy();
     result/=n;
     return result;
 }
 // Residuo
 Vector operator%(Vector v,const Number &n){
-    Vector result = v;
+    Vector result = v.getCopy();
     result%=n;
     return result;
 }
@@ -304,46 +374,12 @@ Vector range(Vector v, const Number &begin, const Number &end, Number value){
     return result;
 }
 
-template<class T>
-void vectorToArray(Vector &v, T *array, int n, bool imaginary){
-    int lenV = (int)v.length();
-    if(!imaginary){
-        if(lenV<n) n = lenV;
-        for(int j=0; j<n; j++){
-            array[j] = (T)v[j].real();
-        }
-    }else{
-        if(lenV*2<n) n = lenV*2;
-        for(int j=0; j<n/2; j++){
-            array[j] = (T)v[j].real();
-            array[j+n/2] = (T)v[j].imag();
-        }
-    }
-}
-template void vectorToArray(Vector&, int*     , int, bool);
-template void vectorToArray(Vector&, long int*, int, bool);
-template void vectorToArray(Vector&, float*   , int, bool);
-template void vectorToArray(Vector&, double*  , int, bool);
-template void vectorToArray(Vector&, Number*  , int, bool);
-
-template<class T>
-void arrayToVector(T* array, Vector &v, int n, bool imaginary){
-    
-    if(!imaginary){
-        v.resize(n);
-        for(int j=0; j<n; j++){
-            v[j] = array[j];
-        }
-    }else{
-        v.resize(n/2);
-        for(int j=0; j<n/2; j++){
-            v[j]= array[j]+array[j+n/2]*i;
-        }
-    }
+Vector sort(Vector v){
+    Vector result = v.getCopy();
+    return result.sort();
 }
 
-template void arrayToVector(int*,      Vector&, int, bool);
-template void arrayToVector(long int*, Vector&, int, bool);
-template void arrayToVector(float*,    Vector&, int, bool);
-template void arrayToVector(double*,   Vector&, int, bool);
-template void arrayToVector(Number*,   Vector&, int, bool);
+Vector reverse(Vector v){
+    Vector result = v.getCopy();
+    return result.reverse();
+}

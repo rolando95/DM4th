@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include "constants.h"
+#include "data.h"
 #include <sstream>
 #include <fstream>
-#include <assert.h> 
 class Number{
     double r, i;
 public:

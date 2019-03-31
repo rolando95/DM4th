@@ -2,16 +2,11 @@
 #define __VECTOR_H__
 
 #include "_Number.h"
+#include <vector>
 
 class Vector{
-private:
-    int *_rows = nullptr;
-    int *_ref = nullptr;
-    Node<Number> *_data = nullptr;
-
-    void alloc();
-    void free();
-
+    int _rows = 0;
+    std::vector<Number> data;
 public:
     // Inicializacion sin valores
     Vector();
@@ -19,20 +14,17 @@ public:
     Vector(const Vector&);
     // Inicializacion con un numero indefinido de elementos en el constructor
     template<class ... T>
-    Vector(Number first,T... args){  
-        *this = Vector();  
-        this->append(first);
-        this->append(Vector(args...));
+    Vector(const Number& first,T... args){    
+        append(first);
+        append(Vector(args...));
     }
+
     Vector(std::string);
 
     // Acceso a elemento de vector
-    inline Number& operator[](Number n){
-        int pos = (int)n;
-        if(pos<0) pos = 0;
-        assert(pos<*_rows);
-        return _data->array[pos];
-    }
+    Number& operator[](Number);
+    const Vector operator[](Vector) const;
+
     /* 
      Adjunta un numero en el vector
      vector.append(Number)           <- Adjunta el valor Number al final del Vector
@@ -44,20 +36,20 @@ public:
      vector.append(Vector)           <- Adjunta el valor Vector al final del Vector
      vector.append(Vector, position) <- Adjunta el valor Vector en la posicion dada dentro del Vector
     */
-    Vector append(Vector,Number=-1);
-    /* 
-     Elimina un elemento del vector
-     vector.pop()         <- Elimina el ultimo elemento del vector
-     vector.pop(position) <- Elimina el elemento del vector de la posicion dada
-    */
-    Number pop(const Number=-1);
+    Vector append(const Vector&,Number=-1);
+
     // Obtiene el numero de elementos que contiene el vector
-    inline int length() const{ return *_rows;}
+    Number length() const;
     /*
      Busca la posicion de los elementos en el vector que coincidan con el valor de argumento. 
      Devuelve un vector vacio de no encontrar coincidencias
     */
-    int index(const Number&);
+    Vector index(const Number&);
+    /*
+     Busca la posicion de los elementos en el vector que coincidan con alguno de los valores del vector de argumento. 
+     Devuelve un vector vacio de no encontrar coincidencias
+    */
+    Vector index(Vector);
     /* 
      Reescala el vector con el numero de elementos dados.
      Definir un tamanio mayor al actual rellenara de ceros automaticamente, uno menor eliminara los ultimos elementos.
@@ -65,39 +57,38 @@ public:
     void resize(const Number&);
     /*
      Intercambia 2 elementos del vector
-     vector.swap(index1, index2, count=-1);
     */
     void swap(Number, Number, Number=1);
+
     /*
      Ordena elementos del vector
     */
     Vector sort(Number begin=0, Number end=-1);
+
     /*
-     Invierte los elementos del vector
+    Invierte los elementos del vector
     */
     Vector reverse();
-     // Carga valor de tipo Vector desde un fichero
+
+    // Carga valor de tipo Vector desde un fichero
     Vector loadFile(std::string url);
     // Guarda valor de tipo Vector en un fichero
     Vector saveFile(std::string url);
 
-    void operator=(const Vector &D);
     // Asignacion aditiva
-    void operator+=(Vector);
+    Vector operator+=(Vector);
     // Asignacion sustractiva
-    void operator-=(Vector);
+    Vector operator-=(Vector);
     // Asignacion multiplicativa
-    void operator*=(Number);
+    Vector operator*=(Number);
     // Asignacion divisiva
-    void operator/=(Number);
+    Vector operator/=(Number);
     // Residuo
-    void operator%=(Number);
+    Vector operator%=(Number);
 
-    /*
-     Retorna una copia del Vector (Paso por valor)
-    */
-    Vector getCopy();
-    ~Vector();
+    // inicio y final de vector (De utilidad para for each de c++)
+    std::vector<Number>::iterator begin();
+    std::vector<Number>::iterator end();
 };
 
 // Impresion en pantalla del vector
@@ -132,5 +123,37 @@ Vector ones(const Number&);
 Vector range(Vector, const Number&, const Number&, Number=1);
 Vector sort(Vector);
 Vector reverse(Vector);
+
+template<class T>
+/* 
+    Conversion de Vector a array de lenguaje C.      
+    Si se desea adjuntar los numeros imaginarios de Vector, imaginary=true       
+    vectorToArray(array, Vector, Numero de elementos del C array, incluirNumerosImaginarios);
+
+    vectorToArray(array, Vector, 2, false)
+    [1+3i, 2+4i] ==> {1, 2}
+
+    vectorToArray(array, Vector, 4, true)
+    [1+3i, 2+4i] ==> {1, 2, 3, 4}
+
+    NOTA: Es importante reservar memoria del array para la conversion 
+    antes de llamar la funcion
+*/
+void vectorToArray(Vector &v, T *CArray, int N, bool imaginary=false);
+
+
+template<class T>
+/*
+    Conversion de array en lenguaje C a Vector
+    Si la segunda mitad del array contiene el valor imaginario de la parte real, imaginary=true
+    arrayToVector(array, Vector, Numero de elementos del C array, incluirNumerosImaginarios);
+
+    arrayToVector(array, Vector, 4, false)
+    {1,2,3,4} ==> [1, 2, 3, 4]
+
+    arrayToVector(array, Vector, 4, true)
+    {1,2,3,4} ==> [1+3i, 2+4i]
+*/
+void arrayToVector(T* CArray, Vector &v, int N, bool imaginary=false);
 
 #endif

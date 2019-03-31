@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
 #include "_Number.h"
 
 //Expresiones con numero de argumentos infinitos
@@ -23,4 +24,29 @@ void input(T& first, Types& ... args){
     std::cin>>first;
     input(args...);
 }
+
+/*
+ Low implementation!
+*/
+template<typename T>
+struct Node
+{
+    Node(){
+        allocArray(1);
+    }
+
+    T *array = nullptr;
+    inline void allocArray(int size){
+        array = new T[size];
+        assert(array);
+    }
+    inline void resizeArray(int size){
+        array = (T*) realloc(array, size*sizeof(T));
+        assert(array);
+    }
+    inline void freeArray(){
+        delete array;
+        array = nullptr;
+    }
+};
 #endif
