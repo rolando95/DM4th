@@ -6,6 +6,7 @@
 #include "data.h"
 #include <sstream>
 #include <fstream>
+
 class Number{
     double r, i;
 public:

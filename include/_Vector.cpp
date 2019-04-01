@@ -1,38 +1,56 @@
 #include "_Vector.h"
-#include <time.h>
+
+void Vector::_addRef(){
+    if(_ref != nullptr){
+        *_ref += 1;
+        //std::cout<<"Vector ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
+    }
+}
+
+void Vector::_subRef(){
+    if(_ref != nullptr){
+        *_ref -= 1;
+        //std::cout<<"Vector ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+        if(*_ref<=0){ 
+            this->free();
+        }
+    }
+}
 
 void Vector::alloc(){
-    //std::cout<<"create ref"<<std::endl;
+    std::cout<<"New Vector  ---------- N(V)"<<std::endl;
     _ref = new int(1);
     _rows = new int(0);
 }
 
 void Vector::free(){
-    if(_ref != nullptr){
-        *_ref -= 1;
-        if(*_ref<=0){ 
-            //std::cout<<"No reference to this object"<<std::endl;   
+    std::cout<<"Free Vector ---------- F(V)"<<std::endl;   
+    //No resized vector (this->_data = nullptr)
+    if(_data){
+        _data->freeArray();
+        delete _data;
+        _data = nullptr;
 
-            //No resized vector (this->_data = nullptr)
-            if(_data){
-                _data->freeArray();
-                delete _data;
-                _data = nullptr;
-
-                if(_ref){
-                    delete _ref;
-                    _ref = nullptr;
-                }
-
-                if(_rows){
-                    delete _rows;
-                    _rows = nullptr;
-                }
-            }else{
-                //std::cout<<"!"<<std::endl;
-            }
+        if(_ref){
+            delete _ref;
+            _ref = nullptr;
         }
+
+        if(_rows){
+            delete _rows;
+            _rows = nullptr;
+        }
+    }else{
+        //std::cout<<"!"<<std::endl;
     }
+}
+
+void Vector::operator=(const Vector &D) {
+    this->_subRef();
+    this->_data = D._data;
+    this->_rows = D._rows;
+    this->_ref = D._ref;
+    this->_addRef();
 }
 
 Vector::Vector(){
@@ -45,9 +63,14 @@ Vector::Vector(const Vector &v){
 
 
 Vector::Vector(std::string str){
+    this->alloc();
     std::stringstream ss;
     ss << str;
     ss >> *this;
+}
+
+Vector::~Vector(){
+    this->_subRef();
 }
 
 Number Vector::append(const Number &n, Number idx){
@@ -129,10 +152,9 @@ void Vector::resize(const Number &pos){
     if(size != *_rows){
         //Malloc data first time
         if(!this->_data){
-            this->_data = new Node<Number>();
+            this->_data = new _Array<Number>();
             assert(_data);
-
-            this->_data->resizeArray(size);
+            this->_data->allocArray(size);
         //Realloc data
         }else if(size>0){
             this->_data->resizeArray(size);
@@ -228,14 +250,6 @@ Vector Vector::saveFile(std::string url){
     return *this;
 }
 
-void Vector::operator=(const Vector &D) {
-    this->free();
-    this->_data = D._data;
-    this->_rows = D._rows;
-    this->_ref = D._ref;
-    this->_ref[0] += 1;
-}
-
 void Vector::operator+=(Vector v){
     assert(*_rows == v.length());
     for(int j=0; j<*_rows; j++){ _data->array[j] += v[j];}
@@ -266,9 +280,6 @@ Vector Vector::getCopy(){
         result[j] = _data->array[j];
     }
     return result;
-}
-Vector::~Vector(){
-    this->free();
 }
 
 std::ostream& operator<<(std::ostream& stream, Vector v){

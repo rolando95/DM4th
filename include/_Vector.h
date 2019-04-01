@@ -7,12 +7,16 @@ class Vector{
 private:
     int *_rows = nullptr;
     int *_ref = nullptr;
-    Node<Number> *_data = nullptr;
+    _Array<Number> *_data = nullptr;
 
     void alloc();
     void free();
 
 public:
+    void _addRef();
+    void _subRef();
+
+    void operator=(const Vector &D);
     // Inicializacion sin valores
     Vector();
     // Inicializacion con un vector como argumento en el constructor
@@ -20,12 +24,12 @@ public:
     // Inicializacion con un numero indefinido de elementos en el constructor
     template<class ... T>
     Vector(Number first,T... args){  
-        *this = Vector();  
+        this->alloc();  
         this->append(first);
         this->append(Vector(args...));
     }
     Vector(std::string);
-
+    ~Vector();
     // Acceso a elemento de vector
     inline Number& operator[](Number n){
         int pos = (int)n;
@@ -81,7 +85,6 @@ public:
     // Guarda valor de tipo Vector en un fichero
     Vector saveFile(std::string url);
 
-    void operator=(const Vector &D);
     // Asignacion aditiva
     void operator+=(Vector);
     // Asignacion sustractiva
@@ -97,7 +100,6 @@ public:
      Retorna una copia del Vector (Paso por valor)
     */
     Vector getCopy();
-    ~Vector();
 };
 
 // Impresion en pantalla del vector

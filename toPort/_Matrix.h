@@ -29,8 +29,6 @@ public:
     
     Number rowsLength() const;
     Number colsLength() const;
-
-    
     
     /* 
      Adjunta como parametro Vector una fila en la matriz
@@ -55,7 +53,7 @@ public:
      matrix.appendCol(Matrix)           <- Adjunta el valor Matrix al final de la matriz 
      matrix.appendCol(Matrix, position) <- Adjunta el valor Matrix en la posicion dada dentro de la matriz
     */
-    Matrix appendCol(Matrix, Number=-1); /* TODO */
+    Matrix appendCol(Matrix, Number=-1);
     /* 
      Elimina una fila de la matriz
      matrix.popRow()         <- Elimina la ultima fila de la matriz
