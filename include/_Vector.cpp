@@ -1,16 +1,20 @@
 #include "_Vector.h"
-
+//#define REFDEBUG
 void Vector::_addRef(){
     if(_ref != nullptr){
         *_ref += 1;
-        //std::cout<<"Vector ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
+        #ifdef REFDEBUG
+        std::cout<<"Vector ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
+        #endif
     }
 }
 
 void Vector::_subRef(){
     if(_ref != nullptr){
         *_ref -= 1;
-        //std::cout<<"Vector ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+        #ifdef REFDEBUG
+        std::cout<<"Vector ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+        #endif
         if(*_ref<=0){ 
             this->free();
         }
@@ -18,13 +22,17 @@ void Vector::_subRef(){
 }
 
 void Vector::alloc(){
+    #ifdef REFDEBUG
     std::cout<<"New Vector  ---------- N(V)"<<std::endl;
+    #endif
     _ref = new int(1);
     _rows = new int(0);
 }
 
 void Vector::free(){
-    std::cout<<"Free Vector ---------- F(V)"<<std::endl;   
+    #ifdef REFDEBUG
+    std::cout<<"Free Vector ---------- F(V)"<<std::endl;  
+    #endif 
     //No resized vector (this->_data = nullptr)
     if(_data){
         _data->freeArray();

@@ -1,16 +1,20 @@
 #include "_Matrix.h"
-
+//#define REFDEBUG
 void Matrix::_addRef(){
     if(_ref != nullptr){
         *_ref += 1;
+        #ifdef REFDEBUG
         std::cout<<"Matrix ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
+        #endif
     }
 }
 
 void Matrix::_subRef(){
     if(_ref != nullptr){
         *_ref -= 1;
-          std::cout<<"Matrix ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+        #ifdef REFDEBUG
+        std::cout<<"Matrix ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+        #endif
         if(*_ref<=0){ 
             this->free();
         }
@@ -18,19 +22,24 @@ void Matrix::_subRef(){
 }
 
 void Matrix::alloc(){
+    #ifdef REFDEBUG
     std::cout<<"New Matrix  ---------- N(M)"<<std::endl;
+    #endif
     _ref = new int(1);
     _rows = new int(0);
     _cols = new int(0);
 }
 
 void Matrix::free(){
-    std::cout<<"Free Matrix ---------- F(M)"<<std::endl;   
+    #ifdef REFDEBUG
+    std::cout<<"Free Matrix ---------- F(M)"<<std::endl; 
+    #endif  
     //No resized Matrix (this->_data = nullptr)
     if(_data){
+        /*
         for(int j=0; j<*_rows; j++){
             _data->array[j]._subRef();
-        }
+        }*/
         _data->freeArray();
         delete _data;
         _data = nullptr;
@@ -101,6 +110,7 @@ Matrix Matrix::appendRow(Matrix m, Number position){
 Vector Matrix::appendRow(const Vector &v, Number idx){
     int pos = idx.real();
     assert(pos>=-1 && pos<= *_rows);
+    if(*_rows==0) *_cols = v.length();
     this->resize(*_rows+1, *_cols);
     //Append
     if(pos<0 || pos >= *_rows) {
@@ -168,12 +178,14 @@ void Matrix::resize(const Number &posR,Number posC){
             }
         //Realloc
         }else if(r>0){
+            /*
             if(r<*_rows){
                 //Sub ref to out of range vectors
                 for(int j=r; j<*_rows; j++){
                     this->_data->array[j]._subRef();
                 }
-            }
+            }*/
+            
             //Realloc rows
             this->_data->resizeArray(r);
             //Realloc cols
