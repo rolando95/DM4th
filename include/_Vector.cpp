@@ -16,12 +16,12 @@ void Vector::_subRef(){
         std::cout<<"Vector ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
         #endif
         if(*_ref<=0){ 
-            this->free();
+            this->_free();
         }
     }
 }
 
-void Vector::alloc(){
+void Vector::_alloc(){
     #ifdef REFDEBUG
     std::cout<<"New Vector  ---------- N(V)"<<std::endl;
     #endif
@@ -29,9 +29,9 @@ void Vector::alloc(){
     _rows = new int(0);
 }
 
-void Vector::free(){
+void Vector::_free(){
     #ifdef REFDEBUG
-    std::cout<<"Free Vector ---------- F(V)"<<std::endl;  
+    std::cout<<"_free Vector ---------- F(V)"<<std::endl;  
     #endif 
     //No resized vector (this->_data = nullptr)
     if(_data){
@@ -62,7 +62,7 @@ void Vector::operator=(const Vector &D) {
 }
 
 Vector::Vector(){
-    this->alloc();
+    this->_alloc();
 }
 
 Vector::Vector(const Vector &v){
@@ -71,7 +71,7 @@ Vector::Vector(const Vector &v){
 
 
 Vector::Vector(std::string str){
-    this->alloc();
+    this->_alloc();
     std::stringstream ss;
     ss << str;
     ss >> *this;
@@ -158,12 +158,12 @@ void Vector::resize(const Number &pos){
     int size = (int)pos.real();
     assert(size>=0);
     if(size != *_rows){
-        //Malloc data first time
+        //M_alloc data first time
         if(!this->_data){
             this->_data = new _Array<Number>();
             assert(_data);
             this->_data->allocArray(size);
-        //Realloc data
+        //Re_alloc data
         }else if(size>0){
             this->_data->resizeArray(size);
         }else if(size==0){
@@ -283,8 +283,7 @@ void Vector::operator%=(Number n){
 Vector Vector::getCopy(){
     Vector result;
     result.resize(*_rows);
-    int size = result.length();
-    for(int j=0;j<size; j++){
+    for(int j=0;j<result.length(); j++){
         result[j] = _data->array[j];
     }
     return result;

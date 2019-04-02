@@ -9,12 +9,11 @@ private:
     int *_ref = nullptr;
     _Array<Number> *_data = nullptr;
 
-    void alloc();
-    void free();
-
-public:
+    void _alloc();
+    void _free();
     void _addRef();
     void _subRef();
+public:
 
     void operator=(const Vector &D);
     // Inicializacion sin valores
@@ -24,7 +23,7 @@ public:
     // Inicializacion con un numero indefinido de elementos en el constructor
     template<class ... T>
     Vector(Number first,T... args){  
-        this->alloc();  
+        this->_alloc();  
         this->append(first);
         this->append(Vector(args...));
     }
@@ -95,7 +94,6 @@ public:
     void operator/=(Number);
     // Residuo
     void operator%=(Number);
-
     /*
      Retorna una copia del Vector (Paso por valor)
     */
