@@ -31,9 +31,6 @@ void input(T& first, Types& ... args){
 template<typename T>
 struct _Array
 {
-    Node(){
-        allocArray(1);
-    }
     T *array = nullptr;
     int *_rows = nullptr;
     inline void allocArray(int size){
@@ -134,7 +131,7 @@ public:
     _ArrayManager(){
         this->_alloc();
     }
-    virtual void operator=(const _ArrayManager &D) {
+    void operator=(const _ArrayManager &D) {
         this->_subRef();
         this->_data = D._data;
         this->_rows = D._rows;

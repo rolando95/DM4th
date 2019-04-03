@@ -7,21 +7,18 @@
 using namespace std;
 
 int main(){
-    Matrix a = Matrix("[[1,2,3],\
-                        [4,5,6],\
-                        [7,8,9]]");
-    Matrix b = Matrix(
-        Vector(10,11,12),
-        Vector(13,14,15),
-        Vector(16,17,18)
+    Matrix a = Matrix(
+        Vector(1,2,3),
+        Vector(4,5,6),
+        Vector(7,8,9)
     );
-    Vector c(19,20,21);
-    Matrix d = a.getCopy();
-    a.appendCol(c,2);
     print(a);
-    d.appendCol(a,1);
-    print(d.popCol());
-    print(d.popRow(0));
-    print(d);
+
+    Vector b = a[0];
+    b[2] = 0;
+    print(a);
+    print(b);
+    a.appendCol(b);
+    print(a);
     return 0;
 }

@@ -1,15 +1,6 @@
 #include "_Matrix.h"
 //#define REFDEBUG
 
-void Matrix::operator=(const Matrix &D) {
-    this->_subRef();
-    this->_data = D._data;
-    this->_rows = D._rows;
-    this->_cols = D._cols;
-    this->_ref = D._ref;
-    this->_addRef();
-}
-
 Matrix::Matrix(){
     
 }

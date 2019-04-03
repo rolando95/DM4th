@@ -5,8 +5,7 @@
 
 class Matrix: protected _ArrayManager<Vector>{
 public:
-
-    void operator=(const Matrix &D);
+    using _ArrayManager::operator=;
     // Inicializacion sin valores
     Matrix();
     // Inicializacion con un vector como argumento en el constructor

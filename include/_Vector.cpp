@@ -1,14 +1,5 @@
 #include "_Vector.h"
 
-
-void Vector::operator=(const Vector &D) {
-    this->_subRef();
-    this->_data = D._data;
-    this->_rows = D._rows;
-    this->_ref = D._ref;
-    this->_addRef();
-}
-
 Vector::Vector(){
 }
 

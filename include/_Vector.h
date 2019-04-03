@@ -5,8 +5,7 @@
 
 class Vector: protected _ArrayManager<Number>{
 public:
-
-    void operator=(const Vector &D);
+    using _ArrayManager::operator=;
     // Inicializacion sin valores
     Vector();
     // Inicializacion con un vector como argumento en el constructor
