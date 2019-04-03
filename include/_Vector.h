@@ -3,16 +3,7 @@
 
 #include "_Number.h"
 
-class Vector{
-private:
-    int *_rows = nullptr;
-    int *_ref = nullptr;
-    _Array<Number> *_data = nullptr;
-
-    void _alloc();
-    void _free();
-    void _addRef();
-    void _subRef();
+class Vector: protected _ArrayManager<Number>{
 public:
 
     void operator=(const Vector &D);

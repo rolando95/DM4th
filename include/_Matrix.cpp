@@ -1,62 +1,5 @@
 #include "_Matrix.h"
 //#define REFDEBUG
-void Matrix::_addRef(){
-    if(_ref != nullptr){
-        *_ref += 1;
-        #ifdef REFDEBUG
-        std::cout<<"Matrix ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
-        #endif
-    }
-}
-
-void Matrix::_subRef(){
-    if(_ref != nullptr){
-        *_ref -= 1;
-        #ifdef REFDEBUG
-        std::cout<<"Matrix ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
-        #endif
-        if(*_ref<=0){ 
-            this->_free();
-        }
-    }
-}
-
-void Matrix::_alloc(){
-    #ifdef REFDEBUG
-    std::cout<<"New Matrix  ---------- N(M)"<<std::endl;
-    #endif
-    _ref = new int(1);
-    _rows = new int(0);
-    _cols = new int(0);
-}
-
-void Matrix::_free(){
-    #ifdef REFDEBUG
-    std::cout<<"Free Matrix ---------- F(M)"<<std::endl; 
-    #endif  
-    //No resized Matrix (this->_data = nullptr)
-    if(_data){
-        _data->freeArray();
-        delete _data;
-        _data = nullptr;
-        if(_ref){
-            delete _ref;
-            _ref = nullptr;
-        }
-
-        if(_rows){
-            delete _rows;
-            _rows = nullptr;
-        }
-
-        if(_cols){
-            delete _cols;
-            _cols = nullptr;
-        }
-    }else{
-        //std::cout<<"!"<<std::endl;
-    }
-}
 
 void Matrix::operator=(const Matrix &D) {
     this->_subRef();
@@ -68,7 +11,7 @@ void Matrix::operator=(const Matrix &D) {
 }
 
 Matrix::Matrix(){
-    this->_alloc();
+    
 }
 
 Matrix::Matrix(const Matrix &m){
@@ -84,7 +27,7 @@ Matrix::Matrix(std::string str){
 }
 
 Matrix::~Matrix(){
-    this->_subRef();
+    
 }
 
 Matrix Matrix::appendRow(Matrix m, Number idx){

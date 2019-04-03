@@ -1,57 +1,5 @@
 #include "_Vector.h"
-//#define REFDEBUG
-void Vector::_addRef(){
-    if(_ref != nullptr){
-        *_ref += 1;
-        #ifdef REFDEBUG
-        std::cout<<"Vector ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
-        #endif
-    }
-}
 
-void Vector::_subRef(){
-    if(_ref != nullptr){
-        *_ref -= 1;
-        #ifdef REFDEBUG
-        std::cout<<"Vector ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
-        #endif
-        if(*_ref<=0){ 
-            this->_free();
-        }
-    }
-}
-
-void Vector::_alloc(){
-    #ifdef REFDEBUG
-    std::cout<<"New Vector  ---------- N(V)"<<std::endl;
-    #endif
-    _ref = new int(1);
-    _rows = new int(0);
-}
-
-void Vector::_free(){
-    #ifdef REFDEBUG
-    std::cout<<"_free Vector ---------- F(V)"<<std::endl;  
-    #endif 
-    //No resized vector (this->_data = nullptr)
-    if(_data){
-        _data->freeArray();
-        delete _data;
-        _data = nullptr;
-
-        if(_ref){
-            delete _ref;
-            _ref = nullptr;
-        }
-
-        if(_rows){
-            delete _rows;
-            _rows = nullptr;
-        }
-    }else{
-        //std::cout<<"!"<<std::endl;
-    }
-}
 
 void Vector::operator=(const Vector &D) {
     this->_subRef();
@@ -62,7 +10,6 @@ void Vector::operator=(const Vector &D) {
 }
 
 Vector::Vector(){
-    this->_alloc();
 }
 
 Vector::Vector(const Vector &v){
@@ -78,7 +25,6 @@ Vector::Vector(std::string str){
 }
 
 Vector::~Vector(){
-    this->_subRef();
 }
 
 Number Vector::append(const Number &n, Number idx){

@@ -3,17 +3,7 @@
 
 #include "_Vector.h"
 
-class Matrix{
-private:
-    int *_rows = nullptr;
-    int *_cols = nullptr;
-    int *_ref = nullptr;
-    _Array<Vector> *_data = nullptr;
-
-    void _alloc();
-    void _free();
-    void _addRef();
-    void _subRef();
+class Matrix: protected _ArrayManager<Vector>{
 public:
 
     void operator=(const Matrix &D);
