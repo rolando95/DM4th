@@ -26,6 +26,49 @@ public:
         assert(pos<*_rows);
         return _data->array[pos];
     }
+    /*
+        Obtiene la fila de una matriz
+        matrix.getRow(position)
+    */
+    inline Vector getRow(Number n){
+        assert(n>=0 && n<*_rows);
+        return _data->array[(int)n];
+    }
+    /*
+        Obtiene la columna de una matriz
+        matrix.getCol(position)
+    */
+    inline Vector getCol(Number n){
+        int pos  = (int)n;
+        assert(pos>=0 && pos<*_cols);
+        Vector result; result.resize(*_rows);
+        for(int j=0; j<*_rows; j++){
+            result[j] = _data->array[j][n];
+        }
+        return result;
+    }
+    /*
+        asigna por la fila de una matriz
+        matrix.setRow(position, Vector)
+    */
+    inline Vector setRow(Number n, Vector v){
+        int pos  = (int)n;
+        assert(pos>=0 && pos<*_rows && v.length()==*_cols);
+        _data->array[pos] = v;
+        return v;
+    }
+    /*
+        asigna la columna de una matriz
+        matrix.setCol(position, Vector)
+    */
+    inline Vector setCol(Number n, Vector v){
+        int pos  = (int)n;
+        assert(pos>=0 && pos<*_cols && v.length()==*_rows);
+        for(int j=0; j<*_rows; j++){
+            _data->array[j][n] = v[j];
+        }
+        return v;
+    }
     /* 
      Adjunta como parametro Vector una fila en la matriz
      matrix.appendRow(Vector)           <- Adjunta el valor Vector al final de la matriz 

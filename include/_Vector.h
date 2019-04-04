@@ -26,6 +26,23 @@ public:
         assert(pos<*_rows);
         return _data->array[pos];
     }
+    /*
+        obtiene un elemento de vector
+        vector.getItem(position)
+    */
+    inline Number getItem(Number pos){
+        assert(pos>=0 && pos<*_rows);
+        return _data->array[(int)pos];
+    }
+    /*
+        asigna un elemento de vector
+        vector.setItem(position)
+    */    
+    inline Number setItem(Number pos, Number value){
+         assert(pos>=0 && pos<*_rows);
+         _data->array[(int)pos] = value;
+         return value;
+    }
     /* 
      Adjunta un numero en el vector
      vector.append(Number)           <- Adjunta el valor Number al final del Vector
