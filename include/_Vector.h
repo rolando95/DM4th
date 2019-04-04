@@ -131,6 +131,13 @@ Vector operator/(Vector,const Number&);
 // Residuo
 Vector operator%(Vector,const Number&);
 
+bool operator==(Vector&,Vector&);
+bool operator!=(Vector&,Vector&);
+bool operator> (Vector&,Vector&);
+bool operator< (Vector&,Vector&);
+bool operator>=(Vector&,Vector&);
+bool operator<=(Vector&,Vector&);
+
 Vector zeros(const Number&);
 //
 Vector ones(const Number&);

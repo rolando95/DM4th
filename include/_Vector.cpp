@@ -302,6 +302,50 @@ Vector operator%(Vector v,const Number &n){
     result%=n;
     return result;
 }
+bool operator==(Vector &v1, Vector &v2){
+    bool result = true;
+    if(v1.length()!=v2.length()){
+        result = false;
+    }else{
+        for(int j=0; j<v1.length(); j++){
+            if(v1[j]!=v2[j]) {
+                result = false;
+                break;
+            }
+            
+        }
+    }
+    return result;
+}
+
+bool operator!=(Vector &v1, Vector &v2){
+    return !(v1==v2);
+}
+
+bool operator>(Vector &v1, Vector &v2){
+    bool result=false;
+    int min = v1.length()<v2.length()? v1.length() : v2.length();
+    for(int j=0; j<min; j++){
+        if(v1[j]!=v2[j]){
+            result = v1[j]>v2[j];
+            break;
+        }
+        result = v1.length()>v2.length();
+    }
+    return result;
+}
+
+bool operator<(Vector &v1, Vector &v2){
+    return !(v1>=v2);
+}
+
+bool operator>=(Vector &v1, Vector &v2){
+    return v1>v2||v1==v2;
+}
+
+bool operator<=(Vector &v1, Vector &v2){
+    return !(v1>v2);
+}
 
 Vector zeros(const Number &n){
     Vector z; z.resize(n);
@@ -328,6 +372,7 @@ Vector range(Vector v, const Number &begin, const Number &end, Number value){
     }
     return result;
 }
+
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;
     if(value>0 && end>begin){

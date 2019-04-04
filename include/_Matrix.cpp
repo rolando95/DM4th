@@ -348,6 +348,51 @@ Matrix operator%(Matrix m,const Number &n){
     return result;
 }
 
+bool operator==(Matrix &m1, Matrix &m2){
+    bool result = true;
+    if(m1.length()!=m2.length() || m1.colsLength()!=m2.colsLength()){
+        result = false;
+    }else{
+        for(int j=0; j<m1.length(); j++){
+            if(m1[j]!=m2[j]) {
+                result = false;
+                break;
+            }
+            
+        }
+    }
+    return result;
+}
+
+bool operator!=(Matrix &m1, Matrix &m2){
+    return !(m1==m2);
+}
+
+bool operator>(Matrix &m1, Matrix &m2){
+    bool result=false;
+    int min = m1.length()<m2.length()? m1.length() : m2.length();
+    for(int j=0; j<min; j++){
+        if(m1[j]!=m2[j]){
+            result = m1[j]>m2[j];
+            break;
+        }
+        result = m1.length()>m2.length();
+    }
+    return result;
+}
+
+bool operator<(Matrix &m1, Matrix &m2){
+    return !(m1>=m2);
+}
+
+bool operator>=(Matrix &m1, Matrix &m2){
+    return m1>m2||m1==m2;
+}
+
+bool operator<=(Matrix &m1, Matrix &m2){
+    return !(m1>m2);
+}
+
 Matrix zeros(const Number &r, const Number &c){
     Matrix result;
     for(int j=0; j<r.real();j++){

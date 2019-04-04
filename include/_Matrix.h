@@ -161,6 +161,13 @@ Vector operator*(Matrix, Vector);
 Matrix operator/(Matrix,const Number&);
 // Residuo
 Matrix operator%(Matrix,const Number&);
+
+bool operator==(Matrix&,Matrix&);
+bool operator!=(Matrix&,Matrix&);
+bool operator> (Matrix&,Matrix&);
+bool operator< (Matrix&,Matrix&);
+bool operator>=(Matrix&,Matrix&);
+bool operator<=(Matrix&,Matrix&);
 /*
  Devuelve una matriz de ceros con numero de filas y columnas dadas
  zeros(2,2) ==> [[0,0]
