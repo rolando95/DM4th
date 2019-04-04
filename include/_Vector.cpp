@@ -328,6 +328,19 @@ Vector range(Vector v, const Number &begin, const Number &end, Number value){
     }
     return result;
 }
+Vector range(const Number &begin, const Number &end, Number value){
+    Vector v;
+    if(value>0 && end>begin){
+        for(Number j=begin; j<end; j+=value){
+            v.append(j);
+        }
+    }else if(value<0 && begin>end){
+        for(Number j=begin; j>end; j+=value){
+            v.append(j);
+        }
+    }
+    return v;
+}
 
 Vector sort(Vector v){
     Vector result = v.getCopy();

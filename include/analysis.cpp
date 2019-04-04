@@ -28,20 +28,6 @@ Number fibonacci(Number n){
     return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/sqrt(5);
 }
 
-Vector range(const Number &begin, const Number &end, Number value){
-    Vector v;
-    if(value>0 && end>begin){
-        for(Number j=begin; j<end; j+=value){
-            v.append(j);
-        }
-    }else if(value<0 && begin>end){
-        for(Number j=begin; j>end; j+=value){
-            v.append(j);
-        }
-    }
-    return v;
-}
-
 Vector range(Function f, const Number &begin, const Number &end, Number value){
         Vector result;
     if(value>0 && end>begin){
@@ -188,8 +174,8 @@ Vector diff(Vector v, Number iter){
     if(iter<=0) return v;
     else{
         Vector diffV;
-        if(v.length().real() >= 2){
-            for(auto j=0; j<v.length().real() -1; j++){
+        if(v.length() >= 2){
+            for(auto j=0; j<v.length()-1; j++){
                 diffV.append(v[j+1] - v[j]);
             }
             return diff(diffV,iter - 1);

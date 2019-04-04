@@ -137,6 +137,7 @@ Vector ones(const Number&);
 
 // range(vector, pos begin, pos end, interval)
 Vector range(Vector, const Number&, const Number&, Number=1);
+Vector range(const Number&, const Number&, Number=1);
 Vector sort(Vector);
 Vector reverse(Vector);
 

@@ -1,6 +1,5 @@
 //#include <number.h>
-#include "_Vector.h"
-#include "_Matrix.h"
+#include "number.h"
 #include <string>
 #include <iostream>
 

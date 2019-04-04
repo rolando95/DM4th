@@ -29,14 +29,11 @@ Number minimum(const Number a, const T ... b){
 }
 // Fibonacci number 
 Number fibonacci(Number);
-// Fibonaci number (golden ratio)
-Vector range(const Number&, const Number&, Number=1);
-
 // range(f, x0=begin, xn=end, interval)
 Vector range(Function, const Number&, const Number&, Number=1);
 // e^x
 Number exp(Number x);
-// Convert Complex number to polar expresion
+// Convert Complex number to polar expresion returns Vector(r, angle)
 Vector polar(Number n);
 // PI Function
 Number PI(Number z, Number tolerance=1e-7);
@@ -78,7 +75,7 @@ Number newtonRaphson(Function f, Function fd, Number x0=1.01, Number maxIter=100
 Number secantMethod(Function f, Number x0=0.01, Number x1=1.01, Number maxIter=100, Number tolerance=1e-5);
 /*
  Returns all roots of a polynomial Function
- x^2-1 ==> bairstowMethod( V(1, 0,-1) ); ==> returns (-1, 1)
+ x^2-1 ==> bairstowMethod( V(1, 0,-1) ); ==> returns [-1, 1]
  bairstowMethod(polynomial coefficients, r=seed, s=seed2, max iterations, tolerance)
 */
 Vector bairstowsMethod(Vector, Number r=0.1, Number s=0.1, Number maxIter=100, Number tolerance=1e-5);
