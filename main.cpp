@@ -7,18 +7,12 @@
 using namespace std;
 
 int main(){
-    Matrix a = Matrix(
-        Vector(1,2,3),
-        Vector(4,5,6),
-        Vector(7,8,9)
-    );
-    print(a);
-
-    Vector b = a[0];
-    b[2] = 0;
-    print(a);
-    print(b);
-    a.appendCol(b);
-    print(a);
+    /*
+    Vector a(1,2,3);
+    Matrix b;
+    b.resize(2,1);
+    b[0] = a;
+    print(a,"\n",b);
+    */
     return 0;
 }

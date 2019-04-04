@@ -1,11 +1,19 @@
 #ifndef __DATA_H__
 #define __DATA_H__
 
+//#define REFDEBUG
+
 #include <iostream>
 #include <string>
 #include <cassert>
 #include "_Number.h"
-//#define REFDEBUG
+
+#ifdef REFDEBUG
+    #include <typeinfo>
+    #include <cxxabi.h>
+    #include "console.h"
+#endif
+
 //Expresiones con numero de argumentos infinitos
 void print();
 template<class T, class ... Types>
@@ -69,23 +77,28 @@ struct _Array
 template<typename T>
 class _ArrayManager{
 protected:
+    #ifdef REFDEBUG
+        std::string type = abi::__cxa_demangle(typeid(T).name(),0,0,0);
+    #endif
     int *_rows = nullptr;
     int *_cols = nullptr;
     int *_ref = nullptr;
      _Array<T> *_data = nullptr;
+
     void _alloc(){
-        #ifdef REFDEBUG
-        std::cout<<"New Array  ---------- N"<<std::endl;
-        #endif
         _ref = new int(1);
         _rows = new int(0);
         _cols = new int(0);
-    }
-    void _free(){
+
         #ifdef REFDEBUG
-        std::cout<<"Free Array ---------- F"<<std::endl; 
-        #endif  
-        //No resized Matrix (this->_data = nullptr)
+            setTextColor(GREEN);
+            std::cout<<"\nNew ";
+            setTextColor(WHITE);
+            std::cout<<type<<" Array: "<<this<<"\n";
+        #endif
+    }
+
+    void _free(){
         if(_data){
             _data->freeArray();
             delete _data;
@@ -104,23 +117,37 @@ protected:
                 delete _cols;
                 _cols = nullptr;
             }
-        }else{
-            //std::cout<<"!"<<std::endl;
         }
+
+        #ifdef REFDEBUG
+            setTextColor(MAGENTA);
+            std::cout<<"\nFree ";
+            setTextColor(WHITE); 
+            std::cout<<type<<" Array: "<<this<<"\n";
+        #endif  
     }
+
     void _addRef(){
         if(_ref != nullptr){
             *_ref += 1;
+
             #ifdef REFDEBUG
-            std::cout<<"Array ref "<<*_ref-1<<" -> "<<*_ref<<std::endl;
+                std::cout<<"\n"<<type<<" "<<this;
+                setTextColor(YELLOW);
+                std::cout<<" ref: "<<*_ref-1<<" -> "<<*_ref<<"\n";
+                setTextColor(WHITE);
             #endif
         }
     }
     void _subRef(){
         if(_ref != nullptr){
             *_ref -= 1;
+
             #ifdef REFDEBUG
-            std::cout<<"Array ref "<<*_ref+1<<" -> "<<*_ref<<std::endl;
+                std::cout<<"\n"<<type<<" "<<this;
+                setTextColor(YELLOW);
+                std::cout<<" ref: "<<*_ref+1<<" -> "<<*_ref<<"\n";
+                setTextColor(WHITE);
             #endif
             if(*_ref<=0){ 
                 this->_free();
@@ -131,11 +158,12 @@ public:
     _ArrayManager(){
         this->_alloc();
     }
-    void operator=(const _ArrayManager &D) {
+    void operator=(const _ArrayManager &A) {
         this->_subRef();
-        this->_data = D._data;
-        this->_rows = D._rows;
-        this->_ref = D._ref;
+        this->_data = A._data;
+        this->_rows = A._rows;
+        this->_cols = A._cols;
+        this->_ref = A._ref;
         this->_addRef();
     }
     ~_ArrayManager(){

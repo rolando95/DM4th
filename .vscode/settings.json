@@ -58,6 +58,7 @@
         "cstdarg": "cpp",
         "iomanip": "cpp",
         "list": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "thread": "cpp"
     }
 }
