@@ -19,11 +19,11 @@ public:
     }
     Vector(std::string);
     ~Vector();
+    
     // Acceso a elemento de vector
     inline Number& operator[](Number n){
         int pos = (int)n;
-        if(pos<0) pos = 0;
-        assert(pos<*_rows);
+        assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     }
     /*

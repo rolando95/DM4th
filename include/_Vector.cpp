@@ -36,7 +36,8 @@ Number Vector::append(const Number &n, Number idx){
     return n;
 }
 
-Vector Vector::append(Vector v,Number idx){
+Vector Vector::append(Vector vec,Number idx){
+    Vector v = vec.getCopy();
     int pos = (int)idx.real();
     int size = v.length();
     int end = *_rows;
@@ -95,17 +96,8 @@ void Vector::resize(const Number &pos){
     int size = (int)pos.real();
     assert(size>=0);
     if(size != *_rows){
-        //M_alloc data first time
-        if(!this->_data){
-            this->_data = new _Array<Number>();
-            assert(_data);
-            this->_data->allocArray(size);
-        //Re_alloc data
-        }else if(size>0){
-            this->_data->resizeArray(size);
-        }else if(size==0){
-            this->_data->resizeArray(1);
-        }
+        //Realloc items
+        this->_data->resizeArray(size);
         //Initialize values
         if(size>*_rows){
             for(int j=*_rows; j<size;j++){
@@ -247,6 +239,7 @@ std::istream& operator>>(std::istream& stream, Vector &v){
             v.append(value);
             if(stream.peek()==']')break;
             else if(stream.peek()==',') stream.get(); // Captura la comma
+            else assert(false);
         }
         stream.get(); // Captura el corchete cerrado
     }

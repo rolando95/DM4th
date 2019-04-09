@@ -6,6 +6,7 @@
 #include "_Number.h"
 #include "_Vector.h"
 #include "_Matrix.h"
+#include "_Quaternion.h"
 #include "analysis.h"
 #include "console.h"
 

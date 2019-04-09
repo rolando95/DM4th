@@ -2,7 +2,6 @@
 //#define REFDEBUG
 
 Matrix::Matrix(){
-    
 }
 
 Matrix::Matrix(const Matrix &m){
@@ -21,10 +20,11 @@ Matrix::~Matrix(){
     
 }
 
-Matrix Matrix::appendRow(Matrix m, Number idx){
+Matrix Matrix::appendRow(Matrix mat, Number idx){
+    Matrix m = mat.getCopy();
     int pos = idx.real();
-    assert(pos>=-1 && pos<=*_rows);
     if(*_rows==0) *_cols = m.colsLength();
+    assert(pos>=-1 && pos<=*_rows && m.colsLength()==*_cols);
     int begin = *_rows;
     this->resize(*_rows+m.rowsLength(), *_cols);
     //Append
@@ -45,10 +45,11 @@ Matrix Matrix::appendRow(Matrix m, Number idx){
     return m;
 }
 
-Vector Matrix::appendRow(const Vector &v, Number idx){
+Vector Matrix::appendRow(Vector &vec, Number idx){
+    Vector v = vec.getCopy();
     int pos = idx.real();
-    assert(pos>=-1 && pos<= *_rows);
     if(*_rows==0) *_cols = v.length();
+    assert(pos>=-1 && pos<=*_rows && v.length()==*_cols);
     this->resize(*_rows+1, *_cols);
     //Append
     if(pos<0 || pos >= *_rows) {
@@ -65,12 +66,12 @@ Vector Matrix::appendRow(const Vector &v, Number idx){
 }
 
 Vector Matrix::appendCol(Vector &vec, Number idx){
-    int pos = idx.real();
     Vector v = vec.getCopy();
+    int pos = idx.real();
     // Reescala el numero de filas si anteriormente era igual a 0
     if(*_rows==0) *_rows = v.length();
     // Verifica que el numero de elementos del vector insertado es igual al numero de filas de la matriz
-    else assert(v.length() == *_rows);
+    else assert(pos>=0 && pos<=*_cols && v.length()==*_rows);
     for(int j=0; j<*_rows; j++){
         _data->array[j].append(v[j], pos);
     }
@@ -79,14 +80,14 @@ Vector Matrix::appendCol(Vector &vec, Number idx){
 }
 
 Matrix Matrix::appendCol(Matrix mat, Number idx){
-    int pos = idx.real();
     Matrix m = mat.getCopy();
+    int pos = idx.real();
     if(*_rows==0){
         this->resize(m.rowsLength(), *_cols);
     } else{
         this->resize(*_rows, *_cols);
     }
-    assert(m.rowsLength()==*_rows);
+    assert(pos>=0 && pos<=*_cols && m.rowsLength()==*_rows);
     for(int j=0; j<*_rows; j++){
         _data->array[j].append(m[j],pos);
     }
@@ -151,24 +152,11 @@ void Matrix::resize(const Number &posR,Number posC){
     //c = (c==-1)?r:c;
     assert(r>=0 && c>=0);
     if(r != *_rows){
-        //M_alloc data firt time
-        if(!this->_data){
-            this->_data = new _Array<Vector>();
-            assert(_data);
-            //_alloc rows
-            this->_data->allocArray(r);
-            //_alloc cols
-            for(int j=0; j<r; j++){
-                this->_data->array[j].resize(c);
-            }
-        //Re_alloc
-        }else if(r>0){
-            //Re_alloc rows
-            this->_data->resizeArray(r);
-            //Re_alloc cols
-            for(int j=0; j<r; j++){
-                this->_data->array[j].resize(c);
-            }
+        //Realloc rows
+        this->_data->resizeArray(r);
+        //Realloc cols
+        for(int j=0; j<r; j++){
+            this->_data->array[j].resize(c);
         }
         *_rows = r;
         *_cols = c;
@@ -262,13 +250,17 @@ std::ostream& operator<<(std::ostream& stream, Matrix m){
 std::istream& operator>>(std::istream& stream, Matrix &m){
     m.resize(0,0);
     Vector value;
+    int pos = 0;
     if(stream.peek()==' ')stream>>std::ws;
     if(stream.peek()=='['){
         stream.get(); // Captura el corchete abierto
         while(stream>>value){
-            if(value.length()>0) m.appendRow(value);
+            //if(pos>0) assert(value.length()==m.colsLength()); 
+            m.appendRow(value);
             if(stream.peek()==']')break;
             else if(stream.peek()==',')stream.get(); //Captura la comma
+            else assert(false);
+            pos++;
         }
         stream.get(); // Captura el corchete cerrado
     }

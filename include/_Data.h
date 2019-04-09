@@ -83,17 +83,18 @@ protected:
     int *_rows = nullptr;
     int *_cols = nullptr;
     int *_ref = nullptr;
-     _Array<T> *_data = nullptr;
+     _Array<T> *_data = new _Array<T>();
 
     void _alloc(){
+        _data->allocArray(0);
         _ref = new int(1);
         _rows = new int(0);
         _cols = new int(0);
 
         #ifdef REFDEBUG
-            setTextColor(GREEN);
+            //setTextColor(GREEN);
             std::cout<<"\nNew ";
-            setTextColor(WHITE);
+            //setTextColor(WHITE);
             std::cout<<type<<" Array: "<<this<<"\n";
         #endif
     }
@@ -120,9 +121,9 @@ protected:
         }
 
         #ifdef REFDEBUG
-            setTextColor(MAGENTA);
+            //setTextColor(MAGENTA);
             std::cout<<"\nFree ";
-            setTextColor(WHITE); 
+            //setTextColor(WHITE); 
             std::cout<<type<<" Array: "<<this<<"\n";
         #endif  
     }
@@ -133,9 +134,9 @@ protected:
 
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
-                setTextColor(YELLOW);
+                //setTextColor(YELLOW);
                 std::cout<<" ref: "<<*_ref-1<<" -> "<<*_ref<<"\n";
-                setTextColor(WHITE);
+                //setTextColor(WHITE);
             #endif
         }
     }
@@ -145,9 +146,9 @@ protected:
 
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
-                setTextColor(YELLOW);
+                //setTextColor(YELLOW);
                 std::cout<<" ref: "<<*_ref+1<<" -> "<<*_ref<<"\n";
-                setTextColor(WHITE);
+                //setTextColor(WHITE);
             #endif
             if(*_ref<=0){ 
                 this->_free();

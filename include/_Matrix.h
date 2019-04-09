@@ -22,8 +22,7 @@ public:
     // Acceso a elemento de matrix
     inline Vector& operator[](Number n){
         int pos = (int)n;
-        if(pos<0) pos = 0;
-        assert(pos<*_rows);
+        assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     }
     /*
@@ -74,7 +73,7 @@ public:
      matrix.appendRow(Vector)           <- Adjunta el valor Vector al final de la matriz 
      matrix.appendRow(Vector, position) <- Adjunta el valor Vector en la posicion dada dentro de la matriz
     */
-    Vector appendRow(const Vector&, Number=-1);
+    Vector appendRow(Vector&, Number=-1);
     /* 
      Adjunta como parametro Matrix filas en la matriz
      matrix.appendRow(Matrix)           <- Adjunta el valor Matrix al final de la matriz 
