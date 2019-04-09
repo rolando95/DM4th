@@ -45,6 +45,10 @@ void Quaternion::operator-=(Quaternion q){
     _data->array[3] -= q[3];
 } 
 
+void Quaternion::operator*=(Quaternion q1){
+    *this = *this*q1;
+}
+
 
 Quaternion Quaternion::normalize(){
     Number result=0;
@@ -58,6 +62,14 @@ Quaternion Quaternion::normalize(){
     return *this;
 }
 
+Quaternion Quaternion::getCopy(){
+    Quaternion result;
+    result[0] = _data->array[0];
+    result[1] = _data->array[1];
+    result[2] = _data->array[2];
+    result[3] = _data->array[3];
+    return result;
+}
 std::ostream& operator<<(std::ostream& stream, Quaternion q){
     int len = 4;
     stream<<"[";
@@ -87,4 +99,23 @@ std::istream& operator>>(std::istream& stream, Quaternion &q){
     assert(pos==3);
     if(stream.peek()=='\n')stream.get();
     return stream;
+}
+
+Quaternion operator+(Quaternion q1, Quaternion q2){
+    Quaternion result = q1.getCopy();
+    result+=q2;
+    return result;
+}
+Quaternion operator-(Quaternion q1, Quaternion q2){
+    Quaternion result = q1.getCopy();
+    result-=q2;
+    return result;
+}
+Quaternion operator*(Quaternion q1, Quaternion q2){
+    Quaternion result;
+    result[0] = q1[0]*q2[0] - q1[1]*q2[1] - q1[2]*q2[2] - q1[3]*q2[3];
+    result[1] = q1[1]*q2[0] + q1[0]*q2[1] + q1[2]*q2[3] - q1[3]*q2[2];
+    result[2] = q1[0]*q2[2] - q1[1]*q2[3] + q1[2]*q2[0] + q1[3]*q2[1];
+    result[3] = q1[0]*q2[3] + q1[1]*q2[2] - q1[2]*q2[1] + q1[3]*q2[0];
+    return result;
 }

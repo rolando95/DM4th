@@ -26,12 +26,18 @@ public:
         assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     }
+    
+    Quaternion getCopy();
 
     void operator+=(Quaternion);
     void operator-=(Quaternion);
     void operator*=(Quaternion);
     Quaternion normalize();
 };
+
+Quaternion operator*(Quaternion, Quaternion);
+Quaternion operator+(Quaternion, Quaternion);
+Quaternion operator-(Quaternion, Quaternion);
 
 // Impresion en pantalla de la Matriz
 std::ostream& operator<<(std::ostream&, Quaternion);
