@@ -38,10 +38,13 @@ public:
 Quaternion operator*(Quaternion, Quaternion);
 Quaternion operator+(Quaternion, Quaternion);
 Quaternion operator-(Quaternion, Quaternion);
+//Quaternion operator/(Quaternion, Quaternion);
 
 // Impresion en pantalla de la Matriz
 std::ostream& operator<<(std::ostream&, Quaternion);
 
 // Lectura en pantalla de la Matriz
 std::istream& operator>>(std::istream&, Quaternion&);
+
+Number norm(Quaternion q);
 #endif

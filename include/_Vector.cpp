@@ -351,7 +351,7 @@ Vector ones(const Number &n){
     for(int j=0; j<n; j++) o[j] = 1;
     return o;
 }
-
+/*
 Vector range(Vector v, const Number &begin, const Number &end, Number value){
     Vector result;
     if(value>0 && end>begin){
@@ -365,7 +365,7 @@ Vector range(Vector v, const Number &begin, const Number &end, Number value){
     }
     return result;
 }
-
+*/
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;
     if(value>0 && end>begin){

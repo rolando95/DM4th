@@ -171,4 +171,11 @@ public:
          this->_subRef();
     }
 };
+
+template<typename T>
+class _TreeManager: protected _ArrayManager<T>{
+private:
+    
+public:
+};
 #endif

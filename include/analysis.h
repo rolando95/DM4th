@@ -30,7 +30,7 @@ Number minimum(const Number a, const T ... b){
 // Fibonacci number 
 Number fibonacci(Number);
 // range(f, x0=begin, xn=end, interval)
-Vector range(Function, const Number&, const Number&, Number=1);
+//Vector range(Function, const Number&, const Number&, Number=1);
 // e^x
 Number exp(Number x);
 // Convert Complex number to polar expresion returns Vector(r, angle)

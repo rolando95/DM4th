@@ -28,8 +28,9 @@ Number fibonacci(Number n){
     return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/sqrt(5);
 }
 
+/*
 Vector range(Function f, const Number &begin, const Number &end, Number value){
-        Vector result;
+    Vector result;
     if(value>0 && end>begin){
         for(Number j=begin; j<=end; j+=value){
             result.append(f(j));
@@ -41,6 +42,7 @@ Vector range(Function f, const Number &begin, const Number &end, Number value){
     }
     return result;
 }
+*/
 
 Number exp(Number x){
     return pow(e,x);

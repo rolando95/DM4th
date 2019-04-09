@@ -51,11 +51,7 @@ void Quaternion::operator*=(Quaternion q1){
 
 
 Quaternion Quaternion::normalize(){
-    Number result=0;
-    for(int j=0; j<*_rows; j++){
-        result += _data->array[j]*_data->array[j];
-    }
-    result = sqrt(result);
+    Number result = sqrt(norm(*this));
     for(int j=0; j<*_rows; j++){
         _data->array[j]/=result;
     }
@@ -111,11 +107,26 @@ Quaternion operator-(Quaternion q1, Quaternion q2){
     result-=q2;
     return result;
 }
+
+/*
+Quaternion operator/(Quaternion q1, Quaternion q2){
+    //Quaternion result = q2.getCopy();
+    //return result;
+}*/
+
 Quaternion operator*(Quaternion q1, Quaternion q2){
     Quaternion result;
     result[0] = q1[0]*q2[0] - q1[1]*q2[1] - q1[2]*q2[2] - q1[3]*q2[3];
     result[1] = q1[1]*q2[0] + q1[0]*q2[1] + q1[2]*q2[3] - q1[3]*q2[2];
     result[2] = q1[0]*q2[2] - q1[1]*q2[3] + q1[2]*q2[0] + q1[3]*q2[1];
     result[3] = q1[0]*q2[3] + q1[1]*q2[2] - q1[2]*q2[1] + q1[3]*q2[0];
+    return result;
+}
+
+Number norm(Quaternion q){
+    Number result=0;
+    for(int j=0; j<4; j++){
+        result += q[j]*q[j];
+    }   
     return result;
 }
