@@ -10,7 +10,7 @@ Matrix::Matrix(const Matrix &m){
 
 
 Matrix::Matrix(std::string str){
-    this->_alloc();
+    //this->_alloc();
     std::stringstream ss;
     ss << str;
     ss >> *this;

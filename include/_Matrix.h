@@ -13,7 +13,7 @@ public:
     // Inicializacion con un numero indefinido de elementos en el constructor
     template<class ... T>
     Matrix(Vector first,T... args){  
-        this->_alloc();  
+        //this->_alloc();  
         this->appendRow(first);
         this->appendRow(Matrix(args...));
     }

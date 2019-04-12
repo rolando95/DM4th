@@ -62,6 +62,8 @@ struct _Array
                 array = tmp;
                 tmp = nullptr;
             }
+        }else{
+            allocArray(size);
         }
         assert(array);
         *_rows = size;
@@ -86,7 +88,7 @@ protected:
      _Array<T> *_data = new _Array<T>();
 
     void _alloc(){
-        _data->allocArray(0);
+        //_data->allocArray(0);
         _ref = new int(1);
         _rows = new int(0);
         _cols = new int(0);
@@ -172,10 +174,36 @@ public:
     }
 };
 
-template<typename T>
-class _TreeManager: protected _ArrayManager<T>{
-private:
-    
+template<class TreeClass, typename T>
+class _TreeManager: protected _ArrayManager<TreeClass>{
+protected:
 public:
+    T* _value = nullptr;
+    void funcion(){
+        
+    }
+    _TreeManager(){
+        _value = new T();
+    }
+    void operator=(const _TreeManager &A){
+        this->_subRef();
+        this->_data = A._data;
+        this->_rows = A._rows;
+        this->_cols = A._cols;
+        this->_ref = A._ref;
+
+        this->_value = A._value;
+
+        this->_addRef();
+    }
+
+    ~_TreeManager(){
+        if(this->_ref != nullptr){
+            if(this->_ref[0]==1 && _value!=nullptr){
+                delete _value;
+                _value = nullptr;
+            }
+        }
+    }
 };
 #endif
