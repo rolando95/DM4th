@@ -29,7 +29,7 @@ public:
         Obtiene la fila de una matriz
         matrix.getRow(position)
     */
-    inline Vector getRow(Number n){
+    inline Vector getRow(Number n) const {
         assert(n>=0 && n<*_rows);
         return _data->array[(int)n];
     }
@@ -37,7 +37,7 @@ public:
         Obtiene la columna de una matriz
         matrix.getCol(position)
     */
-    inline Vector getCol(Number n){
+    inline Vector getCol(Number n) const{
         int pos  = (int)n;
         assert(pos>=0 && pos<*_cols);
         Vector result; result.resize(*_rows);

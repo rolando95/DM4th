@@ -30,7 +30,7 @@ public:
         obtiene un elemento de vector
         vector.getItem(position)
     */
-    inline Number getItem(Number pos){
+    inline Number getItem(Number pos) const{
         assert(pos>=0 && pos<*_rows);
         return _data->array[(int)pos];
     }

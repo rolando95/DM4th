@@ -67,3 +67,20 @@ void _printStructure(Tree &_tree, int level=0, std::string levelStr="", bool las
 void Tree::printStructure(){
     _printStructure(*this);
 }
+
+
+std::ostream& operator<<(std::ostream& stream, const Tree &t){
+    int size = t.childLength();
+    
+    stream<<"{\"value\":"<<t.getValue()<<",\"child\":[";  
+    for(int j=0; j<size; j++){
+        if(j!=0) stream<<", ";
+        stream<<t.getChild(j);
+
+    }
+    stream<<"]}";
+    
+    return stream;
+}
+
+

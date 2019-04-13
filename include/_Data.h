@@ -177,8 +177,8 @@ public:
 template<class TreeClass, typename T>
 class _TreeManager: protected _ArrayManager<TreeClass>{
 protected:
-public:
     T* _value = nullptr;
+public:
     void funcion(){
         
     }

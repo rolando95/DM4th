@@ -18,7 +18,9 @@ int main(){
     a[1].appendChild(10);
     a[1][0].appendChild(11);
     a[1][0][0].appendChild(12);
-    a.printStructure();
     
+    a.printStructure();
+    print(a);
+    print(10);
     return 0;
 }
