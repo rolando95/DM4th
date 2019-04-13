@@ -206,4 +206,27 @@ public:
         }
     }
 };
+
+/*
+template<class T>
+class Property{
+    private:
+    T (* _get)();
+    void (* _set)(T);
+    public:
+    Property(T(*get)(), void(*set)(T)){
+        _get=get;
+        _set=set;
+    }
+
+    void operator=(T value){
+        _set(value);
+    }
+
+    
+    operator T(){
+        return _get();
+    }
+};
+*/
 #endif

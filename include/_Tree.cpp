@@ -44,23 +44,26 @@ Number Tree::appendChild(Number n, Number idx){
     return n;
 }
 
-void _printStructure(int level, Tree &_tree, bool last=false){
-    if(level>0){
-        for(int j=0; j<level-1; j++){
-            std::cout<<(char)179<<"   ";
-        }
-        if(last) std::cout<<(char)192<<(char)196<<(char)196;
-        else std::cout<<(char)195<<(char)196<<(char)196;
-        std::cout<<" ";
+void _printStructure(Tree &_tree, int level=0, std::string levelStr="", bool last=false){
+    if(level==0){
+        std::cout<<_tree.getValue()<<std::endl;
+    }else{
+        std::cout<<levelStr;
+
+        if(last) std::cout<<(char)192<<(char)196<<(char)196<<" "; //print: "├── "
+        else std::cout<<(char)195<<(char)196<<(char)196<<" "; //print: "└── "
+
+        std::cout<<_tree.getValue()<<std::endl;
+
+        if(!last) levelStr += (char)179 + std::string("   "); // append "|   "
+        else levelStr += std::string("    "); // append "    "
     }
-    std::cout<<_tree.getValue()<<std::endl;
     for(int j=0; j<_tree.childLength(); ++j){
-        
-        _printStructure(level+1, _tree[j], j==_tree.childLength()-1 );
+        _printStructure(_tree[j], level+1, levelStr, j==_tree.childLength()-1 );
     }
     return;
 }
 
 void Tree::printStructure(){
-    _printStructure(0,*this);
+    _printStructure(*this);
 }

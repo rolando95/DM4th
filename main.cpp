@@ -5,18 +5,19 @@
 using namespace std;
 
 int main(){
-    //Vector a = Vector(1,2,3,4);
-    
     Tree a;
-    a.setValue(10);
-    a.resize(2);
-    a[0].setValue(15);
-    a[1].setValue(17);
-    a[0].appendChild(1);
-    a[0].appendChild(2);
+
+    a.setValue(2);
+    a.appendChild(3);
+    a.appendChild(7);
+    a[0].appendChild(4);
+    a[0][0].appendChild(9);
     a[0].appendChild(5);
-    a[0][1].appendChild(7-5i);
-    a[0][1][0].appendChild(-12);
+    a[0][1].appendChild(6);
+    a[0][1].appendChild(8);
+    a[1].appendChild(10);
+    a[1][0].appendChild(11);
+    a[1][0][0].appendChild(12);
     a.printStructure();
     
     return 0;
