@@ -218,12 +218,12 @@ Vector Vector::getCopy(){
     return result;
 }
 
-std::ostream& operator<<(std::ostream& stream, Vector v){
+std::ostream& operator<<(std::ostream& stream, const Vector &v){
     int size = v.length();
     stream<<"[";
     for(int n=0; n<size; n++){
         if(n!=0) stream<<", ";
-        stream<<v[n];
+        stream<<v.getItem(n);
     }
     stream<<"]";
     return stream;

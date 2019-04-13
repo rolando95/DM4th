@@ -235,12 +235,12 @@ void Matrix::operator%=(Number n){
     }
 }
 
-std::ostream& operator<<(std::ostream& stream, Matrix m){
+std::ostream& operator<<(std::ostream& stream, const Matrix &m){
     //stream<<"\n";
     stream<<"[";
     for(int n=0; n<m.rowsLength(); n++){
         if(n!=0) stream<<",\n ";
-        stream<<m[n];
+        stream<<m.getRow(n);
     }
     stream<<"]";
     //stream<<"\n";

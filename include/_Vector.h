@@ -108,7 +108,7 @@ public:
 };
 
 // Impresion en pantalla del vector
-std::ostream& operator<<(std::ostream&, Vector);
+std::ostream& operator<<(std::ostream&, const Vector&);
 
 
 // Lectura en pantalla del vector

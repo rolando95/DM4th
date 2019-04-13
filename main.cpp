@@ -7,9 +7,12 @@ using namespace std;
 int main(){
     Tree a;
 
+    print(b);
+    print(c);
     a.setValue(2);
     a.appendChild(3);
     a.appendChild(7);
+    
     a[0].appendChild(4);
     a[0][0].appendChild(9);
     a[0].appendChild(5);
@@ -21,6 +24,5 @@ int main(){
     
     a.printStructure();
     print(a);
-    print(10);
     return 0;
 }

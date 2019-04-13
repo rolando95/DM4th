@@ -44,22 +44,22 @@ Number Tree::appendChild(Number n, Number idx){
     return n;
 }
 
-void _printStructure(Tree &_tree, int level=0, std::string levelStr="", bool last=false){
+void _printStructure(Tree &_tree, int level=0, std::string tab="", bool last=false){
     if(level==0){
         std::cout<<_tree.getValue()<<std::endl;
     }else{
-        std::cout<<levelStr;
+        std::cout<<tab;
 
         if(last) std::cout<<(char)192<<(char)196<<(char)196<<" "; //print: "├── "
         else std::cout<<(char)195<<(char)196<<(char)196<<" "; //print: "└── "
 
         std::cout<<_tree.getValue()<<std::endl;
 
-        if(!last) levelStr += (char)179 + std::string("   "); // append "|   "
-        else levelStr += std::string("    "); // append "    "
+        if(!last) tab += (char)179 + std::string("   "); // append "|   "
+        else tab += std::string("    "); // append "    "
     }
     for(int j=0; j<_tree.childLength(); ++j){
-        _printStructure(_tree[j], level+1, levelStr, j==_tree.childLength()-1 );
+        _printStructure(_tree[j], level+1, tab, j==_tree.childLength()-1 );
     }
     return;
 }
@@ -67,8 +67,7 @@ void _printStructure(Tree &_tree, int level=0, std::string levelStr="", bool las
 void Tree::printStructure(){
     _printStructure(*this);
 }
-
-
+/*
 std::ostream& operator<<(std::ostream& stream, const Tree &t){
     int size = t.childLength();
     
@@ -82,5 +81,31 @@ std::ostream& operator<<(std::ostream& stream, const Tree &t){
     
     return stream;
 }
+*/
 
+void outTree(std::ostream& stream, const Tree &t, std::string tab=""){
+    std::string value = "value";
+    std::string child = "child";
+    int size = t.childLength();
+    std::string lTab = tab+"  ";
 
+    stream<<tab<<"{\n";
+    stream<<lTab<<"\""<<value<<"\" : "<<t.getValue()<<",\n";
+    if(size>0){
+        stream<<lTab<<"\""<<child<<"\" : [\n";
+        for(int j=0; j<size; j++){
+            if(j!=0) stream<<",\n";
+            outTree(stream,t.getChild(j), lTab+std::string("  "));
+        }
+        stream<<"\n"<<lTab<<"]\n";
+    }else{
+        stream<<lTab<<"\""<<child<<"\" : []\n";
+    }
+    
+    stream<<tab<<"}";
+}
+
+std::ostream& operator<<(std::ostream& stream, const Tree &t){
+   outTree(stream,t,"");
+   return stream;
+}

@@ -137,7 +137,7 @@ public:
 };
 
 // Impresion en pantalla de la Matriz
-std::ostream& operator<<(std::ostream&, Matrix);
+std::ostream& operator<<(std::ostream&, const Matrix&);
 
 // Lectura en pantalla de la Matriz
 std::istream& operator>>(std::istream&, Matrix&);
