@@ -5,7 +5,7 @@ Number maximum(Vector v){
     Number value = -INF;
     if(v.length()>0){
         value = v[0];
-        for(int j=1; j<v.length(); j++){
+        for(int j=1; j<v.length(); ++j){
             if(v[j]>value) value = v[j];
         }
     }
@@ -16,7 +16,7 @@ Number minimum(Vector v){
     Number value = INF;
     if(v.length()>0){
         value = v[0];
-        for(int j=1; j<v.length(); j++){
+        for(int j=1; j<v.length(); ++j){
             if(v[j]<value) value = v[j];
         }
     }
@@ -84,7 +84,7 @@ Number gamma(Number z, Number tolerance){
     else{
         z -= 1;
         x = 0.99999999999980993;
-        for(Number j=0; j<p.length(); j++){
+        for(Number j=0; j<p.length(); ++j){
             x += p[j]/(z+j+1);
         }
         t = z + p.length() - 0.5;
@@ -100,7 +100,7 @@ Number gamma(Number z, Number tolerance){
 Number factorial(const Number &n){
     Number x = 1;
     if(floor(n.real())==n && n>=0){ // Es numero entero positivo 
-        for(auto i=1; i<=n; i++){
+        for(auto i=1; i<=n; ++i){
             x *= i;
         }
     }else{
@@ -177,7 +177,7 @@ Vector diff(Vector v, Number iter){
     else{
         Vector diffV;
         if(v.length() >= 2){
-            for(auto j=0; j<v.length()-1; j++){
+            for(auto j=0; j<v.length()-1; ++j){
                 diffV.append(v[j+1] - v[j]);
             }
             return diff(diffV,iter - 1);
@@ -192,7 +192,7 @@ Number integral(Function f, const Number &a, const Number &b, const Number subin
     Number h = (b-a)/n;
     
     Number s=0;
-    for(Number j=0; j<n; j++){
+    for(Number j=0; j<n; ++j){
         s+=f(a+h*(j+0.5));
     }
     return s*h;
@@ -229,11 +229,11 @@ Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
     x1 = x1.real();
     Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
-    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; n++){
+    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/derivative(f,x1);
     }
     if(abs(f(x1))>tolerance){
-        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; n++){
+        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/derivative(f,y1);
         }
         if(abs(f(y1))>tolerance) x1 = NAN;
@@ -245,11 +245,11 @@ Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number 
     x1 = x1.real();
     Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
-    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; n++){
+    for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/fd(x1);
     }
     if(abs(f(x1))>tolerance){
-        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; n++){
+        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/fd(y1);
         }
         if(abs(f(y1))>tolerance) x1 = NAN;
@@ -265,13 +265,13 @@ Number secantMethod(Function f, Number x0, Number x1, Number maxIter, Number tol
     Number y1 = x1.imag()==0? 1.01i : x1.imag();
     Number y2;
 
-    for(int n=0; n<maxIter && abs(f(x1))>tolerance; n++){
+    for(int n=0; n<maxIter && abs(f(x1))>tolerance; ++n){
         x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));
         x0 = x1; x1 = x2;
     }
 
     if(abs(f(x2))>tolerance){
-        for(int n=0; n<maxIter && abs(f(y1))>tolerance; n++){
+        for(int n=0; n<maxIter && abs(f(y1))>tolerance; ++n){
             y2 = y1 - f(y1) * ((y0-y1)/(f(y0) - f(y1)));
             y0 = y1; y1 = y2;
         }
@@ -299,19 +299,19 @@ Vector bairstowsMethod(Vector v, Number r, Number s, Number maxIter, Number tole
         Number dr, ds;
 
         // Empieza el ciclo para calcular las nuevas raices
-        for(int k=0; k<maxIter; k++){
+        for(int k=0; k<maxIter; ++k){
             
             // Calcula los coeficientes de b
             b[0] = v[0];
             b[1] = v[1] + b[0]*r;
-            for(int j=2; j<=degree; j++){
+            for(int j=2; j<=degree; ++j){
                 b[j] = v[j] + b[j-1]*r + b[j-2]*s;
             }
 
             // Calcula los coeficientes de c
             c[0] = b[0];
             c[1] = b[1] + c[0]*r;
-            for(int j=2; j< degree; j++){
+            for(int j=2; j< degree; ++j){
                 c[j] = b[j] + c[j-1]*r + c[j-2]*s;  
             }
 

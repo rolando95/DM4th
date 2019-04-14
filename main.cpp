@@ -7,8 +7,6 @@ using namespace std;
 int main(){
     Tree a;
 
-    print(b);
-    print(c);
     a.setValue(2);
     a.appendChild(3);
     a.appendChild(7);

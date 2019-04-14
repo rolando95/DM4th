@@ -16,7 +16,7 @@ void Tree::resize(const Number &pos){
         this->_data->resizeArray(size);
         //Initialize values
         if(size>*_rows){
-            for(int j=*_rows; j<size;j++){
+            for(int j=*_rows; j<size;++j){
                 _data->array[j].setValue(0);
             }
         }
@@ -72,7 +72,7 @@ std::ostream& operator<<(std::ostream& stream, const Tree &t){
     int size = t.childLength();
     
     stream<<"{\"value\":"<<t.getValue()<<",\"child\":[";  
-    for(int j=0; j<size; j++){
+    for(int j=0; j<size; ++j){
         if(j!=0) stream<<", ";
         stream<<t.getChild(j);
 
@@ -93,7 +93,7 @@ void outTree(std::ostream& stream, const Tree &t, std::string tab=""){
     stream<<lTab<<"\""<<value<<"\" : "<<t.getValue()<<",\n";
     if(size>0){
         stream<<lTab<<"\""<<child<<"\" : [\n";
-        for(int j=0; j<size; j++){
+        for(int j=0; j<size; ++j){
             if(j!=0) stream<<",\n";
             outTree(stream,t.getChild(j), lTab+std::string("  "));
         }

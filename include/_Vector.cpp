@@ -28,7 +28,7 @@ Number Vector::append(const Number &n, Number idx){
     }
     //Insert
     else {
-        for(int j=*_rows-1; j > pos; j--){
+        for(int j=*_rows-1; j > pos; --j){
             _data->array[j] = _data->array[j-1];
         }
         _data->array[pos] = n;
@@ -46,15 +46,15 @@ Vector Vector::append(Vector vec,Number idx){
 
     //Append
     if(pos<0||pos==*_rows){
-        for(int j=0; j<size; j++){
+        for(int j=0; j<size; ++j){
             _data->array[end+j] = v[j];
         }
     //Insert
     }else{
-        for(int j=end+size-1; j>=pos+size; j--){
+        for(int j=end+size-1; j>=pos+size; --j){
             _data->array[j] = _data->array[j-size];
         }
-        for(int j=pos; j<pos+size; j++){
+        for(int j=pos; j<pos+size; ++j){
             _data->array[j] = v[j-pos];
         }
     }
@@ -71,7 +71,7 @@ Number Vector::pop(const Number idx){
         value = _data->array[*_rows-1];
     }else{
         value = _data->array[pos];
-        for(int j=pos; j<*_rows-1; j++){
+        for(int j=pos; j<*_rows-1; ++j){
             _data->array[j] = _data->array[j+1];
         }
     }
@@ -83,7 +83,7 @@ Number Vector::pop(const Number idx){
 
 int Vector::index(const Number &value){
     int result = -1;
-    for(int j=0; j<*_rows; j++){
+    for(int j=0; j<*_rows; ++j){
         if(value==_data->array[j]) {
             result = j;
             break;
@@ -100,7 +100,7 @@ void Vector::resize(const Number &pos){
         this->_data->resizeArray(size);
         //Initialize values
         if(size>*_rows){
-            for(int j=*_rows; j<size;j++){
+            for(int j=*_rows; j<size; ++j){
                 _data->array[j] = 0 ;
             }
         }
@@ -124,7 +124,7 @@ void Vector::swap(Number p1, Number p2, Number c){
         //std::cout<<*this<<std::endl;
     }else{
         Vector tmp; tmp.resize(count);
-        for(int j=0; j<count; j++){
+        for(int j=0; j<count; ++j){
             tmp[j] = _data->array[idx1+j];
             _data->array[idx1+j] = _data->array[idx2+j];
             _data->array[idx2+j] = tmp[j];
@@ -137,7 +137,7 @@ void Vector::swap(Number p1, Number p2, Number c){
 Number partition(Vector v, Number &lo, Number &hi){
     Number pivot = v[hi];
     Number i = lo;
-    for(Number j=lo; j<=hi-1; j++){
+    for(Number j=lo; j<=hi-1; ++j){
         if(v[j]<pivot){
             v.swap(i,j);
             i+=1;
@@ -159,7 +159,7 @@ Vector Vector::sort(Number lo, Number hi){
 
 Vector Vector::reverse(){
     int size = *_rows/2;
-    for(Number j=0; j<size; j++){
+    for(Number j=0; j<size; ++j){
         this->swap(j,*_rows-j-1);
     }
     return *this;
@@ -189,30 +189,30 @@ Vector Vector::saveFile(std::string url){
 
 void Vector::operator+=(Vector v){
     assert(*_rows == v.length());
-    for(int j=0; j<*_rows; j++){ _data->array[j] += v[j];}
+    for(int j=0; j<*_rows; ++j){ _data->array[j] += v[j];}
 }
 
 void Vector::operator-=(Vector v){
     assert(*_rows == v.length());
-    for(int j=0; j<*_rows; j++){ _data->array[j] -= v[j];}
+    for(int j=0; j<*_rows; ++j){ _data->array[j] -= v[j];}
 }
 
 void Vector::operator*=(Number n){
-    for(int j=0; j<*_rows; j++){ _data->array[j] *= n;}
+    for(int j=0; j<*_rows; ++j){ _data->array[j] *= n;}
 }
 
 void Vector::operator/=(Number n){
-    for(int j=0; j<*_rows; j++){ _data->array[j] /= n;}
+    for(int j=0; j<*_rows; ++j){ _data->array[j] /= n;}
 }
 
 void Vector::operator%=(Number n){
-    for(int j=0; j<*_rows; j++){ _data->array[j] %= n;}
+    for(int j=0; j<*_rows; ++j){ _data->array[j] %= n;}
 }
 
 Vector Vector::getCopy(){
     Vector result;
     result.resize(*_rows);
-    for(int j=0;j<result.length(); j++){
+    for(int j=0;j<result.length(); ++j){
         result[j] = _data->array[j];
     }
     return result;
@@ -221,7 +221,7 @@ Vector Vector::getCopy(){
 std::ostream& operator<<(std::ostream& stream, const Vector &v){
     int size = v.length();
     stream<<"[";
-    for(int n=0; n<size; n++){
+    for(int n=0; n<size; ++n){
         if(n!=0) stream<<", ";
         stream<<v.getItem(n);
     }
@@ -266,7 +266,7 @@ Vector operator-(Vector v1,Vector v2){
 Number operator*(Vector v1,Vector v2){
     Number result = 0;
     assert(v1.length() == v2.length());
-    for(int j=0; j<v1.length(); j++){
+    for(int j=0; j<v1.length(); ++j){
         result += v1[j]*v2[j];
     }
     return result;
@@ -300,7 +300,7 @@ bool operator==(Vector &v1, Vector &v2){
     if(v1.length()!=v2.length()){
         result = false;
     }else{
-        for(int j=0; j<v1.length(); j++){
+        for(int j=0; j<v1.length(); ++j){
             if(v1[j]!=v2[j]) {
                 result = false;
                 break;
@@ -318,7 +318,7 @@ bool operator!=(Vector &v1, Vector &v2){
 bool operator>(Vector &v1, Vector &v2){
     bool result=false;
     int min = v1.length()<v2.length()? v1.length() : v2.length();
-    for(int j=0; j<min; j++){
+    for(int j=0; j<min; ++j){
         if(v1[j]!=v2[j]){
             result = v1[j]>v2[j];
             break;
@@ -348,7 +348,7 @@ Vector zeros(const Number &n){
 Vector ones(const Number &n){
     Vector o;
     o.resize(n);
-    for(int j=0; j<n; j++) o[j] = 1;
+    for(int j=0; j<n; ++j) o[j] = 1;
     return o;
 }
 /*

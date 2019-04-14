@@ -29,7 +29,7 @@ Matrix Matrix::appendRow(Matrix mat, Number idx){
     this->resize(*_rows+m.rowsLength(), *_cols);
     //Append
     if(pos<0 || pos >= *_rows) {
-        for(int j=0; j<m.rowsLength(); j++){
+        for(int j=0; j<m.rowsLength(); ++j){
             _data->array[begin+j] = m[j];
         }
     }
@@ -38,7 +38,7 @@ Matrix Matrix::appendRow(Matrix mat, Number idx){
         for(int j=*_rows-1; j >= pos+m.rowsLength(); j--){
             _data->array[j] = _data->array[j-m.rowsLength()];
         }
-        for(int j=0; j<m.rowsLength(); j++){
+        for(int j=0; j<m.rowsLength(); ++j){
             _data->array[pos+j] = m[j];
         }
     }
@@ -72,7 +72,7 @@ Vector Matrix::appendCol(Vector &vec, Number idx){
     if(*_rows==0) *_rows = v.length();
     // Verifica que el numero de elementos del vector insertado es igual al numero de filas de la matriz
     else assert(pos>=0 && pos<=*_cols && v.length()==*_rows);
-    for(int j=0; j<*_rows; j++){
+    for(int j=0; j<*_rows; ++j){
         _data->array[j].append(v[j], pos);
     }
     *_cols+=1;
@@ -88,7 +88,7 @@ Matrix Matrix::appendCol(Matrix mat, Number idx){
         this->resize(*_rows, *_cols);
     }
     assert(pos>=0 && pos<=*_cols && m.rowsLength()==*_rows);
-    for(int j=0; j<*_rows; j++){
+    for(int j=0; j<*_rows; ++j){
         _data->array[j].append(m[j],pos);
     }
     *_cols += m.colsLength();
@@ -103,7 +103,7 @@ Vector Matrix::popRow(const Number idx){
         value = _data->array[*_rows-1];
     }else{
         value = _data->array[pos];
-        for(int j=pos; j<*_rows-1;j++){
+        for(int j=pos; j<*_rows-1;++j){
             _data->array[j] = _data->array[j+1];
         }
     }
@@ -119,7 +119,7 @@ Vector Matrix::popCol(const Number idx){
     if(pos<0 || pos>=*_cols){
         pos = *_cols-1;
     }
-    for(int j=0; j<*_rows; j++){
+    for(int j=0; j<*_rows; ++j){
         value[j] = _data->array[j].pop(pos);
     }
     *_cols -= 1;
@@ -155,7 +155,7 @@ void Matrix::resize(const Number &posR,Number posC){
         //Realloc rows
         this->_data->resizeArray(r);
         //Realloc cols
-        for(int j=0; j<r; j++){
+        for(int j=0; j<r; ++j){
             this->_data->array[j].resize(c);
         }
         *_rows = r;
@@ -166,8 +166,8 @@ void Matrix::resize(const Number &posR,Number posC){
 Matrix Matrix::getCopy(){
     Matrix result;
     result.resize(*_rows,*_cols);
-    for(int j=0; j<result.rowsLength(); j++){
-        for(int k=0; k<result.colsLength(); k++){
+    for(int j=0; j<result.rowsLength(); ++j){
+        for(int k=0; k<result.colsLength(); ++k){
             result[j][k] = _data->array[j][k];
         }
     }
@@ -177,8 +177,8 @@ Matrix Matrix::getCopy(){
 void Matrix::operator+=(Matrix m){
     assert(this->rowsLength()==m.rowsLength() && 
            this->colsLength()==m.colsLength());
-    for(int j=0; j<*_rows; j++){
-        for(int k=0; k<*_cols; k++){
+    for(int j=0; j<*_rows; ++j){
+        for(int k=0; k<*_cols; ++k){
             _data->array[j][k] += m[j][k];
         }
     }
@@ -187,8 +187,8 @@ void Matrix::operator+=(Matrix m){
 void Matrix::operator-=(Matrix m){
     assert(this->rowsLength()==m.rowsLength() && 
            this->colsLength()==m.colsLength());
-    for(int j=0; j<*_rows; j++){
-        for(int k=0; k<*_cols; k++){
+    for(int j=0; j<*_rows; ++j){
+        for(int k=0; k<*_cols; ++k){
             _data->array[j][k] -= m[j][k];
         }
     }
@@ -212,24 +212,24 @@ void Matrix::operator*=(Matrix m){
 }
 
 void Matrix::operator*=(Number n){
-    for(int j=0; j<*_rows; j++){
-        for(int k=0; k<*_cols; k++){
+    for(int j=0; j<*_rows; ++j){
+        for(int k=0; k<*_cols; ++k){
             _data->array[j][k] *= n;
         }
     }
 }
 
 void Matrix::operator/=(Number n){
-    for(int j=0; j<*_rows; j++){
-        for(int k=0; k<*_cols; k++){
+    for(int j=0; j<*_rows; ++j){
+        for(int k=0; k<*_cols; ++k){
             _data->array[j][k] /= n;
         }
     }
 }
 
 void Matrix::operator%=(Number n){
-    for(int j=0; j<*_rows; j++){
-        for(int k=0; k<*_cols; k++){
+    for(int j=0; j<*_rows; ++j){
+        for(int k=0; k<*_cols; ++k){
             _data->array[j][k] %= n;
         }
     }
@@ -238,7 +238,7 @@ void Matrix::operator%=(Number n){
 std::ostream& operator<<(std::ostream& stream, const Matrix &m){
     //stream<<"\n";
     stream<<"[";
-    for(int n=0; n<m.rowsLength(); n++){
+    for(int n=0; n<m.rowsLength(); ++n){
         if(n!=0) stream<<",\n ";
         stream<<m.getRow(n);
     }
@@ -309,9 +309,9 @@ Vector operator*(Vector v, Matrix m){
     int len = m.colsLength();
     result.resize(len);
     int lenV = v.length();
-    for(int k=0; k<len; k++){
+    for(int k=0; k<len; ++k){
         result[k] = 0;
-        for(int j=0; j<lenV; j++){
+        for(int j=0; j<lenV; ++j){
             result[k] += v[j]*m[j][k];
         }
     }
@@ -322,7 +322,7 @@ Vector operator*(Matrix m, Vector v){
     Vector result;
     int len = m.rowsLength();
     result.resize(len);
-    for(int j=0; j<len; j++){
+    for(int j=0; j<len; ++j){
         result[j] = m[j]*v;
     }
     return result;
@@ -345,7 +345,7 @@ bool operator==(Matrix &m1, Matrix &m2){
     if(m1.length()!=m2.length() || m1.colsLength()!=m2.colsLength()){
         result = false;
     }else{
-        for(int j=0; j<m1.length(); j++){
+        for(int j=0; j<m1.length(); ++j){
             if(m1[j]!=m2[j]) {
                 result = false;
                 break;
@@ -363,7 +363,7 @@ bool operator!=(Matrix &m1, Matrix &m2){
 bool operator>(Matrix &m1, Matrix &m2){
     bool result=false;
     int min = m1.length()<m2.length()? m1.length() : m2.length();
-    for(int j=0; j<min; j++){
+    for(int j=0; j<min; ++j){
         if(m1[j]!=m2[j]){
             result = m1[j]>m2[j];
             break;
@@ -387,7 +387,7 @@ bool operator<=(Matrix &m1, Matrix &m2){
 
 Matrix zeros(const Number &r, const Number &c){
     Matrix result;
-    for(int j=0; j<r.real();j++){
+    for(int j=0; j<r.real();++j){
         result.appendRow(zeros(c));
     }
     return result;
@@ -396,8 +396,8 @@ Matrix zeros(const Number &r, const Number &c){
 Matrix ones(const Number &r, const Number &c){
     Matrix o;
     o.resize(r,c);
-    for(int j=0; j<r; j++) {
-        for(int k=0; k<c; k++){ 
+    for(int j=0; j<r; ++j) {
+        for(int k=0; k<c; ++k){ 
             o[j][k] = 1;
         }
     }
@@ -408,7 +408,7 @@ Matrix identity(Number r, Number c){
     Matrix result;
     if(c<0) c = r;
     result.resize(r,c);
-    for(int j=0; j<result.rowsLength();j++){
+    for(int j=0; j<result.rowsLength();++j){
         if(j<result.colsLength()) result[j][j] = 1;
         else break;
     }

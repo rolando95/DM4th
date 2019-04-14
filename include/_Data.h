@@ -52,7 +52,7 @@ struct _Array
             if(!tmp) {
                 tmp = new T[size];
                 int max = (*_rows>size)?size:*_rows;
-                for(int j=0; j<max; j++){
+                for(int j=0; j<max; ++j){
                     tmp[j] = array[j];
                 }
                 delete[] array;
