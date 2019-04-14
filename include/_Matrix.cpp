@@ -20,7 +20,7 @@ Matrix::~Matrix(){
     
 }
 
-Matrix Matrix::appendRow(Matrix mat, Number idx){
+void Matrix::appendRow(Matrix mat, Number idx){
     Matrix m = mat.getCopy();
     int pos = idx.real();
     if(*_rows==0) *_cols = m.colsLength();
@@ -42,10 +42,9 @@ Matrix Matrix::appendRow(Matrix mat, Number idx){
             _data->array[pos+j] = m[j];
         }
     }
-    return m;
 }
 
-Vector Matrix::appendRow(Vector &vec, Number idx){
+void Matrix::appendRow(Vector &vec, Number idx){
     Vector v = vec.getCopy();
     int pos = idx.real();
     if(*_rows==0) *_cols = v.length();
@@ -62,10 +61,9 @@ Vector Matrix::appendRow(Vector &vec, Number idx){
         }
         _data->array[pos] = v;
     }
-    return v;
 }
 
-Vector Matrix::appendCol(Vector &vec, Number idx){
+void Matrix::appendCol(Vector &vec, Number idx){
     Vector v = vec.getCopy();
     int pos = idx.real();
     // Reescala el numero de filas si anteriormente era igual a 0
@@ -76,10 +74,9 @@ Vector Matrix::appendCol(Vector &vec, Number idx){
         _data->array[j].append(v[j], pos);
     }
     *_cols+=1;
-    return vec;
 }
 
-Matrix Matrix::appendCol(Matrix mat, Number idx){
+void Matrix::appendCol(Matrix mat, Number idx){
     Matrix m = mat.getCopy();
     int pos = idx.real();
     if(*_rows==0){
@@ -92,7 +89,6 @@ Matrix Matrix::appendCol(Matrix mat, Number idx){
         _data->array[j].append(m[j],pos);
     }
     *_cols += m.colsLength();
-    return m;
 }
 
 Vector Matrix::popRow(const Number idx){
@@ -138,6 +134,7 @@ Matrix Matrix::loadFile(std::string url){
     file.close();
     return *this;
 }
+
 Matrix Matrix::saveFile(std::string url){
     // Crear ruta si no existe  
     std::ofstream file;

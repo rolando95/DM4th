@@ -24,7 +24,7 @@ void Tree::resize(const Number &pos){
     }
 }
 
-Number Tree::appendChild(Number n, Number idx){
+void Tree::appendChild(Number n, Number idx){
     int pos = idx.real();
     assert(pos>=-1 && pos<= *_rows);
     this->resize(*_rows+1);
@@ -41,7 +41,42 @@ Number Tree::appendChild(Number n, Number idx){
         }
         _data->array[pos].setValue(n);
     }
-    return n;
+}
+
+void Tree::appendChild(Tree &t, Number idx){
+    int pos = idx.real();
+    assert(pos>=-1 && pos<= *_rows);
+    this->resize(*_rows+1);
+    
+    //Append
+    if(pos<0||pos>=*_rows){
+        _data->array[*_rows-1] = t;
+    }else{
+        for(int j=*_rows-1; j>pos; j--){
+            _data->array[j] = _data->array[j-1];
+        }
+        _data->array[pos] = t;
+    }
+}
+
+void Tree::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        this->resize(0);
+    }else{
+        file>>*this;
+    }
+    file.close();
+}
+
+void Tree::saveFile(std::string url){
+    // Crear ruta si no existe  
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
 }
 
 void _printStructure(Tree &_tree, int level=0, std::string tab="", bool last=false){
@@ -67,21 +102,6 @@ void _printStructure(Tree &_tree, int level=0, std::string tab="", bool last=fal
 void Tree::printStructure(){
     _printStructure(*this);
 }
-/*
-std::ostream& operator<<(std::ostream& stream, const Tree &t){
-    int size = t.childLength();
-    
-    stream<<"{\"value\":"<<t.getValue()<<",\"child\":[";  
-    for(int j=0; j<size; ++j){
-        if(j!=0) stream<<", ";
-        stream<<t.getChild(j);
-
-    }
-    stream<<"]}";
-    
-    return stream;
-}
-*/
 
 void outTree(std::ostream& stream, const Tree &t, std::string tab=""){
     std::string value = "value";
@@ -108,4 +128,91 @@ void outTree(std::ostream& stream, const Tree &t, std::string tab=""){
 std::ostream& operator<<(std::ostream& stream, const Tree &t){
    outTree(stream,t,"");
    return stream;
+}
+
+void _getExtraChars(std::istream &stream){
+    if(stream.peek()==' ') stream>>std::ws;
+    if(stream.peek()=='\n') stream.get();
+    if(stream.peek()==' ') stream>>std::ws;
+}
+
+void _StrInQuotesFromStream(std::istream &stream, std::string &value){
+    char delimeter('"');
+    _getExtraChars(stream);
+    if(stream.peek()=='"') stream.get();
+    else assert(false);
+    std::getline(stream, value, delimeter);
+    
+    _getExtraChars(stream);
+}
+
+void inTree(std::istream &stream, Tree &t){
+    std::string inStr = "XXXXX";
+    t = Tree();
+    Number value;
+
+    // Lee corchete abierto
+    _getExtraChars(stream);
+    if(stream.peek()!='{') assert(false);
+    stream.get();
+
+    // Obtiene la clave "value"
+    _StrInQuotesFromStream(stream,inStr);
+    if(inStr!="value") assert(false);
+
+    // Lee los dos puntos
+    _getExtraChars(stream);
+    if(stream.peek()!=':') assert(false);
+    stream.get();
+
+    // Lee el valor
+    stream>>value;
+    t.setValue(value);
+
+    // Lee la comma
+    _getExtraChars(stream);
+    if(stream.peek()!=',') assert(false);
+    stream.get();
+
+    // Obtiene la clave "child"
+    _StrInQuotesFromStream(stream,inStr);
+    if(inStr!="child") assert(false);
+
+    // Lee los dos puntos
+    _getExtraChars(stream);
+    if(stream.peek()!=':') assert(false);
+    stream.get();
+
+    // Lee el corchete abierto
+    _getExtraChars(stream);
+    if(stream.peek()!='[') assert(false);
+    stream.get();
+
+    // Lee iterativamente los hijos del nodo
+    while(true){
+
+        // El nodo no tiene hijos
+        if(stream.peek()==']'){stream.get();break;}
+
+        // Lee el arbol recursivamente
+        Tree lT;
+        inTree(stream, lT);
+        t.appendChild(lT);
+
+        // Siguiente dato en la lista de hijos
+        if(stream.peek()==']'){stream.get();break;}
+        else if(stream.peek()==',') stream.get();
+        else assert(false);
+    }
+
+    // Lee el corchete cerrado
+    _getExtraChars(stream);
+    if(stream.peek()!='}') assert(false);
+    stream.get();
+
+    _getExtraChars(stream);
+}
+std::istream& operator>>(std::istream& stream, Tree &t){
+    inTree(stream, t);   
+    return stream;
 }

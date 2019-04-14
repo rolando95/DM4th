@@ -24,11 +24,22 @@ public:
         return _data->array[pos];
     }
     void resize(const Number&);
-    Number appendChild(Number, Number=-1);
+
+    void appendChild(Number, Number=-1);
+
+    void appendChild(Tree&, Number=-1);
+
+    // Carga valor de tipo Tree desde un fichero
+    void loadFile(std::string url);
+    // Guarda valor de tipo Tree en un fichero
+    void saveFile(std::string url);
 
     void printStructure();
 };
 
 // Impresion en pantalla del Tree
 std::ostream& operator<<(std::ostream&, const Tree&);
+
+// Lectura en pantalla del Tree
+std::istream& operator>>(std::istream&, Tree&);
 #endif

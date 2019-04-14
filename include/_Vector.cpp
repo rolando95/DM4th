@@ -18,7 +18,7 @@ Vector::Vector(std::string str){
 Vector::~Vector(){
 }
 
-Number Vector::append(const Number &n, Number idx){
+void Vector::append(const Number &n, Number idx){
     int pos = idx.real();
     assert(pos>=-1 && pos<= *_rows);
     this->resize(*_rows+1);
@@ -33,10 +33,9 @@ Number Vector::append(const Number &n, Number idx){
         }
         _data->array[pos] = n;
     }
-    return n;
 }
 
-Vector Vector::append(Vector vec,Number idx){
+void Vector::append(Vector vec,Number idx){
     Vector v = vec.getCopy();
     int pos = (int)idx.real();
     int size = v.length();
@@ -58,8 +57,6 @@ Vector Vector::append(Vector vec,Number idx){
             _data->array[j] = v[j-pos];
         }
     }
-
-    return v;
 }
 
 Number Vector::pop(const Number idx){

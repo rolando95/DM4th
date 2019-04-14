@@ -48,13 +48,13 @@ public:
      vector.append(Number)           <- Adjunta el valor Number al final del Vector
      vector.append(Number, position) <- Adjunta el valor Number en la posicion dada dentro del Vector
     */
-    Number append(const Number&,Number=-1);
+    void append(const Number&,Number=-1);
     /* 
      Adjunta un vector
      vector.append(Vector)           <- Adjunta el valor Vector al final del Vector
      vector.append(Vector, position) <- Adjunta el valor Vector en la posicion dada dentro del Vector
     */
-    Vector append(Vector,Number=-1);
+    void append(Vector,Number=-1);
     /* 
      Elimina un elemento del vector
      vector.pop()         <- Elimina el ultimo elemento del vector
