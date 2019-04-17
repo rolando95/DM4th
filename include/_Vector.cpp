@@ -131,11 +131,14 @@ void Vector::swap(Number p1, Number p2, Number c){
 }
 
 /*Quicksort*/
-Number partition(Vector v, Number &lo, Number &hi){
+Number partition(Vector v, bool reverse, Number &lo, Number &hi){
     Number pivot = v[hi];
     Number i = lo;
     for(Number j=lo; j<=hi-1; ++j){
-        if(v[j]<pivot){
+        if(reverse && v[j]>pivot){
+            v.swap(i,j);
+            i+=1;
+        }else if(!reverse && v[j]<pivot){
             v.swap(i,j);
             i+=1;
         }
@@ -144,12 +147,12 @@ Number partition(Vector v, Number &lo, Number &hi){
     return i;
 }
 
-Vector Vector::sort(Number lo, Number hi){
+Vector Vector::sort(bool reverse, Number lo, Number hi){
     if(hi<=-1) hi = *_rows-1;
     if(lo<hi){ 
-        Number p = partition(*this,lo,hi);
-        this->sort(lo, p-1);
-        this->sort(p+1,hi);
+        Number p = partition(*this, reverse, lo,hi);
+        this->sort(reverse, lo, p-1);
+        this->sort(reverse, p+1,hi);
     }
     return *this;
 }
@@ -377,9 +380,9 @@ Vector range(const Number &begin, const Number &end, Number value){
     return v;
 }
 
-Vector sort(Vector v){
+Vector sort(Vector v, bool reverse){
     Vector result = v.getCopy();
-    return result.sort();
+    return result.sort(reverse);
 }
 
 Vector reverse(Vector v){

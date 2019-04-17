@@ -81,7 +81,7 @@ public:
     /*
      Ordena elementos del vector
     */
-    Vector sort(Number begin=0, Number end=-1);
+    Vector sort(bool reverse=false, Number begin=0, Number end=-1);
     /*
      Invierte los elementos del vector
     */
@@ -145,7 +145,7 @@ Vector ones(const Number&);
 // range(vector, pos begin, pos end, interval)
 //Vector range(Vector, const Number&, const Number&, Number=1);
 Vector range(const Number&, const Number&, Number=1);
-Vector sort(Vector);
+Vector sort(Vector, bool reverse=false);
 Vector reverse(Vector);
 
 #endif

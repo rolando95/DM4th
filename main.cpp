@@ -23,5 +23,9 @@ int main(){
     a.printStructure();
 
     a.saveFile("ejemplo.txt");
+
+    Vector c = Vector(1,3,2,4,5,7,6,4,10);
+    print(sort(c));
+    print(sort(c,true));
     return 0;
 }
