@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include <atomic>
 #include "_Number.h"
 
 #ifdef REFDEBUG
@@ -113,9 +112,9 @@ protected:
         _cols = new int(0);
 
         #ifdef REFDEBUG
-            //setTextColor(GREEN);
+            setTextColor(GREEN);
             std::cout<<"\nNew ";
-            //setTextColor(WHITE);
+            setTextColor(WHITE);
             std::cout<<type<<" Array: "<<this<<"\n";
         #endif
     }
@@ -142,9 +141,9 @@ protected:
         }
 
         #ifdef REFDEBUG
-            //setTextColor(MAGENTA);
+            setTextColor(MAGENTA);
             std::cout<<"\nFree ";
-            //setTextColor(WHITE); 
+            setTextColor(WHITE); 
             std::cout<<type<<" Array: "<<this<<"\n";
         #endif  
     }
@@ -155,9 +154,9 @@ protected:
 
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
-                //setTextColor(YELLOW);
+                setTextColor(YELLOW);
                 std::cout<<" ref: "<<(int)(*_ref-1)<<" -> "<<(int)(*_ref)<<"\n";
-                //setTextColor(WHITE);
+                setTextColor(WHITE);
             #endif
         }
     }
@@ -167,9 +166,9 @@ protected:
 
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
-                //setTextColor(YELLOW);
+                setTextColor(YELLOW);
                 std::cout<<" ref: "<<(int)(*_ref+1)<<" -> "<<(int)(*_ref)<<"\n";
-                //setTextColor(WHITE);
+                setTextColor(WHITE);
             #endif
             if(*_ref<=0){ 
                 this->_free();
