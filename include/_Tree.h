@@ -34,6 +34,8 @@ public:
     // Guarda valor de tipo Tree en un fichero
     void saveFile(std::string url);
 
+    Tree getCopy();
+    
     void printStructure();
 };
 

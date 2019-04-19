@@ -50,12 +50,12 @@ void Tree::appendChild(Tree &t, Number idx){
     
     //Append
     if(pos<0||pos>=*_rows){
-        _data->array[*_rows-1] = t;
+        _data->array[*_rows-1] = t.getCopy();
     }else{
         for(int j=*_rows-1; j>pos; j--){
             _data->array[j] = _data->array[j-1];
         }
-        _data->array[pos] = t;
+        _data->array[pos] = t.getCopy();
     }
 }
 
@@ -77,6 +77,18 @@ void Tree::saveFile(std::string url){
     file.open(url);
     file<<*this;
     file.close();
+}
+
+Tree Tree::getCopy(){
+    Tree result;
+    result.setValue(*_value);
+    if(this->childLength()>0){
+        result.resize(this->childLength());
+        for(int j=0; j<this->childLength(); ++j){
+            result[j] = _data->array[j].getCopy();
+        }
+    }
+    return result;
 }
 
 void _printStructure(Tree &_tree, int level=0, std::string tab="", bool last=false){

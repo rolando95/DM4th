@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <atomic>
 #include "_Number.h"
 
 #ifdef REFDEBUG
@@ -46,9 +47,10 @@ struct _Array
         assert(array);
         _rows = new int(size);
     }
-    inline void resizeArray(int size){
-        if(array) {
-            T *tmp = (T*) realloc(array, size*sizeof(T));
+    void resizeArray(int size){
+        /*
+        if(array != nullptr) {
+            T *tmp = (T*) realloc(array, (size+1)*sizeof(T));
             if(!tmp) {
                 tmp = new T[size];
                 int max = (*_rows>size)?size:*_rows;
@@ -67,6 +69,23 @@ struct _Array
         }
         assert(array);
         *_rows = size;
+        */
+       
+        if(array != nullptr){
+            T *tmp = new T[size]; 
+            int max = (*_rows>size)?size:*_rows;
+            for(int j=0; j<max; ++j){
+                tmp[j] = array[j];
+            }
+            delete[] array;
+            array = tmp;
+            tmp = nullptr;
+        }else{
+            allocArray(size);
+        }
+        assert(array);
+        *_rows = size;
+        
     }
     inline void freeArray(){
         delete[] array;
@@ -84,7 +103,7 @@ protected:
     #endif
     int *_rows = nullptr;
     int *_cols = nullptr;
-    int *_ref = nullptr;
+    volatile int *_ref = nullptr;
      _Array<T> *_data = new _Array<T>();
 
     void _alloc(){
@@ -137,7 +156,7 @@ protected:
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
                 //setTextColor(YELLOW);
-                std::cout<<" ref: "<<*_ref-1<<" -> "<<*_ref<<"\n";
+                std::cout<<" ref: "<<(int)(*_ref-1)<<" -> "<<(int)(*_ref)<<"\n";
                 //setTextColor(WHITE);
             #endif
         }
@@ -149,7 +168,7 @@ protected:
             #ifdef REFDEBUG
                 std::cout<<"\n"<<type<<" "<<this;
                 //setTextColor(YELLOW);
-                std::cout<<" ref: "<<*_ref+1<<" -> "<<*_ref<<"\n";
+                std::cout<<" ref: "<<(int)(*_ref+1)<<" -> "<<(int)(*_ref)<<"\n";
                 //setTextColor(WHITE);
             #endif
             if(*_ref<=0){ 
@@ -162,12 +181,14 @@ public:
         this->_alloc();
     }
     void operator=(const _ArrayManager &A) {
-        this->_subRef();
-        this->_data = A._data;
-        this->_rows = A._rows;
-        this->_cols = A._cols;
-        this->_ref = A._ref;
-        this->_addRef();
+        if(this!=&A){
+            this->_subRef();
+            this->_data = A._data;
+            this->_rows = A._rows;
+            this->_cols = A._cols;
+            this->_ref = A._ref;
+            this->_addRef();
+        }
     }
     ~_ArrayManager(){
          this->_subRef();
@@ -186,15 +207,17 @@ public:
         _value = new T();
     }
     void operator=(const _TreeManager &A){
-        this->_subRef();
-        this->_data = A._data;
-        this->_rows = A._rows;
-        this->_cols = A._cols;
-        this->_ref = A._ref;
+        if(this!=&A){
+            this->_subRef();
+            this->_data = A._data;
+            this->_rows = A._rows;
+            this->_cols = A._cols;
+            this->_ref = A._ref;
 
-        this->_value = A._value;
+            this->_value = A._value;
 
-        this->_addRef();
+            this->_addRef();
+        }
     }
 
     ~_TreeManager(){

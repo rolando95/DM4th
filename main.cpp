@@ -1,14 +1,13 @@
 #include "number.h"
 #include <string>
 #include <iostream>
-
+#include <thread>
 using namespace std;
 
 int main(){
     Tree a, b;
     b.loadFile("ejemplo.txt");
     b.printStructure();
-       
     a.setValue(2);
     a.appendChild(3);
     a.appendChild(7);
@@ -21,11 +20,7 @@ int main(){
     a[1][0].appendChild(11);
     a[1][0][0].appendChild(12);
     a.printStructure();
-
     a.saveFile("ejemplo.txt");
 
-    Vector c = Vector(1,3,2,4,5,7,6,4,10);
-    print(sort(c));
-    print(sort(c,true));
     return 0;
 }
