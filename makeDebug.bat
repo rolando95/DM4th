@@ -1,6 +1,6 @@
 @echo off
 DEL bin\*.o
-g++ -g -w -Og -c include\*.cpp
+g++ -g -Wall -Og -c include\*.cpp
 IF %errorlevel%==0 (
     move *.o bin >nul
 )

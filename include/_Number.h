@@ -6,6 +6,7 @@
 #include "_Data.h"
 #include <sstream>
 #include <fstream>
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 class Number{
     double r, i;

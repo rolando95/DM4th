@@ -1,5 +1,4 @@
 #include "_Number.h"
-
 Number::Number(const double a,const double b){
     this->r = a;
     this->i = b;
