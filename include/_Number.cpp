@@ -14,7 +14,7 @@ Number::Number(std::string str){
     ss >> *this;
 }
 
-int Number::precision =  5;
+int precision =  5;
 
 double Number::real()const {return this->r;}
 double Number::real(double a){this->r = a; return this->r;}

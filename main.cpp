@@ -21,6 +21,6 @@ int main(){
     a[1][0][0].appendChild(12);
     a.printStructure();
     a.saveFile("ejemplo.txt");
-
+    getchar();
     return 0;
 }

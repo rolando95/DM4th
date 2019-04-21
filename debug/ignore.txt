@@ -1,0 +1,1 @@
+Este file está unicamente para no omitir por completo la carpeta bin ignorada por el .gitignore

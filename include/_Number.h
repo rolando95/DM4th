@@ -11,8 +11,6 @@
 class Number{
     double r, i;
 public:
-    static int precision;
-    
 
     Number(const double=0,const double=0);
     Number(const Number&);
