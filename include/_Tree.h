@@ -28,6 +28,7 @@ public:
     void appendChild(Number, Number=-1);
 
     void appendChild(Tree&, Number=-1);
+    void _appendRefChild(Tree&, Number=-1);
 
     // Carga valor de tipo Tree desde un fichero
     void loadFile(std::string url);

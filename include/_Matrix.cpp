@@ -20,8 +20,35 @@ Matrix::~Matrix(){
     
 }
 
+void Matrix::appendRow(Vector &vec, Number idx){
+    Vector v = vec.getCopy();
+    _appendRefRow(v,idx);
+}
+
+void Matrix::_appendRefRow(Vector &v, Number idx){
+    int pos = idx.real();
+    if(*_rows==0) *_cols = v.length();
+    assert(pos>=-1 && pos<=*_rows && v.length()==*_cols);
+    this->resize(*_rows+1, *_cols);
+    //Append
+    if(pos<0 || pos >= *_rows) {
+        _data->array[*_rows-1] = v;
+    }
+    //Insert
+    else {
+        for(int j=*_rows-1; j > pos; j--){
+            _data->array[j] = _data->array[j-1];
+        }
+        _data->array[pos] = v;
+    }
+}
+
 void Matrix::appendRow(Matrix mat, Number idx){
     Matrix m = mat.getCopy();
+    _appendRefRow(m,idx);
+}
+
+void Matrix::_appendRefRow(Matrix m, Number idx){
     int pos = idx.real();
     if(*_rows==0) *_cols = m.colsLength();
     assert(pos>=-1 && pos<=*_rows && m.colsLength()==*_cols);
@@ -41,25 +68,6 @@ void Matrix::appendRow(Matrix mat, Number idx){
         for(int j=0; j<m.rowsLength(); ++j){
             _data->array[pos+j] = m[j];
         }
-    }
-}
-
-void Matrix::appendRow(Vector &vec, Number idx){
-    Vector v = vec.getCopy();
-    int pos = idx.real();
-    if(*_rows==0) *_cols = v.length();
-    assert(pos>=-1 && pos<=*_rows && v.length()==*_cols);
-    this->resize(*_rows+1, *_cols);
-    //Append
-    if(pos<0 || pos >= *_rows) {
-        _data->array[*_rows-1] = v;
-    }
-    //Insert
-    else {
-        for(int j=*_rows-1; j > pos; j--){
-            _data->array[j] = _data->array[j-1];
-        }
-        _data->array[pos] = v;
     }
 }
 

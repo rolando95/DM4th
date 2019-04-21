@@ -1,7 +1,7 @@
 *.exe
 *.txt
-bin/*
-debug/*
+bin/
+debug/
 !bin/ignore.txt
 !debug/ignore.txt
-.vscode/ipch/
+.vscode/ipch/*

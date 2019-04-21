@@ -36,7 +36,8 @@ void Vector::append(const Number &n, Number idx){
 }
 
 void Vector::append(Vector vec,Number idx){
-    Vector v = vec.getCopy();
+    //Vector v = vec.getCopy();
+    Vector v = vec;
     int pos = (int)idx.real();
     int size = v.length();
     int end = *_rows;

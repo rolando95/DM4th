@@ -74,12 +74,14 @@ public:
      matrix.appendRow(Vector, position) <- Adjunta el valor Vector en la posicion dada dentro de la matriz
     */
     void appendRow(Vector&, Number=-1);
+    void _appendRefRow(Vector&, Number=-1);
     /* 
      Adjunta como parametro Matrix filas en la matriz
      matrix.appendRow(Matrix)           <- Adjunta el valor Matrix al final de la matriz 
      matrix.appendRow(Matrix, position) <- Adjunta el valor Matrix en la posicion dada dentro de la matriz
     */
     void appendRow(Matrix, Number=-1);
+    void _appendRefRow(Matrix, Number=-1);
     /* 
      Adjunta como parametro Vector una columna en la matriz
      matrix.appendCol(Vector)           <- Adjunta el valor Vector al final de la matriz 

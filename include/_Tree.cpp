@@ -43,19 +43,23 @@ void Tree::appendChild(Number n, Number idx){
     }
 }
 
-void Tree::appendChild(Tree &t, Number idx){
+void Tree::appendChild(Tree &tr, Number idx){
+    Tree t = tr.getCopy();
+    _appendRefChild(t);
+}
+void Tree::_appendRefChild(Tree &t, Number idx){
     int pos = idx.real();
     assert(pos>=-1 && pos<= *_rows);
     this->resize(*_rows+1);
     
     //Append
     if(pos<0||pos>=*_rows){
-        _data->array[*_rows-1] = t.getCopy();
+        _data->array[*_rows-1] = t;
     }else{
         for(int j=*_rows-1; j>pos; j--){
             _data->array[j] = _data->array[j-1];
         }
-        _data->array[pos] = t.getCopy();
+        _data->array[pos] = t;
     }
 }
 
