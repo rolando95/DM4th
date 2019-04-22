@@ -3,7 +3,7 @@
 
 #include "_Number.h"
 
-class Vector: protected _ArrayManager<Number>{
+class Vector: public _ArrayManager<Number>{
 public:
     using _ArrayManager::operator=;
     // Inicializacion sin valores
@@ -144,6 +144,8 @@ bool operator> (Vector&,Vector&);
 bool operator< (Vector&,Vector&);
 bool operator>=(Vector&,Vector&);
 bool operator<=(Vector&,Vector&);
+
+Vector dim(const Number&);
 
 Vector zeros(const Number&);
 //

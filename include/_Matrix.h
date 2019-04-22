@@ -3,7 +3,7 @@
 
 #include "_Vector.h"
 
-class Matrix: protected _ArrayManager<Vector>{
+class Matrix: public _ArrayManager<Vector>{
 public:
     using _ArrayManager::operator=;
     // Inicializacion sin valores
@@ -185,6 +185,12 @@ bool operator> (Matrix&,Matrix&);
 bool operator< (Matrix&,Matrix&);
 bool operator>=(Matrix&,Matrix&);
 bool operator<=(Matrix&,Matrix&);
+
+/*
+ Devuelve una matriz inicializada con las dimensiones especificadas
+*/
+Matrix dim(const Number&, const Number&);
+
 /*
  Devuelve una matriz de ceros con numero de filas y columnas dadas
  zeros(2,2) ==> [[0,0]

@@ -341,9 +341,12 @@ bool operator<=(Vector &v1, Vector &v2){
     return !(v1>v2);
 }
 
-Vector zeros(const Number &n){
+Vector dim(const Number &n){
     Vector z; z.resize(n);
     return z;
+}
+Vector zeros(const Number &n){
+    return dim(n);
 }
 
 Vector ones(const Number &n){

@@ -33,6 +33,24 @@ void input(T& first, Types& ... args){
     input(args...);
 }
 
+template<class T>
+class _Property{
+public:
+    T *_property;
+
+    void setPointer(T* propertyPtr){
+         _property = propertyPtr;
+    }
+    
+    void operator=(const _Property &A){
+        *_property = A._property[0];
+    }
+
+    void operator=(T A){
+        *_property = A;
+    }
+};
+
 /*
  Low implementation!
 */
@@ -199,12 +217,15 @@ class _TreeManager: protected _ArrayManager<TreeClass>{
 protected:
     T* _value = nullptr;
 public:
-    void funcion(){
-        
-    }
+
+    /*Tree node value*/
+    _Property<T> value;
+
     _TreeManager(){
         _value = new T();
+        value.setPointer(_value);
     }
+
     void operator=(const _TreeManager &A){
         if(this!=&A){
             this->_subRef();
@@ -228,27 +249,4 @@ public:
         }
     }
 };
-
-/*
-template<class T>
-class Property{
-    private:
-    T (* _get)();
-    void (* _set)(T);
-    public:
-    Property(T(*get)(), void(*set)(T)){
-        _get=get;
-        _set=set;
-    }
-
-    void operator=(T value){
-        _set(value);
-    }
-
-    
-    operator T(){
-        return _get();
-    }
-};
-*/
 #endif

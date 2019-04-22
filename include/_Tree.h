@@ -3,21 +3,24 @@
 
 #include "_Matrix.h"
 
-class Tree: protected _TreeManager<Tree,Number>{
+
+class Tree: public _TreeManager<Tree,Number>{
 public:
     Tree();
     Tree(Number);
 
     inline Number getValue() const {return *_value;}
+
     inline void setValue(Number n){ *_value = n;}
+
     inline int childLength() const {return *_rows;}
+
     // Acceso a hijos del nodo
     inline Tree& operator[](Number n){
         int pos = (int)n;
         assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     } 
-
      // Acceso a hijos del nodo
     inline Tree& operator()(Number n){
         int pos = (int)n;

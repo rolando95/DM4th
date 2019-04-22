@@ -390,12 +390,14 @@ bool operator<=(Matrix &m1, Matrix &m2){
     return !(m1>m2);
 }
 
+Matrix dim(const Number &r, const Number &c){
+    Matrix o;
+    o.resize(r,c);
+    return o;
+}
+
 Matrix zeros(const Number &r, const Number &c){
-    Matrix result;
-    for(int j=0; j<r.real();++j){
-        result.appendRow(zeros(c));
-    }
-    return result;
+    return dim(r,c);
 }
 
 Matrix ones(const Number &r, const Number &c){
