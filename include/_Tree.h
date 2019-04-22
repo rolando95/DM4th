@@ -16,6 +16,13 @@ public:
         int pos = (int)n;
         assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
+    } 
+
+     // Acceso a hijos del nodo
+    inline Tree& operator()(Number n){
+        int pos = (int)n;
+        assert(pos>=0 && pos<*_rows);
+        return _data->array[pos];
     }    
 
     inline Tree& getChild(Number n) const { 

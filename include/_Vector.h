@@ -26,6 +26,13 @@ public:
         assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     }
+
+    // Acceso a elemento de Vector
+    inline Number& operator()(Number n){
+        int pos = (int)n;
+        assert(pos>=0 && pos<*_rows);
+        return _data->array[pos];
+    }
     /*
         obtiene un elemento de vector
         vector.getItem(position)

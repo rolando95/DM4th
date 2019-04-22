@@ -25,6 +25,22 @@ public:
         assert(pos>=0 && pos<*_rows);
         return _data->array[pos];
     }
+
+    // Acceso a fila de Matrix
+    inline Vector& operator()(Number row){
+        int r = (int)row;
+        assert(r>=0 && r<*_rows);
+        return _data->array[r];
+    }
+    // Acceso a elemento de Matrix
+    inline Number& operator()(Number row, Number col){
+        int r = (int)row;
+        int c = (int)col;
+        assert(r>=0 && r<*_rows &&
+               c>=0 && c<*_cols );
+        return _data->array[r][c];
+    }
+
     /*
         Obtiene la fila de una matriz
         matrix.getRow(position)
