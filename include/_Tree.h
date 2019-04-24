@@ -6,6 +6,7 @@
 
 class Tree: public _TreeManager<Tree,Number>{
 public:
+    using _TreeManager::operator=;
     Tree();
     Tree(Number);
 

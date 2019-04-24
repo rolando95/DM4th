@@ -38,16 +38,21 @@ class _Property{
 public:
     T *_property;
 
+
     void setPointer(T* propertyPtr){
          _property = propertyPtr;
     }
     
     void operator=(const _Property &A){
-        *_property = A._property[0];
+        *_property = *A._property;
     }
 
     void operator=(T A){
         *_property = A;
+    }
+
+    operator T(){
+        return *_property;
     }
 };
 
@@ -217,10 +222,10 @@ class _TreeManager: protected _ArrayManager<TreeClass>{
 protected:
     T* _value = nullptr;
 public:
-
     /*Tree node value*/
     _Property<T> value;
 
+    
     _TreeManager(){
         _value = new T();
         value.setPointer(_value);
