@@ -150,7 +150,7 @@ std::ostream& operator<<(std::ostream& stream, Number n){
     }
     return stream;
 }
-//Lectura en pantalla de numeros complejos
+//Entrada de numeros complejos
 std::istream& operator>>(std::istream& stream, Number &n){
     n=0;
     int state = 1;

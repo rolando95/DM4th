@@ -5,5 +5,5 @@ void beforeMain(){
 }
 
 void afterMain(){
-   //getchar();
+   getchar();
 }

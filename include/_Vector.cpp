@@ -132,7 +132,7 @@ void Vector::swap(Number p1, Number p2, Number c){
 }
 
 /*Quicksort*/
-Number partition(Vector v, bool reverse, Number &lo, Number &hi){
+Number partition(Vector &v, bool reverse, Number lo, Number hi){
     Number pivot = v[hi];
     Number i = lo;
     for(Number j=lo; j<=hi-1; ++j){
@@ -149,7 +149,7 @@ Number partition(Vector v, bool reverse, Number &lo, Number &hi){
 }
 
 Vector Vector::sort(bool reverse, Number lo, Number hi){
-    if(hi<=-1) hi = *_rows-1;
+    if(hi==INF) hi = *_rows-1;
     if(lo<hi){ 
         Number p = partition(*this, reverse, lo,hi);
         this->sort(reverse, lo, p-1);

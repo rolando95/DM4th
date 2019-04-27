@@ -1,5 +1,5 @@
 @echo off
-g++    -Wall -O3 -c include\*.cpp
+g++    -Wall -O2 -c include\*.cpp
 IF %errorlevel%==0 (
     move /Y *.o bin >nul
 

@@ -4,17 +4,13 @@
 #include <thread>
 using namespace std;
 
+Number f(Number x){
+    return x*x+2;
+}
 int main(){
-    Tree a,c;
-    c.value = 17;
-    a.value = 10;
-    c.value = a.value;
-    Number b = 5;
-    a.value = b;
-    b = a.value;
-    b = 50 - a.value*a.value;
-    print(b);
-    print(b>=a.value);
-    getchar();
+    Number a = 0, b = 9;
+    print(a,b, a<b);
+    Vector c = Vector(10,1,1,2,33,4,5,6,6,10);
+    print(c.sort());
     return 0;
 }

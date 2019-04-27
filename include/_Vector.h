@@ -88,7 +88,7 @@ public:
     /*
      Ordena elementos del vector
     */
-    Vector sort(bool reverse=false, Number begin=0, Number end=-1);
+    Vector sort(bool reverse=false, Number begin=0, Number end=INF);
     /*
      Invierte los elementos del vector
     */
