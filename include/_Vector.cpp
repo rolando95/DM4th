@@ -372,13 +372,24 @@ Vector range(Vector v, const Number &begin, const Number &end, Number value){
 */
 Vector range(const Number &begin, const Number &end, Number value){
     Vector v;
+    int idx = 0;
     if(value>0 && end>begin){
         for(Number j=begin; j<end; j+=value){
-            v.append(j);
+            ++idx;
+        }
+        v.resize(idx);
+        idx = 0;
+        for(Number j=begin; j<end; j+=value, ++idx){
+            v[idx] = j;
         }
     }else if(value<0 && begin>end){
         for(Number j=begin; j>end; j+=value){
-            v.append(j);
+            ++idx;
+        }
+        v.resize(idx);
+        idx = 0;
+        for(Number j=begin; j>end; j+=value, ++idx){
+            v[idx] = j;
         }
     }
     return v;

@@ -14,8 +14,20 @@
     #include "console.h"
 #endif
 
-//Expresiones con numero de argumentos infinitos
+// Salida de un numero por consola
 void print();
+
+template<class ... Types> 
+void print(const bool& first, const Types& ... args){
+    if(first){
+        std::cout<<"true ";
+    }else{
+        std::cout<<"false ";
+    }
+    print(args...);
+}
+
+
 template<class T, class ... Types>
 void print(const T& first, const Types& ... args){
     std::cout<<first<<" ";
@@ -23,10 +35,14 @@ void print(const T& first, const Types& ... args){
 }
 
 // Entrada de un numero por consola
+
+std::string input();
+
 template<class T>
 void input(T& last){
     std::cin>>last;
 }
+
 template<class T, class ... Types>
 void input(T& first, Types& ... args){
     std::cin>>first;
@@ -240,6 +256,7 @@ public:
             this->_ref = A._ref;
 
             this->_value = A._value;
+            this->value.setPointer(_value);
 
             this->_addRef();
         }
