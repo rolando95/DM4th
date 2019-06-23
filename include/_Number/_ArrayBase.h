@@ -53,16 +53,18 @@ class _BaseArray
             }
         }
 
-        inline int arraySize() const { return this->_size; }
-        inline T &operator[](int idx){return this->_array[idx];}
-        inline T &operator()(int idx){return this->_array[idx];}
+        inline int size() const { return this->_size; }
+        inline T &operator[](int idx){ return this->_array[idx]; }
+        inline T &operator()(int idx){ return this->_array[idx]; }
+
+        
 };
 
 template<class T>
 class _RefArray: public _BaseArray<T>
 {
     private:
-        int _numRef=0;
+        volatile int _numRef=0;
     public:
         void incrRef(){
             ++_numRef;
@@ -77,61 +79,73 @@ class _RefArray: public _BaseArray<T>
             }
         }
 
-        int getNumRef() const {return this->_numRef;}
+        int getNumRef() const { return this->_numRef; }
+
+        inline T *c_arr(){ return this->_array; }
 };
 
-template<class T>
-class _MultidimRefArray: public _RefArray<T>
+
+class _ShapeData
 {
     protected:
         _BaseArray<int> _shape;
     public:
-        _MultidimRefArray(){ _shape.resize(1); }
-        ~_MultidimRefArray(){}
-        void resizeShape(int size){ _shape.resize(size); }
-        const int shapeSize() { return _shape.arraySize(); }
-        const int getShape(int idx) { return _shape[idx]; }
-        void setShape(int idx, int value){ _shape[idx] = value; }
+        _ShapeData(int size=1){ _shape.resize(size); }
+        ~_ShapeData(){}
+        inline void resize(int size){ _shape.resize(size); }
+        inline const int size() { return _shape.size(); }
+        inline const int get(int idx) { return _shape[idx]; }
+        inline void set(int idx, int value){ _shape[idx] = value; }
 };
 
 template<class T>
-class _ArrayManager
+struct _ArrayData
+{
+    _ShapeData shape;
+    _RefArray<T> array;
+};
+
+template<class T>
+class _ArrayDataManager
 {
     protected:
-        _MultidimRefArray<T> *_array = nullptr;
+        _ArrayData<T> *_data = nullptr;
     public:
         
-        _ArrayManager(){
-            _array = new _MultidimRefArray<T>();
-            _array->incrRef();
+        _ArrayDataManager(){
+            _data = new _ArrayData<T>();
+            _data->array.incrRef();
         }
 
-        ~_ArrayManager(){
-            _array->decrRef();
+        ~_ArrayDataManager(){
+            _data->array.decrRef();
         }
 
         //EDIT
-        void resizeArray(int size){
-            _array->resize(size);
-            _array->setShape(1,size);
+        void resize(int size){
+            _data->array.resize(size);
+            _data->shape.set(1,size);
         }
 
         inline int size() const {
-            return _array->arraySize();
+            return _data->array.size();
         }
 
         T &operator()(int idx){
-            nAssert(idx<_array->arraySize());
-            return (*_array)[idx];
+            nAssert(idx<_data->array.size());
+            return _data->array[idx];
         }
 
-        void const operator=(_ArrayManager &other){
-            _array->decrRef();
-            if(_array->getNumRef() <= 0) {
-                delete _array;
-                _array = nullptr;
+        void const operator=(_ArrayDataManager &other){
+            _data->array.decrRef();
+            if(_data->array.getNumRef() <= 0) {
+                delete _data;
+                _data = nullptr;
             }
-            _array = other._array;
-            _array->incrRef();
+            
+            _data = other._data;
+            _data->array.incrRef();
         }
+
+        inline T *c_arr(){ return _data->array.c_arr(); }
 };

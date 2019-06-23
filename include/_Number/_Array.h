@@ -1,7 +1,8 @@
 #include "_ArrayBase.h"
 
-class Array: public _ArrayManager<int>
+template<class T=int>
+class Array: public _ArrayDataManager<T>
 {
-    typedef _ArrayManager super;
+    typedef _ArrayDataManager<T> super;
     public:
 };
