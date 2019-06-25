@@ -18,7 +18,10 @@
                     "C:/MinGW/mingw64/lib/gcc/x86_64-w64-mingw32/8.1.0",
                     "C:/MinGW/mingw64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"
                 ]
-            }
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.21.27702/bin/Hostx64/x64/cl.exe"
         }
     ],
     "version": 4

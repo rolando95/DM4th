@@ -1,5 +1,5 @@
 #include <cassert>
 
-inline void nAssert(bool expression, const char *msg=""){
-    assert(expression);
-}
+// inline void nAssert(bool expression, const char *msg=""){
+//     assert(expression);
+// }

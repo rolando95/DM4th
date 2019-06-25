@@ -1,7 +1,4 @@
 *.exe
 *.txt
-bin/
-debug/
-!bin/ignore.txt
-!debug/ignore.txt
+bin-int/
 .vscode/ipch/*

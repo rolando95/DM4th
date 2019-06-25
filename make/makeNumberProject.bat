@@ -1,10 +1,13 @@
 @echo off
-g++    -Wall -O2 -c include\_Number\*.cpp
-IF %errorlevel%==0 (
-    move /Y *.o bin >nul
+REM mkdir bin-int\release\x64\
+REM mkdir bin-int\debug\x64\
 
-    g++ -g -Wall -Og -c include\_Number\*.cpp
+g++   -Wall -O2 -c src\*.cpp
+IF %errorlevel%==0 (
+    move /Y *.o bin-int\release\x64 >nul
+
+    g++ -g -Wall -Og -c src\*.cpp
     IF %errorlevel%==0 (
-        move /Y *.o debug >nul
+        move /Y *.o bin-int\debug\x64 >nul
     )
 )

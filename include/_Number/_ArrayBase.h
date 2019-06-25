@@ -11,20 +11,21 @@ class _BaseArray
         int _size=0;
         T *_array=nullptr;
 
-        inline void allocArray(int size){
-            nAssert(!this->_array && size>0);
+        inline void allocArray(int size)
+        {
+            assert(!this->_array && size>0);
             this->_array = new T[size]();
             this->_size = size;
         }
 
-        inline void reallocArray(int size){
-            nAssert(this->_array && size>0);
-            if(size!=_size){
+        inline void reallocArray(int size)
+        {
+            assert(this->_array && size>0);
+            if(size!=_size)
+            {
                 T *tmp = new T[size]();
                 int min = _min(size, this->_size);
-                for(int j=0; j<min; ++j){
-                    tmp[j] = _array[j];
-                }
+                for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
                 delete[] _array;
                 _array = tmp;
                 tmp = nullptr;
@@ -32,25 +33,23 @@ class _BaseArray
             }
         }
         
-        inline void freeArray(){
-            nAssert(_array != nullptr);
+        inline void freeArray()
+        {
+            assert(_array != nullptr);
             delete[] _array;
             _array = nullptr;
             _size=0;
         }
 
     public:
-        _BaseArray(int size=0){
-            if(size>0){
-                allocArray(size);
-            }
+        _BaseArray(int size=0)
+        {
+            if(size>0){ allocArray(size); }
         }
-        inline void resize(int size){
-            if(this->_array==nullptr){
-                this->allocArray(size);
-            }else{
-                this->reallocArray(size);
-            }
+        inline void resize(int size)
+        {
+            if(this->_array==nullptr){ this->allocArray(size); }
+            else{ this->reallocArray(size); }
         }
 
         inline int size() const { return this->_size; }
@@ -64,22 +63,22 @@ template<class T>
 class _RefArray: public _BaseArray<T>
 {
     private:
-        volatile int _numRef=0;
+        volatile int _ref=0;
     public:
-        void incrRef(){
-            ++_numRef;
-            std::cout<<this<<" INCR REF: "<<_numRef<<std::endl;
+        void incrRef()
+        {
+            ++_ref;
+            std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
         }
 
-        void decrRef(){
-            _numRef -= 1;
-            std::cout<<this<<" DECR REF: "<<_numRef<<std::endl;
-            if(this->_numRef <= 0){
-                this->freeArray();
-            }
+        void decrRef()
+        {
+            _ref -= 1;
+            std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
+            if(this->_ref <= 0 && this->_array!=nullptr){ this->freeArray(); }
         }
 
-        int getNumRef() const { return this->_numRef; }
+        int refCount() const { return this->_ref; }
 
         inline T *c_arr(){ return this->_array; }
 };
@@ -94,8 +93,8 @@ class _ShapeData
         ~_ShapeData(){}
         inline void resize(int size){ _shape.resize(size); }
         inline const int size() { return _shape.size(); }
-        inline const int get(int idx) { return _shape[idx]; }
-        inline void set(int idx, int value){ _shape[idx] = value; }
+        inline const int getAxisIdx(int idx) { return _shape[idx]; }
+        inline void setAxisIdx(int idx, int value){ _shape[idx] = value; }
 };
 
 template<class T>
@@ -110,35 +109,47 @@ class _ArrayDataManager
 {
     protected:
         _ArrayData<T> *_data = nullptr;
-    public:
-        
-        _ArrayDataManager(){
-            _data = new _ArrayData<T>();
-            _data->array.incrRef();
-        }
-
-        ~_ArrayDataManager(){
-            _data->array.decrRef();
-        }
 
         //EDIT
-        void resize(int size){
+        void resizeArray(int size)
+        {
             _data->array.resize(size);
             _data->shape.set(1,size);
         }
 
-        inline int size() const {
+        inline int size() const 
+        {
             return _data->array.size();
         }
+    public:
+        
+        _ArrayDataManager()
+        {
+            _data = new _ArrayData<T>();
+            _data->array.incrRef();
+        }
+        ~_ArrayDataManager()
+        { 
+            _data->array.decrRef();
+        }
 
-        T &operator()(int idx){
-            nAssert(idx<_data->array.size());
+        T &operator()(int idx)
+        {
+            assert(idx<_data->array.size());
             return _data->array[idx];
         }
 
-        void const operator=(_ArrayDataManager &other){
+        T &operator[](int idx)
+        {
+            assert(idx<_data->array.size());
+            return _data->array[idx];
+        }
+
+        void const operator=(_ArrayDataManager &other)
+        {
             _data->array.decrRef();
-            if(_data->array.getNumRef() <= 0) {
+            if(_data->array.refCount() <= 0) 
+            {
                 delete _data;
                 _data = nullptr;
             }
