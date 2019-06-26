@@ -8,20 +8,17 @@
             ],
             "defines": [
                 "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
+                "UNICODE"
             ],
-            "intelliSenseMode": "msvc-x64",
+            "compilerPath": "C:/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin/g++.exe",
+            "intelliSenseMode": "gcc-x64",
             "browse": {
                 "path": [
-                    "${workspaceRoot}",
-                    "C:/MinGW/mingw64/lib/gcc/x86_64-w64-mingw32/8.1.0",
-                    "C:/MinGW/mingw64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"
-                ]
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.21.27702/bin/Hostx64/x64/cl.exe"
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
         }
     ],
     "version": 4

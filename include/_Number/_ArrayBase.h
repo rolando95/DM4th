@@ -1,8 +1,8 @@
-#include "_Assert.h"
 #include "_Constants.h"
 #include "_Math.h"
 #include <iostream>
 #include <string>
+#include <cassert>
 
 template<class T> 
 class _BaseArray
@@ -133,19 +133,7 @@ class _ArrayDataManager
             _data->array.decrRef();
         }
 
-        T &operator()(int idx)
-        {
-            assert(idx<_data->array.size());
-            return _data->array[idx];
-        }
-
-        T &operator[](int idx)
-        {
-            assert(idx<_data->array.size());
-            return _data->array[idx];
-        }
-
-        void const operator=(_ArrayDataManager &other)
+        void const operator=(const _ArrayDataManager &other) 
         {
             _data->array.decrRef();
             if(_data->array.refCount() <= 0) 

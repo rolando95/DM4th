@@ -2,3 +2,4 @@
 *.txt
 bin-int/
 .vscode/ipch/*
+bash.exe.stackdump

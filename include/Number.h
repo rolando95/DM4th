@@ -1,4 +1,5 @@
 #include "_Number/_Array.h"
+#include "_Number/_Utilities.h"
 
 using std::string;
 using std::cin;
