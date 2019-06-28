@@ -14,8 +14,8 @@ class TemplateArray: public _ArrayDataManager<T>
             super::_data->shape.setAxisIdx(0, axis1);
         }
 
-        void resize(int axis1){
-            super::_resize(0,1,axis1);
+        inline void resize(int axis1){
+            super::_resize1DArray(axis1);
         }
 
         TemplateArray<int> shape(){

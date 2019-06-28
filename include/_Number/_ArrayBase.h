@@ -109,13 +109,7 @@ class _ArrayDataManager
 {
     protected:
         _ArrayData<T> *_data = nullptr;
-
-
-
-        inline int size() const 
-        {
-            return _data->array.size();
-        }
+        
         template<class ... U>
         T &_item(int axis, int pos, int idx, U ... args){
             pos = pos*this->_data->shape.getAxisIdx(axis) + idx;
@@ -167,10 +161,6 @@ class _ArrayDataManager
             _data->array.incrRef();
         }
 
-        void _resize1DArray(int size)
-        {
-            _resize(0,1,size);
-        }
-
+        inline void _resize1DArray(int size){ _resize(0,1,size); }
         inline T *c_arr(){ return _data->array.c_arr(); }
 };
