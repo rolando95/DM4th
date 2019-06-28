@@ -26,9 +26,12 @@ template<class T> range<T>::range(T begin, T end){
 }
 
 template<class T> range<T>::range(T begin, T end, T step){
-     _begin = begin;
+    _begin = begin;
     _end = end;
     _step = step;
+    if(begin>end){
+        _isInverse = true;
+    }
     assert(
         (begin<end && step>0) ||
         (begin>end && step<0)
@@ -59,7 +62,7 @@ template<class T> range<T>::operator Array<T>(){
         int idx=0;
         T j=_begin;
         while(idx<count){
-            result(idx) = j;
+            result.item(idx) = j;
             j+=_step;
             ++idx;
         }

@@ -110,17 +110,38 @@ class _ArrayDataManager
     protected:
         _ArrayData<T> *_data = nullptr;
 
-        //EDIT
-        void resizeArray(int size)
-        {
-            _data->array.resize(size);
-            _data->shape.set(1,size);
-        }
+
 
         inline int size() const 
         {
             return _data->array.size();
         }
+        template<class ... U>
+        T &_item(int axis, int pos, int idx, U ... args){
+            pos = pos*this->_data->shape.getAxisIdx(axis) + idx;
+            return _item(axis+1, pos, args ...);
+        }
+
+        T &_item(int axis, int pos, int idx){
+            assert(axis+1 == this->_data->shape.size());
+            pos = pos*this->_data->shape.getAxisIdx(axis) + idx;
+            return this->_data->array[pos];
+        }
+
+        template<class ... U>
+        void _resize(int axis, int count, int idx, U ...args){
+            count *= idx;
+            _resize(axis+1, count, args ...);
+            this->_data->shape.setAxisIdx(axis, idx);
+        }
+
+        void _resize(int axis, int count, int idx){
+            count*=idx;
+            this->_data->array.resize(count);
+            this->_data->shape.resize(axis+1);
+            this->_data->shape.setAxisIdx(axis, idx);
+        }
+
     public:
         
         _ArrayDataManager()
@@ -144,6 +165,11 @@ class _ArrayDataManager
             
             _data = other._data;
             _data->array.incrRef();
+        }
+
+        void _resize1DArray(int size)
+        {
+            _resize(0,1,size);
         }
 
         inline T *c_arr(){ return _data->array.c_arr(); }

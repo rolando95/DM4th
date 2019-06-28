@@ -8,27 +8,21 @@ class TemplateArray: public _ArrayDataManager<T>
 {
     typedef _ArrayDataManager<T> super;
     public:
-        void resize(int x, int y=0){
-            assert(x>0 && y>=0);
-            
-            if(y>0){
-                super::_data->array.resize(x*y);
-                super::_data->shape.resize(2);
-                super::_data->shape.setAxisIdx(0,x);
-                super::_data->shape.setAxisIdx(1,y);
-            }else{
-                super::_data->array.resize(x);
-                super::_data->shape.resize(1);
-                super::_data->shape.setAxisIdx(0,x);
-            }
-           
+        template<class ... U>
+        void resize(int axis1, U ... args){
+            super::_resize(1, axis1, args ... );
+            super::_data->shape.setAxisIdx(0, axis1);
+        }
+
+        void resize(int axis1){
+            super::_resize(0,1,axis1);
         }
 
         TemplateArray<int> shape(){
             TemplateArray<int> result;
-            result.resize(super::_data->shape.size());
+            result._resize1DArray(super::_data->shape.size());
             for(int j=0; j<super::_data->shape.size(); j++){
-                result(j) = super::_data->shape.getAxisIdx(j);
+                result.item(j) = super::_data->shape.getAxisIdx(j);
             }
             return result;
         }
@@ -36,19 +30,13 @@ class TemplateArray: public _ArrayDataManager<T>
         int shape(int axis){
             return super::_data->shape.getAxisIdx(axis);
         }
-
-        // operator T(){
-        //     assert(super::_data->array.size()==1);
-        //     return super::_data->array[0];
-        // }
         
-        // T &operator()(int idx)
-        // {
-        //     assert(idx<super::_data->array.size());
-        //     return super::_data->array[idx];
-        // }
+        template<class ... U>
+        T &item(int x, U ... args){
+            return super::_item(1,x,args ...);
+        }
 
-        T &operator()(int x){
+        T &item(int x){
             assert(
                 super::_data->shape.size()==1 &&
                 x<super::_data->array.size()
@@ -56,13 +44,9 @@ class TemplateArray: public _ArrayDataManager<T>
             return super::_data->array[x];
         }
 
-        T &operator()(int x, int y){
-            assert(
-                super::_data->shape.size()==2 &&
-                x<super::_data->shape.getAxisIdx(0) &&
-                y<super::_data->shape.getAxisIdx(1)
-            );
-            return super::_data->array[x*super::_data->shape.getAxisIdx(0) + y];
+        template<class ...U>
+        T &operator()(U ... args){
+            return this->item(args...);
         }
 };
 
@@ -72,6 +56,7 @@ class Array: public TemplateArray<T>
 {
     typedef TemplateArray<T> super;
     public:
+        virtual ~Array(){}
 };
 
 template<>

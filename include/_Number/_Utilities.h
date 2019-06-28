@@ -1,7 +1,7 @@
 #include "_Array.h"
 
 template<class T=int>
-struct range{
+class range{
     private:
         T _begin;
         T _end;
