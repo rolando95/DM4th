@@ -13,7 +13,7 @@ int main(){
     //     std::cout<<std::endl;
     // }
 
-    // TemplateArray<int> size = arr.shape();
+    // Array<int> size = arr.shape();
 
     // for(int x=0; x<size.shape(0); ++x){
     //     std::cout<<size.item(x)<<" ";

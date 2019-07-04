@@ -18,6 +18,10 @@ class TemplateArray: public _ArrayDataManager<T>
             super::_resize1DArray(axis1);
         }
 
+        int shapeSize(){
+            return super::_data->shape.size();
+
+        }
         TemplateArray<int> shape(){
             TemplateArray<int> result;
             result._resize1DArray(super::_data->shape.size());
@@ -50,13 +54,13 @@ class TemplateArray: public _ArrayDataManager<T>
         }
 };
 
-
 template<class T=float>
 class Array: public TemplateArray<T>
 {
     typedef TemplateArray<T> super;
     public:
-        virtual ~Array(){}
+        Array();
+        Array(const super &other){ static_cast<super&>(*this) = other; }
 };
 
 template<>
@@ -64,9 +68,8 @@ class Array<bool>: public TemplateArray<bool>
 {
     typedef TemplateArray super;
     public:
-
-    //bool any()
-    //bool all()
+        Array();
+        Array(const super &other){ static_cast<super&>(*this) = other; }
 };
 
 #endif

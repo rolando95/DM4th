@@ -32,20 +32,13 @@ class _BaseArray
                 _size = size;
             }
         }
-        
-        inline void freeArray()
-        {
-            assert(_array != nullptr);
-            delete[] _array;
-            _array = nullptr;
-            _size=0;
-        }
 
     public:
         _BaseArray(int size=0)
         {
             if(size>0){ allocArray(size); }
         }
+
         inline void resize(int size)
         {
             if(this->_array==nullptr){ this->allocArray(size); }
@@ -56,31 +49,17 @@ class _BaseArray
         inline T &operator[](int idx){ return this->_array[idx]; }
         inline T &operator()(int idx){ return this->_array[idx]; }
 
-        
-};
-
-template<class T>
-class _RefArray: public _BaseArray<T>
-{
-    private:
-        volatile int _ref=0;
-    public:
-        void incrRef()
-        {
-            ++_ref;
-            std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
+        bool isFree(){
+            return this->_array==nullptr; 
         }
 
-        void decrRef()
+        inline void freeArray()
         {
-            _ref -= 1;
-            std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
-            if(this->_ref <= 0 && this->_array!=nullptr){ this->freeArray(); }
+            assert(_array != nullptr);
+            delete[] _array;
+            _array = nullptr;
+            _size=0;
         }
-
-        int refCount() const { return this->_ref; }
-
-        inline T *c_arr(){ return this->_array; }
 };
 
 
@@ -95,13 +74,39 @@ class _ShapeData
         inline const int size() { return _shape.size(); }
         inline const int getAxisIdx(int idx) { return _shape[idx]; }
         inline void setAxisIdx(int idx, int value){ _shape[idx] = value; }
+        inline void freeArray() { 
+            if(!this->_shape.isFree()){
+                this->_shape.freeArray();
+            }
+        }
 };
 
 template<class T>
-struct _ArrayData
+class _ArrayData
 {
-    _ShapeData shape;
-    _RefArray<T> array;
+    private:
+        volatile int _ref=0;
+    public:
+        _ShapeData shape;
+        _BaseArray<T> array;
+        
+        void incrRef()
+        {
+            ++_ref;
+            std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
+        }
+
+        void decrRef()
+        {
+            _ref -= 1;
+            std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
+            if(this->_ref <= 0 && !array.isFree()){ 
+                array.freeArray(); 
+                shape.freeArray();
+            }
+        }
+
+        int refCount() const { return this->_ref; }
 };
 
 template<class T>
@@ -141,26 +146,35 @@ class _ArrayDataManager
         _ArrayDataManager()
         {
             _data = new _ArrayData<T>();
-            _data->array.incrRef();
+            _data->incrRef();
         }
         ~_ArrayDataManager()
         { 
-            _data->array.decrRef();
+            _data->decrRef();
         }
 
         void const operator=(const _ArrayDataManager &other) 
         {
-            _data->array.decrRef();
-            if(_data->array.refCount() <= 0) 
+            _data->decrRef();
+            if(_data->refCount() <= 0) 
             {
                 delete _data;
                 _data = nullptr;
             }
             
             _data = other._data;
-            _data->array.incrRef();
+            _data->incrRef();
         }
 
+        int shapeSize(){
+            return _data->shape.size();
+        }
+
+        int shape(int axis){
+            return _data->shape.getAxisIdx(axis);
+        }
         inline void _resize1DArray(int size){ _resize(0,1,size); }
-        inline T *c_arr(){ return _data->array.c_arr(); }
+        inline T *c_arr(){ return &_data->array[0]; }
+        inline int c_arr_size() { return _data->array.size(); }
+        inline T &c_arr_item(int idx) { return _data->array[idx];}
 };
