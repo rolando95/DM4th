@@ -45,6 +45,13 @@ class _BaseArray
             else{ this->reallocArray(size); }
         }
 
+        inline void _allocAndReturnOldArray(int size){
+            T* result = this->_array;
+            this->_array = new T[size]();
+            this->_size = size;
+            return result;
+        }
+
         inline int size() const { return this->_size; }
         inline T &operator[](int idx){ return this->_array[idx]; }
         inline T &operator()(int idx){ return this->_array[idx]; }
