@@ -45,7 +45,8 @@ class _BaseArray
             else{ this->reallocArray(size); }
         }
 
-        inline void _allocAndReturnOldArray(int size){
+        inline T* _allocAndReturnOldArray(int size){
+            assert(size>0);
             T* result = this->_array;
             this->_array = new T[size]();
             this->_size = size;
@@ -53,8 +54,8 @@ class _BaseArray
         }
 
         inline int size() const { return this->_size; }
-        inline T &operator[](int idx){ return this->_array[idx]; }
-        inline T &operator()(int idx){ return this->_array[idx]; }
+        inline T &operator[](int idx){ assert(idx<this->size()); return  this->_array[idx]; }
+        inline T &operator()(int idx){ assert(idx<this->size()); return this->_array[idx]; }
 
         bool isFree(){
             return this->_array==nullptr; 
@@ -62,10 +63,10 @@ class _BaseArray
 
         inline void freeArray()
         {
-            assert(_array != nullptr);
-            delete[] _array;
-            _array = nullptr;
-            _size=0;
+            assert(this->_array != nullptr);
+            delete[] this->_array;
+            this->_array = nullptr;
+            this->_size=0;
         }
 };
 
@@ -135,17 +136,19 @@ class _ArrayDataManager
         }
 
         template<class ... U>
-        void _resize(int axis, int count, int idx, U ...args){
-            count *= idx;
-            _resize(axis+1, count, args ...);
+        T* _allocZeros(int axis, int count, int idx, U ... args){
+             count *= idx;
+            T* oldArray = _allocZeros(axis+1, count, args ...);
             this->_data->shape.setAxisIdx(axis, idx);
+            return oldArray;
         }
 
-        void _resize(int axis, int count, int idx){
+        T*  _allocZeros(int axis, int count, int idx){
             count*=idx;
-            this->_data->array.resize(count);
+            T* oldArray = this->_data->array._allocAndReturnOldArray(count);
             this->_data->shape.resize(axis+1);
             this->_data->shape.setAxisIdx(axis, idx);
+            return oldArray;
         }
 
     public:
@@ -180,7 +183,12 @@ class _ArrayDataManager
         int shape(int axis){
             return _data->shape.getAxisIdx(axis);
         }
-        inline void _resize1DArray(int size){ _resize(0,1,size); }
+
+        inline void _resize1DArray(int size){
+            this->_data->array.resize(size);
+            this->_data->shape.resize(1);
+            this->_data->shape.setAxisIdx(0, size);
+        }
         inline T *c_arr(){ return &_data->array[0]; }
         inline int c_arr_size() { return _data->array.size(); }
         inline T &c_arr_item(int idx) { return _data->array[idx];}
