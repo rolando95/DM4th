@@ -5,7 +5,9 @@ template class range<int>;
 template class range<float>;
 template class range<double>;
 
-template<class T> range<T>::range(): _begin(0), _end(0), _step(1) {}
+template<class T> range<T>::range(): _begin(0), _end(0), _step(1) {
+    this->setCount();
+}
 
 template<class T> range<T>::range(T end){
     _end = end;
@@ -13,6 +15,7 @@ template<class T> range<T>::range(T end){
         _isInverse = true;
         _step = -1;
     }
+    this->setCount();
 }
 
 template<class T> range<T>::range(T begin, T end){
@@ -23,7 +26,9 @@ template<class T> range<T>::range(T begin, T end){
         _isInverse = true;
         _step = -1;
     }
+    this->setCount();
 }
+
 
 template<class T> range<T>::range(T begin, T end, T step){
     _begin = begin;
@@ -36,9 +41,10 @@ template<class T> range<T>::range(T begin, T end, T step){
         (begin<end && step>0) ||
         (begin>end && step<0)
     );
+    this->setCount();
 }
 
-template<class T> range<T>::operator Array<T>(){
+template<class T>  void range<T>::setCount(){
     int count=0;
     {
         T j=_begin;
@@ -54,20 +60,39 @@ template<class T> range<T>::operator Array<T>(){
             }
         }
     }
-    
-    Array<T> result;
-    result.resize(count);
-
-    {
-        int idx=0;
-        T j=_begin;
-        while(idx<count){
-            result.item(idx) = j;
-            j+=_step;
-            ++idx;
-        }
-    }
-    
-    return result;
+    this->_count = count;
 }
+
+// template<class T> range<T>::operator Array<T>(){
+//     int count=0;
+//     {
+//         T j=_begin;
+//         if(!_isInverse){
+//             while(j<_end){
+//                 ++count;
+//                 j+=_step;
+//             }
+//         }else{
+//             while(j>_end){
+//                 ++count;
+//                 j+=_step;
+//             }
+//         }
+//     }
+    
+//     Array<T> result;
+//     result.resize(count);
+
+//     {
+//         int idx=0;
+//         T j=_begin;
+//         while(idx<count){
+//             result.item(idx) = j;
+//             j+=_step;
+//             ++idx;
+//         }
+//     }
+    
+//     return result;
+// }
 

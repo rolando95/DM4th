@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include "_Utilities.h"
 
 template<class T> 
 class _BaseArray
@@ -101,13 +102,13 @@ class _ArrayData
         void incrRef()
         {
             ++_ref;
-            std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
+            //std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
         }
 
         void decrRef()
         {
             _ref -= 1;
-            std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
+            //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
             if(this->_ref <= 0 && !array.isFree()){ 
                 array.freeArray(); 
                 shape.freeArray();
