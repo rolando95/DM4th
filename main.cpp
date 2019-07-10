@@ -23,5 +23,9 @@ int main(){
     for(int x=0; x<size.shape(0); ++x){
         std::cout<<size.item(x)<<" ";
     }
-    std::cout<<std::endl;
+
+    arr = range<int>(0,10);
+
+    Array<float> arr2 = range<float>(11);
+    std::cout<<(arr<arr2)<<" "<<(arr!=arr2)<<std::endl;
 }

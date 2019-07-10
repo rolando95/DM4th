@@ -155,6 +155,95 @@ class TemplateArray: public _ArrayDataManager<T>
         T &operator()(U ... args){
             return this->item(args...);
         }
+
+        template<class U>
+        bool operator==(TemplateArray<U> &other){
+
+            // Check if arrays have the same shape
+            // int size = this->shapeSize();
+            // int oSize = other.shapeSize();
+
+            // if(size!=oSize) return false;
+
+            // TemplateArray<T> tmp2 = other.shape(); 
+            // int* shape = tmp2.c_arr();
+            // TemplateArray<T> tmp = other.shape(); 
+            // int* oShape = tmp.c_arr();
+        
+            // for(int j=0; j<size; ++j){
+            //     std::cout<<shape[j]<<" "<<oShape[j]<<std::endl;
+            //     if(shape[j]!=oShape[j]) return false;
+            // }
+
+            int sizeArr = this->c_arr_size();
+            int oSizeArr = other.c_arr_size();
+
+            if(sizeArr != oSizeArr) return false;
+
+            T* c_arr = this->c_arr();
+            U* oC_arr = other.c_arr();
+
+            for(int j=0; j<sizeArr; ++j){
+                if(c_arr[j]!=oC_arr[j]) return false;
+            }            
+
+            return true;
+
+            
+        }
+
+        template<class U>
+        bool operator!=(TemplateArray<U> &other){
+            return !(*this==other);
+        }
+
+        template<class U>
+        bool operator>(TemplateArray<U> &other){
+            int sizeArr = this->c_arr_size();
+            int oSizeArr = other.c_arr_size();
+
+            int size = _min(sizeArr,oSizeArr); 
+
+            T* c_arr = this->c_arr();
+            U* oC_arr = other.c_arr();
+
+            for(int j=0; j<size; ++j){
+                if(c_arr[j]>oC_arr[j]) return true;
+                if(c_arr[j]<oC_arr[j]) return false;
+            }            
+
+            if(oSizeArr>=sizeArr) return false;
+            return true;
+        }
+
+        template<class U>
+        bool operator<=(TemplateArray<U> &other){
+            return !(*this>other);
+        }
+
+        template<class U>
+        bool operator>=(TemplateArray<U> &other){
+            int sizeArr = this->c_arr_size();
+            int oSizeArr = other.c_arr_size();
+
+            int size = _min(sizeArr,oSizeArr); 
+
+            T* c_arr = this->c_arr();
+            U* oC_arr = other.c_arr();
+
+            for(int j=0; j<size; ++j){
+                if(c_arr[j]>oC_arr[j]) return true;
+                if(c_arr[j]<oC_arr[j]) return false;
+            }            
+
+            if(oSizeArr>sizeArr) return false;
+            return true;
+        }
+
+        template<class U>
+        bool operator<(TemplateArray<U> &other){
+            return !(*this>=other);
+        }
 };
 
 #endif

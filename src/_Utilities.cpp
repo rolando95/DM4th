@@ -10,7 +10,9 @@ template<class T> range<T>::range(): _begin(0), _end(0), _step(1) {
 }
 
 template<class T> range<T>::range(T end){
+    _begin = 0;
     _end = end;
+    _step = 1;
     if(end<0){
         _isInverse = true;
         _step = -1;
