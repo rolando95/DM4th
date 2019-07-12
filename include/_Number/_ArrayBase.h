@@ -1,9 +1,11 @@
 #include "_Constants.h"
 #include "_Math.h"
+#include "_Utilities.h"
+#include "_c_arr_Utilities.h"
+
 #include <iostream>
 #include <string>
 #include <cassert>
-#include "_Utilities.h"
 
 template<class T> 
 class _BaseArray

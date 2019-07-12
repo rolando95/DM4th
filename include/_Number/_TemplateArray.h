@@ -28,6 +28,16 @@ class TemplateArray: public _ArrayDataManager<T>
                 }
             }
         }
+
+        void _reshape(int axis, int last){
+            super::_data->shape.setAxisIdx(axis, last);
+        }
+
+        template<class ... U>
+        void _reshape(int axis, int first, U ... args){
+            super::_data->shape.setAxisIdx(axis, first);
+            this->_reshape(axis+1, args...);
+        }
     public:
         TemplateArray(){}
         
@@ -115,6 +125,19 @@ class TemplateArray: public _ArrayDataManager<T>
             return result;
         }
 
+        int shape(int axis){
+            return super::_data->shape.getAxisIdx(axis);
+        }
+
+        template<class ... U>
+        void reshape(int axis1, U ... args){
+            int oldShapeSum = mult(this->shape().c_arr(), this->shapeSize());
+            int newShapeSum = mult(axis1,args...);
+            assert(oldShapeSum==newShapeSum);
+            super::_data->shape.resize(count(axis1,args...));
+            this->_reshape(0, axis1, args...);
+        }
+
         TemplateArray<int> _getAxisDisplacement(){
             TemplateArray<int> result;
             result._resize1DArray(super::_data->shape.size());
@@ -135,10 +158,6 @@ class TemplateArray: public _ArrayDataManager<T>
             return disp;
         }
 
-        int shape(int axis){
-            return super::_data->shape.getAxisIdx(axis);
-        }
-
         template<class ... U>
         T &item(int x, U ... args){
             return super::_item(1,x,args ...);
@@ -151,7 +170,7 @@ class TemplateArray: public _ArrayDataManager<T>
             return super::_data->array[x];
         }
 
-        template<class ...U>
+        template<class ... U>
         T &operator()(U ... args){
             return this->item(args...);
         }

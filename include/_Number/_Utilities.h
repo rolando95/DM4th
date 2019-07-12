@@ -1,5 +1,4 @@
 #pragma once
-
 #include <cassert>
 
 template<class T=int>
@@ -31,3 +30,32 @@ class range{
             return this->_step;
         }
 };
+
+
+template<class T>
+T mult(T last){
+    return last;
+}
+template<class T, class ... U>
+T mult(T first, U ... args){
+    return first*mult(args...);
+}
+
+
+template<class T>
+T sum(T last){
+    return last;
+}
+template<class T, class ... U>
+T sum(T first, U ... args){
+    return first+sum(args...);
+}
+
+template<class T>
+int count(T last){
+    return 1;
+}
+template<class T, class ... U>
+int count(T first, U ... args){
+    return 1+count(args...);
+}
