@@ -131,11 +131,24 @@ class TemplateArray: public _ArrayDataManager<T>
 
         template<class ... U>
         void reshape(int axis1, U ... args){
-            int oldShapeSum = mult(this->shape().c_arr(), this->shapeSize());
-            int newShapeSum = mult(axis1,args...);
-            assert(oldShapeSum==newShapeSum);
+            int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
+            int newShapeMult = mult(axis1,args...);
+            assert(oldShapeMult==newShapeMult);
+            
             super::_data->shape.resize(count(axis1,args...));
             this->_reshape(0, axis1, args...);
+        }
+
+        void reshape(TemplateArray<int> newShape){
+            int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
+            int newShapeMult = mult(newShape.c_arr(), newShape.size());     
+            assert(newShape.shapeSize()==1);    
+            assert(oldShapeMult==newShapeMult);
+
+            this->_data->shape.resize(newShape.size());
+            for(int j=0; j<newShape.size(); ++j){
+                this->_data->shape.setAxisIdx(j,newShape.item(j));
+            }
         }
 
         TemplateArray<int> _getAxisDisplacement(){
@@ -170,9 +183,24 @@ class TemplateArray: public _ArrayDataManager<T>
             return super::_data->array[x];
         }
 
+        T &item(TemplateArray<int> axisArray){
+            assert(axisArray.shapeSize()==1);
+            assert(axisArray.size()==this->shapeSize());
+
+            int pos = axisArray.c_arr()[0];
+            for(int j=1; j<this->shapeSize(); ++j){
+                pos = pos*this->_data->shape.getAxisIdx(j) + axisArray.c_arr()[j];
+            }
+            return this->_data->array[pos];            
+        }
+
         template<class ... U>
         T &operator()(U ... args){
             return this->item(args...);
+        }
+
+        inline T &operator()(TemplateArray<int> axisArray){
+            this->item(axisArray);
         }
 
         template<class U>
