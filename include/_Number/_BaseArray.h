@@ -125,35 +125,6 @@ class _ArrayDataManager
 {
     protected:
         _ArrayData<T> *_data = nullptr;
-        
-        template<class ... U>
-        T &_item(int axis, int pos, int idx, U ... args){
-            pos = pos*this->_data->shape.getAxisIdx(axis) + idx;
-            return _item(axis+1, pos, args ...);
-        }
-
-        T &_item(int axis, int pos, int idx){
-            assert(axis+1 == this->_data->shape.size());
-            pos = pos*this->_data->shape.getAxisIdx(axis) + idx;
-            return this->_data->array[pos];
-        }
-
-        template<class ... U>
-        T* _allocZeros(int axis, int count, int idx, U ... args){
-             count *= idx;
-            T* oldArray = _allocZeros(axis+1, count, args ...);
-            this->_data->shape.setAxisIdx(axis, idx);
-            return oldArray;
-        }
-
-        T*  _allocZeros(int axis, int count, int idx){
-            count*=idx;
-            T* oldArray = this->_data->array._allocAndReturnOldArray(count);
-            this->_data->shape.resize(axis+1);
-            this->_data->shape.setAxisIdx(axis, idx);
-            return oldArray;
-        }
-
     public:
         
         _ArrayDataManager()
@@ -192,7 +163,4 @@ class _ArrayDataManager
             this->_data->shape.resize(1);
             this->_data->shape.setAxisIdx(0, size);
         }
-        inline T *c_arr(){ return &_data->array[0]; }
-        inline int c_arr_size() { return _data->array.size(); }
-        inline T &c_arr_item(int idx) { return _data->array[idx];}
 };

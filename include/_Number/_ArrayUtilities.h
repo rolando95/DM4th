@@ -23,3 +23,8 @@ T sum(Array<T> arr){
     }
     return result;
 }
+
+template<class T>
+int count(Array<T> arr){
+    return arr.c_arr_size();
+}

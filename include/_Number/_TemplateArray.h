@@ -1,7 +1,7 @@
 #ifndef __T_ARRAY_H__
 #define __T_ARRAY_H__
 
-#include "_ArrayBase.h"
+#include "_BaseArray.h"
 template<class T>
 class TemplateArray: public _ArrayDataManager<T>
 {
@@ -38,7 +38,37 @@ class TemplateArray: public _ArrayDataManager<T>
             super::_data->shape.setAxisIdx(axis, first);
             this->_reshape(axis+1, args...);
         }
+
+        template<class ... U>
+        T &_item(int axis, int pos, int idx, U ... args){
+            pos = pos*super::_data->shape.getAxisIdx(axis) + idx;
+            return _item(axis+1, pos, args ...);
+        }
+
+        T &_item(int axis, int pos, int idx){
+            assert(axis+1 == super::_data->shape.size());
+            pos = pos*super::_data->shape.getAxisIdx(axis) + idx;
+            return super::_data->array[pos];
+        }
+
+        template<class ... U>
+        T* _allocZeros(int axis, int count, int idx, U ... args){
+             count *= idx;
+            T* oldArray = _allocZeros(axis+1, count, args ...);
+            super::_data->shape.setAxisIdx(axis, idx);
+            return oldArray;
+        }
+
+        T*  _allocZeros(int axis, int count, int idx){
+            count*=idx;
+            T* oldArray = super::_data->array._allocAndReturnOldArray(count);
+            super::_data->shape.resize(axis+1);
+            super::_data->shape.setAxisIdx(axis, idx);
+            return oldArray;
+        }
+
     public:
+
         TemplateArray(){}
         
         TemplateArray(range<T> &other){
@@ -57,7 +87,7 @@ class TemplateArray: public _ArrayDataManager<T>
         void resize(int axis1, U ... args){
             if(this->shapeSize()==1){ //1 dim to N dim
                 int oldShape = this->shape(0);
-                T* oldArray  = super::_allocZeros(1, axis1, args ...);
+                T* oldArray  = this->_allocZeros(1, axis1, args ...);
                 super::_data->shape.setAxisIdx(0,axis1);
                 int newDisp = this->_getAxisDisplacement(0);
                 int end = _min(oldShape, this->shape(0));
@@ -70,7 +100,7 @@ class TemplateArray: public _ArrayDataManager<T>
                 TemplateArray<int> oldShape = this->shape();
                 TemplateArray<int> oldDisp = this->_getAxisDisplacement();
 
-                T* oldArray = super::_allocZeros(1, axis1, args ...);
+                T* oldArray = this->_allocZeros(1, axis1, args ...);
                 super::_data->shape.setAxisIdx(0, axis1);
                 TemplateArray<int> newShape = this->shape();
                 TemplateArray<int> newDisp = this->_getAxisDisplacement();
@@ -173,7 +203,7 @@ class TemplateArray: public _ArrayDataManager<T>
 
         template<class ... U>
         T &item(int x, U ... args){
-            return super::_item(1,x,args ...);
+            return this->_item(1,x,args ...);
         }
 
         T &item(int x){
@@ -291,6 +321,10 @@ class TemplateArray: public _ArrayDataManager<T>
         bool operator<(TemplateArray<U> &other){
             return !(*this>=other);
         }
+
+        inline T *c_arr(){ return &super::_data->array[0]; }
+        inline int c_arr_size() { return super::_data->array.size(); }
+        inline T &c_arr_item(int idx) { return super::_data->array[idx];}
 };
 
 #endif
