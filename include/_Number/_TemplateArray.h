@@ -2,15 +2,43 @@
 #define __T_ARRAY_H__
 
 #include "_BaseArray.h"
+
+
+////////////////////////////////////// FIX THIS
+template<class T>
+class TemplateArray;
+
+template<class T, class ... U>
+void _items(TemplateArray<T> &arr, int axis, T first, U ... args){
+    arr.c_arr()[axis] = first;
+    _items(arr, axis+1, args...);
+}
+
+template<class T>
+void _items(TemplateArray<T> &arr, int axis){}
+
+template<class T, class ... U>
+TemplateArray<T> items(T first, U ... args){
+    TemplateArray<T> result;
+    int size = count(first, args...);
+    result._resize1DArray(size);
+    _items(result, 0, first, args...);
+    return result;
+}
+////////////////////////////////////// END FIX THIS
+
 template<class T>
 class TemplateArray: public _ArrayDataManager<T>
 {
     typedef _ArrayDataManager<T> super;
+    public:
+    
     private:
+
         void _resize(int axis, int oldDispCount, int newDispCount, 
-         TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
-         TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
-         T* oldArray){
+            TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
+            TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
+            T* oldArray){
             int end = _min(oldShape.item(axis), newShape.item(axis));
             if(axis<oldShape.size()-1 && axis<newShape.size()-1){
                 for(int j=0; j<end; ++j){
@@ -67,13 +95,26 @@ class TemplateArray: public _ArrayDataManager<T>
             return oldArray;
         }
 
+        T* _allocZeros(TemplateArray<int> axisArray){
+            int count = 1;
+            for(int j=0; j<axisArray.size(); ++j){
+                count*= axisArray.c_arr()[j];
+            }
+            T* oldArray = super::_data->array._allocAndReturnOldArray(count);
+            super::_data->shape.resize(axisArray.size());
+            for(int j=0; j<axisArray.size(); ++j){
+                super::_data->shape.setAxisIdx(j, axisArray.c_arr()[j]);
+            }
+            return oldArray;
+        }
+
     public:
 
         TemplateArray(){}
         
         TemplateArray(range<T> &other){
             int count = other.count();
-            super::_resize1DArray(count);
+            this->_resize1DArray(count);
             T j=other.begin();
             int idx=0;
             while(idx<count){
@@ -84,11 +125,19 @@ class TemplateArray: public _ArrayDataManager<T>
         }
 
         template<class ... U>
-        void resize(int axis1, U ... args){
+        inline void resize(int axis1, U ... args){
+            TemplateArray<int> axisArray = items<int>(axis1, args...);
+            this->resize(axisArray);
+        }
+        //template<class ... U>
+        void resize(TemplateArray<int> axisArray){
+            assert(axisArray.shapeSize()==1);
+
             if(this->shapeSize()==1){ //1 dim to N dim
                 int oldShape = this->shape(0);
-                T* oldArray  = this->_allocZeros(1, axis1, args ...);
-                super::_data->shape.setAxisIdx(0,axis1);
+
+                T* oldArray = this->_allocZeros(axisArray);
+
                 int newDisp = this->_getAxisDisplacement(0);
                 int end = _min(oldShape, this->shape(0));
                 int newj = 0;
@@ -100,8 +149,8 @@ class TemplateArray: public _ArrayDataManager<T>
                 TemplateArray<int> oldShape = this->shape();
                 TemplateArray<int> oldDisp = this->_getAxisDisplacement();
 
-                T* oldArray = this->_allocZeros(1, axis1, args ...);
-                super::_data->shape.setAxisIdx(0, axis1);
+                T* oldArray = this->_allocZeros(axisArray);
+
                 TemplateArray<int> newShape = this->shape();
                 TemplateArray<int> newDisp = this->_getAxisDisplacement();
 
@@ -117,13 +166,12 @@ class TemplateArray: public _ArrayDataManager<T>
                         oldArray
                     );
                 }
-
                 delete[] oldArray;
             }
         }
 
         inline void resize(int axis1){
-            if(this->shapeSize()==1) super::_resize1DArray(axis1); // 1 dim to 1 dim
+            if(this->shapeSize()==1) this->_resize1DArray(axis1); // 1 dim to 1 dim
             else{ // N dim to 1 dim
                 int disp = this->_getAxisDisplacement(0);
                 int end = _min(axis1, this->shape(0));
@@ -325,6 +373,11 @@ class TemplateArray: public _ArrayDataManager<T>
         inline T *c_arr(){ return &super::_data->array[0]; }
         inline int c_arr_size() { return super::_data->array.size(); }
         inline T &c_arr_item(int idx) { return super::_data->array[idx];}
+        inline void _resize1DArray(int size){
+            assert(this->shapeSize()<=1); // Can be 0 || 1
+            this->_data->array.resize(size);
+            this->_data->shape.resize(1);
+            this->_data->shape.setAxisIdx(0, size);
+        }
 };
-
 #endif

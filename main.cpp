@@ -1,11 +1,7 @@
 #include "Number.h"
-int main(){ 
-    Array<int> arr;
-    arr.resize(10);
-    int* c_arr = arr.c_arr();
-    for(int j=0; j<10; ++j){
-        c_arr[j] = j+1;
-    }
+int main(){
+    Array<int> arr = items<int>(10,20,30,40,50,60,70,80,90,100);
+
     arr.resize(3,4,5);
     arr.item(1,3,2) = 50;
     for (int x=0; x<3; x++){

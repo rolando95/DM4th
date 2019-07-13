@@ -157,10 +157,4 @@ class _ArrayDataManager
         int shape(int axis){
             return _data->shape.getAxisIdx(axis);
         }
-
-        inline void _resize1DArray(int size){
-            this->_data->array.resize(size);
-            this->_data->shape.resize(1);
-            this->_data->shape.setAxisIdx(0, size);
-        }
 };
