@@ -19,6 +19,7 @@ int main(){
     for(int x=0; x<size.shape(0); ++x){
         std::cout<<size.item(x)<<" ";
     }
+    cout<<endl;
 
     arr = range<int>(0,10);
 

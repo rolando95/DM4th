@@ -143,8 +143,7 @@ class TemplateArray: public _ArrayDataManager<T>
         template<class ... U>
         inline void resize(int axis1, U ... args)
         {
-            TemplateArray<int> axisArray;
-            axisArray = items<int>(axis1, args...);
+            TemplateArray<int> axisArray = items<int>(axis1, args...);
             this->resize(axisArray);
         }
         //template<class ... U>

@@ -149,15 +149,23 @@ class _ArrayDataManager
 
     public:
         
-        _ArrayDataManager(){ this->incrRef(); }
+        _ArrayDataManager(){ 
+            this->incrRef(); 
+        }
+        _ArrayDataManager(const _ArrayDataManager<T> &other)
+        {
+            _data = other._data;
+            this->incrRef();
+        }
         ~_ArrayDataManager(){ this->decrRef(); }
 
-        void const operator=(const _ArrayDataManager &other) 
+        _ArrayDataManager const &operator=(const _ArrayDataManager &other) 
         {
-            if(this->_data==other._data) return;
+            if(this->_data==other._data) return *this;
             this->decrRef();
             _data = other._data;
             this->incrRef();
+            return *this;
         }
 
         int shapeSize(){
