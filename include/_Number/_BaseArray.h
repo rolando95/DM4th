@@ -104,14 +104,15 @@ class _ArrayData
         void incrRef()
         {
             ++_ref;
-            //std::cout<<this<<" INCR REF: "<<_ref<<std::endl;
+            std::cout<<this<<" INCR+ REF: "<<_ref<<std::endl;
         }
 
         void decrRef()
         {
             _ref -= 1;
-            //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
-            if(this->_ref <= 0 && !array.isFree()){ 
+            std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
+            if(this->_ref <= 0 && !array.isFree())
+            { 
                 array.freeArray(); 
                 shape.freeArray();
             }
@@ -125,19 +126,17 @@ class _ArrayDataManager
 {
     protected:
         _ArrayData<T> *_data = nullptr;
-    public:
-        
-        _ArrayDataManager()
+
+        void incrRef()
         {
-            _data = new _ArrayData<T>();
-            _data->incrRef();
-        }
-        ~_ArrayDataManager()
-        { 
-            _data->decrRef();
+            if(this->_data == nullptr)
+            {
+                this->_data = new _ArrayData<T>();
+            }
+            this->_data->incrRef();
         }
 
-        void const operator=(const _ArrayDataManager &other) 
+        void decrRef()
         {
             _data->decrRef();
             if(_data->refCount() <= 0) 
@@ -146,8 +145,19 @@ class _ArrayDataManager
                 _data = nullptr;
             }
             
+        }
+
+    public:
+        
+        _ArrayDataManager(){ this->incrRef(); }
+        ~_ArrayDataManager(){ this->decrRef(); }
+
+        void const operator=(const _ArrayDataManager &other) 
+        {
+            if(this->_data==other._data) return;
+            this->decrRef();
             _data = other._data;
-            _data->incrRef();
+            this->incrRef();
         }
 
         int shapeSize(){
