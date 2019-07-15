@@ -2,7 +2,7 @@
 #define __T_ARRAY_H__
 
 #include "_BaseArray.h"
-
+#include <queue>
 
 ////////////////////////////////////// FIX THIS
 template<class T>
@@ -23,7 +23,7 @@ TemplateArray<T> items(T first, U ... args)
 {
     TemplateArray<T> result;
     int size = count(first, args...);
-    result._resize1DArray(size);
+    result.resize(size);
     _items(result, 0, first, args...);
     return result;
 }
@@ -36,6 +36,13 @@ class TemplateArray: public _ArrayDataManager<T>
     public:
 
     private:
+        inline void _resize1DArray(int size)
+        {
+            //assert(this->shapeSize()<=1); // Can be 0 || 1
+            this->_data->array.resize(size);
+            this->_data->shape.resize(1);
+            this->_data->shape.setAxisIdx(0, size);
+        }
 
         void _resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
@@ -104,7 +111,7 @@ class TemplateArray: public _ArrayDataManager<T>
             return oldArray;
         }
 
-        std::ostream& _ostream(int shapeIdx, int& c_idx, std::ostream& stream, int ident)
+        void _ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident)
         {
             for(int j=0; j<shapeIdx; ++j)
             {
@@ -118,7 +125,7 @@ class TemplateArray: public _ArrayDataManager<T>
                 {
                     
                     if(j!=0) stream<<",\n";
-                    this->_ostream(shapeIdx+1,c_idx,stream, ident);
+                    this->_ostream(stream, shapeIdx+1,c_idx, ident);
                 }
                 stream<<"\n";
                 for(int j=0; j<shapeIdx; ++j)
@@ -133,10 +140,69 @@ class TemplateArray: public _ArrayDataManager<T>
                     stream<<this->c_arr()[c_idx];
                 }
             }
-
-
             stream << "]";
-            return stream;
+        }
+
+        void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
+        {
+            int size=0;
+            _handleIstreamSpacesAndNewLines(stream);
+            if(stream.peek()=='[')
+            {
+                while (true)
+                {
+                    assert(stream.peek()=='['); stream.get();
+
+                    _handleIstreamSpacesAndNewLines(stream);
+                    if(stream.peek()==']') break; //This dim is empty
+
+                    this->_istream(stream, values, shapeIdx+1, c_size, shapeAllocated);
+                    size+=1;
+                    
+                    assert(stream.peek()==']'); stream.get();
+
+                    if(stream.peek()==']'){ break; }
+                    else if(stream.peek()==',') { stream.get(); }
+                    else assert(false);
+                }
+            }else
+            {
+                T value;
+                while (true)
+                {
+                    _handleIstreamSpacesAndNewLines(stream);
+                    if(stream.peek()==']') break; //This dim is empty
+                    
+                    stream>>value;
+                    values.push(value);
+                    size += 1;
+                    c_size += 1;
+                    
+                    if(stream.peek()==']'){ break; }
+                    else if(stream.peek()==',') { stream.get(); }
+                    else assert(false);
+                }
+
+                if(!shapeAllocated)
+                {
+                    for(int j=0; j<this->_data->shape.size(); ++j)
+                    {
+                        this->_data->shape.setAxisIdx(j, 0);
+                    }
+                    this->_data->shape.resize(shapeIdx+1);
+                    shapeAllocated = true;
+                }
+            }
+
+            assert(
+                size > 0  && 
+                (
+                    this->_data->shape.getAxisIdx(shapeIdx) == 0 ||
+                    this->_data->shape.getAxisIdx(shapeIdx) == size
+                )
+            );
+            this->_data->shape.setAxisIdx(shapeIdx, size);
+            //std::cout<<size<<" "<<shapeIdx+1<<std::endl;      
         }
     public:
 
@@ -210,7 +276,7 @@ class TemplateArray: public _ArrayDataManager<T>
 
         inline void resize(int axis1)
         {
-            if(this->shapeSize()==1) this->_resize1DArray(axis1); // 1 dim to 1 dim
+            if(this->shapeSize()<=1) this->_resize1DArray(axis1); // 0 || 1 dim to 1 dim
             else
             { // N dim to 1 dim
                 int disp = this->_getAxisDisplacement(0);
@@ -227,7 +293,7 @@ class TemplateArray: public _ArrayDataManager<T>
             }
         }
 
-        int shapeSize() const { return super::_data->shape.size(); }
+        inline int shapeSize() const { return super::_data->shape.size(); }
 
         int size() const { return super::_data->shape.getAxisIdx(0); }
 
@@ -340,7 +406,7 @@ class TemplateArray: public _ArrayDataManager<T>
             // int* oShape = tmp.c_arr();
         
             // for(int j=0; j<size; ++j){
-            //     std::cout<<shape[j]<<" "<<oShape[j]<<std::endl;
+            //     //std::cout<<shape[j]<<" "<<oShape[j]<<std::endl;
             //     if(shape[j]!=oShape[j]) return false;
             // }
 
@@ -358,8 +424,6 @@ class TemplateArray: public _ArrayDataManager<T>
             }            
 
             return true;
-
-            
         }
 
         template<class U>
@@ -416,7 +480,31 @@ class TemplateArray: public _ArrayDataManager<T>
         std::ostream& ostream(std::ostream& stream, int ident=4)
         {
             int c_idx = 0;          
-            this->_ostream(0,c_idx,stream, ident);
+            this->_ostream(stream, 0, c_idx, ident);
+            return stream;
+        }
+
+        std::istream& istream(std::istream& stream)
+        {
+            int c_size = 0;
+            std::queue<T> values;
+            bool shapeAllocated = false;
+            _handleIstreamSpacesAndNewLines(stream);
+
+            assert(stream.peek()=='['); stream.get();
+            
+            this->_istream(stream, values, 0, c_size, shapeAllocated);
+            _handleIstreamSpacesAndNewLines(stream);
+
+            assert(stream.peek()==']'); stream.get();
+
+            this->_data->array.resize(c_size);
+            for(int j=0; j<c_size; ++j)
+            {
+                assert(!values.empty());
+                this->c_arr()[j] = values.front(); 
+                values.pop();
+            }
             return stream;
         }
 
@@ -424,18 +512,17 @@ class TemplateArray: public _ArrayDataManager<T>
         inline const T *c_arr()const { return &super::_data->array[0]; }
         inline int c_arr_size() { return super::_data->array.size(); }
         inline T &c_arr_item(int idx) { return super::_data->array[idx]; }
-        inline void _resize1DArray(int size)
-        {
-            assert(this->shapeSize()<=1); // Can be 0 || 1
-            this->_data->array.resize(size);
-            this->_data->shape.resize(1);
-            this->_data->shape.setAxisIdx(0, size);
-        }
 };
 
 template<class T>
 inline std::ostream& operator<<(std::ostream& stream, TemplateArray<T> &arr)
 {
     return arr.ostream(stream,4);
+}
+
+template<class T>
+inline std::istream& operator>>(std::istream& stream, TemplateArray<T> &arr)
+{
+    return arr.istream(stream);
 }
 #endif

@@ -26,6 +26,14 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "string": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "memory": "cpp",
+        "ratio": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp"
     }
 }

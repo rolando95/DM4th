@@ -65,36 +65,13 @@ template<class T>  void range<T>::setCount(){
     this->_count = count;
 }
 
-// template<class T> range<T>::operator Array<T>(){
-//     int count=0;
-//     {
-//         T j=_begin;
-//         if(!_isInverse){
-//             while(j<_end){
-//                 ++count;
-//                 j+=_step;
-//             }
-//         }else{
-//             while(j>_end){
-//                 ++count;
-//                 j+=_step;
-//             }
-//         }
-//     }
-    
-//     Array<T> result;
-//     result.resize(count);
-
-//     {
-//         int idx=0;
-//         T j=_begin;
-//         while(idx<count){
-//             result.item(idx) = j;
-//             j+=_step;
-//             ++idx;
-//         }
-//     }
-    
-//     return result;
-// }
+void _handleIstreamSpacesAndNewLines(std::istream &stream)
+{
+    while(stream.peek()==' ' || stream.peek()=='\n')
+    {
+        if(stream.peek()==' ') stream>>std::ws;
+        if(stream.peek()=='\n') stream.get();
+        if(stream.peek()==' ') stream>>std::ws;
+    }
+}
 

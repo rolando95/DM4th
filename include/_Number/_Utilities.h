@@ -1,6 +1,6 @@
 #pragma once
 #include <cassert>
-
+#include <istream>
 template<class T=int>
 class range{
     private:
@@ -59,3 +59,5 @@ template<class T, class ... U>
 int count(T first, U ... args){
     return 1+count(args...);
 }
+
+void _handleIstreamSpacesAndNewLines(std::istream &stream);
