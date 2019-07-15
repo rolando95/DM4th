@@ -1,5 +1,8 @@
 *.exe
 *.txt
 bin-int/
-.vscode/ipch/*
+.vscode/*
+!.vscode/launch.json
+!.vscode/task.json
+!.vscode/c_cpp_properties.json
 bash.exe.stackdump

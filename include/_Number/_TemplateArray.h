@@ -88,24 +88,6 @@ class TemplateArray: public _ArrayDataManager<T>
             return super::_data->array[pos];
         }
 
-        template<class ... U>
-        T* _allocZeros(int axis, int count, int idx, U ... args)
-        {
-             count *= idx;
-            T* oldArray = _allocZeros(axis+1, count, args ...);
-            super::_data->shape.setAxisIdx(axis, idx);
-            return oldArray;
-        }
-
-        T*  _allocZeros(int axis, int count, int idx)
-        {
-            count*=idx;
-            T* oldArray = super::_data->array._allocAndReturnOldArray(count);
-            super::_data->shape.resize(axis+1);
-            super::_data->shape.setAxisIdx(axis, idx);
-            return oldArray;
-        }
-
         T* _allocZeros(const TemplateArray<int> &axisArray)
         {
             int count = 1;
@@ -122,6 +104,40 @@ class TemplateArray: public _ArrayDataManager<T>
             return oldArray;
         }
 
+        std::ostream& _ostream(int shapeIdx, int& c_idx, std::ostream& stream, int ident)
+        {
+            for(int j=0; j<shapeIdx; ++j)
+            {
+                for(int k=0; k<ident; ++k) stream<<" ";
+            }
+            stream << "[";
+            if(this->shapeSize()>shapeIdx+1) 
+            {
+                stream<<"\n";
+                for(int j=0; j<this->shape(shapeIdx); ++j)
+                {
+                    
+                    if(j!=0) stream<<",\n";
+                    this->_ostream(shapeIdx+1,c_idx,stream, ident);
+                }
+                stream<<"\n";
+                for(int j=0; j<shapeIdx; ++j)
+                {
+                    for(int k=0; k<ident; ++k) stream<<" ";
+                }
+            }else
+            {
+                for(int j=0; j<this->shape(shapeIdx); ++j, ++c_idx)
+                {
+                    if(j!=0) stream<<", ";
+                    stream<<this->c_arr()[c_idx];
+                }
+            }
+
+
+            stream << "]";
+            return stream;
+        }
     public:
 
         TemplateArray(){}
@@ -397,6 +413,13 @@ class TemplateArray: public _ArrayDataManager<T>
         template<class U>
         bool operator<(TemplateArray<U> &other){ return !(*this>=other); }
 
+        std::ostream& ostream(std::ostream& stream, int ident=4)
+        {
+            int c_idx = 0;          
+            this->_ostream(0,c_idx,stream, ident);
+            return stream;
+        }
+
         inline T *c_arr(){ return &super::_data->array[0]; }
         inline const T *c_arr()const { return &super::_data->array[0]; }
         inline int c_arr_size() { return super::_data->array.size(); }
@@ -409,4 +432,10 @@ class TemplateArray: public _ArrayDataManager<T>
             this->_data->shape.setAxisIdx(0, size);
         }
 };
+
+template<class T>
+inline std::ostream& operator<<(std::ostream& stream, TemplateArray<T> &arr)
+{
+    return arr.ostream(stream,4);
+}
 #endif
