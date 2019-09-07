@@ -1,1 +1,1 @@
-g++ -g -Wall bin-int/debug/x64/*.o main.cpp -Iinclude -o bin/debug/main.exe  
+g++ -ggdb -Wall bin-int/debug/x64/*.o main.cpp -Iinclude -o bin/debug/main.exe  

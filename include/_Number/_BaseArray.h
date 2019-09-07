@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <memory>
+#include <atomic>
 
 template<class T> 
 class _BaseArray
@@ -96,8 +98,9 @@ template<class T>
 class _ArrayData
 {
     private:
-        volatile int _ref=0;
+        std::atomic<int> _ref{0};
     public:
+
         _ShapeData shape;
         _BaseArray<T> array;
         

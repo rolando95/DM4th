@@ -5,22 +5,22 @@
 
 
 template<class T=float>
-class Array: public TemplateArray<T>
+class ndArray: public TemplateArray<T>
 {
     typedef TemplateArray<T> super;
     public:
-        Array(){}
-        Array(const super &other){ static_cast<super&>(*this) = other; }
-        Array(range<T> other) { static_cast<super&>(*this) = other; }
+        ndArray(){}
+        ndArray(const super &other){ static_cast<super&>(*this) = other; }
+        ndArray(range<T> other) { static_cast<super&>(*this) = other; }
 };
 
 template<>
-class Array<bool>: public TemplateArray<bool>
+class ndArray<bool>: public TemplateArray<bool>
 {
     typedef TemplateArray super;
     public:
-        Array(){}
-        Array(const super &other){ static_cast<super&>(*this) = other; }
-        //Array(const range<bool> &other) { super(other); }
+        ndArray(){}
+        ndArray(const super &other){ static_cast<super&>(*this) = other; }
+        //ndArray(const range<bool> &other) { super(other); }
 };
 #endif
