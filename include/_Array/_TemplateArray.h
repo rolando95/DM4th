@@ -8,10 +8,10 @@
 template<class T>
 class TemplateArray;
 
-template<class T, class ... U>
-void _items(TemplateArray<T> &arr, int axis, T first, U ... args)
+template<class T, class U, class ... V>
+void _items(TemplateArray<T> &arr, int axis, U first, V ... args)
 {
-    arr.c_arr()[axis] = first;
+    arr.c_arr()[axis] = (T)first;
     _items(arr, axis+1, args...);
 }
 
@@ -34,15 +34,15 @@ class TemplateArray: public _ArrayDataManager<T>
 {
     typedef _ArrayDataManager<T> super;
     public:
-
-    private:
         inline void _resize1DArray(int size)
         {
             //assert(this->shapeSize()<=1); // Can be 0 || 1
-            this->_data->array.resize(size);
-            this->_data->shape.resize(1);
-            this->_data->shape(0) = size;
+            super::_data->array.resize(size);
+            super::_data->shape.resize(1);
+            super::_data->shape(0) = size;
         }
+    private:
+
 
         void _resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
@@ -64,35 +64,35 @@ class TemplateArray: public _ArrayDataManager<T>
             }else{
                 for(int j=0; j<end; ++j)
                 {
-                    this->_data->array[newDispCount+newDisp.item(axis)*j] = oldArray[oldDispCount+oldDisp.item(axis)*j];
+                    super::_data->array[newDispCount+newDisp.item(axis)*j] = oldArray[oldDispCount+oldDisp.item(axis)*j];
                 }
             }
         }
 
         void _reshape(int axis, int last)
         {
-            super::_data->shape(axis) = last;
+            super::_data->shape.set(axis, last);
         }
 
         template<class ... U>
         void _reshape(int axis, int first, U ... args)
         {
-            super::_data->shape(axis) = first;
+            super::_data->shape.set(axis, first);
             this->_reshape(axis+1, args...);
         }
 
         template<class ... U>
-        T &_item(int axis, int pos, int idx, U ... args)
+        int _item(int axis, int pos, int idx, U ... args) const
         {
-            pos = pos*super::_data->shape(axis) + idx;
+            pos = pos*super::_data->shape.get(axis) + idx;
             return _item(axis+1, pos, args ...);
         }
 
-        T &_item(int axis, int pos, int idx)
+        int _item(int axis, int pos, int idx) const
         {
             assert(axis+1 == super::_data->shape.size());
-            pos = pos*super::_data->shape(axis) + idx;
-            return super::_data->array(pos);
+            pos = pos*super::_data->shape.get(axis) + idx;
+            return pos;
         }
 
         T* _allocZeros(const TemplateArray<int> &axisArray)
@@ -106,12 +106,12 @@ class TemplateArray: public _ArrayDataManager<T>
             super::_data->shape.resize(axisArray.size());
             for(int j=0; j<axisArray.size(); ++j)
             {
-                super::_data->shape(j) = axisArray.c_arr()[j];
+                super::_data->shape.set(j,axisArray.c_arr()[j]);
             }
             return oldArray;
         }
 
-        void _ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident)
+        void _ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident) const
         {
             for(int j=0; j<shapeIdx; ++j)
             {
@@ -185,11 +185,11 @@ class TemplateArray: public _ArrayDataManager<T>
 
                 if(!shapeAllocated)
                 {
-                    for(int j=0; j<this->_data->shape.size(); ++j)
+                    for(int j=0; j<super::_data->shape.size(); ++j)
                     {
-                        this->_data->shape(j) = 0;
+                        super::_data->shape.set(j, 0);
                     }
-                    this->_data->shape.resize(shapeIdx+1);
+                    super::_data->shape.resize(shapeIdx+1);
                     shapeAllocated = true;
                 }
             }
@@ -197,11 +197,11 @@ class TemplateArray: public _ArrayDataManager<T>
             assert(
                 size > 0  && 
                 (
-                    this->_data->shape(shapeIdx) == 0 ||
-                    this->_data->shape(shapeIdx) == size
+                    super::_data->shape.get(shapeIdx) == 0 ||
+                    super::_data->shape.get(shapeIdx) == size
                 )
             );
-            this->_data->shape(shapeIdx) = size;
+            super::_data->shape.set(shapeIdx, size);
             //std::cout<<size<<" "<<shapeIdx+1<<std::endl;      
         }
     public:
@@ -281,9 +281,9 @@ class TemplateArray: public _ArrayDataManager<T>
             { // N dim to 1 dim
                 int disp = this->_getAxisDisplacement(0);
                 int end = _min(axis1, this->shape(0));
-                T* old = this->_data->array._allocAndReturnOldArray(axis1);
+                T* old = super::_data->array._allocAndReturnOldArray(axis1);
                 super::_data->shape.resize(1);
-                super::_data->shape(0) = axis1;
+                super::_data->shape.set(0, axis1);
                 int oldj=0; int newj=0;
                 for(; newj<end; ++newj, oldj+=disp)
                 {
@@ -295,7 +295,7 @@ class TemplateArray: public _ArrayDataManager<T>
 
         inline int shapeSize() const { return super::_data->shape.size(); }
 
-        int size() const { return super::_data->shape(0); }
+        int size() const { return super::_data->shape.get(0); }
 
         TemplateArray<int> shape() const
         {
@@ -303,7 +303,7 @@ class TemplateArray: public _ArrayDataManager<T>
             result._resize1DArray(super::_data->shape.size());
             for(int j=0; j<super::_data->shape.size(); ++j)
             {
-                result.item(j) = super::_data->shape(j);
+                result.item(j) = super::_data->shape.get(j);
             }
             return result;
         }
@@ -316,7 +316,8 @@ class TemplateArray: public _ArrayDataManager<T>
         template<class ... U>
         void reshape(int axis1, U ... args)
         {
-            int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
+            //int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
+            int oldShapeMult = mult(super::_data->shape.c_arr(), this->shapeSize());
             int newShapeMult = mult(axis1,args...);
             assert(oldShapeMult==newShapeMult);
             
@@ -326,15 +327,15 @@ class TemplateArray: public _ArrayDataManager<T>
 
         void reshape(TemplateArray<int> newShape)
         {
-            int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
+            int oldShapeMult = mult(super::_data->shape.c_arr(), this->shapeSize());
             int newShapeMult = mult(newShape.c_arr(), newShape.size());     
             assert(newShape.shapeSize()==1);    
             assert(oldShapeMult==newShapeMult);
 
-            this->_data->shape.resize(newShape.size());
+            super::_data->shape.resize(newShape.size());
             for(int j=0; j<newShape.size(); ++j)
             {
-                this->_data->shape(j) = newShape.item(j);
+                super::_data->shape.set(j, newShape.item(j));
             }
         }
 
@@ -346,7 +347,7 @@ class TemplateArray: public _ArrayDataManager<T>
             for(int j=super::_data->shape.size()-1; j>=0; --j)
             {
                 result.item(j) = disp;
-                disp *= super::_data->shape(j);
+                disp *= super::_data->shape.get(j);
             }
 
             return result;
@@ -357,15 +358,19 @@ class TemplateArray: public _ArrayDataManager<T>
             int disp = 1;
             for(int j=super::_data->shape.size()-1; j>axis; --j)
             {
-                disp *= super::_data->shape(j);
+                disp *= super::_data->shape.get(j);
             }
             return disp;
         }
 
         template<class ... U>
-        T &item(int x, U ... args){ return this->_item(1,x,args ...); }
+        T &item(int x, U ... args) const
+        { 
+            const int pos = this->_item(1,x,args ...); 
+            return super::_data->array(pos);
+        }
 
-        T &item(int x)
+        T &item(int x) const
         {
             assert(super::_data->shape.size()==1);
             assert(x<super::_data->array.size());
@@ -373,7 +378,7 @@ class TemplateArray: public _ArrayDataManager<T>
             return super::_data->array[x];
         }
 
-        T &item(TemplateArray<int> axisArray)
+        T &item(const TemplateArray<int> &axisArray)
         {
             assert(axisArray.shapeSize()==1);
             assert(axisArray.size()==this->shapeSize());
@@ -381,42 +386,93 @@ class TemplateArray: public _ArrayDataManager<T>
             int pos = axisArray.c_arr()[0];
             for(int j=1; j<this->shapeSize(); ++j)
             {
-                pos = pos*this->_data->shape(j) + axisArray.c_arr()[j];
+                pos = pos*super::_data->shape.get(j) + axisArray.c_arr()[j];
             }
 
             // int *iter = axisArray.c_arr(); 
             // int pos = *iter;
             // for(int j=1; j<this->shapeSize(); ++j, ++iter)
             // {
-            //     pos = pos*this->_data->shape(j) + *iter;
+            //     pos = pos*super::_data->shape(j) + *iter;
             // }
-            return this->_data->array[pos];            
+            return super::_data->array[pos];            
+        }
+
+        TemplateArray<T> copy() const
+        {
+            TemplateArray<T> result;
+            result.resize(this->shape());
+            for(int j=0; j<this->c_arr_size(); ++j)
+            {
+                result.c_arr_item(j) = this->c_arr_item(j);
+            }
+            return result;
         }
 
         template<class ... U>
         inline T &operator()(U ... args){ return this->item(args...); }
+        template<class ... U>
+        const inline T &operator()(U ... args) const { return this->item(args...); }
 
         inline T &operator()(TemplateArray<int> axisArray){ this->item(axisArray); }
 
         template<class U>
-        bool operator==(TemplateArray<U> &other)
+        TemplateArray<T> operator+(const TemplateArray<U> &other) const
         {
-            return this->_data->shape==other._data->shape && other._data->array==this->_data->array;
+            TemplateArray<T> result = this->copy();
+            result += other;
+            return result;
         }
 
         template<class U>
-        inline bool operator!=(TemplateArray<U> &other){ return !(*this==other); }
+        const TemplateArray<T> operator+=(const TemplateArray<U> &other)
+        {
+            assert(super::_data->shape==other._arrayData()->shape);
+            for(int j=0; j<this->c_arr_size(); ++j)
+            {
+                this->c_arr_item(j) += other.c_arr_item(j);
+            }
+            return *this;
+        }
 
         template<class U>
-        bool operator>(TemplateArray<U> &other)
+        TemplateArray<T> operator-(const TemplateArray<U> &other) const
         {
-            int sizeArr = this->c_arr_size();
-            int oSizeArr = other.c_arr_size();
+            TemplateArray<T> result = this->copy();
+            result -= other;
+            return result;
+        }
+
+        template<class U>
+        const TemplateArray<T> operator-=(const TemplateArray<U> &other)
+        {
+            assert(super::_data->shape==other._arrayData()->shape);
+            for(int j=0; j<this->c_arr_size(); ++j)
+            {
+                this->c_arr_item(j) -= other.c_arr_item(j);
+            }
+            return *this;
+        }
+
+        template<class U>
+        bool operator==(const TemplateArray<U> &other)
+        {
+            return super::_data->shape==other._arrayData()->shape && other._arrayData()->array==super::_data->array;
+        }
+
+        template<class U>
+        inline bool operator!=(const TemplateArray<U> &other){ return !(*this==other); }
+
+        template<class U>
+        bool operator>(const TemplateArray<U> &other)
+        {
+            const int sizeArr = this->c_arr_size();
+            const int oSizeArr = other.c_arr_size();
 
             int size = _min(sizeArr,oSizeArr); 
 
-            T* c_arr = this->c_arr();
-            U* oC_arr = other.c_arr();
+            const T* c_arr = this->c_arr();
+            const U* oC_arr = other.c_arr();
 
             for(int j=0; j<size; ++j)
             {
@@ -429,18 +485,18 @@ class TemplateArray: public _ArrayDataManager<T>
         }
 
         template<class U>
-        inline bool operator<=(TemplateArray<U> &other){ return !(*this>other); }
+        inline bool operator<=(const TemplateArray<U> &other){ return !(*this>other); }
 
         template<class U>
-        bool operator>=(TemplateArray<U> &other)
+        bool operator>=(const TemplateArray<U> &other)
         {
-            int sizeArr = this->c_arr_size();
-            int oSizeArr = other.c_arr_size();
+            const int sizeArr = this->c_arr_size();
+            const int oSizeArr = other.c_arr_size();
 
             int size = _min(sizeArr,oSizeArr); 
 
             T* c_arr = this->c_arr();
-            U* oC_arr = other.c_arr();
+            const U* oC_arr = other.c_arr();
 
             for(int j=0; j<size; ++j)
             {
@@ -455,7 +511,7 @@ class TemplateArray: public _ArrayDataManager<T>
         template<class U>
         bool operator<(TemplateArray<U> &other){ return !(*this>=other); }
 
-        std::ostream& ostream(std::ostream& stream, int ident=4)
+        std::ostream& ostream(std::ostream& stream, int ident=4) const
         {
             int c_idx = 0;          
             this->_ostream(stream, 0, c_idx, ident);
@@ -476,7 +532,7 @@ class TemplateArray: public _ArrayDataManager<T>
 
             assert(stream.peek()==']'); stream.get();
 
-            this->_data->array.resize(c_size);
+            super::_data->array.resize(c_size);
             for(int j=0; j<c_size; ++j)
             {
                 assert(!values.empty());
@@ -487,13 +543,14 @@ class TemplateArray: public _ArrayDataManager<T>
         }
 
         inline T *c_arr(){ return &super::_data->array[0]; }
-        inline const T *c_arr()const { return &super::_data->array[0]; }
-        inline int c_arr_size() { return super::_data->array.size(); }
+        inline const T *c_arr() const { return &super::_data->array[0]; }
+        inline const int c_arr_size() const { return super::_data->array.size(); }
         inline T &c_arr_item(int idx) { return super::_data->array[idx]; }
+        inline const T c_arr_item(int idx) const { return super::_data->array.get(idx); }
 };
 
 template<class T>
-inline std::ostream& operator<<(std::ostream& stream, TemplateArray<T> &arr)
+inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<T> &arr)
 {
     return arr.ostream(stream,4);
 }

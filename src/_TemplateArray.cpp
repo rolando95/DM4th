@@ -1,4 +1,4 @@
-#include "../include/_Number/_TemplateArray.h"
+#include "../include/_Array/_TemplateArray.h"
 
 // template<> void Array<int>::function(){
 // }

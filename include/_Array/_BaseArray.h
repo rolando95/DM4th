@@ -58,9 +58,11 @@ class _BaseArray
             return result;
         }
 
-        inline int size() const { return this->_size; }
+        inline const int size() const { return this->_size; }
         inline T &operator[](int idx){ assert(idx<this->size()); return  this->_array[idx]; }
         inline T &operator()(int idx){ assert(idx<this->size()); return this->_array[idx]; }
+        const inline get(int idx) const { assert(idx<this->size()); return this->_array[idx]; }
+        void set(int idx, T value) {  this->_array[idx]=value; }
 
 
         bool isFree(){
@@ -68,7 +70,7 @@ class _BaseArray
         }
 
         template<class U>
-        bool operator==(_BaseArray<U> &other)
+        bool operator==(const _BaseArray<U> &other) const 
         {
             if(this->size()!=other.size())
             {
@@ -76,7 +78,7 @@ class _BaseArray
             }
             for(int j=0; j<this->size(); ++j)
             {
-                if(this->_array[j] != other[j])
+                if(this->_array[j] != other.get(j))
                 {
                     return false;
                 }
@@ -85,7 +87,7 @@ class _BaseArray
         }
 
         template<class U>
-        inline bool operator!=(_BaseArray<U> &other){ return !(*this==other); }
+        inline bool operator!=(const _BaseArray<U> &other) const { return !(*this==other); }
 
         inline void freeArray()
         {
@@ -117,8 +119,11 @@ class _ShapeData
         }
         inline int &operator[](int idx){ return  this->_shape[idx]; }
         inline int &operator()(int idx){ return this->_shape[idx]; }
-        bool operator==(_ShapeData &other) { return this->_shape==other._shape; }
-        bool operator!=(_ShapeData &other) { return this->_shape!=other._shape; }
+        bool operator==(const _ShapeData &other) const { return this->_shape==other._shape; }
+        bool operator!=(const _ShapeData &other) const { return this->_shape!=other._shape; }
+        inline const int get(int idx) { return this->_shape.get(idx); }
+        inline void set(int idx, int value) { this->_shape.set(idx,value); }
+        inline const int *c_arr(){ return &_shape[0]; }
 };
 
 template<class T>
@@ -205,4 +210,10 @@ class _ArrayDataManager
         int shape(int axis){
             return this->_data->shape(axis);
         }
+
+        _ArrayData<T> const *_arrayData() const
+        {
+            return _data;
+        }
+
 };

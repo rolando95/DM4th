@@ -1,9 +1,9 @@
 
 template<class T>
-T mult(T* c_arr, int size){
+T mult(const T* c_arr, int size){
     T result = 1;
     for(int j=0; j<size; ++j){
-        result*=c_arr[j];
+        result=result*c_arr[j];
     }
     return result;
 }

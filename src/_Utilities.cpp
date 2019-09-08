@@ -1,4 +1,4 @@
-#include "../include/_Number/_Utilities.h"
+#include "../include/_Array/_Utilities.h"
 
 //Range class
 template class range<int>;
