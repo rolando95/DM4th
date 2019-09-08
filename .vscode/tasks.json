@@ -6,11 +6,11 @@
         {
             "type": "shell",
             "label": "startDebug",
-            //"command": "${workspaceFolder}/make/debug.bat",
-            "command" : "C:/Users/rarj1/Documents/Trabajos/Proyectos/_Number.h/make/debug.sh",
+            "command": "${workspaceFolder}/make/debug.bat",
+            //"command" : "${workspaceFolder}/make/debug.sh",
             "args": [],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/make/"
             },
             "problemMatcher": [
                 "$gcc"
@@ -19,11 +19,11 @@
         {
             "type": "shell",
             "label": "startRelease",
-            //"command": "${workspaceFolder}/make/release.bat",
-            "command" : "C:/Users/rarj1/Documents/Trabajos/Proyectos/_Number.h/make/release.sh",
+            "command": "${workspaceFolder}/make/release.bat",
+            //"command" : "${workspaceFolder}/make/release.sh",
             "args": [],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/make/"
             },
             "problemMatcher": [
                 "$gcc"
@@ -32,11 +32,11 @@
         {
             "type": "shell",
             "label": "makeNumber",
-            //"command": "${workspaceFolder}/make/makeNumberProject.bat",
-            "command" : "C:/Users/rarj1/Documents/Trabajos/Proyectos/_Number.h/make/makeNumberProject.sh",
+            "command": "${workspaceFolder}/make/makeNumberProject.bat",
+            //"command" : "${workspaceFolder}/make/makeNumberProject.sh",
             "args": [],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/make/"
             },
             "problemMatcher": [
                 "$gcc"

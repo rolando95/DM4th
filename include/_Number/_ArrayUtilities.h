@@ -2,7 +2,7 @@
 #include "_Array.h"
 
 template<class T>
-T mult(ndArray<T> arr)
+T mult(NDArray<T> arr)
 {
     T result = 1;
     T* c_arr = arr.c_arr();
@@ -15,7 +15,7 @@ T mult(ndArray<T> arr)
 
 
 template<class T>
-T sum(ndArray<T> arr)
+T sum(NDArray<T> arr)
 {
     T result = 0;
     T* c_arr = arr.c_arr();
@@ -27,4 +27,4 @@ T sum(ndArray<T> arr)
 }
 
 template<class T>
-int count(ndArray<T> arr){ return arr.c_arr_size(); }
+int count(NDArray<T> arr){ return arr.c_arr_size(); }

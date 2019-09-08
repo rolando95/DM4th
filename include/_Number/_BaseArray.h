@@ -62,9 +62,30 @@ class _BaseArray
         inline T &operator[](int idx){ assert(idx<this->size()); return  this->_array[idx]; }
         inline T &operator()(int idx){ assert(idx<this->size()); return this->_array[idx]; }
 
+
         bool isFree(){
             return this->_array==nullptr; 
         }
+
+        template<class U>
+        bool operator==(_BaseArray<U> &other)
+        {
+            if(this->size()!=other.size())
+            {
+                return false;
+            }
+            for(int j=0; j<this->size(); ++j)
+            {
+                if(this->_array[j] != other[j])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        template<class U>
+        inline bool operator!=(_BaseArray<U> &other){ return !(*this==other); }
 
         inline void freeArray()
         {
@@ -73,6 +94,8 @@ class _BaseArray
             this->_array = nullptr;
             this->_size=0;
         }
+
+        
 };
 
 
@@ -85,13 +108,17 @@ class _ShapeData
         ~_ShapeData(){}
         inline void resize(int size){ _shape.resize(size); }
         inline const int size() { return _shape.size(); }
-        inline const int getAxisIdx(int idx) { return _shape[idx]; }
-        inline void setAxisIdx(int idx, int value){ _shape[idx] = value; }
+        // inline const int getAxisIdx(int idx) { return this->_shape[idx]; }
+        // inline void setAxisIdx(int idx, int value){ this->_shape[idx] = value; }
         inline void freeArray() { 
             if(!this->_shape.isFree()){
                 this->_shape.freeArray();
             }
         }
+        inline int &operator[](int idx){ return  this->_shape[idx]; }
+        inline int &operator()(int idx){ return this->_shape[idx]; }
+        bool operator==(_ShapeData &other) { return this->_shape==other._shape; }
+        bool operator!=(_ShapeData &other) { return this->_shape!=other._shape; }
 };
 
 template<class T>
@@ -141,11 +168,11 @@ class _ArrayDataManager
 
         void decrRef()
         {
-            _data->decrRef();
-            if(_data->refCount() <= 0) 
+            this->_data->decrRef();
+            if(this->_data->refCount() <= 0) 
             {
-                delete _data;
-                _data = nullptr;
+                delete this->_data;
+                this->_data = nullptr;
             }
             
         }
@@ -166,16 +193,16 @@ class _ArrayDataManager
         {
             if(this->_data==other._data) return *this;
             this->decrRef();
-            _data = other._data;
+            this->_data = other._data;
             this->incrRef();
             return *this;
         }
 
         int shapeSize(){
-            return _data->shape.size();
+            return this->_data->shape.size();
         }
 
         int shape(int axis){
-            return _data->shape.getAxisIdx(axis);
+            return this->_data->shape(axis);
         }
 };
