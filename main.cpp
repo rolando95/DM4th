@@ -6,8 +6,9 @@ int main(){
     cout<<(arr-arr2);
 
     NDArray<string> list = items<string>("Hola", "Mundo");
-    cout<<list;
+    cout<<list<<endl;
     
-    
+    NDArray<bool> listB = items<bool>(false, true, false, false);
+    cout<<listB<<" "<<!listB<<endl;
     return 0;
 }
