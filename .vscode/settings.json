@@ -39,6 +39,11 @@
         "deque": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp",
-        "optional": "cpp"
-    }
+        "optional": "cpp",
+        "cstdarg": "cpp",
+        "cstddef": "cpp",
+        "algorithm": "cpp",
+        "memory_resource": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

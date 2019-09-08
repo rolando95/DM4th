@@ -4,4 +4,10 @@ int main(){
     NDArray<float> arr2 = range<float>(10);
     NDArray<float> arr3 = arr+arr2;
     cout<<(arr-arr2);
+
+    NDArray<string> list = items<string>("Hola", "Mundo");
+    cout<<list;
+    
+    
+    return 0;
 }

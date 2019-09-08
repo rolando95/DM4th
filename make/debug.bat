@@ -7,7 +7,9 @@ if "%fileName%"=="" (
 )
 mkdir bin\debug\
 g++ -ggdb -Wall bin-int\debug\x64\*.o %fileName% -Iinclude -o bin\debug\main.exe  
-IF %errorlevel%==0 (
-    cls
-    REM start main.exe
-)
+
+if errorlevel 1 ( exit /B 1 )
+
+REM call bin\debug\main.exe
+
+exit /b 0
