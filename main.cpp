@@ -1,19 +1,24 @@
 #include "Number.h"
 int main(){
-    NDArray<float> arr = items<float>(10,20,30,40,50,60,70,80,90);
+
+    Number numero = -1;
+
+    cout<<sqrt(numero)<<endl;
+    
+    NDArray<Number> arr = items<Number>(10,20,30,40,50,60-10i,70,80,90);
 
     arr.push(100,5);
-    float result = arr.pop(0);
+    Number result = arr.pop(0);
     cout<<result<<" "<<arr<<endl;
     arr.push(result);
     cout<<arr<<endl;
 
     arr.resize(10);
-    NDArray<int> arr2 = range<int>(10);
-    NDArray<float> arr3 = arr+arr2;
+    NDArray<Number> arr2 = range<Number>(10);
+    NDArray<Number> arr3 = arr+arr2;
     cout<<(arr-arr2)<<endl;
 
-    NDArray<float> arr4 = arr.getCopy();
+    NDArray<Number> arr4 = arr.getCopy();
     arr4.pushArray(arr2,0);
     cout<<arr4<<endl;
 

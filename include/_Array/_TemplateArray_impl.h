@@ -348,17 +348,6 @@ TemplateArray<T> TemplateArray<T>::popArray(const int pos)
     if(this->shapeSize()==2)
     {
         result.resize(this->shape(1));
-        // int pos = idx.real();
-        // assert(*_rows>0);
-        // if(pos<0 || pos>=*_rows) {
-        //     value = _data->array[*_rows-1];
-        // }else{
-        //     value = _data->array[pos];
-        //     for(int j=pos; j<*_rows-1;++j){
-        //         _data->array[j] = _data->array[j+1];
-        //     }
-        // }
-        // this->resize(*_rows-1,*_cols);
         assert(this->shape(0)>0);
         if(pos==this->shape(0)-1 || pos==END)
         {

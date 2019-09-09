@@ -69,7 +69,7 @@ inline T &_BaseArray<T>::operator()(int idx)
 }
 
 template<class T>
-const inline _BaseArray<T>::get(int idx) const 
+const inline T _BaseArray<T>::get(int idx) const 
 { 
     assert(idx<this->size()); 
     return this->_array[idx]; 

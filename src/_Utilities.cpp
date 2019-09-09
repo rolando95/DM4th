@@ -1,9 +1,10 @@
-#include "../include/_Array/_Utilities.h"
-
+#include "../include/_Utilities/_Utilities.h"
+#include "../include/_Number/_Number.h"
 //Range class
 template class range<int>;
 template class range<float>;
 template class range<double>;
+template class range<Number>;
 
 template<class T> range<T>::range(): _begin(0), _end(0), _step(1) {
     this->setCount();

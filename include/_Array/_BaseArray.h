@@ -1,9 +1,9 @@
 #pragma once
 
-#include "_Constants.h"
-#include "_Math.h"
-#include "_Utilities.h"
-#include "_c_arr_Utilities.h"
+#include "../_Utilities/_Constants.h"
+#include "../_Utilities/_Math.h"
+#include "../_Utilities/_Utilities.h"
+#include "../_Utilities/_c_arr_Utilities.h"
 
 #include <iostream>
 #include <string>
@@ -31,7 +31,7 @@ class _BaseArray
         inline const int size() const;
         inline T &operator[](int idx);
         inline T &operator()(int idx);
-        const inline get(int idx) const;
+        const inline T get(int idx) const;
         void set(int idx, T value);
 
         bool isFree();
