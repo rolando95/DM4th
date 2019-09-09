@@ -58,6 +58,17 @@ class TemplateArray: public _ArrayDataManager<T>
         template<class U> const TemplateArray<T> operator-=(const TemplateArray<U> &other);
         template<class U> TemplateArray<T> operator-(const TemplateArray<U> &other) const;
 
+        template<class U> const TemplateArray<T> operator*=(const TemplateArray<U> &other);
+        template<class U> TemplateArray<T> operator*(const TemplateArray<U> &other) const;
+        const TemplateArray<T> operator*=(const T &other);
+        TemplateArray<T> operator*(const T &other);
+
+        const TemplateArray<T> operator/=(const T &other);
+        TemplateArray<T> operator/(const T &other);
+
+        const TemplateArray<T> operator%=(const T &other);
+        TemplateArray<T> operator%(const T &other);
+
         template<class U> bool operator==(const TemplateArray<U> &other);
         template<class U> inline bool operator!=(const TemplateArray<U> &other);
         template<class U> bool operator>(const TemplateArray<U> &other);

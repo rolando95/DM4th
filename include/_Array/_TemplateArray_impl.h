@@ -438,6 +438,106 @@ TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) cons
 }
 
 template<class T> template<class U>
+const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &other)
+{   
+    TemplateArray<T> result;
+    if(this->shapeSize()==1 && other.shapeSize()==1)
+    {
+        assert(this->shape(0)==other.shape(0));
+        result.resize(1);
+        for(int j=0; j<this->shape(0); ++j)
+        {
+            result.item(0) += this->item(j)*other.item(j);
+        }
+    }
+    else if(this->shapeSize()<=2 && other.shapeSize()<=2)
+    {
+        assert(this->shape(1) == other.shape(0));
+        int maxX = this->shape(0);
+        int maxY = other.shape(1);
+        int maxZ = other.shape(0);
+
+        result.resize(maxX,maxY);
+        for(int x=0; x<maxX; ++x){
+            for(int y=0; y<maxY; ++y){
+                for(int z=0;z<maxZ; ++z){
+                    result.item(x,y) += this->item(x,z) * other.item(z,y);
+                }
+            }
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+
+    *this = result;
+    return *this;
+}
+
+template<class T> template<class U>
+TemplateArray<T> TemplateArray<T>::operator*(const TemplateArray<U> &other) const
+{
+    TemplateArray<T> result = this->getCopy();
+    result *= other;
+    return result;
+}
+
+template<class T>
+const TemplateArray<T> TemplateArray<T>::operator*=(const T &other)
+{
+    for(int j=0; j<this->c_arr_size(); ++j)
+    {
+        this->c_arr_item(j) *= other;
+    }
+    return *this;
+}
+
+template<class T>
+TemplateArray<T> TemplateArray<T>::operator*(const T &other)
+{
+    TemplateArray<T> result = this->getCopy();
+    result *= other;
+    return result;
+}
+
+template<class T>
+const TemplateArray<T> TemplateArray<T>::operator/=(const T &other)
+{
+    for(int j=0; j<this->c_arr_size(); ++j)
+    {
+        this->c_arr_item(j) /= other;
+    }
+    return *this;
+}
+
+template<class T>
+TemplateArray<T> TemplateArray<T>::operator/(const T &other)
+{
+    TemplateArray<T> result = this->getCopy();
+    result /= other;
+    return result;
+}
+
+template<class T>
+const TemplateArray<T> TemplateArray<T>::operator%=(const T &other)
+{
+    for(int j=0; j<this->c_arr_size(); ++j)
+    {
+        this->c_arr_item(j) = fmod(this->c_arr_item(j), other);
+    }
+    return *this;
+}
+
+template<class T>
+TemplateArray<T> TemplateArray<T>::operator%(const T &other)
+{
+    TemplateArray<T> result = this->getCopy();
+    result %= other;
+    return result;
+}
+
+template<class T> template<class U>
 bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
 {
     return super::_data->shape==other._arrayData()->shape && other._arrayData()->array==super::_data->array;

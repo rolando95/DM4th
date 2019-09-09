@@ -1,5 +1,4 @@
-#ifndef __ARRAY_H__
-#define __ARRAY_H__
+#pragma once
 
 #include "_TemplateArray_impl.h"
 
@@ -41,5 +40,3 @@ class NDArray<bool>: public TemplateArray<bool>
 
 // Specialization methods
 inline std::ostream& operator<<(std::ostream& stream, const NDArray<std::string> &arr){ return arr.ostream(stream,4,true); }
-
-#endif
