@@ -1,5 +1,4 @@
-#ifndef __NUMBER_H__
-#define __NUMBER_H__
+#pragma once
 
 #include <iostream>
 #include "../_Utilities/_Constants.h"
@@ -32,10 +31,10 @@ public:
     explicit operator char *();
     explicit operator std::string();
 
-    // Carga valor de tipo Number desde un fichero
-    Number loadFile(std::string url);
-    // Guarda valor de tipo Number en un fichero
-    Number saveFile(std::string url);
+    // // Carga valor de tipo Number desde un fichero
+    // Number loadFile(std::string url);
+    // // Guarda valor de tipo Number en un fichero
+    // Number saveFile(std::string url);
 
     // Incremento prefijo
     Number operator ++();
@@ -152,4 +151,3 @@ Number atanh(const Number&);
 Number acoth(const Number&);
 Number asech(const Number&);
 Number acsch(const Number&);
-#endif

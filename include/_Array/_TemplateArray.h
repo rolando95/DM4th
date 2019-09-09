@@ -11,6 +11,7 @@ class TemplateArray: public _ArrayDataManager<T>
     public:
         TemplateArray();  
         TemplateArray(range<T> &other);
+        TemplateArray(const std::string &other);
 
         template<class ... U>
         inline void resize(int axis1, U ... args);

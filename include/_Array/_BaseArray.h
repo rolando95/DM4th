@@ -10,6 +10,7 @@
 #include <cassert>
 #include <memory>
 #include <atomic>
+#include <sstream>
 
 template<class T> 
 class _BaseArray

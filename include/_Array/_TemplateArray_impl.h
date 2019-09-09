@@ -23,6 +23,14 @@ TemplateArray<T>::TemplateArray(range<T> &other)
     }
 }
 
+template<class T>
+TemplateArray<T>::TemplateArray(const std::string &str) 
+{    
+    std::stringstream ss;
+    ss << str;
+    ss >> *this;
+}
+
 template<class T> template<class ... U>
 inline void TemplateArray<T>::resize(int axis1, U ... args)
 {
@@ -658,6 +666,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
     {
         while (true)
         {
+            _handleIstreamSpacesAndNewLines(stream);
             assert(stream.peek()=='['); stream.get();
 
             _handleIstreamSpacesAndNewLines(stream);
@@ -668,6 +677,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             
             assert(stream.peek()==']'); stream.get();
 
+            _handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else assert(false);
@@ -685,6 +695,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             size += 1;
             c_size += 1;
             
+            _handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else assert(false);
