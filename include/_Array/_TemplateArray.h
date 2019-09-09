@@ -37,7 +37,15 @@ class TemplateArray: public _ArrayDataManager<T>
         T &item(int x) const;
         T &item(const TemplateArray<int> &axisArray);
 
-        TemplateArray<T> copy() const;
+        TemplateArray<T> getCopy() const;
+
+        template<class U>
+        void push(const U &value, const int idx=END);
+        template<class U>
+        void pushArray(const TemplateArray<U> &other, const int idx=END);
+        
+        T pop(const int idx=END);
+        TemplateArray<T> popArray(const int idx=END);
 
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;

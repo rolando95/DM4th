@@ -1,6 +1,12 @@
 #pragma once
 #include <cassert>
 #include <istream>
+#include <limits>
+
+constexpr int BEGIN = 0;
+constexpr int END = std::numeric_limits<int>::max();
+constexpr int ALL = std::numeric_limits<int>::max();
+
 template<class T=int>
 class range{
     private:

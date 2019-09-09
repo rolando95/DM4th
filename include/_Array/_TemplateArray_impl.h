@@ -117,7 +117,7 @@ TemplateArray<int> TemplateArray<T>::shape() const
 template<class T>
 int TemplateArray<T>::shape(int axis) const       
 {
-    return super::_data->shape(axis);
+    return super::_data->shape.get(axis);
 }
 
 template<class T> template<class ... U>
@@ -211,7 +211,7 @@ T &TemplateArray<T>::item(const TemplateArray<int> &axisArray)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::copy() const
+TemplateArray<T> TemplateArray<T>::getCopy() const
 {
     TemplateArray<T> result;
     result.resize(this->shape());
@@ -219,6 +219,177 @@ TemplateArray<T> TemplateArray<T>::copy() const
     {
         result.c_arr_item(j) = this->c_arr_item(j);
     }
+    return result;
+}
+
+template<class T> template<class U>
+void TemplateArray<T>::push(const U &value, const int pos)
+{
+    assert(this->shapeSize()<=1);
+    assert( (pos>=0 && pos<= this->shape(0)) || pos==END);
+    this->resize(this->shape(0)+1);
+    //Append
+    if(pos >= this->shape(0) || pos==END) 
+    {
+        super::_data->array(this->shape(0)-1) = value;
+    }
+    //Insert
+    else 
+    {
+        for(int j=this->shape(0)-1; j > pos; --j)
+        {
+            super::_data->array(j) = super::_data->array(j-1);
+        }
+        super::_data->array(pos) = value;
+    }
+}
+
+template<class T> template<class U>
+void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
+
+    if(this->shapeSize()<=1 && other.shapeSize()==1)
+    {
+        int size = other.size();
+        int end = this->shape(0);
+        assert( (pos>=0 && pos<=end) || pos==END);
+        this->resize(end+size);
+
+        //Append
+        if(pos==END||pos==end)
+        {
+            for(int j=0; j<size; ++j)
+            {
+                super::_data->array(end+j) = (T)other.item(j);
+            }
+        //Insert
+        }else
+        {
+            for(int j=end+size-1; j>=pos+size; --j)
+            {
+                super::_data->array(j) = super::_data->array(j-size);
+            }
+            for(int j=pos; j<pos+size; ++j)
+            {
+                super::_data->array(j) = (T)other.item(j-pos);
+            }
+        }
+    }
+    else if( (this->shapeSize()==0 || this->shapeSize()==2) && other.shapeSize()==1 ){
+        int cols;
+        if(this->shapeSize()==0) cols = other.shape(0);
+        else cols = this->shape(1);
+
+        int end = this->shape(0);
+        assert( (pos>=0 && pos<=this->shape(0)) || pos==END);
+        assert(cols==other.shape(0));
+
+        this->resize(this->shape(0)+1, cols);
+
+        //Append
+        if(pos>=end || pos==END)
+        {
+            T *iter = &this->item(this->shape(0)-1,0);
+            for(int j=0; j<cols; ++j)
+            {
+                iter[j] = (T)other.item(j);
+            }
+        }
+
+        //Insert
+        else
+        {
+            T *src = &this->item(0,0);
+            T *dst = &this->item(1,0);
+            for(int j=(this->shape(0)-1)*cols-1; j>=pos*cols ; --j){
+                dst[j] = src[j];
+            }
+
+            T *iter = &this->item(pos,0);
+            for(int j=0; j<cols; ++j)
+            {
+                iter[j] = (T)other.item(j);
+            }
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+template<class T>
+T TemplateArray<T>::pop(const int idx)
+{
+    T result;
+    assert(this->shapeSize()==1 && this->shape(0)>0);
+    assert( (idx>=0 && idx<this->shape(0)) || idx==END ); 
+
+    if(idx==END || idx==this->shape(0)-1)
+    {
+        result = this->item(this->shape(0)-1);
+    }else{
+        T *iter = &this->item(idx);
+        result = *iter;
+        for(int j=0; j<this->shape(0)-idx; ++j)
+        {
+            iter[j] = iter[j+1];
+        }
+    }
+    this->resize(this->shape(0)-1);
+    return result;
+}
+
+template<class T>
+TemplateArray<T> TemplateArray<T>::popArray(const int pos)
+{
+    TemplateArray<T> result;
+    assert( (pos>=0 && pos<this->shape(0)) || pos==END ); 
+     
+    if(this->shapeSize()==2)
+    {
+        result.resize(this->shape(1));
+        // int pos = idx.real();
+        // assert(*_rows>0);
+        // if(pos<0 || pos>=*_rows) {
+        //     value = _data->array[*_rows-1];
+        // }else{
+        //     value = _data->array[pos];
+        //     for(int j=pos; j<*_rows-1;++j){
+        //         _data->array[j] = _data->array[j+1];
+        //     }
+        // }
+        // this->resize(*_rows-1,*_cols);
+        assert(this->shape(0)>0);
+        if(pos==this->shape(0)-1 || pos==END)
+        {
+            T *iter = &this->item(this->shape(0)-1,0);
+            for(int j=0; j<this->shape(1); ++j)
+            {
+                result.item(j) = iter[j];
+            }
+        }else
+        {
+            T *iter = &this->item(pos,0);
+            for(int j=0; j<this->shape(1); ++j)
+            {
+                result.item(j) =iter[j];
+            }
+
+            T *src = &this->item(pos+1, 0);
+            T *dst = &this->item(pos, 0);
+            //result = *iter;
+            for(int j=0; j<(this->shape(0)-pos-1)*this->shape(1); ++j)
+            {
+                dst[j] = src[j];
+            }
+        }
+        
+    }else
+    {
+        assert(false);
+    }
+    
+    this->resize(this->shape(0)-1, this->shape(1));
     return result;
 }
 
@@ -245,7 +416,7 @@ const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &othe
 template<class T> template<class U>
 TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &other) const
 {
-    TemplateArray<T> result = this->copy();
+    TemplateArray<T> result = this->getCopy();
     result += other;
     return result;
 }
@@ -264,7 +435,7 @@ const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &othe
 template<class T> template<class U>
 TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) const
 {
-    TemplateArray<T> result = this->copy();
+    TemplateArray<T> result = this->getCopy();
     result -= other;
     return result;
 }
