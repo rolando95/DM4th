@@ -22,7 +22,8 @@ class TemplateArray: public _ArrayDataManager<T>
         inline int shapeSize() const;
 
         int size() const;
-
+        int itemsCount() const;
+        
         TemplateArray<int> shape() const;
         int shape(int axis) const;
 
@@ -33,10 +34,9 @@ class TemplateArray: public _ArrayDataManager<T>
         TemplateArray<int> _getAxisDisplacement() const;
         int _getAxisDisplacement(int axis) const;
 
-        template<class ... U>
-        T &item(int x, U ... args) const;
-        T &item(int x) const;
-        T &item(const TemplateArray<int> &axisArray);
+        template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
+        template<class AXIS> T &item(AXIS x) const;
+        template<class AXIS> T &item(const TemplateArray<AXIS> &axisArray);
 
         TemplateArray<T> getCopy() const;
 
@@ -50,21 +50,21 @@ class TemplateArray: public _ArrayDataManager<T>
 
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
-        inline T &operator()(TemplateArray<int> axisArray);
+        template<class U> inline T &operator()(TemplateArray<U> axisArray);
 
         template<class U> const TemplateArray<T> operator+=(const TemplateArray<U> &other);
-        template<class U> TemplateArray<T> operator+(const TemplateArray<U> &other) const;
+        template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
 
         template<class U> const TemplateArray<T> operator-=(const TemplateArray<U> &other);
-        template<class U> TemplateArray<T> operator-(const TemplateArray<U> &other) const;
+        template<class U> inline TemplateArray<T> operator-(const TemplateArray<U> &other) const;
 
         template<class U> const TemplateArray<T> operator*=(const TemplateArray<U> &other);
-        template<class U> TemplateArray<T> operator*(const TemplateArray<U> &other) const;
+        template<class U> inline TemplateArray<T> operator*(const TemplateArray<U> &other) const;
         const TemplateArray<T> operator*=(const T &other);
-        TemplateArray<T> operator*(const T &other);
+        inline TemplateArray<T> operator*(const T &other) const;
 
         const TemplateArray<T> operator/=(const T &other);
-        TemplateArray<T> operator/(const T &other);
+        inline TemplateArray<T> operator/(const T &other) const;
 
         const TemplateArray<T> operator%=(const T &other);
         TemplateArray<T> operator%(const T &other);

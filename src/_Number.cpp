@@ -343,6 +343,30 @@ Number round(const Number &n, int p){
         );
         return n1;
 }
+
+Number ceil(const Number &n, int p){
+        Number n1 = Number(
+            ceil(n.real() * pow(10,p)) / pow(10,p),
+            ceil(n.imag() * pow(10,p)) / pow(10,p)
+        );
+        return n1;
+}
+
+Number floor(const Number &n, int p){
+        Number n1 = Number(
+            floor(n.real() * pow(10,p)) / pow(10,p),
+            floor(n.imag() * pow(10,p)) / pow(10,p)
+        );
+        return n1;
+}
+
+Number truncate(const Number &n, int p){
+        Number n1 = Number(
+            trunc(n.real() * pow(10,p)) / pow(10,p),
+            trunc(n.imag() * pow(10,p)) / pow(10,p)
+        );
+        return n1;
+}
 Number abs(const Number &n){
     return sqrt(norm(n));
 }

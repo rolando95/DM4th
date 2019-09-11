@@ -111,6 +111,9 @@ template<class T>
 int TemplateArray<T>::size() const { return super::_data->shape.get(0); }
 
 template<class T>
+int TemplateArray<T>::itemsCount() const { return super::_data->array.size(); }
+
+template<class T>
 TemplateArray<int> TemplateArray<T>::shape() const
 {
     TemplateArray<int> result;
@@ -181,32 +184,34 @@ int TemplateArray<T>::_getAxisDisplacement(int axis) const
     return disp;
 }
 
-template<class T> template<class ... U>
-T &TemplateArray<T>::item(int x, U ... args) const
+template<class T> template<class AXIS, class ... U>
+T &TemplateArray<T>::item(AXIS axis, U ... args) const
 { 
+    int x = (int)axis;
     const int pos = this->_item(1,x,args ...); 
     return super::_data->array(pos);
 }
 
-template<class T>
-T &TemplateArray<T>::item(int x) const
+template<class T> template<class AXIS>
+T &TemplateArray<T>::item(AXIS axis) const
 {
+    int x = (AXIS)axis;
     assert(super::_data->shape.size()==1);
     assert(x<super::_data->array.size());
     assert( super::_data->shape.size()==1 && x<super::_data->array.size() );
     return super::_data->array[x];
 }
 
-template<class T>
-T &TemplateArray<T>::item(const TemplateArray<int> &axisArray)
+template<class T> template<class AXIS>
+T &TemplateArray<T>::item(const TemplateArray<AXIS> &axisArray)
 {
     assert(axisArray.shapeSize()==1);
     assert(axisArray.size()==this->shapeSize());
 
-    int pos = axisArray.c_arr()[0];
+    int pos = (int)axisArray.c_arr()[0];
     for(int j=1; j<this->shapeSize(); ++j)
     {
-        pos = pos*super::_data->shape.get(j) + axisArray.c_arr()[j];
+        pos = pos*super::_data->shape.get(j) + (int)axisArray.c_arr()[j];
     }
 
     // int *iter = axisArray.c_arr(); 
@@ -396,8 +401,8 @@ inline T &TemplateArray<T>::operator()(U ... args){ return this->item(args...); 
 template<class T> template<class ... U>
 const inline T &TemplateArray<T>::operator()(U ... args) const { return this->item(args...); }
 
-template<class T> 
-inline T &TemplateArray<T>::operator()(TemplateArray<int> axisArray){ this->item(axisArray); }
+template<class T> template<class U>
+inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ this->item(axisArray); }
 
 template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
@@ -411,7 +416,7 @@ const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &othe
 }
 
 template<class T> template<class U>
-TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &other) const
+inline TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result += other;
@@ -430,7 +435,7 @@ const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &othe
 }
 
 template<class T> template<class U>
-TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) const
+inline TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result -= other;
@@ -441,6 +446,15 @@ template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &other)
 {   
     TemplateArray<T> result;
+    if(this->itemsCount()==1)
+    {
+        result = other * this->item(0);
+    }
+    else if(other.itemsCount()==1)
+    {
+        result = *this * other.item(0);
+    }
+    else
     if(this->shapeSize()==1 && other.shapeSize()==1)
     {
         assert(this->shape(0)==other.shape(0));
@@ -476,12 +490,13 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
 }
 
 template<class T> template<class U>
-TemplateArray<T> TemplateArray<T>::operator*(const TemplateArray<U> &other) const
+inline TemplateArray<T> TemplateArray<T>::operator*(const TemplateArray<U> &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result *= other;
     return result;
 }
+
 
 template<class T>
 const TemplateArray<T> TemplateArray<T>::operator*=(const T &other)
@@ -494,7 +509,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const T &other)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::operator*(const T &other)
+inline TemplateArray<T> TemplateArray<T>::operator*(const T &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result *= other;
@@ -512,7 +527,7 @@ const TemplateArray<T> TemplateArray<T>::operator/=(const T &other)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::operator/(const T &other)
+inline TemplateArray<T> TemplateArray<T>::operator/(const T &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result /= other;

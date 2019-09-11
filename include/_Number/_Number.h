@@ -28,6 +28,7 @@ public:
 
     template<class T>
     explicit operator T(){return (T)this->r;}
+    inline explicit operator int () { return (int)round(this->r); }
     explicit operator char *();
     explicit operator std::string();
 
@@ -112,6 +113,10 @@ Number rad(const Number&);
 Number deg(const Number&);
 
 Number round(const Number&, int p=0);
+Number ceil(const Number&, int p=0);
+Number floor(const Number&, int p=0);
+Number truncate(const Number&, int p=0);
+inline Number trunc(const Number&value, int p=0) { return truncate(value,p); }
 
 Number abs(const Number&);
 Number norm(const Number&);
