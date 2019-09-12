@@ -12,6 +12,7 @@ NDArray<Number> quadratic(const A &a, const B &b, const C &c){
     return roots;
 }
 
+
 template<class T>
 NDArray<Number> bairstowsMethod(NDArray<T> v, Number r, Number s, Number maxIter, Number tolerance){
 
@@ -22,7 +23,7 @@ NDArray<Number> bairstowsMethod(NDArray<T> v, Number r, Number s, Number maxIter
     Number degree = v.size()-1;
     
     if(degree==1) roots = items<Number>( -v.item(1)/v.item(0) ); // Polinomio de grado 1
-    else if(degree==2) roots = quadratic(v(0),v(1),v(2)); // Polinomio de grado 2
+    else if(degree==2) roots = quadratic<Number,Number,Number>(v(0),v(1),v(2)); // Polinomio de grado 2
     else if(degree>2){ // Polinomio de grado superior a 2
         
         // 

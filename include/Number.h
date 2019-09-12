@@ -2,6 +2,8 @@
 #include "_Utilities/_Utilities.h"
 #include "_Array/_ArrayUtilities.h"
 #include "_Number/_Number.h"
+#include "_Math/_Differential.h"
+#include "_Math/_MathUtilities.h"
 #include "_Math/_Roots_impl.h"
 
 using std::string;
