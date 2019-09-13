@@ -80,10 +80,6 @@ _TreeDataManager<Tree,T> const &_TreeDataManager<Tree,T>::operator=(const _TreeD
     return *this;
 }
 
-template<template<class> class Tree, class T>
-int _TreeDataManager<Tree,T>::childrenCount(){
-    return this->_data->array.size();
-}
 
 // template<template<class> class Tree, class T>
 // _TreeData<Tree, T> const *_TreeDataManager<Tree,T>::_treeData() const

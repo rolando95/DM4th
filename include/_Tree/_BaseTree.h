@@ -34,7 +34,7 @@ class _TreeDataManager
 
         _TreeDataManager<Tree,T> const &operator=(const _TreeDataManager<Tree,T> &other);
 
-        int childrenCount();
+        
 
         //_TreeData<Tree,T> const *_TreeData() const;
 

@@ -18,7 +18,12 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         template<class CHILD> inline TemplateTree<T> &operator()(CHILD idx) const;
         // template<class U> inline TemplateTree<T> &operator()(NDArray<U> axisTree, int level=0);
 
-        
-        inline void resizeChildren(int size);
+        inline int size();
+        inline void resize(int size);
 
+        inline TemplateTree<T> &left();
+        inline TemplateTree<T> &right();
+
+        std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
+        std::istream& istream(std::istream& stream);
 };
