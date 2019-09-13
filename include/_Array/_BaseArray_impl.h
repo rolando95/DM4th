@@ -230,3 +230,4 @@ _ArrayData<T> const *_ArrayDataManager<T>::_arrayData() const
 {
     return _data;
 }
+

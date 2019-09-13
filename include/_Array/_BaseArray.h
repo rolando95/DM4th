@@ -76,13 +76,14 @@ class _ArrayData
         std::atomic<int> _ref{0};
     public:
 
-        _ShapeData shape;
+        _ShapeData    shape;
         _BaseArray<T> array;
-        
         void incrRef();
         void decrRef();
         int refCount() const;
 };
+
+
 
 template<class T>
 class _ArrayDataManager
@@ -108,3 +109,4 @@ class _ArrayDataManager
         _ArrayData<T> const *_arrayData() const;
 
 };
+

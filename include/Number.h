@@ -1,4 +1,5 @@
 #include "_Array/_Array.h"
+#include "_Tree/_Tree_impl.h"
 #include "_Utilities/_Utilities.h"
 #include "_Array/_ArrayUtilities.h"
 #include "_Number/_Number.h"
