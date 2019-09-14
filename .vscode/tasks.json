@@ -31,9 +31,9 @@
         },
         {
             "type": "shell",
-            "label": "makeNumber",
-            "command": "${workspaceFolder}/make/makeNumberProject.bat",
-            //"command" : "${workspaceFolder}/make/makeNumberProject.sh",
+            "label": "makeDM4th",
+            "command": "${workspaceFolder}/make/makeDM4thProject.bat",
+            //"command" : "${workspaceFolder}/make/makeDM4thProject.sh",
             "args": [],
             "options": {
                 "cwd": "${workspaceFolder}/make/"

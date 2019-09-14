@@ -37,6 +37,18 @@
             "environment": [],
             "externalConsole": true,
             "preLaunchTask": "startRelease"
+        },
+        {
+            "name": "Make DM4th Binaries",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/make/empty.bat",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": "makeDM4th"
         }
     ]
 }

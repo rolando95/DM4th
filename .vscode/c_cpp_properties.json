@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceRoot}",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/DM4th"
             ],
             "defines": [
                 "_DEBUG",

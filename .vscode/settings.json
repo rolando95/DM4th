@@ -44,6 +44,5 @@
         "cstddef": "cpp",
         "algorithm": "cpp",
         "memory_resource": "cpp"
-    },
-    "C_Cpp.errorSquiggles": "Disabled"
+    }
 }

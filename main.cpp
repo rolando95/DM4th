@@ -2,10 +2,11 @@
 
 int main(){
 
-    NDArray<string> salute = items<string>("Hello", "World"); 
-    NDArray<int> myRange = range<int>(0,10);
+    NDArray<string> salute  = items<string>("Hello", "World");
+    NDArray<Number> myList  = range<Number>(0,10);
 
-    print(salute, myRange);
+    print(salute, myList);
 
-    sleep(5);
+    input();
+    return 0;
 }

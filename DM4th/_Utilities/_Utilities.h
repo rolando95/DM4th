@@ -45,18 +45,6 @@ int count(T first, U ... args){
     return 1+count(args...);
 }
 
-inline void print()
-{
-    std::cout<<"\n";
-}
-
-template<class T, class ... U>
-void print(T first, U... args)
-{
-    std::cout<<first<<"\n";
-    print(args ...);
-}
-
 void _handleIstreamSpacesAndNewLines(std::istream &stream);
 
 void _handleStringInQuotes(std::istream &stream, std::string &value);
