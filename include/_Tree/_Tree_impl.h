@@ -68,7 +68,7 @@ inline TemplateTree<T> &TemplateTree<T>::operator()(U ... args)
     return this->child(args ...);
 }
 template<class T>
-inline int TemplateTree<T>::size(){
+inline int TemplateTree<T>::size() const {
     return this->_data->array.size();
 }
 
@@ -94,145 +94,147 @@ inline TemplateTree<T> &TemplateTree<T>::right()
     return super::_data->array[1];
 }
 
+
 template<class T>
-void TemplateTree<T>::_ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident, bool quotes) const       
+std::ostream& TemplateTree<T>::ostream(std::ostream& stream, int level, int ident, bool quotes) const
 {
-    for(int j=0; j<shapeIdx; ++j)
+    std::string valueStr = "value";
+    std::string childStr = "child";
+    std::string tab = "";
+    for(int j=0; j<ident*level;++j)
     {
-        for(int k=0; k<ident; ++k) stream<<" ";
+        tab = tab + " ";
     }
-    stream << "[";
-    if(this->shapeSize()>shapeIdx+1) 
+
+    std::string lTab = tab;
+    for(int j=0 ; j<ident; ++j)
     {
-        stream<<"\n";
-        for(int j=0; j<this->shape(shapeIdx); ++j)
-        {
-            
+        lTab = lTab +" ";
+    }
+
+    stream<<tab<<"{\n";
+    stream<<lTab<<"\""<<valueStr<<"\" : "<<this->item()<<",\n";
+    if(this->size()>0){
+        stream<<lTab<<"\""<<childStr<<"\" : [\n";
+        for(int j=0; j<this->size(); ++j){
             if(j!=0) stream<<",\n";
-            this->_ostream(stream, shapeIdx+1,c_idx, ident, quotes);
+            //outTree(stream, this->child(j), lTab+std::string("  "));
+            this->child(j).ostream(stream, level+2, ident, quotes);
         }
-        stream<<"\n";
-        for(int j=0; j<shapeIdx; ++j)
-        {
-            for(int k=0; k<ident; ++k) stream<<" ";
-        }
-    }else
-    {
-        for(int j=0; j<this->shape(shapeIdx); ++j, ++c_idx)
-        {
-            if(j!=0) stream<<", ";
-            if(quotes) stream<<"\"";
-            stream<<this->c_arr()[c_idx];
-            if(quotes) stream<<"\"";
-        }
+        stream<<"\n"<<lTab<<"]\n";
+    }else{
+        stream<<lTab<<"\""<<childStr<<"\" : []\n";
     }
-    stream << "]";
-}
-
-template<class T>
-void TemplateTree<T>::_istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
-{
-    int size=0;
-    _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()=='[')
-    {
-        while (true)
-        {
-            _handleIstreamSpacesAndNewLines(stream);
-            assert(stream.peek()=='['); stream.get();
-
-            _handleIstreamSpacesAndNewLines(stream);
-            if(stream.peek()==']') break; //This dim is empty
-
-            this->_istream(stream, values, shapeIdx+1, c_size, shapeAllocated);
-            size+=1;
-            
-            assert(stream.peek()==']'); stream.get();
-
-            _handleIstreamSpacesAndNewLines(stream);
-            if(stream.peek()==']'){ break; }
-            else if(stream.peek()==',') { stream.get(); }
-            else assert(false);
-        }
-    }else
-    {
-        T value;
-        while (true)
-        {
-            _handleIstreamSpacesAndNewLines(stream);
-            if(stream.peek()==']') break; //This dim is empty
-            
-            stream>>value;
-            values.push(value);
-            size += 1;
-            c_size += 1;
-            
-            _handleIstreamSpacesAndNewLines(stream);
-            if(stream.peek()==']'){ break; }
-            else if(stream.peek()==',') { stream.get(); }
-            else assert(false);
-        }
-
-        if(!shapeAllocated)
-        {
-            for(int j=0; j<super::_data->shape.size(); ++j)
-            {
-                super::_data->shape.set(j, 0);
-            }
-            super::_data->shape.resize(shapeIdx+1);
-            shapeAllocated = true;
-        }
-    }
-
-    assert(
-        size > 0  && 
-        (
-            super::_data->shape.get(shapeIdx) == 0 ||
-            super::_data->shape.get(shapeIdx) == size
-        )
-    );
-    super::_data->shape.set(shapeIdx, size);
-    //std::cout<<size<<" "<<shapeIdx+1<<std::endl;      
-}
-
-template<class T>
-std::ostream& TemplateTree<T>::ostream(std::ostream& stream, int ident, bool quotes) const
-{
-    // int c_idx = 0;          
-    // this->_ostream(stream, 0, c_idx, ident, quotes);
-    // return stream;
+    
+    stream<<tab<<"}";
     return stream;
 }
 
 template<class T>
 std::istream& TemplateTree<T>::istream(std::istream& stream)
 {
-    // int c_size = 0;
-    // std::queue<T> values;
-    // bool shapeAllocated = false;
-    // _handleIstreamSpacesAndNewLines(stream);
+    std::queue<TemplateTree<T>> trees;
+    TemplateTree<T> &t = *this;
+    std::string inStr = "XXXXX";
+    T value;
 
-    // assert(stream.peek()=='['); stream.get();
-    
-    // this->_istream(stream, values, 0, c_size, shapeAllocated);
-    // _handleIstreamSpacesAndNewLines(stream);
+    // Lee corchete abierto
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!='{') assert(false);
+    stream.get();
 
-    // assert(stream.peek()==']'); stream.get();
+    // Obtiene la clave "value"
+    _handleStringInQuotes(stream,inStr);
+    if(inStr!="value") assert(false);
 
-    // super::_data->array.resize(c_size);
-    // for(int j=0; j<c_size; ++j)
-    // {
-    //     assert(!values.empty());
-    //     this->c_arr()[j] = values.front(); 
-    //     values.pop();
-    // }
+    // Lee los dos puntos
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!=':') assert(false);
+    stream.get();
+
+    // Lee el valor
+    stream>>value;
+    t.item() = value;
+
+    // Lee la comma
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!=',') assert(false);
+    stream.get();
+
+    // Obtiene la clave "child"
+    _handleStringInQuotes(stream,inStr);
+    if(inStr!="child") assert(false);
+
+    // Lee los dos puntos
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!=':') assert(false);
+    stream.get();
+
+    // Lee el corchete abierto
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!='[') assert(false);
+    stream.get();
+
+    // Lee iterativamente los hijos del nodo
+    while(true){
+        _handleIstreamSpacesAndNewLines(stream);
+
+        // El nodo no tiene hijos
+        if(stream.peek()==']'){stream.get();break;}
+
+        // Lee el arbol recursivamente
+        TemplateTree<T> lT;
+        lT.istream(stream);
+        trees.push(lT);
+
+        _handleIstreamSpacesAndNewLines(stream);
+        // Siguiente dato en la lista de hijos
+        if(stream.peek()==']'){stream.get();break;}
+        else if(stream.peek()==',') stream.get();
+        else assert(false);
+    }
+
+    // Lee el corchete cerrado
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()!='}') assert(false);
+    stream.get();
+    //_handleIstreamSpacesAndNewLines(stream);
+
+    t.resize(trees.size());
+    for(int j=0; j<t.size(); ++j)
+    {
+        t.child(j) = trees.front(); 
+        trees.pop();
+    }
     return stream;
+}
+
+template<class T>
+void TemplateTree<T>::loadFile(std::string path){
+    std::ifstream file;
+    file.open(path);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        this->resize(0);
+    }else{
+        file>>*this;
+    }
+    file.close();
+}
+
+template<class T>
+void TemplateTree<T>::saveFile(std::string path){
+    // Crear ruta si no existe  
+    std::ofstream file;
+    file.open(path);
+    file<<*this;
+    file.close();
 }
 
 template<class T>
 inline std::ostream& operator<<(std::ostream& stream, const TemplateTree<T> &tree)
 {
-    return tree.ostream(stream,4);
+    return tree.ostream(stream);
 }
 
 template<class T>

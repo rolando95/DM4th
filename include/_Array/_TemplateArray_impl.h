@@ -643,6 +643,28 @@ std::istream& TemplateArray<T>::istream(std::istream& stream)
 }
 
 template<class T>
+void TemplateArray<T>::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        // Validar que no existe fichero
+        this->resize(0);
+    }else{
+        file>>*this;
+    }
+    file.close();
+}
+
+template<class T>
+void TemplateArray<T>::saveFile(std::string url){
+    // Crear ruta si no existe  
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
+}
+
+template<class T>
 inline void TemplateArray<T>::_resize1DArray(int size)
 {
     //assert(this->shapeSize()<=1); // Can be 0 || 1

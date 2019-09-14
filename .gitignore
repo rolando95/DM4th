@@ -1,5 +1,5 @@
 *.exe
-*.txt
+/*.txt
 bin-int/
 .vscode/*
 !.vscode/launch.json

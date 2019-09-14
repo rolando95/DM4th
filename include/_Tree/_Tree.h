@@ -13,7 +13,6 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         inline T &node() const;
         inline T &item() const;
 
-        
         inline TemplateTree<T> &child(Number idx) const;
         inline TemplateTree<T> &child(int idx) const;
         template<class ... U> TemplateTree<T> &child(Number idx, U ... args) const;
@@ -26,17 +25,17 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         template<class ... U>
         inline TemplateTree<T> &operator()(U ... args);
 
-        inline int size();
+        inline int size() const;
         inline void resize(int size);
 
         inline TemplateTree<T> &left();
         inline TemplateTree<T> &right();
 
-        std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
+        std::ostream& ostream(std::ostream& stream, int level=0, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);
-    private:
-        void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
-        void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);
+
+        void loadFile(std::string path);
+        void saveFile(std::string path);
 };
 
 template<class T>

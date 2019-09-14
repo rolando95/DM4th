@@ -37,6 +37,11 @@ _BaseArray<T>::_BaseArray(int size)
 template<class T>
 inline void _BaseArray<T>::resize(int size)
 {
+    if(size==0) 
+    {
+        this->freeArray();
+        return;
+    }
     if(this->_array==nullptr){ this->allocArray(size); }
     else{ this->reallocArray(size); }
 }
@@ -112,10 +117,10 @@ inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
 template<class T>
 inline void _BaseArray<T>::freeArray()
 {
-    assert(this->_array != nullptr);
+    this->_size=0;
+    if(this->_array == nullptr) return;
     delete[] this->_array;
     this->_array = nullptr;
-    this->_size=0;
 }
 
 //////////////////// _ShapeData

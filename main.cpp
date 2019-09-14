@@ -7,10 +7,12 @@ FUNCTION(f)
 
 int main(){
 
+    NDArray<int> array = range<int>(25);
+    array.reshape(5,5);
+    array.saveFile("intNDArray.txt");
     TemplateTree<int> example;
-    example.resize(5);
-    example.child(3).resize(2);
-    example.child(items<int>(3,1)).item() = 19;
-    cout<<example(3,1).item()<<endl;
+    example.loadFile("intTree.txt");
+
+    cout<<example;
     return 0;
 }

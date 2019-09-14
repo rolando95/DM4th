@@ -76,3 +76,12 @@ void _handleIstreamSpacesAndNewLines(std::istream &stream)
     }
 }
 
+void _handleStringInQuotes(std::istream &stream, std::string &value)
+{
+    char delimeter('"');
+    _handleIstreamSpacesAndNewLines(stream);
+    if(stream.peek()=='"') stream.get();
+    else assert(false);
+    std::getline(stream, value, delimeter);
+    _handleIstreamSpacesAndNewLines(stream);
+}

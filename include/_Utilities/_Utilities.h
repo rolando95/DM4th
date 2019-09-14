@@ -2,6 +2,10 @@
 #include <cassert>
 #include <istream>
 #include <limits>
+#include "_Constants.h"
+#include <queue>
+#include <sstream>
+#include <fstream>
 
 constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();
@@ -37,7 +41,6 @@ class range{
         }
 };
 
-
 template<class T>
 T mult(T last){
     return last;
@@ -67,3 +70,5 @@ int count(T first, U ... args){
 }
 
 void _handleIstreamSpacesAndNewLines(std::istream &stream);
+
+void _handleStringInQuotes(std::istream &stream, std::string &value);

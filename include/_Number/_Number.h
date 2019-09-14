@@ -1,10 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "../_Utilities/_Constants.h"
+#include "../_Utilities/_Utilities.h"
 #include "../_Math/_Math.h"
-#include <sstream>
-#include <fstream>
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 class Number{
@@ -32,10 +30,8 @@ public:
     explicit operator char *();
     explicit operator std::string();
 
-    // // Carga valor de tipo Number desde un fichero
-    // Number loadFile(std::string url);
-    // // Guarda valor de tipo Number en un fichero
-    // Number saveFile(std::string url);
+    void loadFile(std::string url);
+    void saveFile(std::string url);
 
     // Incremento prefijo
     Number operator ++();

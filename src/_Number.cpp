@@ -42,27 +42,22 @@ Number::operator std::string(){
     return str;
 }
 
-// Number Number::loadFile(std::string url){
-//     std::ifstream file;
-//     file.open(url);
-//     if(file.fail()) {
-//         // Validar que no existe fichero
-//         *this = 0;
-//     }else{
-//         file>>*this;
-//     }
-//     file.close();
-//     return *this;
-// }
-// Number Number::saveFile(std::string url){
-//     // Crear ruta si no existe
-
-//     std::ofstream file;
-//     file.open(url);
-//     file<<*this;
-//     file.close();
-//     return *this;
-// }
+void Number::loadFile(std::string url){
+    std::ifstream file;
+    file.open(url);
+    if(file.fail()) {
+        *this = 0;
+    }else{
+        file>>*this;
+    }
+    file.close();
+}
+void Number::saveFile(std::string url){
+    std::ofstream file;
+    file.open(url);
+    file<<*this;
+    file.close();
+}
 
 // Incremento prefijo
 Number Number::operator ++(){

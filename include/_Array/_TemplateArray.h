@@ -1,7 +1,7 @@
 #pragma once
 
 #include "_BaseArray_impl.h"
-#include <queue>
+#include "../_Utilities/_Utilities.h"
 
 template<class T>
 class TemplateArray: public _ArrayDataManager<T>
@@ -78,6 +78,9 @@ class TemplateArray: public _ArrayDataManager<T>
 
         std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);
+
+        void loadFile(std::string path);
+        void saveFile(std::string path);
 
         inline void _resize1DArray(int size);
         inline T *c_arr();
