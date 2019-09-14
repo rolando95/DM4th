@@ -1,5 +1,8 @@
-#include "../include/_Math/_Series.h"
-#include "../include/_Math/_Differential.h"
+#include "../DM4th/_Math/_Series.h"
+#include "../DM4th/_Math/_Differential.h"
+
+namespace DM4th
+{
 
 Number fibonacci(Number n){
     return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/sqrt(5);
@@ -55,4 +58,6 @@ Number product(Function f, const Number &begin, const Number &end, const Number 
         x *= f(j);
     }
     return x;
+}
+
 }

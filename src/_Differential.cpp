@@ -1,4 +1,7 @@
-#include "../include/_Math/_Differential.h"
+#include "../DM4th/_Math/_Differential.h"
+
+namespace DM4th
+{
 
 Number exp(Number x){
     return pow(e,x);
@@ -95,4 +98,6 @@ Number integral(Function f, const Number &a, const Number &b, const Number subin
     s+=f(b);
     return 3*h/8*s;
     */
+}
+
 }

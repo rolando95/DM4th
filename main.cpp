@@ -1,18 +1,11 @@
-#include "Number.h"
-
-FUNCTION(f)
-{
-    return x*x+1;
-}
+#include "DM4th/DM4th.h"
 
 int main(){
 
-    NDArray<int> array = range<int>(25);
-    array.reshape(5,5);
-    array.saveFile("intNDArray.txt");
-    TemplateTree<int> example;
-    example.loadFile("intTree.txt");
+    NDArray<string> salute = items<string>("Hello", "World"); 
+    NDArray<int> myRange = range<int>(0,10);
 
-    cout<<example;
-    return 0;
+    print(salute, myRange);
+
+    sleep(5);
 }

@@ -1,4 +1,8 @@
-#include "../include/_Number/_Number.h"
+#include "../DM4th/_Number/_Number.h"
+
+namespace DM4th
+{
+
 Number::Number(const double a,const double b){
     this->r = a;
     this->i = b;
@@ -270,7 +274,7 @@ Number operator/(const Number &n1,const Number &n2){
         return Number(n1.real()/n2.real(),0);
     // im/im
     }else{
-        double denominator = pow(n2.real(),2) + pow(n2.imag(),2);
+        double denominator = std::pow(n2.real(),2) + std::pow(n2.imag(),2);
         
         // n1/n2
         if(denominator != 0)
@@ -333,32 +337,32 @@ Number deg(const Number &n1){
 }
 Number round(const Number &n, int p){
         Number n1 = Number(
-            round(n.real() * pow(10,p)) / pow(10,p),
-            round(n.imag() * pow(10,p)) / pow(10,p)
+            std::round(n.real() * std::pow(10,p)) / std::pow(10,p),
+            std::round(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
 Number ceil(const Number &n, int p){
         Number n1 = Number(
-            ceil(n.real() * pow(10,p)) / pow(10,p),
-            ceil(n.imag() * pow(10,p)) / pow(10,p)
+            std::ceil(n.real() * std::pow(10,p)) / std::pow(10,p),
+            std::ceil(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
 Number floor(const Number &n, int p){
         Number n1 = Number(
-            floor(n.real() * pow(10,p)) / pow(10,p),
-            floor(n.imag() * pow(10,p)) / pow(10,p)
+            std::floor(n.real() * std::pow(10,p)) / std::pow(10,p),
+            std::floor(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
 Number truncate(const Number &n, int p){
         Number n1 = Number(
-            trunc(n.real() * pow(10,p)) / pow(10,p),
-            trunc(n.imag() * pow(10,p)) / pow(10,p)
+            std::trunc(n.real() * std::pow(10,p)) / std::pow(10,p),
+            std::trunc(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
@@ -370,7 +374,10 @@ Number norm(const Number &n){
 }
 Number arg(const Number &n){
     if(n.real()>0 || n.imag() != 0){
-        return Number(2*atan(n.imag()/(sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())),0);
+        return Number(
+            2*std::atan(n.imag()/(std::sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())), 
+            0
+        );
     }else if(n.real()<0 && n.imag() == 0){
         return Number(pi,0);
     }
@@ -430,3 +437,5 @@ Number atanh(const Number &n){return 0.5*ln((1+n)/(1-n));}
 Number acoth(const Number &n){return atanh(1/n);}
 Number asech(const Number &n){return acosh(1/n);}
 Number acsch(const Number &n){return asinh(1/n);}
+
+}

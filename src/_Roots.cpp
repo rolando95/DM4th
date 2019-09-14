@@ -1,5 +1,8 @@
-#include "../include/_Math/_Roots.h"
-#include "../include/_Math/_Differential.h"
+#include "../DM4th/_Math/_Roots.h"
+#include "../DM4th/_Math/_Differential.h"
+
+namespace DM4th
+{
 
 // Aproximaciones de raices
 Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
@@ -56,4 +59,6 @@ Number secantMethod(Function f, Number x0, Number x1, Number maxIter, Number tol
         else x2 = y2;
     }
     return x2;
+}
+
 }
