@@ -8,14 +8,9 @@ FUNCTION(f)
 int main(){
 
     TemplateTree<int> example;
-
-    example.node() = 10;
-    example.resizeChildren(5);
-    example(3).resizeChildren(10);
-    example.item(3,5) = -150;
-    cout<<example(3,5).node()<<" "<<example.childrenCount()<<endl;
-    NDArray<Number> arr2 = items<Number>(1,2,0,-1);
-    cout<<bairstowsMethod(arr2)<<endl;
-    cout<<integral(f, 0, 10);
+    example.resize(5);
+    example.child(3).resize(2);
+    example.child(items<int>(3,1)).item() = 19;
+    cout<<example(3,1).item()<<endl;
     return 0;
 }

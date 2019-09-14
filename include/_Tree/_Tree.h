@@ -2,21 +2,29 @@
 
 #include "_BaseTree_impl.h"
 #include "../_Array/_Array.h"
-
+#include "../_Number/_Number.h"
 //class Tree: public _TreeManager<Tree,Number>{
+
 template<class T>
 class TemplateTree: public _TreeDataManager<TemplateTree,T>
 {
         typedef _TreeDataManager<TemplateTree,T> super;
     public:
-        inline T &node();
-        inline T &item();
-        template<class ... U> inline T &item(U ... args);
+        inline T &node() const;
+        inline T &item() const;
 
-        template<class CHILD, class ... U> TemplateTree<T> &operator()(CHILD idx, U ... args) const;
-        // template<class CHILD, class ... U> const inline TemplateTree<T> &operator()(U ... args) const;
-        template<class CHILD> inline TemplateTree<T> &operator()(CHILD idx) const;
-        // template<class U> inline TemplateTree<T> &operator()(NDArray<U> axisTree, int level=0);
+        
+        inline TemplateTree<T> &child(Number idx) const;
+        inline TemplateTree<T> &child(int idx) const;
+        template<class ... U> TemplateTree<T> &child(Number idx, U ... args) const;
+        template<class ... U> TemplateTree<T> &child(int idx, U ... args) const;
+        template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
+        template<class U> TemplateTree<T> &child(const NDArray<U> &axis, int level=0) const;
+
+        template<class U>
+        inline TemplateTree<T> &operator()(U axis);
+        template<class ... U>
+        inline TemplateTree<T> &operator()(U ... args);
 
         inline int size();
         inline void resize(int size);
@@ -26,4 +34,12 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
 
         std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);
+    private:
+        void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
+        void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);
 };
+
+template<class T>
+std::ostream& operator<<(std::ostream&, const TemplateTree<T>&);
+template<class T>
+std::istream& operator>>(std::istream&, TemplateTree<T>&);
