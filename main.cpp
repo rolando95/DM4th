@@ -3,8 +3,9 @@
 int main(){
 
     NDArray<string> salute  = items<string>("Hello", "World");
-    NDArray<Number> myList  = range<Number>(0,10);
+    NDArray<float> myList  = items<float>(1,2,3,4,5);
 
+    print(bairstowsMethod(myList));
     print(salute, myList);
 
     input();

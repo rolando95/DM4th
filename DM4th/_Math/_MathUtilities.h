@@ -6,8 +6,8 @@
 namespace DM4th
 {
     
-typedef Number (* Function)(Number x);
+typedef number (* Function)(number x);
 
-#define FUNCTION(name) Number name(Number x)
+#define FUNCTION(name) number name(number x)
 
 }

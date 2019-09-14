@@ -5,9 +5,9 @@ namespace DM4th
 {
 
 // Aproximaciones de raices
-Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
+number newtonRaphson(Function f, number x1, number maxIter, number tolerance){
     x1 = x1.real();
-    Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
+    number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
     for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/derivative(f,x1);
@@ -21,9 +21,9 @@ Number newtonRaphson(Function f, Number x1, Number maxIter, Number tolerance){
     }
     return x1;
 }
-Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number tolerance){
+number newtonRaphson(Function f, Function fd, number x1, number maxIter, number tolerance){
     x1 = x1.real();
-    Number y1 = (x1.imag()==0)? 1.00i : x1.imag();
+    number y1 = (x1.imag()==0)? 1.00i : x1.imag();
     
     for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/fd(x1);
@@ -37,13 +37,13 @@ Number newtonRaphson(Function f, Function fd, Number x1, Number maxIter, Number 
     }
     return x1;
 }
-Number secantMethod(Function f, Number x0, Number x1, Number maxIter, Number tolerance){
+number secantMethod(Function f, number x0, number x1, number maxIter, number tolerance){
     x0 = x0.real(); x1 = x1.real();
-    Number x2;
+    number x2;
 
-    Number y0 = x0.imag()==0? 1.00i : x0.imag();
-    Number y1 = x1.imag()==0? 1.01i : x1.imag();
-    Number y2;
+    number y0 = x0.imag()==0? 1.00i : x0.imag();
+    number y1 = x1.imag()==0? 1.01i : x1.imag();
+    number y2;
 
     for(int n=0; n<maxIter && abs(f(x1))>tolerance; ++n){
         x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));

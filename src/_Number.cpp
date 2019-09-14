@@ -3,16 +3,16 @@
 namespace DM4th
 {
 
-Number::Number(const double a,const double b){
+number::number(const double a,const double b){
     this->r = a;
     this->i = b;
 }
 
-Number::Number(const Number& n){
-    *this = n;
-}
+// number::number(number n){
+//     *this = n;
+// }
 
-Number::Number(std::string str){
+number::number(std::string str){
     std::stringstream ss;
     ss << str;
     ss >> *this;
@@ -20,33 +20,33 @@ Number::Number(std::string str){
 
 int precision =  5;
 
-double Number::real()const {return this->r;}
-double Number::real(double a){this->r = a; return this->r;}
+double number::real()const {return this->r;}
+double number::real(double a){this->r = a; return this->r;}
 
-double Number::imag()const {return this->i;}
-double Number::imag(double a){this->i = a; return this->i;}
+double number::imag()const {return this->i;}
+double number::imag(double a){this->i = a; return this->i;}
 
-Number Number::operator=(double a){
+number number::operator=(double a){
     this->r = a;
     this->i = 0;
     return *this;
 }
 
-Number::operator char*(){
+number::operator char*(){
     std::string str = (std::string)*this;
     char *cstr = new char[str.length()+1];
     sprintf(cstr,"%s",str.c_str());
     return cstr;
 }
 
-Number::operator std::string(){
+number::operator std::string(){
     std::ostringstream strs;
     strs << *this;
     std::string str = strs.str();
     return str;
 }
 
-void Number::loadFile(std::string url){
+void number::loadFile(std::string url){
     std::ifstream file;
     file.open(url);
     if(file.fail()) {
@@ -56,7 +56,7 @@ void Number::loadFile(std::string url){
     }
     file.close();
 }
-void Number::saveFile(std::string url){
+void number::saveFile(std::string url){
     std::ofstream file;
     file.open(url);
     file<<*this;
@@ -64,72 +64,72 @@ void Number::saveFile(std::string url){
 }
 
 // Incremento prefijo
-Number Number::operator ++(){
+number number::operator ++(){
     this->r += 1;
     return *this;
 }
 // Incremento postfijo
-Number Number::operator ++(int){
-    Number a = *this;
+number number::operator ++(int){
+    number a = *this;
     this->r += 1;
     return a;
 }
 // Decremento prefijo
-Number Number::operator --(){
+number number::operator --(){
     this->r -= 1;
     return *this;
 }
 // Decremento postfijo
-Number Number::operator --(int){
-    Number a = *this;
+number number::operator --(int){
+    number a = *this;
     this->r -= 1;
     return a;
 }
-Number Number::operator+=(Number n){
+number number::operator+=(number n){
     *this = *this + n;
     return *this;
 }
-Number Number::operator-=(Number n){
+number number::operator-=(number n){
     *this = *this - n;
     return *this;
 }
-Number Number::operator*=(Number n){
+number number::operator*=(number n){
     *this = *this * n;
     return *this;
 }
-Number Number::operator/=(Number n){
+number number::operator/=(number n){
     *this = *this / n;
     return *this;
 }
-Number Number::operator%=(Number n){
+number number::operator%=(number n){
     *this = *this % n;
     return *this;
 }
 
-Number strToNumber(std::string str){
-    Number result;
+number strTonumber(std::string str){
+    number result;
     std::stringstream ss(str);
     ss>>result;
     return result;
 }
 
-Number operator""_i(long double a){
-    return Number(0,a);
+number operator""_i(long double a){
+    return number(0,a);
 }
-Number operator""_i(unsigned long long int a){
-    return Number(0,a);
+number operator""_i(unsigned long long int a){
+    return number(0,a);
 }
-Number operator""i(unsigned long long int a){
-    return Number(0,a);
+number operator""i(unsigned long long int a){
+    return number(0,a);
 }
-Number operator""i(long double a){
-    return Number(0,a);
+number operator""i(long double a){
+    return number(0,a);
 }
-Number operator-(Number a){
-    return Number(-a.real(),-a.imag());
+number operator-(number a){
+    return number(-a.real(),-a.imag());
 }
 //Impresion en pantalla de numeros complejos
-std::ostream& operator<<(std::ostream& stream, Number n){
+std::ostream& operator<<(std::ostream& stream, number n){
     if(n.real() == INF) stream<<"INF";
     else if(n.real() == -INF) stream<<"-INF";
     else if(std::isnan(n.real())) stream<<"NAN";
@@ -150,7 +150,7 @@ std::ostream& operator<<(std::ostream& stream, Number n){
     return stream;
 }
 //Entrada de numeros complejos
-std::istream& operator>>(std::istream& stream, Number &n){
+std::istream& operator>>(std::istream& stream, number &n){
     n=0;
     int state = 1;
     int nextState;
@@ -242,43 +242,43 @@ std::istream& operator>>(std::istream& stream, Number &n){
 
 }
 // Suma de numeros complejos
-Number operator+(const Number &n1,const Number &n2){
-    return Number(n1.real() + n2.real(), n1.imag() + n2.imag());
+number operator+(const number &n1,const number &n2){
+    return number(n1.real() + n2.real(), n1.imag() + n2.imag());
 }
 // Resta de numeros complejos
-Number operator-(const Number &n1,const Number &n2){
-    return Number(n1.real() - n2.real(), n1.imag() - n2.imag());
+number operator-(const number &n1,const number &n2){
+    return number(n1.real() - n2.real(), n1.imag() - n2.imag());
 }
 // Multiplicacion de numeros complejos
-Number operator*(const Number &n1,const Number &n2){
+number operator*(const number &n1,const number &n2){
     //real*real
     if(n1.imag()==0 && n2.imag()==0){
         return n1.real()*n2.real();
     }
     //im*im
     else{
-        return Number(
+        return number(
             n1.real()*n2.real() - n1.imag()*n2.imag(), 
             n1.real()*n2.imag() + n1.imag()*n2.real()
         );
     }
 }
 // Division de numeros complejos
-Number operator/(const Number &n1,const Number &n2){
+number operator/(const number &n1,const number &n2){
 
     // n/INF
     if(n2.real() == INF && n1.real() != INF)
-        return Number(0,0);
+        return number(0,0);
     // real/real
     else if(n1.imag()==0 && n2.imag()==0 && n2.real() != 0){
-        return Number(n1.real()/n2.real(),0);
+        return number(n1.real()/n2.real(),0);
     // im/im
     }else{
         double denominator = std::pow(n2.real(),2) + std::pow(n2.imag(),2);
         
         // n1/n2
         if(denominator != 0)
-            return Number(
+            return number(
                 (n1.real()*n2.real() + n1.imag()*n2.imag())/ denominator,
                 (n1.imag()*n2.real() - n1.real()*n2.imag())/ denominator  
             );
@@ -286,16 +286,16 @@ Number operator/(const Number &n1,const Number &n2){
         else
             if(n1.real() != INF && n1 != 0){
                 if(n1.real()>0)
-                    return Number(INF,0);
+                    return number(INF,0);
                 else    
-                    return Number(-INF,0);
+                    return number(-INF,0);
             }else
-                return Number(NAN,0);
+                return number(NAN,0);
     }
 }
 // Residuo de numeros complejos
-Number operator%(const Number &n1,const Number &n2){
-    Number result;
+number operator%(const number &n1,const number &n2){
+    number result;
     if(n2.real()!=0) result.real(fmod(n1.real(),n2.real()));
      else if(n1.real()==0) result.real(0);
     else return NAN;
@@ -306,136 +306,136 @@ Number operator%(const Number &n1,const Number &n2){
 }
 
 // Relacional
-bool operator==(const Number &n1, const Number &n2){
+bool operator==(const number &n1, const number &n2){
     return (n1.real()==n2.real() && n1.imag()==n2.imag());
 }
-bool operator!=(const Number &n1, const Number &n2){
+bool operator!=(const number &n1, const number &n2){
     return (n1.real()!=n2.real() || n1.imag()!=n2.imag());
 }
-bool operator>(const Number &n1, const Number &n2){
+bool operator>(const number &n1, const number &n2){
     bool result=false; 
     if(n1.real() > n2.real()) result=true;
     else if(n1.real()==n2.real() && n1.imag() > n2.imag()) result=true;
     return result;
 }
-bool operator<(const Number &n1, const Number &n2){
+bool operator<(const number &n1, const number &n2){
     return !(n1>=n2);
 }
-bool operator>=(const Number &n1, const Number &n2){
+bool operator>=(const number &n1, const number &n2){
     return n1>n2||n1==n2;
 }
-bool operator<=(const Number &n1, const Number &n2){
+bool operator<=(const number &n1, const number &n2){
     return !(n1>n2);
 }
 
 // Math
-Number rad(const Number &n1){
-    return Number(n1.real()*pi/180, n1.imag()*pi/(double)180.0);
+number rad(number n1){
+    return number(n1.real()*pi/180, n1.imag()*pi/(double)180.0);
 }
-Number deg(const Number &n1){
-    return Number(n1.real()*180/pi, n1.imag()*(double)180.0/pi);
+number deg(number n1){
+    return number(n1.real()*180/pi, n1.imag()*(double)180.0/pi);
 }
-Number round(const Number &n, int p){
-        Number n1 = Number(
+number round(number n, int p){
+        number n1 = number(
             std::round(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::round(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
-Number ceil(const Number &n, int p){
-        Number n1 = Number(
+number ceil(number n, int p){
+        number n1 = number(
             std::ceil(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::ceil(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
-Number floor(const Number &n, int p){
-        Number n1 = Number(
+number floor(number n, int p){
+        number n1 = number(
             std::floor(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::floor(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
-Number truncate(const Number &n, int p){
-        Number n1 = Number(
+number truncate(number n, int p){
+        number n1 = number(
             std::trunc(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::trunc(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
-Number abs(const Number &n){
+number abs(number n){
     return sqrt(norm(n));
 }
-Number norm(const Number &n){
+number norm(number n){
     return n.real()*n.real() + n.imag()*n.imag();
 }
-Number arg(const Number &n){
+number arg(number n){
     if(n.real()>0 || n.imag() != 0){
-        return Number(
+        return number(
             2*std::atan(n.imag()/(std::sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())), 
             0
         );
     }else if(n.real()<0 && n.imag() == 0){
-        return Number(pi,0);
+        return number(pi,0);
     }
-    return Number(NAN, 0);
+    return number(NAN, 0);
 }
-Number conjugate(const Number &n){
-    return Number(n.real(), -n.imag());
+number conjugate(number n){
+    return number(n.real(), -n.imag());
 }
-Number pow(const Number &n1,const Number &n2){
+number pow(number n1,number n2){
     if(n1.imag()==0 && n2.imag()==0 && n1.real() >= 0)
-        return pow(n1.real(),n2.real());
+        return number(std::pow(n1.real(),n2.real()),0);
     else{
-        Number exponent = n2*ln(n1);
-        return pow(e,exponent.real())*(cos(exponent.imag())+sin(exponent.imag())*i);
+        number exponent = n2*ln(n1);
+        return std::pow(e,exponent.real())*(std::cos(exponent.imag())+std::sin(exponent.imag())*i);
     }
 }
-Number sqrt(const Number &n){
+number sqrt(number n){
     return pow(n,0.5);
 }
-Number ln(const Number &n){
-    if(n==0) return Number(-INF,0);
+number ln(number n){
+    if(n==0) return number(-INF,0);
     else{
-        return log(abs(n).real())+arg(n)*i;
+        return std::log(abs(n).real())+arg(n)*i;
     }
 }
-Number log(const Number &n, const Number &base){return ln(n)/ln(base);}
+number log(number n,number base){return ln(n)/ln(base);}
 
-Number sin(const Number &n){return (n.imag()==0)?sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
-Number cos(const Number &n){return (n.imag()==0)?cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
-Number tan(const Number &n){
-    Number c = cos(n);
+number sin(number n){return (n.imag()==0)?std::sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
+number cos(number n){return (n.imag()==0)?std::cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
+number tan(number n){
+    number c = cos(n);
     if(round(c,15)==0){
-        return Number(INF,0);
+        return number(INF,0);
     }else
         return sin(n)/c;}
-Number cot(const Number &n){return 1/tan(n);}
-Number sec(const Number &n){return 1/cos(n);}
-Number csc(const Number &n){return 1/sin(n);}
+number cot(number n){return 1/tan(n);}
+number sec(number n){return 1/cos(n);}
+number csc(number n){return 1/sin(n);}
 
-Number asin(const Number &n){return -i*ln(i*n+sqrt(1-n*n));}
-Number acos(const Number &n){return pi/2-asin(n);}
-Number atan(const Number &n){return i/2*(ln(1-i*n)-ln(1+i*n));}
-Number acot(const Number &n){return atan(1/n);}
-Number asec(const Number &n){return acos(1/n);}
-Number acsc(const Number &n){return asin(1/n);}
+number asin(number n){return -i*ln(i*n+sqrt(1-n*n));}
+number acos(number n){return pi/2-asin(n);}
+number atan(number n){return i/2*(ln(1-i*n)-ln(1+i*n));}
+number acot(number n){return atan(1/n);}
+number asec(number n){return acos(1/n);}
+number acsc(number n){return asin(1/n);}
 
-Number sinh(const Number &n){return (pow(e,n)-pow(e,-n))/2;}
-Number cosh(const Number &n){return (pow(e,n)+pow(e,-n))/2;}
-Number tanh(const Number &n){return sinh(n)/cosh(n);}
-Number coth(const Number &n){return cosh(n)/sinh(n);}
-Number sech(const Number &n){return 1/cosh(n);}
-Number csch(const Number &n){return 1/sinh(n);}
+number sinh(number n){return (pow(e,n)-pow(e,-n))/2;}
+number cosh(number n){return (pow(e,n)+pow(e,-n))/2;}
+number tanh(number n){return sinh(n)/cosh(n);}
+number coth(number n){return cosh(n)/sinh(n);}
+number sech(number n){return 1/cosh(n);}
+number csch(number n){return 1/sinh(n);}
 
-Number asinh(const Number &n){return ln(n+sqrt(n*n+1));}
-Number acosh(const Number &n){return ln(n+sqrt(n*n-1));}
-Number atanh(const Number &n){return 0.5*ln((1+n)/(1-n));}
-Number acoth(const Number &n){return atanh(1/n);}
-Number asech(const Number &n){return acosh(1/n);}
-Number acsch(const Number &n){return asinh(1/n);}
+number asinh(number n){return ln(n+sqrt(n*n+1));}
+number acosh(number n){return ln(n+sqrt(n*n-1));}
+number atanh(number n){return 0.5*ln((1+n)/(1-n));}
+number acoth(number n){return atanh(1/n);}
+number asech(number n){return acosh(1/n);}
+number acsch(number n){return asinh(1/n);}
 
 }

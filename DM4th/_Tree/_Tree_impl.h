@@ -18,7 +18,7 @@ inline T &TemplateTree<T>::item() const
 }
 
 template<class T> 
-inline TemplateTree<T> &TemplateTree<T>::child(Number idx) const
+inline TemplateTree<T> &TemplateTree<T>::child(number idx) const
 {
     return super::_data->array[(int)idx];
 }
@@ -30,7 +30,7 @@ inline TemplateTree<T> &TemplateTree<T>::child(int idx) const
 }
 
 template<class T> template<class ... U>
-TemplateTree<T> &TemplateTree<T>::child(Number idx, U ... args) const
+TemplateTree<T> &TemplateTree<T>::child(number idx, U ... args) const
 {
     return super::_data->array[(int)idx].child(args ...);
 }

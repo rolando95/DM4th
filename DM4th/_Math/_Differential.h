@@ -6,21 +6,21 @@ namespace DM4th
 {
 
 // e^x
-Number exp(Number x);
+number exp(number x);
 
 // PI Function
-Number PI(Number z, Number tolerance=1e-7);
+number PI(number z, number tolerance=1e-7);
 // gamma Function
-Number gamma(Number z, Number tolerance=1e-7);
+number gamma(number z, number tolerance=1e-7);
 
-Number derivative(Function f, const Number&, const Number order=1, const Number tolerance=1e-2);
+number derivative(Function f, const number&, const number order=1, const number tolerance=1e-2);
 /*
  Difference between adjacent elements of vector.
  Returns n-1 values of the vector for each iteration
  diff(vector, iterations)
 */
-NDArray<Number> diff(NDArray<Number>, Number=1);
+NDArray<number> diff(NDArray<number>, number=1);
 // integral(f, begin, end, subintervals=99)
-Number integral(Function f, const Number&, const Number&, const Number subintervals=1000);
+number integral(Function f, const number&, const number&, const number subintervals=1000);
 
 }

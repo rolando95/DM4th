@@ -7,9 +7,9 @@ namespace DM4th
 
 // cuadratica
 template<class A, class B, class C>
-NDArray<Number> quadratic(const A &a, const B &b, const C &c){
-    NDArray<Number> roots;
-    Number square = sqrt(b*b - 4*a*c);
+NDArray<number> quadratic(const A &a, const B &b, const C &c){
+    NDArray<number> roots;
+    number square = sqrt(b*b - 4*a*c);
     roots.push((-b+square)/(2*a));
     roots.push((-b-square)/(2*a));
     return roots;
@@ -17,27 +17,26 @@ NDArray<Number> quadratic(const A &a, const B &b, const C &c){
 
 
 template<class T>
-NDArray<Number> bairstowsMethod(NDArray<T> v, Number r, Number s, Number maxIter, Number tolerance){
+NDArray<number> bairstowsMethod(NDArray<T> v, number r, number s, number maxIter, number tolerance){
 
     // Conserva los valores semilla iniciales para futuras iteraciones
-    Number ra = r; 
-    Number sa = s;
-    NDArray<Number> roots;
-    Number degree = v.size()-1;
+    number ra = r; 
+    number sa = s;
+    NDArray<number> roots;
+    number degree = v.size()-1;
     
-    if(degree==1) roots = items<Number>( -v.item(1)/v.item(0) ); // Polinomio de grado 1
-    else if(degree==2) roots = quadratic<Number,Number,Number>(v(0),v(1),v(2)); // Polinomio de grado 2
+    if(degree==1) roots = items<number>( -v.item(1)/v.item(0) ); // Polinomio de grado 1
+    else if(degree==2) roots = quadratic<number,number,number>(v(0),v(1),v(2)); // Polinomio de grado 2
     else if(degree>2){ // Polinomio de grado superior a 2
         
         // 
-        NDArray<Number> b; b.resize(v.size());
-        NDArray<Number> c; c.resize(v.size()-1);
-        Number errorR, errorS;
-        Number dr, ds;
+        NDArray<number> b; b.resize(v.size());
+        NDArray<number> c; c.resize(v.size()-1);
+        number errorR, errorS;
+        number dr, ds;
 
         // Empieza el ciclo para calcular las nuevas raices
         for(int k=0; k<maxIter; ++k){
-            
             // Calcula los coeficientes de b
             b(0) = v(0);
             b(1) = v(1) + b(0)*r;

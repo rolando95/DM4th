@@ -6,20 +6,20 @@ namespace DM4th
 {
 
 // Fibonacci number 
-Number fibonacci(Number);
+number fibonacci(number);
 // factorial(value)
-Number factorial(const Number&);
+number factorial(const number&);
 // sumatory(f, V(xn...) , interval)
-Number sumatory(Function f, NDArray<Number>, const Number interval=1); 
+number sumatory(Function f, NDArray<number>, const number interval=1); 
 // sumatory(f, begin, end, interval)
-Number sumatory(Function f, const Number&, const Number&, const Number interval=1); 
-// sumatory(NDArray<Number>, begin, end, interval) 
-Number sumatory(NDArray<Number>, Number begin=0, Number end=-1, const Number interval=1);
+number sumatory(Function f, const number&, const number&, const number interval=1); 
+// sumatory(NDArray<number>, begin, end, interval) 
+number sumatory(NDArray<number>, number begin=0, number end=-1, const number interval=1);
 // product(f, V(xn...), interval)
-Number product(Function f, NDArray<Number>, const Number interval=1); 
+number product(Function f, NDArray<number>, const number interval=1); 
 // product(f, begin, end, interval)
-Number product(Function f, const Number&, const Number&, const Number interval=1); 
-// product(NDArray<Number>, begin, end, interval) 
-Number product(NDArray<Number>, Number begin=0, Number end=-1, const Number interval=1);
+number product(Function f, const number&, const number&, const number interval=1); 
+// product(NDArray<number>, begin, end, interval) 
+number product(NDArray<number>, number begin=0, number end=-1, const number interval=1);
 
 }

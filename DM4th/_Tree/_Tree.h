@@ -3,7 +3,7 @@
 #include "_BaseTree_impl.h"
 #include "../_Array/_Array.h"
 #include "../_Number/_Number.h"
-//class Tree: public _TreeManager<Tree,Number>{
+//class Tree: public _TreeManager<Tree,number>{
 
 namespace DM4th
 {
@@ -16,9 +16,9 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         inline T &node() const;
         inline T &item() const;
 
-        inline TemplateTree<T> &child(Number idx) const;
+        inline TemplateTree<T> &child(number idx) const;
         inline TemplateTree<T> &child(int idx) const;
-        template<class ... U> TemplateTree<T> &child(Number idx, U ... args) const;
+        template<class ... U> TemplateTree<T> &child(number idx, U ... args) const;
         template<class ... U> TemplateTree<T> &child(int idx, U ... args) const;
         template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
         template<class U> TemplateTree<T> &child(const NDArray<U> &axis, int level=0) const;

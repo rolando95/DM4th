@@ -8,13 +8,13 @@
 namespace DM4th
 {
 
-class Number{
+class number{
     double r, i;
 public:
 
-    Number(const double=0,const double=0);
-    Number(const Number&);
-    Number(std::string);
+    number(const double=0,const double=0);
+    //number(number);
+    number(std::string);
 
     // get set parte real
     double real() const;
@@ -25,7 +25,7 @@ public:
     double imag(double);
     
     // Asignacion de un valor numerico
-    Number operator=(double);
+    number operator=(double);
 
     template<class T>
     explicit operator T(){return (T)this->r;}
@@ -37,123 +37,123 @@ public:
     void saveFile(std::string url);
 
     // Incremento prefijo
-    Number operator ++();
+    number operator ++();
     // Incremento postfijo
-    Number operator ++(int);
+    number operator ++(int);
     // Decremento prefijo
-    Number operator --();
+    number operator --();
     // Decremento postfijo
-    Number operator --(int);
+    number operator --(int);
     // Asignacion aditiva
-    Number operator +=(Number);
+    number operator +=(number);
     // Asignacion sustractiva
-    Number operator -=(Number);
+    number operator -=(number);
     // Asignacion multiplicativa
-    Number operator *=(Number);
+    number operator *=(number);
     // Asignacion divisiva
-    Number operator /=(Number);
+    number operator /=(number);
     // Residuo
-    Number operator %=(Number);
+    number operator %=(number);
 };
 
 // Define como constante el valor de i
-static const Number i(0,1);
-static const Number _i(0,1);
+static const number i(0,1);
+static const number _i(0,1);
 
-// Convert string to Number
-Number strToNumber(std::string);
-
-// Conversion de expresion literal <double>i a tipo numero
-Number operator""_i(long double);
-
-// Conversion de expresion literal <entero>i a tipo numero
-Number operator""_i(unsigned long long int);
+// Convert string to number
+number strTonumber(std::string);
 
 // Conversion de expresion literal <double>i a tipo numero
-Number operator""i(long double);
+number operator""_i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-Number operator""i(unsigned long long int);
+number operator""_i(unsigned long long int);
+
+// Conversion de expresion literal <double>i a tipo numero
+number operator""i(long double);
+
+// Conversion de expresion literal <entero>i a tipo numero
+number operator""i(unsigned long long int);
 
 // Cambio a signo negativo
-Number operator-(Number);
+number operator-(number);
 
 // Impresion en pantalla de numeros complejos
-std::ostream& operator<<(std::ostream&, Number);
+std::ostream& operator<<(std::ostream&, number);
 
 // Lectura en pantalla de numeros complejos
-std::istream& operator>>(std::istream&, Number&);
+std::istream& operator>>(std::istream&, number&);
 
 // Suma de numeros complejos
-Number operator+(const Number&,const Number&);
+number operator+(const number&,const number&);
 
 // Resta de numeros complejos
-Number operator-(const Number&,const Number&);
+number operator-(const number&,const number&);
 
 // Multiplicacion de numeros complejos
-Number operator*(const Number&,const Number&);
+number operator*(const number&,const number&);
 
 // Division de numeros complejos
-Number operator/(const Number&,const Number&);
+number operator/(const number&,const number&);
 
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
-Number operator%(const Number&,const Number&);
+number operator%(const number&,const number&);
 
 // Relacional
-bool operator==(const Number&, const Number&);
-bool operator!=(const Number&, const Number&);
-bool operator>=(const Number&, const Number&);
-bool operator<=(const Number&, const Number&);
-bool operator>(const Number&, const Number&);
-bool operator<(const Number&, const Number&);
+bool operator==(const number&, const number&);
+bool operator!=(const number&, const number&);
+bool operator>=(const number&, const number&);
+bool operator<=(const number&, const number&);
+bool operator>(const number&, const number&);
+bool operator<(const number&, const number&);
 
 // Math
-Number rad(const Number&);
-Number deg(const Number&);
+number rad(number);
+number deg(number);
 
-Number round(const Number&, int p=0);
-Number ceil(const Number&, int p=0);
-Number floor(const Number&, int p=0);
-Number truncate(const Number&, int p=0);
-inline Number trunc(const Number&value, int p=0) { return truncate(value,p); }
+number round(number, int p=0);
+number ceil(number, int p=0);
+number floor(number, int p=0);
+number truncate(number, int p=0);
+inline number trunc(const number&value, int p=0) { return truncate(value,p); }
 
-Number abs(const Number&);
-Number norm(const Number&);
-Number arg(const Number&);
-Number conjugate(const Number&);
+number abs(number);
+number norm(number);
+number arg(number);
+number conjugate(number);
 
-Number pow(const Number&,const Number&);
-Number sqrt(const Number&);
-Number ln(const Number&);
+number pow(number,number);
+number sqrt(number);
+number ln(number);
 //logs(N, base)
-Number log(const Number&, const Number &base=e);
+number log(number, number base=e);
 
-Number sin(const Number&);
-Number cos(const Number&);
-Number tan(const Number&);
-Number cot(const Number&);
-Number sec(const Number&);
-Number csc(const Number&);
+number sin(number);
+number cos(number);
+number tan(number);
+number cot(number);
+number sec(number);
+number csc(number);
 
-Number asin(const Number&);
-Number acos(const Number&);
-Number atan(const Number&);
-Number acot(const Number&);
-Number asec(const Number&);
-Number acsc(const Number&);
+number asin(number);
+number acos(number);
+number atan(number);
+number acot(number);
+number asec(number);
+number acsc(number);
 
-Number sinh(const Number&);
-Number cosh(const Number&);
-Number tanh(const Number&);
-Number coth(const Number&);
-Number sech(const Number&);
-Number csch(const Number&);
+number sinh(number);
+number cosh(number);
+number tanh(number);
+number coth(number);
+number sech(number);
+number csch(number);
 
-Number asinh(const Number&);
-Number acosh(const Number&);
-Number atanh(const Number&);
-Number acoth(const Number&);
-Number asech(const Number&);
-Number acsch(const Number&);
+number asinh(number);
+number acosh(number);
+number atanh(number);
+number acoth(number);
+number asech(number);
+number acsch(number);
 
 }
