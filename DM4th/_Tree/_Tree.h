@@ -25,7 +25,7 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
 
         TemplateTree<T> getCopy() const;
         void printTreeStructure() const;
-        
+
         template<class U>
         inline TemplateTree<T> &operator()(U axis);
         template<class ... U>
@@ -42,6 +42,8 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
 
         void loadFile(std::string path);
         void saveFile(std::string path);
+    private:
+        void _printStructure(int level=0, std::string tab="", bool last=false) const;
 };
 
 template<class T>

@@ -72,6 +72,34 @@ TemplateTree<T> TemplateTree<T>::getCopy() const
     return result;
 }
 
+template<class T>
+void TemplateTree<T>::_printStructure(int level, std::string tab, bool last) const{
+    if(level==0){
+        std::cout<<this->item()<<std::endl;
+    }else{
+        std::cout<<tab;
+
+        if(last) std::cout<<(char)192<<(char)196<<(char)196<<" "; //print: "├── "
+        else std::cout<<(char)195<<(char)196<<(char)196<<" "; //print: "└── "
+
+        std::cout<<this->item()<<std::endl;
+
+        if(!last) tab += (char)179 + std::string("   "); // append "|   "
+        else tab += std::string("    "); // append "    "
+    }
+    for(int j=0; j<this->size(); ++j){
+        this->child(j)._printStructure(level+1, tab, j==this->size()-1 );
+    }
+    return;
+}
+
+
+template<class T>
+void TemplateTree<T>::printTreeStructure() const
+{
+    this->_printStructure();
+}
+
 template<class T> template<class U>
 inline TemplateTree<T> &TemplateTree<T>::operator()(U axis)
 {
