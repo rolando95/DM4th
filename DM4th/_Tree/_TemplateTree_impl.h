@@ -6,6 +6,18 @@ namespace DM4th
 {
 
 template<class T>
+TemplateTree<T>::TemplateTree() {}
+
+template<class T>
+TemplateTree<T>::TemplateTree(const std::string &str) 
+{    
+    std::stringstream ss;
+    ss << str;
+    ss >> *this;
+}
+
+
+template<class T>
 inline T &TemplateTree<T>::node() const
 {
     return super::_data->node;

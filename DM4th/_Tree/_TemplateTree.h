@@ -13,6 +13,9 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
 {
         typedef _TreeDataManager<TemplateTree,T> super;
     public:
+        TemplateTree();  
+        TemplateTree(const std::string &other);
+
         inline T &node() const;
         inline T &item() const;
 
