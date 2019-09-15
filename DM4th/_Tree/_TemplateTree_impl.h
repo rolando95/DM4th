@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_Tree.h"
+#include "_TemplateTree.h"
 
 namespace DM4th
 {
