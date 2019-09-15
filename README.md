@@ -17,30 +17,378 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
   - Soporte de resultados con números reales y complejos en todos los métodos incluídos en la librería.
 - Entrada y salida por consola utilizando métodos input() y print() de números complejos, arreglos multidimensionales y árboles.
 
-
 ## Instalación
-Prerrequisitos:
+* Sigue los siguientes pasos para instalar el compilador, editor de código y compilar DM4th en el siguiente [enlace](INSTALATION.md).
 
-1. Tener instalado un IDE de desarrollo para C++ o un editor de texto. ([Visual Studio Code](https://code.visualstudio.com/) recomendado).
-    - Si estás en Visual Studio Code, instalar la [extensión de C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 
-2. Tener instalado un compilador de C++ en tu PC (`Mingw-w64` recomendado para Windows)
-   Si ya lo tienes instalado, saltar a Incluir DM4th en tu PC.
-    -   Descarga el compilador desde el siguiente [enlace](http://mingw-w64.org/doku.php/download/mingw-builds). Es importante que la ruta de instalación no contenga espacios (en otras palabras evitar rutas como `C:/Program Files/`), se recomienda instalar el compilador en `C:/Mingw-w64`
-  
-        ![Mingw Instalation Screenshot 01](resources/screenshots/MingwWinInstall.png)
-    - Es necesario incluir en el `PATH` la ruta donde están los archivos binarios del compilador:
-        - Incluir en el path la siguiente ruta: `c:\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin"`, si has instalado el compilador en una ruta distinta, debes modificar la ruta correspondiente.
+## Ejemplos
 
-        ![Mingw Instalation Screenshot 02](resources/screenshots/MingwPath.png)
-        ![Mingw Instalation Screenshot 03](resources/screenshots/MingwPath1.png)
-        - Reinicia tu PC. Puedes comprobar que el compilador está instalado ejecutando desde el Command prompt el siguiente comando: `g++ --version`
+* Imprime en consola dos arrglos de tipo cadena y number respectivamente
+    ```C#
+    #include "DM4th/DM4th.h"
 
-Incluyendo `DM4th` en tu PC
+    int main()
+    {
+        NDArray<string> hello  = items<string>("Hello", "World");
+        NDArray<number> myList = range<number>(10);
 
-1. Clona DM4th en tu PC o descarga el `.zip` del proyecto
-2. Abre la carpeta DM4th desde el Visual Studio Code
-    - NOTA: Sólo para la primera vez que descargues o clones `DM4th` en un nuevo directorio, debes generar los archivos binarios. si utilizas Visual Studio Code, ejecuta la tarea `Make DM4th Binaries`; si usas otro editor, puedees generar los binarios desde make/makeDM4thProject.bat 
-    ![Making M4th Project 01](resources/screenshots/DM4thMakingProjectScreenshot.png)
-3. Abre el archivo `main.cpp`, ¡escribe el programa que desees y ejecútalo!
-![Making M4th Project 02](resources/screenshots/HelloWorld1.png)
-![Making M4th Project 03](resources/screenshots/HelloWorld2.png)
+        print(hello, myList);
+
+        input();
+        return 0;
+    }
+    ```
+    ```json
+    SALIDA:
+
+    ["Hello", "World"]
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    ```
+* Trabajando con números complejos
+ 
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        number a = 5+7i;
+        number b = 10-2i;
+        number c = -25;
+
+        print("sum:", a+b);
+        print("sub:", a-b);
+        print("mult:", a*b);
+        print("div:", a/b);
+        print("sqrt:", sqrt(c));
+        print("sin:", sin(rad(c)));
+        input();
+        
+        return 0;
+    }
+    ```
+    ```json
+    SALIDA:
+
+    sum:
+    15+5i
+
+    sub:
+    -5+9i
+
+    mult:
+    64+60i
+
+    div:
+    0.34615+0.76923i
+
+    sqrt:
+    5i
+
+    sin:
+    -0.42262
+    ```
+
+* Operaciones con arreglos
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        NDArray<number> arr1 = range<number>(5);
+        NDArray<number> arr2 = range<number>(10,5,-1);
+        number value = 10;
+
+        print("arr1:",arr1);
+        print("arr2:",arr2);
+        
+        // Single operations
+        print("sum", arr1+arr2);
+        print("sub", arr1-arr2);
+        print("mult", arr1*arr2);
+        print("div", arr1/value);
+
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA:
+
+    arr1:
+    [0, 1, 2, 3, 4]
+
+    arr2:
+    [10, 9, 8, 7, 6]
+
+    sum
+    [10, 10, 10, 10, 10]
+
+    sub
+    [-10, -8, -6, -4, -2]
+
+    mult
+    [70]
+
+    div
+    [0, 0.1, 0.2, 0.3, 0.4]
+
+    ```
+
+* Inserción y eliminación de elementos en arreglos de una dimensión
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        NDArray<number> arr1 = items<number>(1,3,5,7,9);
+        NDArray<number> arr2 = items<number>(2,4,6,8,0);
+        number value = 1000;
+
+        print("arr1:",arr1);
+        print("arr2:",arr2);
+
+        // Push elements
+        arr1.push(value);
+        print("value "+string(value)+" inserted:",arr1);
+
+        arr1.pushArray(arr2);
+        print(arr1);
+
+        // Insert value at index 3 of array
+        arr1.push(-999, 3);
+        print("Insert value into array at index 3:",arr1);
+
+        print("Remove elements from array:");
+        arr1.pop();
+        print(arr1);
+
+        arr1.pop(0);
+        print(arr1);
+
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA: 
+
+    arr1:
+    [1, 3, 5, 7, 9]
+
+    arr2:
+    [2, 4, 6, 8, 0]
+
+    value 1000 inserted:
+    [1, 3, 5, 7, 9, 1000]
+
+    [1, 3, 5, 7, 9, 1000, 2, 4, 6, 8, 0]
+
+    Insert value into array at index 3:
+    [1, 3, 5, -999, 7, 9, 1000, 2, 4, 6, 8, 0]
+
+    Remove elements from array:
+
+    [1, 3, 5, -999, 7, 9, 1000, 2, 4, 6, 8]
+
+    [3, 5, -999, 7, 9, 1000, 2, 4, 6, 8]
+    ```
+
+* Operaciones con arreglos de 2 dimensiones
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        NDArray<number> arr1 = range<number>(10,25);
+        print("arr1:", arr1);
+
+        arr1.reshape(3,5);
+        print("Reshape 5x3:",arr1);
+
+        arr1.resize(3,4);
+        print("Resize 3x4:", arr1);
+
+        arr1.resize(4,4);
+        arr1(3,0) = -7i;
+        print("Resize 5x5:", arr1);
+
+        NDArray<number> arr2 = arr1+arr1;
+        print("arr2=arr1+arr1:", arr2);
+
+        print("arr2*10:", arr2*10);
+
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA: 
+
+    arr1:
+    [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+
+    Reshape 5x3:
+    [
+        [10, 11, 12, 13, 14],
+        [15, 16, 17, 18, 19],
+        [20, 21, 22, 23, 24]
+    ]
+
+    Resize 3x4:
+    [
+        [10, 11, 12, 13],
+        [15, 16, 17, 18],
+        [20, 21, 22, 23]
+    ]
+
+    Resize 5x5:
+    [
+        [10, 11, 12, 13],
+        [15, 16, 17, 18],
+        [20, 21, 22, 23],
+        [-7i, 0, 0, 0]
+    ]
+
+    arr2=arr1+arr1:
+    [
+        [20, 22, 24, 26],
+        [30, 32, 34, 36],
+        [40, 42, 44, 46],
+        [-14i, 0, 0, 0]
+    ]
+
+    arr2*10:
+    [
+        [200, 220, 240, 260],
+        [300, 320, 340, 360],
+        [400, 420, 440, 460],
+        [-140i, 0, 0, 0]
+    ]
+    ```
+* Arrays de N dimensiones
+  ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        NDArray<number> arr1 = range<number>(0,24,2);
+        print("arr1",arr1);
+
+        arr1.reshape(2,2,3);
+        print("Reshape 2x2x3:", arr1);
+
+        arr1 /= 10;
+        print("arr1/10:", arr1);
+
+        arr1.reshape(2,6);
+        arr1(0,0) = -15;
+
+        print("Reshape 2x6:", arr1);
+
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA:
+
+    arr1
+    [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+
+    Reshape 2x2x3:
+    [
+        [
+            [0, 2, 4],
+            [6, 8, 10]
+        ],
+        [
+            [12, 14, 16],
+            [18, 20, 22]
+        ]
+    ]
+
+    arr1/10:
+    [
+        [
+            [0, 0.2, 0.4],
+            [0.6, 0.8, 1]
+        ],
+        [
+            [1.2, 1.4, 1.6],
+            [1.8, 2, 2.2]
+        ]
+    ]
+
+    Reshape 2x6:
+    [
+        [-15, 0.2, 0.4, 0.6, 0.8, 1],
+        [1.2, 1.4, 1.6, 1.8, 2, 2.2]
+    ]
+    ```
+
+* Métodos numéricos I
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    number myFunction(number x)
+    {
+        return x*x + 25;
+    }
+
+    int main()
+    {
+        number a = 5;
+        number b = 3.5;
+        number c = -0.2i;
+
+        print("Factorial:",factorial(a), factorial(b), factorial(c));
+
+        // Root of f(x)=x*x+25
+        print("Root of myFunction", newtonRaphson(myFunction));
+
+        // Area of f(x)=x*x+25 [from 0 to 10]
+        print("Integral", integral(myFunction, 0, 10));
+
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA: 
+
+    Factorial:
+    120
+    11.6317
+    0.96195
+
+    Root of myFunction
+    5i
+
+    Integral
+    583.333
+    ```
+
+* Métodos numéricos II
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    int main()
+    {
+        //f(x)=6x^(3)+x^(2)-x-3
+        NDArray<number> polynomial = items<number>(6, 1, -1, 3);
+
+        print("Roots:", bairstowsMethod(polynomial));
+
+        print("Gamma:", gamma(5.999));
+        input();
+        return 0;
+    }
+    ```
+    ```C++
+    SALIDA:
+
+    Roots:
+    [0.38043+0.62796i, 0.38043-0.62796i, -0.92753]
+
+    Gamma:
+    119.795
+    ```

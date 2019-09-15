@@ -134,7 +134,7 @@ std::ostream& operator<<(std::ostream& stream, number n){
     else if(n.real() == -INF) stream<<"-INF";
     else if(std::isnan(n.real())) stream<<"NAN";
     else{
-        n = round(n,15); // Es necesario corregir problemas de redondeo
+        n = round(n,precision); // Es necesario corregir problemas de redondeo
         //stream
         if(n==0) stream<<"0";
         else{
