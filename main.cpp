@@ -2,11 +2,10 @@
 
 int main(){
 
-    NDArray<string> salute  = items<string>("Hello", "World");
-    NDArray<float> myList  = items<float>(1,2,3,4,5);
+    NDArray<string> hello   = items<string>("Hello", "World");
+    NDArray<number> myList  = range<number>(10);
 
-    print(bairstowsMethod(myList));
-    print(salute, myList);
+    print(hello, myList);
 
     input();
     return 0;

@@ -73,7 +73,7 @@ TemplateTree<T> TemplateTree<T>::getCopy() const
 }
 
 template<class T>
-void TemplateTree<T>::_printStructure(int level, std::string tab, bool last) const{
+void TemplateTree<T>::_printTreeStructure(int level, std::string tab, bool last) const{
     if(level==0){
         std::cout<<this->item()<<std::endl;
     }else{
@@ -88,7 +88,7 @@ void TemplateTree<T>::_printStructure(int level, std::string tab, bool last) con
         else tab += std::string("    "); // append "    "
     }
     for(int j=0; j<this->size(); ++j){
-        this->child(j)._printStructure(level+1, tab, j==this->size()-1 );
+        this->child(j)._printTreeStructure(level+1, tab, j==this->size()-1 );
     }
     return;
 }
@@ -97,7 +97,7 @@ void TemplateTree<T>::_printStructure(int level, std::string tab, bool last) con
 template<class T>
 void TemplateTree<T>::printTreeStructure() const
 {
-    this->_printStructure();
+    this->_printTreeStructure();
 }
 
 template<class T> template<class U>
@@ -124,6 +124,74 @@ inline void TemplateTree<T>::resize(int size)
 {
     super::_data->array.resize(size);
 } 
+
+template<class T> template<class U>
+void TemplateTree<T>::push(U value, int pos)
+{
+    assert( (pos>=0 && pos<= this->size()) || pos==END);
+    this->resize(this->size()+1);
+    //Append
+    if(pos >= this->size() || pos==END) 
+    {
+        super::_data->array(this->size()-1).item() = value;
+    }
+    //Insert
+    else
+    {
+        for(int j=this->size()-1; j > pos; --j)
+        {
+            super::_data->array(j) = super::_data->array(j-1).getCopy();
+        }
+        super::_data->array(pos).item() = value;
+    }
+}
+
+template<class T> template<class U>
+void TemplateTree<T>::pushTree(const TemplateTree<U> &tree, const int pos)
+{
+    this->pushTree(tree.getCopy(), pos);
+}
+
+template<class T> template<class U>
+void TemplateTree<T>::pushTreeRef(const TemplateTree<U> &tree, const int pos)
+{
+    assert( (pos>=0 && pos<= this->size()) || pos==END);
+    this->resize(this->size()+1);
+    //Append
+    if(pos >= this->size() || pos==END) 
+    {
+        super::_data->array(this->size()-1) = tree;
+    }
+    //Insert
+    else
+    {
+        for(int j=this->size()-1; j > pos; --j)
+        {
+            super::_data->array(j) = super::_data->array(j-1);
+        }
+        super::_data->array(pos) = tree;
+    }
+}
+
+template<class T>
+TemplateTree<T> TemplateTree<T>::pop(const int idx)
+{
+    TemplateTree<T> result;
+    assert( (idx>=0 && idx<this->size()) || idx==END ); 
+
+    if(idx==END || idx==this->size()-1)
+    {
+        result = this->child(this->size()-1);
+    }else{
+        result = this->child(idx);
+        for(int j=0; j<this->size()-idx-1; ++j)
+        {
+            this->child(j) = this->child(j+1);
+        }
+    }
+    this->resize(this->size()-1);
+    return result;
+}
 
 template<class T> 
 inline TemplateTree<T> &TemplateTree<T>::left()

@@ -333,7 +333,7 @@ T TemplateArray<T>::pop(const int idx)
     }else{
         T *iter = &this->item(idx);
         result = *iter;
-        for(int j=0; j<this->shape(0)-idx; ++j)
+        for(int j=0; j<this->shape(0)-idx-1; ++j)
         {
             iter[j] = iter[j+1];
         }

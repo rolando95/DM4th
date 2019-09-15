@@ -34,6 +34,21 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         inline int size() const;
         inline void resize(int size);
 
+        template<class U>
+        void push(U value, const int idx=END);
+
+        /*
+        The tree will be copy before insert!!!
+        To insert by ref, use pushTreeRef
+        */
+        template<class U>
+        inline void pushTree(const TemplateTree<U> &value, const int idx=END);
+
+        template<class U>
+        void pushTreeRef(const TemplateTree<U> &value, const int idx=END);
+
+        TemplateTree<T> pop(const int idx=END);
+
         inline TemplateTree<T> &left();
         inline TemplateTree<T> &right();
 
@@ -43,7 +58,7 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         void loadFile(std::string path);
         void saveFile(std::string path);
     private:
-        void _printStructure(int level=0, std::string tab="", bool last=false) const;
+        void _printTreeStructure(int level=0, std::string tab="", bool last=false) const;
 };
 
 template<class T>
