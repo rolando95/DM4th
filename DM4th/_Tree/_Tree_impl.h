@@ -58,6 +58,20 @@ TemplateTree<T> &TemplateTree<T>::child(const NDArray<U> &axis, int level) const
     return super::_data->array[(int)axis.item(level)];
 }
 
+template<class T>
+TemplateTree<T> TemplateTree<T>::getCopy() const
+{
+    TemplateTree<T> result;
+    result.item() = this->item();
+    if(this->size()>0){
+        result.resize(this->size());
+        for(int j=0; j<this->size(); ++j){
+            result.child(j) = this->child(j).getCopy();
+        }
+    }
+    return result;
+}
+
 template<class T> template<class U>
 inline TemplateTree<T> &TemplateTree<T>::operator()(U axis)
 {

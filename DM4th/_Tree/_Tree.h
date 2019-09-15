@@ -23,6 +23,9 @@ class TemplateTree: public _TreeDataManager<TemplateTree,T>
         template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
         template<class U> TemplateTree<T> &child(const NDArray<U> &axis, int level=0) const;
 
+        TemplateTree<T> getCopy() const;
+        void printTreeStructure() const;
+        
         template<class U>
         inline TemplateTree<T> &operator()(U axis);
         template<class ... U>
