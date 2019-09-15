@@ -1,8 +1,8 @@
 @echo off
 cd ../
 
-echo ///       Making M4th Binaries       ///
-echo ----------------------------------------
+echo ///        Making M4th Binaries        ///
+echo ------------------------------------------
 echo compiling source debug binaries...
 
 set OUTPUT_RELEASE=bin-int\release\x64\
@@ -24,6 +24,6 @@ if errorlevel 1 ( exit /B 1 )
 move /Y *.o bin-int\debug\x64 >nul
 if errorlevel 1 ( exit /B 1 )
 
-echo ----------------------------------------
-echo /// DM4th has compiled succesfuly!!! ///
+echo ------------------------------------------
+echo /// DM4th has compiled successfully!!! ///
 exit /b %errorlevel%
