@@ -22,7 +22,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
 
 ## Ejemplos
 
-* Imprime en consola dos arrglos de tipo cadena y number respectivamente
+* Impresión en consola de arreglos de diferentes tipos
     ```C#
     #include "DM4th/DM4th.h"
 
@@ -43,9 +43,9 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ["Hello", "World"]
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     ```
-* Trabajando con números complejos
+* Operaciones básicas con números complejos
  
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -88,7 +88,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ```
 
 * Operaciones con arreglos
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -100,7 +100,6 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         print("arr1:",arr1);
         print("arr2:",arr2);
         
-        // Single operations
         print("sum", arr1+arr2);
         print("sub", arr1-arr2);
         print("mult", arr1*arr2);
@@ -110,7 +109,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```json
     SALIDA:
 
     arr1:
@@ -134,7 +133,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ```
 
 * Inserción y eliminación de elementos en arreglos de una dimensión
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -146,14 +145,12 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         print("arr1:",arr1);
         print("arr2:",arr2);
 
-        // Push elements
         arr1.push(value);
         print("value "+string(value)+" inserted:",arr1);
 
         arr1.pushArray(arr2);
         print(arr1);
 
-        // Insert value at index 3 of array
         arr1.push(-999, 3);
         print("Insert value into array at index 3:",arr1);
 
@@ -168,7 +165,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```c++
     SALIDA: 
 
     arr1:
@@ -193,7 +190,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ```
 
 * Operaciones con arreglos de 2 dimensiones
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -220,7 +217,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```c++
     SALIDA: 
 
     arr1:
@@ -265,7 +262,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ]
     ```
 * Arrays de N dimensiones
-  ```C++
+  ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -288,7 +285,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```c++
     SALIDA:
 
     arr1
@@ -326,7 +323,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ```
 
 * Métodos numéricos I
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     number myFunction(number x)
@@ -352,7 +349,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```c++
     SALIDA: 
 
     Factorial:
@@ -368,7 +365,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
     ```
 
 * Métodos numéricos II
-    ```C++
+    ```C#
     #include "DM4th/DM4th.h"
 
     int main()
@@ -383,7 +380,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         return 0;
     }
     ```
-    ```C++
+    ```c++
     SALIDA:
 
     Roots:
