@@ -1,5 +1,5 @@
 # Instalación de DM4th
-## Prerrequisitos:
+**Prerrequisitos**
 
 1. Tener instalado un IDE de desarrollo para `C++` o un editor de texto como [Visual Studio Code](https://code.visualstudio.com/).
     - Si utilizas Visual Studio Code, instalar la [extensión de C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 
