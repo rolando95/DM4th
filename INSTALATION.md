@@ -4,7 +4,7 @@
 1. Tener instalado un IDE de desarrollo para `C++` o un editor de texto como [Visual Studio Code](https://code.visualstudio.com/).
     - Si utilizas Visual Studio Code, instalar la [extensión de C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 
 2. Tener instalado un compilador de C++ en tu PC (`Mingw-w64` recomendado para Windows)
-   Si ya lo tienes instalado, saltar a la sección de [Incluyendo DM4th](##Incluyendo-DM4th)
+   Si ya lo tienes instalado, saltar a la sección de [Incluyendo DM4th](#Incluyendo-DM4th)
     -   Descarga el compilador desde el siguiente [enlace](http://mingw-w64.org/doku.php/download/mingw-builds). **Es importante que la ruta de instalación no contenga espacios** (en otras palabras evitar rutas como `C:/Program Files/`), se recomienda instalar el compilador en `C:/Mingw-w64`
   
         ![Mingw Instalation Screenshot 01](resources/screenshots/MingwWinInstall.png)
@@ -17,7 +17,7 @@
         ![Mingw Instalation Screenshot 03](resources/screenshots/MingwPath1.png) -->
         - **Reinicia tu PC**. Puedes comprobar que el compilador está instalado ejecutando desde el Command prompt el siguiente comando: `g++ --version`
 
-## Incluyendo DM4th
+# Incluyendo DM4th
 
 1. Clona DM4th en tu PC o descarga el `.zip` del proyecto
 2. Abre la carpeta DM4th desde el Visual Studio Code
