@@ -9,9 +9,9 @@ namespace DM4th
 {
 
 template<class T>
-class TemplateTree: public _TreeDataManager<TemplateTree,T>
+class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
 {
-        typedef _TreeDataManager<TemplateTree,T> super;
+        typedef DM4thInternal::_TreeDataManager<TemplateTree,T> super;
     public:
         TemplateTree();  
         TemplateTree(const std::string &other);

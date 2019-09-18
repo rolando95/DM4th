@@ -5,6 +5,8 @@
 namespace DM4th
 {
 
+
+
 template<class T>
 TemplateTree<T>::TemplateTree() {}
 

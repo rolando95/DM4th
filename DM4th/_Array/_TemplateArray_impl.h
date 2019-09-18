@@ -33,7 +33,7 @@ inline void TemplateArray<T>::resize(int axis1)
         int disp = this->_getAxisDisplacement(0);
         int end = _min(axis1, this->shape(0));
         //T* old = super::_data->array._allocAndReturnOldArray(axis1);
-        _BaseArray<T> old = super::_data->array.moveReference();
+        DM4thInternal::_BaseArray<T> old = super::_data->array.moveReference();
         super::_data->array.resize(axis1);
 
         super::_data->shape.resize(1);
@@ -56,7 +56,7 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
     { //1 dim to N dim
         int oldShape = this->shape(0);
 
-        _BaseArray<T> oldArray(this->_allocZeros(axisArray));
+        DM4thInternal::_BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         int newDisp = this->_getAxisDisplacement(0);
         int end = _min(oldShape, this->shape(0));
@@ -71,7 +71,7 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
         TemplateArray<int> oldShape = this->shape();
         TemplateArray<int> oldDisp = this->_getAxisDisplacement();
 
-        _BaseArray<T> oldArray(this->_allocZeros(axisArray));
+        DM4thInternal::_BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         TemplateArray<int> newShape = this->shape();
         TemplateArray<int> newDisp = this->_getAxisDisplacement();
@@ -685,7 +685,7 @@ template<class T>
 void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
             TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
-            const _BaseArray<T> &oldArray)
+            const DM4thInternal::_BaseArray<T> &oldArray)
 {
     int end = _min(oldShape.item(axis), newShape.item(axis));
     if(axis<oldShape.size()-1 && axis<newShape.size()-1){
@@ -736,7 +736,7 @@ int TemplateArray<T>::_item(int axis, int pos, int idx) const
 }
 
 template<class T>
-_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
+DM4thInternal::_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
 {
     int count = 1;
     for(int j=0; j<axisArray.size(); ++j)
@@ -744,7 +744,7 @@ _BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
         count*= axisArray.c_arr()[j];
     }
     //T* oldArray = super::_data->array._allocAndReturnOldArray(count);
-    _BaseArray<T> oldArray(super::_data->array.moveReference());
+    DM4thInternal::_BaseArray<T> oldArray(super::_data->array.moveReference());
     super::_data->array.resize(count);
     super::_data->shape.resize(axisArray.size());
     for(int j=0; j<axisArray.size(); ++j)

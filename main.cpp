@@ -7,6 +7,7 @@ int main(){
 
     print(hello, myList);
 
+    Tree<int> a;
     input();
     return 0;
 }

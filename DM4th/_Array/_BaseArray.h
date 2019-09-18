@@ -15,6 +15,9 @@
 namespace DM4th
 {
 
+namespace DM4thInternal
+{
+
 template<class T> 
 class _BaseArray
 {
@@ -125,5 +128,7 @@ class _ArrayDataManager
         _ArrayData<T> const *_arrayData() const;
 
 };
+
+}
 
 }

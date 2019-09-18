@@ -5,6 +5,8 @@
 namespace DM4th
 {
 
+namespace DM4thInternal
+{
 //////////////////// _TreeData
 
 template<template<class> class Tree, class T>
@@ -89,5 +91,7 @@ _TreeDataManager<Tree,T> const &_TreeDataManager<Tree,T>::operator=(const _TreeD
 // {
 //     return _data;
 // }
+
+}
 
 }

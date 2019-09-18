@@ -5,6 +5,8 @@
 namespace DM4th
 {
 
+namespace DM4thInternal
+{
 //////////////////// _BaseArray
 
 template<class T>
@@ -237,6 +239,8 @@ template<class T>
 _ArrayData<T> const *_ArrayDataManager<T>::_arrayData() const
 {
     return _data;
+}
+
 }
 
 }
