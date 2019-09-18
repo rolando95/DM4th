@@ -33,7 +33,8 @@ inline void TemplateArray<T>::resize(int axis1)
         int disp = this->_getAxisDisplacement(0);
         int end = _min(axis1, this->shape(0));
         //T* old = super::_data->array._allocAndReturnOldArray(axis1);
-        DM4thInternal::_BaseArray<T> old = super::_data->array.moveReference();
+        DM4thInternal::_BaseArray<T> old;
+        super::_data->array.moveReferenceTo(old);
         super::_data->array.resize(axis1);
 
         super::_data->shape.resize(1);
@@ -191,7 +192,7 @@ T &TemplateArray<T>::item(AXIS axis) const
     int x = (AXIS)axis;
     DM4thAssert(super::_data->shape.size()==1);
     DM4thAssert(x<super::_data->array.size());
-    DM4thAssert( super::_data->shape.size()==1 && x<super::_data->array.size() );
+    //DM4thAssert( super::_data->shape.size()==1 && x<super::_data->array.size() );
     return super::_data->array[x];
 }
 
@@ -744,7 +745,8 @@ DM4thInternal::_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<i
         count*= axisArray.c_arr()[j];
     }
     //T* oldArray = super::_data->array._allocAndReturnOldArray(count);
-    DM4thInternal::_BaseArray<T> oldArray(super::_data->array.moveReference());
+    DM4thInternal::_BaseArray<T> oldArray;
+    super::_data->array.moveReferenceTo(oldArray);
     super::_data->array.resize(count);
     super::_data->shape.resize(axisArray.size());
     for(int j=0; j<axisArray.size(); ++j)

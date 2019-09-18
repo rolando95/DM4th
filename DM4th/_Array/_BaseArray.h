@@ -11,22 +11,53 @@
 #include <atomic>
 #include <sstream>
 
+//#define BASEARRAY_STD_VECTOR
+
 namespace DM4th
 {
 
 namespace DM4thInternal
 {
+#if defined BASEARRAY_STD_VECTOR
+template<class T>
+class _BaseArray
+{
+    std::vector<T> _array;
+    private:
+
+    public:
+    _BaseArray(int size=0){
+        this->resize(size);
+    }
+
+    inline void resize(int size);
+    inline const int size() const;
+
+    inline T &operator[](int idx);
+    inline T &operator()(int idx);
+    const inline T get(int idx) const;
+    void set(int idx, T value);
+
+
+
+    template<class U> bool operator==(const _BaseArray<U> &other) const;
+    template<class U> inline bool operator!=(const _BaseArray<U> &other) const;
+
+    inline void clear();
+
+    inline void moveReferenceTo(_BaseArray<T> &other);
+};
+#else 
 
 template<class T> 
 class _BaseArray
 {
-    protected:
+    private:
         int _size=0;
         T *_array=nullptr;
 
         inline void allocArray(int size);
         inline void reallocArray(int size);
-
     public:
         _BaseArray(int size=0);
         ~_BaseArray() {
@@ -35,32 +66,24 @@ class _BaseArray
                 delete[] this->_array;
             } 
         }
-        _BaseArray(int size, T &ref): _size(size), _array(ref){};
-        _BaseArray(const _BaseArray<T> &ref): _size(ref._size), _array(ref._array) {};
-
         inline void resize(int size);
 
-        inline const _BaseArray<T> moveReference()
-        {
-            const _BaseArray<T> ref(*this);
-            this->_array = nullptr;
-            this->_size = 0;
-            return ref;
-        }
         inline const int size() const;
         inline T &operator[](int idx);
         inline T &operator()(int idx);
         const inline T get(int idx) const;
         void set(int idx, T value);
 
-        bool isFree();
+
 
         template<class U> bool operator==(const _BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const _BaseArray<U> &other) const;
 
-        inline void freeArray();
-};
+        inline void clear();
 
+        inline void moveReferenceTo(_BaseArray<T> &other);
+};
+#endif
 
 class _ShapeData
 {
@@ -73,7 +96,7 @@ class _ShapeData
         inline void resize(int size);
         inline const int size();
 
-        inline void freeArray();
+        inline void clear();
         
         inline int &operator[](int idx);
         inline int &operator()(int idx);

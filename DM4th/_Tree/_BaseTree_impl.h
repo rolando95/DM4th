@@ -21,9 +21,9 @@ void _TreeData<Tree,T>::decrRef()
 {
     _ref -= 1;
     //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
-    if(this->_ref <= 0 && !array.isFree())
+    if(this->_ref <= 0)
     { 
-        array.freeArray(); 
+        array.clear(); 
     }
 }
 

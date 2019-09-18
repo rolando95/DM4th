@@ -8,6 +8,79 @@ namespace DM4th
 namespace DM4thInternal
 {
 //////////////////// _BaseArray
+#if defined BASEARRAY_STD_VECTOR
+
+
+template<class T>
+inline void _BaseArray<T>::resize(int size)
+{
+    this->_array.resize(size);
+}
+
+template<class T>
+inline const int _BaseArray<T>::size() const 
+{
+    return this->_array.size();
+}
+
+template<class T>
+inline T &_BaseArray<T>::operator[](int idx) 
+{
+    return this->_array[idx]; //// FIX THIS
+}
+
+template<class T>
+inline T &_BaseArray<T>::operator()(int idx)
+{
+    return this->_array[idx]; /// FIX THIS
+}
+
+template<class T>
+const inline T _BaseArray<T>::get(int idx) const
+{
+    return this->_array[idx];
+}
+
+template<class T>
+void _BaseArray<T>::set(int idx, T value)
+{
+    this->_array[idx] = value;
+}
+
+template<class T> template<class U> 
+bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
+{
+    if(this->size()!=other.size())
+    {
+        return false;
+    }
+    for(int j=0; j<this->size(); ++j)
+    {
+        if(this->get(j) != other.get(j))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+template<class T> template<class U> 
+inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
+{
+    return !(*this==other);
+}
+
+template<class T>
+inline void _BaseArray<T>::clear()
+{
+    this->_array.clear();
+}
+
+template<class T>
+inline void _BaseArray<T>::moveReferenceTo(_BaseArray<T> &other)
+{
+    other._array = std::move(this->_array);
+}
+#else 
 
 template<class T>
 inline void _BaseArray<T>::allocArray(int size)
@@ -44,22 +117,12 @@ inline void _BaseArray<T>::resize(int size)
 {
     if(size==0) 
     {
-        this->freeArray();
+        this->clear();
         return;
     }
     if(this->_array==nullptr){ this->allocArray(size); }
     else{ this->reallocArray(size); }
 }
-
-// template<class T>
-// inline T* _BaseArray<T>::_allocAndReturnOldArray(int size)
-// {
-//     DM4thAssert(size>0);
-//     T* result = this->_array;
-//     this->_array = new T[size]();
-//     this->_size = size;
-//     return result;
-// }
 
 template<class T>
 inline const int _BaseArray<T>::size() const { return this->_size; }
@@ -91,10 +154,6 @@ void _BaseArray<T>::set(int idx, T value)
     this->_array[idx]=value;
 }
 
-template<class T>
-bool _BaseArray<T>::isFree(){
-    return this->_array==nullptr; 
-}
 
 template<class T> template<class U>
 bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const 
@@ -120,7 +179,7 @@ inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
 }
 
 template<class T>
-inline void _BaseArray<T>::freeArray()
+inline void _BaseArray<T>::clear()
 {
     this->_size=0;
     if(this->_array == nullptr) return;
@@ -128,17 +187,23 @@ inline void _BaseArray<T>::freeArray()
     this->_array = nullptr;
 }
 
+template<class T>
+inline void _BaseArray<T>::moveReferenceTo(_BaseArray<T> &other)
+{
+    other.clear();
+    other._array = this->_array;
+    other._size = this->_size;
+    this->_array = nullptr;
+    this->_size = 0;
+}
+#endif
 //////////////////// _ShapeData
 
 inline _ShapeData::_ShapeData(int size){ _shape.resize(size); }
 inline _ShapeData::~_ShapeData(){}
 inline void _ShapeData::resize(int size){ _shape.resize(size); }
 inline const int _ShapeData::size() { return _shape.size(); }
-inline void _ShapeData::freeArray() { 
-    if(!this->_shape.isFree()){
-        this->_shape.freeArray();
-    }
-}
+inline void _ShapeData::clear() { this->_shape.clear(); }
 inline int &_ShapeData::operator[](int idx){ return  this->_shape[idx]; }
 inline int &_ShapeData::operator()(int idx){ return this->_shape[idx]; }
 inline bool _ShapeData::operator==(const _ShapeData &other) const { return this->_shape==other._shape; }
@@ -161,10 +226,10 @@ void _ArrayData<T>::decrRef()
 {
     _ref -= 1;
     //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
-    if(this->_ref <= 0 && !array.isFree())
+    if(this->_ref <= 0)
     { 
-        array.freeArray(); 
-        shape.freeArray();
+        array.clear(); 
+        shape.clear();
     }
 }
 
