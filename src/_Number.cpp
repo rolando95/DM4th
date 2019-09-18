@@ -1,4 +1,4 @@
-#include "../DM4th/_Number/_Number.h"
+#include "../DM4th/Number.h"
 
 namespace DM4th
 {
@@ -20,15 +20,17 @@ number::number(std::string str){
 
 int precision =  5;
 
-double number::real()const {return this->r;}
+const double number::real()const {return this->r;}
 double number::real(double a){this->r = a; return this->r;}
+double &number::real() { return this->r; }
 
-double number::imag()const {return this->i;}
+const double number::imag()const {return this->i;}
 double number::imag(double a){this->i = a; return this->i;}
+double &number::imag() { return this->i; }
 
 number number::operator=(double a){
-    this->r = a;
-    this->i = 0;
+    this->real(a);
+    this->imag(0);
     return *this;
 }
 

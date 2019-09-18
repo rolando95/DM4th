@@ -12,7 +12,7 @@ namespace DM4thInternal
 template<class T>
 inline void _BaseArray<T>::allocArray(int size)
 {
-    assert(!this->_array && size>0);
+    DM4thAssert(!this->_array && size>0);
     this->_array = new T[size]();
     this->_size = size;
 }
@@ -20,7 +20,7 @@ inline void _BaseArray<T>::allocArray(int size)
 template<class T>
 inline void _BaseArray<T>::reallocArray(int size)
 {
-    assert(this->_array && size>0);
+    DM4thAssert(this->_array && size>0);
     if(size!=_size)
     {
         T *tmp = new T[size]();
@@ -54,7 +54,7 @@ inline void _BaseArray<T>::resize(int size)
 // template<class T>
 // inline T* _BaseArray<T>::_allocAndReturnOldArray(int size)
 // {
-//     assert(size>0);
+//     DM4thAssert(size>0);
 //     T* result = this->_array;
 //     this->_array = new T[size]();
 //     this->_size = size;
@@ -67,21 +67,21 @@ inline const int _BaseArray<T>::size() const { return this->_size; }
 template<class T>
 inline T &_BaseArray<T>::operator[](int idx)
 { 
-    assert(idx<this->size()); 
+    DM4thAssert(idx<this->size()); 
     return  this->_array[idx]; 
 }
 
 template<class T>
 inline T &_BaseArray<T>::operator()(int idx)
 { 
-    assert(idx<this->size()); 
+    DM4thAssert(idx<this->size()); 
     return this->_array[idx]; 
 }
 
 template<class T>
 const inline T _BaseArray<T>::get(int idx) const 
 { 
-    assert(idx<this->size()); 
+    DM4thAssert(idx<this->size()); 
     return this->_array[idx]; 
 }
 

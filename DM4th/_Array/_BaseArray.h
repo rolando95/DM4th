@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../_Utilities/_Constants.h"
 #include "../_Math/_Math.h"
 #include "../_Utilities/_Utilities.h"
@@ -7,7 +6,7 @@
 
 
 #include <string>
-#include <cassert>
+
 #include <memory>
 #include <atomic>
 #include <sstream>

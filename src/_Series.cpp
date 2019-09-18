@@ -1,5 +1,4 @@
-#include "../DM4th/_Math/_Series.h"
-#include "../DM4th/_Math/_Differential.h"
+#include "../DM4th/Math.h"
 
 namespace DM4th
 {

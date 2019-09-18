@@ -19,7 +19,7 @@ void _handleStringInQuotes(std::istream &stream, std::string &value)
     char delimeter('"');
     _handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()=='"') stream.get();
-    else assert(false);
+    else DM4thAssert(false);
     std::getline(stream, value, delimeter);
     _handleIstreamSpacesAndNewLines(stream);
 }

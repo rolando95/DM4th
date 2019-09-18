@@ -56,7 +56,7 @@ template<class T>
 TemplateArray<T> range(T begin, T end, T step)
 {
     TemplateArray<T> result;
-    assert( (end>begin && step>0) || (end<begin && step<0));
+    DM4thAssert( (end>begin && step>0) || (end<begin && step<0));
     int count = 0;
     T j = begin;
     if(step>0)

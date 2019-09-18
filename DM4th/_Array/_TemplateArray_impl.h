@@ -50,7 +50,7 @@ inline void TemplateArray<T>::resize(int axis1)
 template<class T>
 void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
 {
-    assert(axisArray.shapeSize()==1);
+    DM4thAssert(axisArray.shapeSize()==1);
 
     if(this->shapeSize()==1)
     { //1 dim to N dim
@@ -126,7 +126,7 @@ const TemplateArray<T> &TemplateArray<T>::reshape(int axis1, U ... args)
     //int oldShapeMult = mult(this->shape().c_arr(), this->shapeSize());
     int oldShapeMult = mult(super::_data->shape.c_arr(), this->shapeSize());
     int newShapeMult = mult(axis1,args...);
-    assert(oldShapeMult==newShapeMult);
+    DM4thAssert(oldShapeMult==newShapeMult);
     
     super::_data->shape.resize(count(axis1,args...));
     this->_reshape(0, axis1, args...);
@@ -139,8 +139,8 @@ const TemplateArray<T> & TemplateArray<T>::reshape(TemplateArray<int> newShape)
 {
     int oldShapeMult = mult(super::_data->shape.c_arr(), this->shapeSize());
     int newShapeMult = mult(newShape.c_arr(), newShape.size());     
-    assert(newShape.shapeSize()==1);    
-    assert(oldShapeMult==newShapeMult);
+    DM4thAssert(newShape.shapeSize()==1);    
+    DM4thAssert(oldShapeMult==newShapeMult);
 
     super::_data->shape.resize(newShape.size());
     for(int j=0; j<newShape.size(); ++j)
@@ -189,17 +189,17 @@ template<class T> template<class AXIS>
 T &TemplateArray<T>::item(AXIS axis) const
 {
     int x = (AXIS)axis;
-    assert(super::_data->shape.size()==1);
-    assert(x<super::_data->array.size());
-    assert( super::_data->shape.size()==1 && x<super::_data->array.size() );
+    DM4thAssert(super::_data->shape.size()==1);
+    DM4thAssert(x<super::_data->array.size());
+    DM4thAssert( super::_data->shape.size()==1 && x<super::_data->array.size() );
     return super::_data->array[x];
 }
 
 template<class T> template<class AXIS>
 T &TemplateArray<T>::item(const TemplateArray<AXIS> &axisArray)
 {
-    assert(axisArray.shapeSize()==1);
-    assert(axisArray.size()==this->shapeSize());
+    DM4thAssert(axisArray.shapeSize()==1);
+    DM4thAssert(axisArray.size()==this->shapeSize());
 
     int pos = (int)axisArray.c_arr()[0];
     for(int j=1; j<this->shapeSize(); ++j)
@@ -231,8 +231,8 @@ TemplateArray<T> TemplateArray<T>::getCopy() const
 template<class T> template<class U>
 void TemplateArray<T>::push(const U &value, const int pos)
 {
-    assert(this->shapeSize()<=1);
-    assert( (pos>=0 && pos<= this->shape(0)) || pos==END);
+    DM4thAssert(this->shapeSize()<=1);
+    DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
     this->resize(this->shape(0)+1);
     //Append
     if(pos >= this->shape(0) || pos==END) 
@@ -257,7 +257,7 @@ void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
     {
         int size = other.size();
         int end = this->shape(0);
-        assert( (pos>=0 && pos<=end) || pos==END);
+        DM4thAssert( (pos>=0 && pos<=end) || pos==END);
         this->resize(end+size);
 
         //Append
@@ -286,8 +286,8 @@ void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
         else cols = this->shape(1);
 
         int end = this->shape(0);
-        assert( (pos>=0 && pos<=this->shape(0)) || pos==END);
-        assert(cols==other.shape(0));
+        DM4thAssert( (pos>=0 && pos<=this->shape(0)) || pos==END);
+        DM4thAssert(cols==other.shape(0));
 
         this->resize(this->shape(0)+1, cols);
 
@@ -319,7 +319,7 @@ void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
     }
     else
     {
-        assert(false);
+        DM4thAssert(false);
     }
 }
 
@@ -327,8 +327,8 @@ template<class T>
 T TemplateArray<T>::pop(const int idx)
 {
     T result;
-    assert(this->shapeSize()==1 && this->shape(0)>0);
-    assert( (idx>=0 && idx<this->shape(0)) || idx==END ); 
+    DM4thAssert(this->shapeSize()==1 && this->shape(0)>0);
+    DM4thAssert( (idx>=0 && idx<this->shape(0)) || idx==END ); 
 
     if(idx==END || idx==this->shape(0)-1)
     {
@@ -349,12 +349,12 @@ template<class T>
 TemplateArray<T> TemplateArray<T>::popArray(const int pos)
 {
     TemplateArray<T> result;
-    assert( (pos>=0 && pos<this->shape(0)) || pos==END ); 
+    DM4thAssert( (pos>=0 && pos<this->shape(0)) || pos==END ); 
      
     if(this->shapeSize()==2)
     {
         result.resize(this->shape(1));
-        assert(this->shape(0)>0);
+        DM4thAssert(this->shape(0)>0);
         if(pos==this->shape(0)-1 || pos==END)
         {
             T *iter = &this->item(this->shape(0)-1,0);
@@ -381,7 +381,7 @@ TemplateArray<T> TemplateArray<T>::popArray(const int pos)
         
     }else
     {
-        assert(false);
+        DM4thAssert(false);
     }
     
     this->resize(this->shape(0)-1, this->shape(1));
@@ -400,7 +400,7 @@ inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ this->item(a
 template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
 {
-    assert(super::_data->shape==other._arrayData()->shape);
+    DM4thAssert(super::_data->shape==other._arrayData()->shape);
     for(int j=0; j<this->c_arr_size(); ++j)
     {
         this->c_arr_item(j) += other.c_arr_item(j);
@@ -419,7 +419,7 @@ inline TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &othe
 template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
 {
-    assert(super::_data->shape==other._arrayData()->shape);
+    DM4thAssert(super::_data->shape==other._arrayData()->shape);
     for(int j=0; j<this->c_arr_size(); ++j)
     {
         this->c_arr_item(j) -= other.c_arr_item(j);
@@ -450,7 +450,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
     else
     if(this->shapeSize()==1 && other.shapeSize()==1)
     {
-        assert(this->shape(0)==other.shape(0));
+        DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
         for(int j=0; j<this->shape(0); ++j)
         {
@@ -459,7 +459,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
     }
     else if(this->shapeSize()<=2 && other.shapeSize()<=2)
     {
-        assert(this->shape(1) == other.shape(0));
+        DM4thAssert(this->shape(1) == other.shape(0));
         int maxX = this->shape(0);
         int maxY = other.shape(1);
         int maxZ = other.shape(0);
@@ -475,7 +475,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
     }
     else
     {
-        assert(false);
+        DM4thAssert(false);
     }
 
     *this = result;
@@ -618,17 +618,17 @@ std::istream& TemplateArray<T>::istream(std::istream& stream)
     bool shapeAllocated = false;
     _handleIstreamSpacesAndNewLines(stream);
 
-    assert(stream.peek()=='['); stream.get();
+    DM4thAssert(stream.peek()=='['); stream.get();
     
     this->_istream(stream, values, 0, c_size, shapeAllocated);
     _handleIstreamSpacesAndNewLines(stream);
 
-    assert(stream.peek()==']'); stream.get();
+    DM4thAssert(stream.peek()==']'); stream.get();
 
     super::_data->array.resize(c_size);
     for(int j=0; j<c_size; ++j)
     {
-        assert(!values.empty());
+        DM4thAssert(!values.empty());
         this->c_arr()[j] = values.front(); 
         values.pop();
     }
@@ -660,7 +660,7 @@ void TemplateArray<T>::saveFile(std::string url){
 template<class T>
 inline void TemplateArray<T>::_resize1DArray(int size)
 {
-    //assert(this->shapeSize()<=1); // Can be 0 || 1
+    //DM4thAssert(this->shapeSize()<=1); // Can be 0 || 1
     super::_data->array.resize(size);
     super::_data->shape.resize(1);
     super::_data->shape(0) = size;
@@ -730,7 +730,7 @@ int TemplateArray<T>::_item(int axis, int pos, int idx, U ... args) const
 template<class T>
 int TemplateArray<T>::_item(int axis, int pos, int idx) const
 {
-    assert(axis+1 == super::_data->shape.size());
+    DM4thAssert(axis+1 == super::_data->shape.size());
     pos = pos*super::_data->shape.get(axis) + idx;
     return pos;
 }
@@ -799,7 +799,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
         while (true)
         {
             _handleIstreamSpacesAndNewLines(stream);
-            assert(stream.peek()=='['); stream.get();
+            DM4thAssert(stream.peek()=='['); stream.get();
 
             _handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']') break; //This dim is empty
@@ -807,12 +807,12 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             this->_istream(stream, values, shapeIdx+1, c_size, shapeAllocated);
             size+=1;
             
-            assert(stream.peek()==']'); stream.get();
+            DM4thAssert(stream.peek()==']'); stream.get();
 
             _handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
-            else assert(false);
+            else DM4thAssert(false);
         }
     }else
     {
@@ -830,7 +830,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             _handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
-            else assert(false);
+            else DM4thAssert(false);
         }
 
         if(!shapeAllocated)
@@ -844,7 +844,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
         }
     }
 
-    assert(
+    DM4thAssert(
         size > 0  && 
         (
             super::_data->shape.get(shapeIdx) == 0 ||

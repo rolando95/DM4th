@@ -64,7 +64,7 @@ TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level)
 template<class T> template<class U>
 TemplateTree<T> &TemplateTree<T>::child(const NDArray<U> &axis, int level) const
 {
-    assert(axis.shapeSize()==1 && axis.size()>0);
+    DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
         return super::_data->array[(int)axis.item(level)].child(axis, level+1);
@@ -142,7 +142,7 @@ inline void TemplateTree<T>::resize(int size)
 template<class T> template<class U>
 void TemplateTree<T>::push(U value, int pos)
 {
-    assert( (pos>=0 && pos<= this->size()) || pos==END);
+    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==END);
     this->resize(this->size()+1);
     //Append
     if(pos >= this->size() || pos==END) 
@@ -169,7 +169,7 @@ void TemplateTree<T>::pushTree(const TemplateTree<U> &tree, const int pos)
 template<class T> template<class U>
 void TemplateTree<T>::pushTreeRef(const TemplateTree<U> &tree, const int pos)
 {
-    assert( (pos>=0 && pos<= this->size()) || pos==END);
+    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==END);
     this->resize(this->size()+1);
     //Append
     if(pos >= this->size() || pos==END) 
@@ -191,7 +191,7 @@ template<class T>
 TemplateTree<T> TemplateTree<T>::pop(const int idx)
 {
     TemplateTree<T> result;
-    assert( (idx>=0 && idx<this->size()) || idx==END ); 
+    DM4thAssert( (idx>=0 && idx<this->size()) || idx==END ); 
 
     if(idx==END || idx==this->size()-1)
     {
@@ -267,16 +267,16 @@ std::istream& TemplateTree<T>::istream(std::istream& stream)
 
     // Lee corchete abierto
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!='{') assert(false);
+    if(stream.peek()!='{') DM4thAssert(false);
     stream.get();
 
     // Obtiene la clave "value"
     _handleStringInQuotes(stream,inStr);
-    if(inStr!="value") assert(false);
+    if(inStr!="value") DM4thAssert(false);
 
     // Lee los dos puntos
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!=':') assert(false);
+    if(stream.peek()!=':') DM4thAssert(false);
     stream.get();
 
     // Lee el valor
@@ -285,21 +285,21 @@ std::istream& TemplateTree<T>::istream(std::istream& stream)
 
     // Lee la comma
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!=',') assert(false);
+    if(stream.peek()!=',') DM4thAssert(false);
     stream.get();
 
     // Obtiene la clave "child"
     _handleStringInQuotes(stream,inStr);
-    if(inStr!="child") assert(false);
+    if(inStr!="child") DM4thAssert(false);
 
     // Lee los dos puntos
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!=':') assert(false);
+    if(stream.peek()!=':') DM4thAssert(false);
     stream.get();
 
     // Lee el corchete abierto
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!='[') assert(false);
+    if(stream.peek()!='[') DM4thAssert(false);
     stream.get();
 
     // Lee iterativamente los hijos del nodo
@@ -318,12 +318,12 @@ std::istream& TemplateTree<T>::istream(std::istream& stream)
         // Siguiente dato en la lista de hijos
         if(stream.peek()==']'){stream.get();break;}
         else if(stream.peek()==',') stream.get();
-        else assert(false);
+        else DM4thAssert(false);
     }
 
     // Lee el corchete cerrado
     _handleIstreamSpacesAndNewLines(stream);
-    if(stream.peek()!='}') assert(false);
+    if(stream.peek()!='}') DM4thAssert(false);
     stream.get();
     //_handleIstreamSpacesAndNewLines(stream);
 

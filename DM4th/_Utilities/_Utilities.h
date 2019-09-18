@@ -1,8 +1,8 @@
 #pragma once
 
 #include "_Constants.h"
+#include "../_Exceptions/_Exceptions.h"
 
-#include <cassert>
 #include <istream>
 #include <iostream>
 #include <limits>

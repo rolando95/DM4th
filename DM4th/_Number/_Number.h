@@ -9,7 +9,7 @@ namespace DM4th
 {
 
 class number{
-    double r, i;
+   double r, i;
 public:
 
     number(const double=0,const double=0);
@@ -17,12 +17,14 @@ public:
     number(std::string);
 
     // get set parte real
-    double real() const;
+    const double real() const;
     double real(double);
+    double &real();
 
     // get set parte imaginaria
-    double imag() const;
+    const double imag() const;
     double imag(double);
+    double &imag();
     
     // Asignacion de un valor numerico
     number operator=(double);
