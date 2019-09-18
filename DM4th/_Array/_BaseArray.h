@@ -27,11 +27,24 @@ class _BaseArray
 
     public:
         _BaseArray(int size=0);
+        ~_BaseArray() {
+            if(this->_array != nullptr)
+            {
+                delete[] this->_array;
+            } 
+        }
+        _BaseArray(int size, T &ref): _size(size), _array(ref){};
+        _BaseArray(const _BaseArray<T> &ref): _size(ref._size), _array(ref._array) {};
 
         inline void resize(int size);
 
-        inline T* _allocAndReturnOldArray(int size);
-
+        inline const _BaseArray<T> moveReference()
+        {
+            const _BaseArray<T> ref(*this);
+            this->_array = nullptr;
+            this->_size = 0;
+            return ref;
+        }
         inline const int size() const;
         inline T &operator[](int idx);
         inline T &operator()(int idx);

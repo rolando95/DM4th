@@ -49,15 +49,15 @@ inline void _BaseArray<T>::resize(int size)
     else{ this->reallocArray(size); }
 }
 
-template<class T>
-inline T* _BaseArray<T>::_allocAndReturnOldArray(int size)
-{
-    assert(size>0);
-    T* result = this->_array;
-    this->_array = new T[size]();
-    this->_size = size;
-    return result;
-}
+// template<class T>
+// inline T* _BaseArray<T>::_allocAndReturnOldArray(int size)
+// {
+//     assert(size>0);
+//     T* result = this->_array;
+//     this->_array = new T[size]();
+//     this->_size = size;
+//     return result;
+// }
 
 template<class T>
 inline const int _BaseArray<T>::size() const { return this->_size; }

@@ -32,7 +32,10 @@ inline void TemplateArray<T>::resize(int axis1)
     { // N dim to 1 dim
         int disp = this->_getAxisDisplacement(0);
         int end = _min(axis1, this->shape(0));
-        T* old = super::_data->array._allocAndReturnOldArray(axis1);
+        //T* old = super::_data->array._allocAndReturnOldArray(axis1);
+        _BaseArray<T> old = super::_data->array.moveReference();
+        super::_data->array.resize(axis1);
+
         super::_data->shape.resize(1);
         super::_data->shape.set(0, axis1);
         int oldj=0; int newj=0;
@@ -40,7 +43,7 @@ inline void TemplateArray<T>::resize(int axis1)
         {
             super::_data->array[newj] = old[oldj];
         }
-        delete[] old;
+        //delete[] old;
     }
 }
 
@@ -53,7 +56,7 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
     { //1 dim to N dim
         int oldShape = this->shape(0);
 
-        T* oldArray = this->_allocZeros(axisArray);
+        _BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         int newDisp = this->_getAxisDisplacement(0);
         int end = _min(oldShape, this->shape(0));
@@ -62,18 +65,18 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
         {
             super::_data->array[newj] = oldArray[oldj];
         }
-        delete[] oldArray;
+        //delete[] oldArray;
     }else
     { //N dim to M dim
         TemplateArray<int> oldShape = this->shape();
         TemplateArray<int> oldDisp = this->_getAxisDisplacement();
 
-        T* oldArray = this->_allocZeros(axisArray);
+        _BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         TemplateArray<int> newShape = this->shape();
         TemplateArray<int> newDisp = this->_getAxisDisplacement();
 
-        if(oldArray==nullptr) return;
+        if(oldArray.size() == 0) return;
 
         int end = _min(oldShape.item(0), newShape.item(0));
         for(int j=0; j<end; ++j)
@@ -86,7 +89,7 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
                 oldArray
             );
         }
-        delete[] oldArray;
+        //delete[] oldArray;
     }
 }
 
@@ -682,7 +685,7 @@ template<class T>
 void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
             TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
-            T* oldArray)
+            const _BaseArray<T> &oldArray)
 {
     int end = _min(oldShape.item(axis), newShape.item(axis));
     if(axis<oldShape.size()-1 && axis<newShape.size()-1){
@@ -699,7 +702,7 @@ void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount,
     }else{
         for(int j=0; j<end; ++j)
         {
-            super::_data->array[newDispCount+newDisp.item(axis)*j] = oldArray[oldDispCount+oldDisp.item(axis)*j];
+            super::_data->array[newDispCount+newDisp.item(axis)*j] = oldArray.get(oldDispCount+oldDisp.item(axis)*j);
         }
     }
 }
@@ -733,14 +736,16 @@ int TemplateArray<T>::_item(int axis, int pos, int idx) const
 }
 
 template<class T>
-T* TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
+_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
 {
     int count = 1;
     for(int j=0; j<axisArray.size(); ++j)
     {
         count*= axisArray.c_arr()[j];
     }
-    T* oldArray = super::_data->array._allocAndReturnOldArray(count);
+    //T* oldArray = super::_data->array._allocAndReturnOldArray(count);
+    _BaseArray<T> oldArray(super::_data->array.moveReference());
+    super::_data->array.resize(count);
     super::_data->shape.resize(axisArray.size());
     for(int j=0; j<axisArray.size(); ++j)
     {

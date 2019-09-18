@@ -43,6 +43,7 @@
         "cstdarg": "cpp",
         "cstddef": "cpp",
         "algorithm": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "cstring": "cpp"
     }
 }

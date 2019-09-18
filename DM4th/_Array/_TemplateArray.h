@@ -95,7 +95,7 @@ class TemplateArray: public _ArrayDataManager<T>
         void _resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
             TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
-            T* oldArray);
+            const _BaseArray<T> &oldArray);
 
         template<class ... U>
         void _reshape(int axis, int first, U ... args);
@@ -105,7 +105,7 @@ class TemplateArray: public _ArrayDataManager<T>
         int _item(int axis, int pos, int idx, U ... args) const;
         int _item(int axis, int pos, int idx) const;
 
-        T* _allocZeros(const TemplateArray<int> &axisArray);
+        _BaseArray<T> _allocZeros(const TemplateArray<int> &axisArray);
 
         void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
         void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);
