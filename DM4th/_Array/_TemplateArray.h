@@ -54,24 +54,24 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(TemplateArray<U> axisArray);
 
-        template<class U> const TemplateArray<T> operator+=(const TemplateArray<U> &other);
+        template<class U> inline const TemplateArray<T> operator+=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
 
-        template<class U> const TemplateArray<T> operator-=(const TemplateArray<U> &other);
+        template<class U> inline const TemplateArray<T> operator-=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator-(const TemplateArray<U> &other) const;
 
         template<class U> const TemplateArray<T> operator*=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator*(const TemplateArray<U> &other) const;
-        const TemplateArray<T> operator*=(const T &other);
+        inline const TemplateArray<T>  operator*=(const T &other);
         inline TemplateArray<T> operator*(const T &other) const;
 
-        const TemplateArray<T> operator/=(const T &other);
+        inline const TemplateArray<T> operator/=(const T &other);
         inline TemplateArray<T> operator/(const T &other) const;
 
-        const TemplateArray<T> operator%=(const T &other);
-        TemplateArray<T> operator%(const T &other);
+        inline const TemplateArray<T> operator%=(const T &other);
+        inline TemplateArray<T> operator%(const T &other);
 
-        template<class U> bool operator==(const TemplateArray<U> &other);
+        template<class U> inline bool operator==(const TemplateArray<U> &other);
         template<class U> inline bool operator!=(const TemplateArray<U> &other);
         template<class U> bool operator>(const TemplateArray<U> &other);
         template<class U> inline bool operator<=(const TemplateArray<U> &other);

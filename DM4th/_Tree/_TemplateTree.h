@@ -2,7 +2,6 @@
 
 #include "_BaseTree_impl.h"
 #include "../_Array/_Array.h"
-#include "../_Number/_Number.h"
 //class Tree: public _TreeManager<Tree,number>{
 
 namespace DM4th

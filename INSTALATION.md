@@ -3,8 +3,9 @@
 
 1. Tener instalado un IDE de desarrollo para `C++` o un editor de texto como [Visual Studio Code](https://code.visualstudio.com/).
     - Si utilizas Visual Studio Code, instalar la [extensión de C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 
-2. Tener instalado un compilador de C++ en tu PC (`Mingw-w64` recomendado para Windows)
-   Si ya lo tienes instalado, saltar a la sección de [Incluyendo DM4th](#Incluyendo-DM4th)
+2. Tener instalado un compilador de `C++11` o superior en tu PC (`Mingw-w64` recomendado para Windows).
+   
+   Si ya lo tienes instalado, saltar a la sección de [Incluyendo DM4th](#Incluyendo-DM4th), de otro modo siga los pasos a continuación:
     -   Descarga el compilador desde el siguiente [enlace](http://mingw-w64.org/doku.php/download/mingw-builds). **Es importante que la ruta de instalación no contenga espacios** (en otras palabras evitar rutas como `C:/Program Files/`), se recomienda instalar el compilador en `C:/Mingw-w64`
   
         ![Mingw Instalation Screenshot 01](resources/screenshots/MingwWinInstall.png)
@@ -26,3 +27,9 @@
 3. Abre el archivo `main.cpp`, haz alguna modificación si deseas y luego ejecútalo haciendo clic en `Release`.
 ![Making M4th Project 02](resources/screenshots/HelloWorld1.png)
 ![Making M4th Project 03](resources/screenshots/HelloWorld2.png)
+
+<!-- # Opcional: Ejecutar en modo debug con Visual Studio Code
+
+Si tienes instalado el compilador en la ruta indicada en este documento (`c:\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin"`), no necesitas hacer ninguna configuración más para poder usarlo, de otro modo debes realizar algunos cambios más:
+
+1. Busca en .vscode/c_cpp_properties.json la siguiente instrucción: `"compilerPath": "C:/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin/g++.exe"` -->

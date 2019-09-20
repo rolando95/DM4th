@@ -2,6 +2,10 @@
 
 #include "_BaseArray.h"
 
+#ifdef DM4thParallel
+    #define DM4thParallelFor
+#endif
+
 namespace DM4th
 {
 
@@ -158,18 +162,34 @@ void _BaseArray<T>::set(int idx, T value)
 template<class T> template<class U>
 bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const 
 {
+    bool result = true;
     if(this->size()!=other.size())
     {
         return false;
     }
-    for(int j=0; j<this->size(); ++j)
-    {
-        if(this->_array[j] != other.get(j))
+
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+        for(int j=0; j<this->size(); ++j)
         {
-            return false;
+            if(this->_array[j] != other.get(j))
+            {
+                result = false;
+                #pragma omp cancel for
+            }
         }
-    }
-    return true;
+    #else
+        for(int j=0; j<this->size(); ++j)
+        {
+            if(this->_array[j] != other.get(j))
+            {
+                result = false;
+                break;
+            }
+        }
+    #endif
+
+    return result;
 }
 
 template<class T> template<class U>
@@ -177,6 +197,75 @@ inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
 { 
     return !(*this==other); 
 }
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other) 
+{
+    DM4thAssert(this->size()==other.size());
+    
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) + other.get(j));
+    }
+    return *this;
+}
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other) 
+{
+    DM4thAssert(this->size()==other.size());
+    
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) - (T)other.get(j));
+    }
+    return *this;
+}
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other) 
+{
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) * (T)other);
+    }
+    return *this;
+}
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other) 
+{
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) / (T)other);
+    }
+    return *this;
+}
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator%=(const U &other) 
+{
+    #if defined DM4thParallelFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, fmod(this->get(j),(T)other));
+    }
+    return *this;
+}
+
 
 template<class T>
 inline void _BaseArray<T>::clear()

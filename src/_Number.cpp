@@ -20,13 +20,13 @@ number::number(std::string str){
 
 int precision =  5;
 
-const double number::real()const {return this->r;}
-double number::real(double a){this->r = a; return this->r;}
-double &number::real() { return this->r; }
+// const double number::real()const {return this->r;}
+// double number::real(double a){this->r = a; return this->r;}
+// double &number::real() { return this->r; }
 
-const double number::imag()const {return this->i;}
-double number::imag(double a){this->i = a; return this->i;}
-double &number::imag() { return this->i; }
+// const double number::imag()const {return this->i;}
+// double number::imag(double a){this->i = a; return this->i;}
+// double &number::imag() { return this->i; }
 
 number number::operator=(double a){
     this->real(a);
@@ -251,20 +251,20 @@ number operator+(const number &n1,const number &n2){
 number operator-(const number &n1,const number &n2){
     return number(n1.real() - n2.real(), n1.imag() - n2.imag());
 }
-// Multiplicacion de numeros complejos
-number operator*(const number &n1,const number &n2){
-    //real*real
-    if(n1.imag()==0 && n2.imag()==0){
-        return n1.real()*n2.real();
-    }
-    //im*im
-    else{
-        return number(
-            n1.real()*n2.real() - n1.imag()*n2.imag(), 
-            n1.real()*n2.imag() + n1.imag()*n2.real()
-        );
-    }
-}
+// // Multiplicacion de numeros complejos
+// number operator*(const number &n1,const number &n2){
+//     //real*real
+//     if(n1.imag()==0 && n2.imag()==0){
+//         return n1.real()*n2.real();
+//     }
+//     //im*im
+//     else{
+//         return number(
+//             n1.real()*n2.real() - n1.imag()*n2.imag(), 
+//             n1.real()*n2.imag() + n1.imag()*n2.real()
+//         );
+//     }
+// }
 // Division de numeros complejos
 number operator/(const number &n1,const number &n2){
 
@@ -298,10 +298,10 @@ number operator/(const number &n1,const number &n2){
 // Residuo de numeros complejos
 number operator%(const number &n1,const number &n2){
     number result;
-    if(n2.real()!=0) result.real(fmod(n1.real(),n2.real()));
+    if(n2.real()!=0) result.real(std::fmod(n1.real(),n2.real()));
      else if(n1.real()==0) result.real(0);
     else return NAN;
-    if(n2.imag()!=0) result.imag(fmod(n1.imag(),n2.imag()));
+    if(n2.imag()!=0) result.imag(std::fmod(n1.imag(),n2.imag()));
     else if(n1.imag()==0) result.imag(0);
     else return NAN;
     return result;
@@ -337,6 +337,12 @@ number rad(number n1){
 number deg(number n1){
     return number(n1.real()*180/pi, n1.imag()*(double)180.0/pi);
 }
+
+number fmod(number n1, number n2)
+{
+    return n1%n2;
+}
+
 number round(number n, int p){
         number n1 = number(
             std::round(n.real() * std::pow(10,p)) / std::pow(10,p),

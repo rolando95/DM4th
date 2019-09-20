@@ -12,7 +12,6 @@ class NDArray: public TemplateArray<T>
     public:
         NDArray(){}
         NDArray(const super &other){ static_cast<super&>(*this) = other; }
-        //NDArray(range<T> other) { static_cast<super&>(*this) = other; }
         NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
         NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
 };

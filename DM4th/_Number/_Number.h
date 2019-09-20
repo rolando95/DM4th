@@ -17,14 +17,14 @@ public:
     number(std::string);
 
     // get set parte real
-    const double real() const;
-    double real(double);
-    double &real();
+    inline const double real() const {return this->r;}
+    inline double real(double a) {this->r = a; return this->r;}
+    inline double &real() { return this->r; }
 
     // get set parte imaginaria
-    const double imag() const;
-    double imag(double);
-    double &imag();
+    inline const double imag() const  {return this->i;}
+    inline double imag(double a) {this->i = a; return this->i;}
+    inline double &imag() { return this->i; }
     
     // Asignacion de un valor numerico
     number operator=(double);
@@ -93,7 +93,19 @@ number operator+(const number&,const number&);
 number operator-(const number&,const number&);
 
 // Multiplicacion de numeros complejos
-number operator*(const number&,const number&);
+inline number operator*(const number&n1,const number&n2){
+    //real*real
+    if(n1.imag()==0 && n2.imag()==0){
+        return n1.real()*n2.real();
+    }
+    //im*im
+    else{
+        return number(
+            n1.real()*n2.real() - n1.imag()*n2.imag(), 
+            n1.real()*n2.imag() + n1.imag()*n2.real()
+        );
+    }
+}
 
 // Division de numeros complejos
 number operator/(const number&,const number&);
@@ -113,6 +125,7 @@ bool operator<(const number&, const number&);
 number rad(number);
 number deg(number);
 
+number fmod(number, number);
 number round(number, int p=0);
 number ceil(number, int p=0);
 number floor(number, int p=0);

@@ -3,7 +3,7 @@
 #include "../_Math/_Math.h"
 #include "../_Utilities/_Utilities.h"
 #include "../_Utilities/_c_arr_Utilities.h"
-
+#include "../_Number/_Number.h"
 
 #include <string>
 
@@ -78,6 +78,13 @@ class _BaseArray
 
         template<class U> bool operator==(const _BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const _BaseArray<U> &other) const;
+        
+        
+        template<class U> const _BaseArray<T> &operator+=(const _BaseArray<U> &other);
+        template<class U> const _BaseArray<T> &operator-=(const _BaseArray<U> &other);
+        template<class U> const _BaseArray<T> &operator*=(const U &other);
+        template<class U> const _BaseArray<T> &operator/=(const U &other);
+        template<class U> const _BaseArray<T> &operator%=(const U &other);
 
         inline void clear();
 

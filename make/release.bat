@@ -7,7 +7,7 @@ if "%fileName%"=="" (
 )
 
 if not exist bin\release\ mkdir bin\release\
-g++    -Wall -O2 bin-int\release\x64\*.o %fileName% -Iinclude -o bin\release\main.exe  
+g++    -Wall -O2 bin-int\release\x64\*.o %fileName% -Iinclude -o bin\release\main.exe -fopenmp -DDM4thParallel
 
 if errorlevel 1 ( exit /B 1 )
 

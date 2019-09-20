@@ -10,6 +10,10 @@
 #include <sstream>
 #include <fstream>
 
+#ifdef DM4thParallel
+    #include <omp.h>
+#endif
+
 namespace DM4th
 {
 

@@ -3,6 +3,10 @@
 #include "_TemplateArray.h"
 #include "_ArrayUtilities.h"
 
+#ifdef DM4thParallel
+    #define DM4thParallelFor
+#endif
+
 namespace DM4th
 {
 
@@ -399,13 +403,9 @@ template<class T> template<class U>
 inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ this->item(axisArray); }
 
 template<class T> template<class U>
-const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
+inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
 {
-    DM4thAssert(super::_data->shape==other._arrayData()->shape);
-    for(int j=0; j<this->c_arr_size(); ++j)
-    {
-        this->c_arr_item(j) += other.c_arr_item(j);
-    }
+    this->_data->array += other._data->array;
     return *this;
 }
 
@@ -418,13 +418,10 @@ inline TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &othe
 }
 
 template<class T> template<class U>
-const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
+inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
 {
     DM4thAssert(super::_data->shape==other._arrayData()->shape);
-    for(int j=0; j<this->c_arr_size(); ++j)
-    {
-        this->c_arr_item(j) -= other.c_arr_item(j);
-    }
+    this->_data->array -= other._data->array;
     return *this;
 }
 
@@ -453,6 +450,10 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
     {
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
+
+        #if defined DM4thParallelFor
+            #pragma omp parallel for
+        #endif
         for(int j=0; j<this->shape(0); ++j)
         {
             result.item(0) += this->item(j)*other.item(j);
@@ -466,6 +467,10 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
         int maxZ = other.shape(0);
 
         result.resize(maxX,maxY);
+        
+        #if defined DM4thParallelFor
+            #pragma omp parallel for
+        #endif
         for(int x=0; x<maxX; ++x){
             for(int y=0; y<maxY; ++y){
                 for(int z=0;z<maxZ; ++z){
@@ -495,10 +500,7 @@ inline TemplateArray<T> TemplateArray<T>::operator*(const TemplateArray<U> &othe
 template<class T>
 const TemplateArray<T> TemplateArray<T>::operator*=(const T &other)
 {
-    for(int j=0; j<this->c_arr_size(); ++j)
-    {
-        this->c_arr_item(j) *= other;
-    }
+    this->_data->array *= other;
     return *this;
 }
 
@@ -511,12 +513,9 @@ inline TemplateArray<T> TemplateArray<T>::operator*(const T &other) const
 }
 
 template<class T>
-const TemplateArray<T> TemplateArray<T>::operator/=(const T &other)
+inline const TemplateArray<T> TemplateArray<T>::operator/=(const T &other)
 {
-    for(int j=0; j<this->c_arr_size(); ++j)
-    {
-        this->c_arr_item(j) /= other;
-    }
+    this->_data->array /= other;
     return *this;
 }
 
@@ -529,17 +528,14 @@ inline TemplateArray<T> TemplateArray<T>::operator/(const T &other) const
 }
 
 template<class T>
-const TemplateArray<T> TemplateArray<T>::operator%=(const T &other)
+inline const TemplateArray<T> TemplateArray<T>::operator%=(const T &other)
 {
-    for(int j=0; j<this->c_arr_size(); ++j)
-    {
-        this->c_arr_item(j) = fmod(this->c_arr_item(j), other);
-    }
+    this->_data->array %= other;
     return *this;
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::operator%(const T &other)
+inline TemplateArray<T> TemplateArray<T>::operator%(const T &other)
 {
     TemplateArray<T> result = this->getCopy();
     result %= other;
@@ -547,7 +543,7 @@ TemplateArray<T> TemplateArray<T>::operator%(const T &other)
 }
 
 template<class T> template<class U>
-bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
+inline bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
 {
     return super::_data->shape==other._arrayData()->shape && other._arrayData()->array==super::_data->array;
 }
