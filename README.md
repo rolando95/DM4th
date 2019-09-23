@@ -18,7 +18,14 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
 - Entrada y salida por consola utilizando métodos input() y print() de números complejos, arreglos multidimensionales y árboles.
 
 ## Instalación
-* Sigue los siguientes pasos para instalar el compilador, editor de código y compilar DM4th en el siguiente [enlace](INSTALATION.md).
+* DM4th es un `header-only library`. No es necesario compilar dependencias para instalar. Basta con descargar la librería, descomprimirla e incluir en tu proyecto como `#include DM4th/DM4th.h`. 
+
+Si no tienes ningún entorno de desarrollo instalado, puedes puedes instalar un editor de código y compilador de C++ recomendado:
+    
+* [Instalar compilador de C++ y editor de código en Windows](https://code.visualstudio.com/docs/cpp/config-mingw).
+
+
+  **NOTA:** DM4th es compatible con versiones de C++11 en adelante.
 
 ## Ejemplos
 
@@ -261,6 +268,55 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
         [-140i, 0, 0, 0]
     ]
     ```
+* Acceso a elementos de Array (Se usan paréntesis en vez de corchetes por razones de rendimiento)
+  ```C#
+    #include "DM4th/DM4th.h"
+
+    int main(){
+        NDArray<number> arr1 = items<number>(100,1,2,3,4,5,6,7,8);
+        NDArray<number> arr2 = items<number>(11,22,33,44,55,66,77,88,200);
+
+        arr1.reshape(3,3);
+        arr2.reshape(3,3);
+
+        print(arr1, arr2);
+
+        number tmp = arr1(0,0);
+        arr1(0,0) = arr2(2,2);
+        arr2(2,2) = tmp;
+
+        print("SWAP:", arr1, arr2);
+
+        input();
+        return 0;
+    }
+  ```
+  ```C++
+    SALIDA:
+    
+    [
+        [100, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8]
+    ]
+    [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 200]
+    ]
+
+    SWAP:
+    [
+        [200, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8]
+    ]
+    [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 100]
+    ]
+  ```
 * Arrays de N dimensiones
   ```C#
     #include "DM4th/DM4th.h"
