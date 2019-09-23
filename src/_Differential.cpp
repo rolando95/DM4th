@@ -1,5 +1,6 @@
 #include "../DM4th/Math.h"
 
+
 namespace DM4th
 {
 
@@ -33,10 +34,10 @@ number gamma(number z, number tolerance){
             x += p(j)/(z+j+1);
         }
         t = z + p.shape(0) - 0.5;
-        result = sqrt(2*pi) *pow(t,z+0.5) * exp(-t) * x;
+        result = std::sqrt(2*pi) *pow(t,z+0.5) * exp(-t) * x;
     }
 
-    if (abs(result.imag() - abs(result.imag()))<=tolerance){
+    if (std::abs(result.imag() - std::abs(result.imag()))<=tolerance){
         return result.real();
     }
     return result;
@@ -44,7 +45,7 @@ number gamma(number z, number tolerance){
 
 // Derivative
 number derivative(Function f, const number &x0, const number order, const number h){
-    number o(abs(floor(order.real())));
+    number o(std::abs(std::floor(order.real())));
     if(order<=0){
         return f(x0);
     }else if(order==1){

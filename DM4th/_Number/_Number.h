@@ -2,35 +2,40 @@
 
 #include <iostream>
 #include "../_Utilities/_Utilities.h"
-#include "../_Math/_Math.h"
+//#include "../_Math/_Math.h"
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
+
+
 
 namespace DM4th
 {
 
-class number{
-   double r, i;
+template<class T>
+class _number{
+   T r=0, i=0;
 public:
+    _number(T=0, T=0);
 
-    number(const double=0,const double=0);
-    //number(number);
-    number(std::string);
+    template<class U>
+    _number(U=0, U=0);
+
+    _number(std::string);
 
     // get set parte real
     inline const double real() const {return this->r;}
     inline double real(double a) {this->r = a; return this->r;}
-    inline double &real() { return this->r; }
+    //inline double &real() { return this->r; }
 
     // get set parte imaginaria
     inline const double imag() const  {return this->i;}
     inline double imag(double a) {this->i = a; return this->i;}
-    inline double &imag() { return this->i; }
+    //inline double &imag() { return this->i; }
     
     // Asignacion de un valor numerico
-    number operator=(double);
+    _number<T> operator=(T);
 
-    template<class T>
-    explicit operator T(){return (T)this->r;}
+    template<class U>
+    explicit operator U(){return (U)this->r;}
     inline explicit operator int () { return (int)round(this->r); }
     explicit operator char *();
     explicit operator std::string();
@@ -39,136 +44,217 @@ public:
     void saveFile(std::string url);
 
     // Incremento prefijo
-    number operator ++();
+    _number<T> operator ++();
     // Incremento postfijo
-    number operator ++(int);
+    _number<T> operator ++(int);
     // Decremento prefijo
-    number operator --();
+    _number<T> operator --();
     // Decremento postfijo
-    number operator --(int);
+    _number<T> operator --(int);
     // Asignacion aditiva
-    number operator +=(number);
+    _number<T> operator +=(_number<T>);
     // Asignacion sustractiva
-    number operator -=(number);
+    _number<T> operator -=(_number<T>);
     // Asignacion multiplicativa
-    number operator *=(number);
+    _number<T> operator *=(_number<T>);
     // Asignacion divisiva
-    number operator /=(number);
+    _number<T> operator /=(_number<T>);
     // Residuo
-    number operator %=(number);
+    _number<T> operator %=(_number<T>);
 };
+#include <type_traits>
+typedef _number<double> number;
+
+// template<typename T>
+// using enable_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
+
+// template<typename T, typename alt_type = number>
+// using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value || std::is_same<T, alt_type>::value, T>::type;
+
+template<typename T, typename alt_type = _number<double>>
+using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
+
+#define enable_if_is_number(T,U) typename = check_if_is_number<T, _number<U>>
 
 // Define como constante el valor de i
-static const number i(0,1);
-static const number _i(0,1);
+static const _number<double> i(0,1);
+static const _number<double> _i(0,1);
 
 // Convert string to number
-number strTonumber(std::string);
+inline _number<double> strTonumber(std::string);
 
 // Conversion de expresion literal <double>i a tipo numero
-number operator""_i(long double);
+inline _number<double> operator""_i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-number operator""_i(unsigned long long int);
+inline _number<double> operator""_i(unsigned long long int);
 
 // Conversion de expresion literal <double>i a tipo numero
-number operator""i(long double);
+inline _number<double> operator""i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-number operator""i(unsigned long long int);
+inline _number<double> operator""i(unsigned long long int);
 
 // Cambio a signo negativo
-number operator-(number);
+template<class T>
+inline _number<T> operator-(_number<T>);
 
 // Impresion en pantalla de numeros complejos
-std::ostream& operator<<(std::ostream&, number);
+template<class T>
+std::ostream& operator<<(std::ostream&, _number<T>);
 
 // Lectura en pantalla de numeros complejos
-std::istream& operator>>(std::istream&, number&);
+template<class T>
+std::istream& operator>>(std::istream&, _number<T>&);
 
 // Suma de numeros complejos
-number operator+(const number&,const number&);
+template<class T>
+inline _number<T> operator+(_number<T>,_number<T>);
+
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator+(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator+(U,_number<T>);
 
 // Resta de numeros complejos
-number operator-(const number&,const number&);
+template<class T>
+inline _number<T> operator-(_number<T>,_number<T>);
+
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator-(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator-(U , _number<T> );
 
 // Multiplicacion de numeros complejos
-inline number operator*(const number&n1,const number&n2){
-    //real*real
-    if(n1.imag()==0 && n2.imag()==0){
-        return n1.real()*n2.real();
-    }
-    //im*im
-    else{
-        return number(
-            n1.real()*n2.real() - n1.imag()*n2.imag(), 
-            n1.real()*n2.imag() + n1.imag()*n2.real()
-        );
-    }
-}
+template<class T>
+_number<T> operator*(_number<T> n1, _number<T> n2);
 
-// Division de numeros complejos
-number operator/(const number&,const number&);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator*(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator*(U , _number<T>);
+
+//Division de numeros complejos
+template<class T>
+_number<T> operator/(_number<T>, _number<T>);
+
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator/(_number<T>, U);
+
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator/(U , _number<T> );
 
 // Residuo de numeros complejos (Solo trabaja como numeros enteros)
-number operator%(const number&,const number&);
+template<class T>
+_number<T> operator%(_number<T>,_number<T>);
+
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator%(_number<T>, U);
+
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator%(U , _number<T>);
 
 // Relacional
-bool operator==(const number&, const number&);
-bool operator!=(const number&, const number&);
-bool operator>=(const number&, const number&);
-bool operator<=(const number&, const number&);
-bool operator>(const number&, const number&);
-bool operator<(const number&, const number&);
+template<class T> inline bool operator==(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator==(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator==(U ,_number<T>);
+
+template<class T> inline bool operator!=(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator!=(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator!=(U , _number<T> );
+
+template<class T> inline bool operator>=(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator>=(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator>=(U , _number<T> );
+
+template<class T> inline bool operator<=(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator<=(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator<=(U , _number<T> );
+
+template<class T> inline bool operator>(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator>(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator>(U , _number<T> );
+
+template<class T> inline bool operator<(_number<T>, _number<T>);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator<(_number<T>, U);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> operator<(U , _number<T>);
 
 // Math
-number rad(number);
-number deg(number);
+template<class T> inline _number<T> rad(_number<T>);
+template<class T> inline _number<T> deg(_number<T>);
 
-number fmod(number, number);
-number round(number, int p=0);
-number ceil(number, int p=0);
-number floor(number, int p=0);
-number truncate(number, int p=0);
-inline number trunc(const number&value, int p=0) { return truncate(value,p); }
+template<class T> inline _number<T> fmod(_number<T>, _number<T>);
 
-number abs(number);
-number norm(number);
-number arg(number);
-number conjugate(number);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> fmod(_number<T>, U );
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> fmod(U , _number<T> );
 
-number pow(number,number);
-number sqrt(number);
-number ln(number);
-//logs(N, base)
-number log(number, number base=e);
+template<class T> inline _number<T> round(_number<T>, int p=0);
+template<class T> inline _number<T> ceil(_number<T>, int p=0);
+template<class T> inline _number<T> floor(_number<T>, int p=0);
+template<class T> inline _number<T> truncate(_number<T>, int p=0);
+template<class T> inline _number<T> trunc(const _number<T> &value, int p=0) { return truncate(value,p); }
 
-number sin(number);
-number cos(number);
-number tan(number);
-number cot(number);
-number sec(number);
-number csc(number);
+template<class T> inline _number<T> abs(_number<T>);
+template<class T> inline _number<T> norm(_number<T>);
+template<class T> inline _number<T> arg(_number<T>);
+template<class T> inline _number<T> conjugate(_number<T>);
 
-number asin(number);
-number acos(number);
-number atan(number);
-number acot(number);
-number asec(number);
-number acsc(number);
+template<class T> inline _number<T> pow(_number<T>,_number<T>);
 
-number sinh(number);
-number cosh(number);
-number tanh(number);
-number coth(number);
-number sech(number);
-number csch(number);
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> pow(_number<T>, U );
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> pow(U , _number<T> );
 
-number asinh(number);
-number acosh(number);
-number atanh(number);
-number acoth(number);
-number asech(number);
-number acsch(number);
+template<class T> inline _number<T> sqrt(_number<T>);
+template<class T> inline _number<T> ln(_number<T>);
+template<class T> inline _number<T> log(_number<T>, _number<T> base=e);
+
+template<class  T, typename U, enable_if_is_number(U, _number<T>)> 
+inline _number<T> log(_number<T>, U base=e);
+template<class  U, typename T, enable_if_is_number(U, _number<T>)> 
+inline _number<T> log(U, _number<T> base=e);
+
+template<class T> inline _number<T> sin(_number<T>);
+template<class T> inline _number<T> cos(_number<T>);
+template<class T> inline _number<T> tan(_number<T>);
+template<class T> inline _number<T> cot(_number<T>);
+template<class T> inline _number<T> sec(_number<T>);
+template<class T> inline _number<T> csc(_number<T>);
+
+template<class T> inline _number<T> asin(_number<T>);
+template<class T> inline _number<T> acos(_number<T>);
+template<class T> inline _number<T> atan(_number<T>);
+template<class T> inline _number<T> acot(_number<T>);
+template<class T> inline _number<T> asec(_number<T>);
+template<class T> inline _number<T> acsc(_number<T>);
+
+template<class T> inline _number<T> sinh(_number<T>);
+template<class T> inline _number<T> cosh(_number<T>);
+template<class T> inline _number<T> tanh(_number<T>);
+template<class T> inline _number<T> coth(_number<T>);
+template<class T> inline _number<T> sech(_number<T>);
+template<class T> inline _number<T> csch(_number<T>);
+
+template<class T> inline _number<T> asinh(_number<T>);
+template<class T> inline _number<T> acosh(_number<T>);
+template<class T> inline _number<T> atanh(_number<T>);
+template<class T> inline _number<T> acoth(_number<T>);
+template<class T> inline _number<T> asech(_number<T>);
+template<class T> inline _number<T> acsch(_number<T>);
 
 }

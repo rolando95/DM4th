@@ -18,7 +18,7 @@ if errorlevel 1 ( exit /B 1 )
 
 echo compiling source debug binaries...
 
-g++ -g -Wall -Og -c src\*.cpp
+g++ -g -Wall -ggdb -c src\*.cpp
 if errorlevel 1 ( exit /B 1 )
 
 move /Y *.o bin-int\debug\x64 >nul

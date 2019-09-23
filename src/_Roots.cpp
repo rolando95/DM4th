@@ -5,9 +5,13 @@ namespace DM4th
 
 // Aproximaciones de raices
 number newtonRaphson(Function f, number x1, number maxIter, number tolerance){
+    if(abs(f(x1))<tolerance)
+    {
+        return x1;
+    }
+    number y1 = (x1.imag()==0)? 1.00i : number(0,x1.imag());
     x1 = x1.real();
-    number y1 = (x1.imag()==0)? 1.00i : x1.imag();
-    
+
     for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/derivative(f,x1);
     }
@@ -15,14 +19,22 @@ number newtonRaphson(Function f, number x1, number maxIter, number tolerance){
         for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/derivative(f,y1);
         }
-        if(abs(f(y1))>tolerance) x1 = NAN;
+        if(abs(f(y1))>tolerance) 
+        {
+            x1 = NAN;
+        }
         else x1 = y1;
     }
     return x1;
 }
 number newtonRaphson(Function f, Function fd, number x1, number maxIter, number tolerance){
-    x1 = x1.real();
+    if(abs(f(x1))<tolerance)
+    {
+        return x1;
+    }
+
     number y1 = (x1.imag()==0)? 1.00i : x1.imag();
+    x1 = x1.real();
     
     for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
         x1 = x1 - f(x1)/fd(x1);
@@ -31,7 +43,10 @@ number newtonRaphson(Function f, Function fd, number x1, number maxIter, number 
         for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/fd(y1);
         }
-        if(abs(f(y1))>tolerance) x1 = NAN;
+        if(abs(f(y1))>tolerance) 
+        {
+            x1 = NAN;
+        }
         else x1 = y1;
     }
     return x1;

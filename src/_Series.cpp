@@ -4,12 +4,12 @@ namespace DM4th
 {
 
 number fibonacci(number n){
-    return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/sqrt(5);
+    return (pow(phi,n) - cos(n*pi)*pow(phi,-n))/std::sqrt(5);
 }
 
 number factorial(const number &n){
     number x = 1;
-    if(floor(n.real())==n && n>=0){ // Es numero entero positivo 
+    if(std::floor(n.real())==n && n>=0){ // Es numero entero positivo 
         for(auto i=1; i<=n; ++i){
             x *= i;
         }
