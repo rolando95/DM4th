@@ -3,11 +3,10 @@ cd ../
 
 set fileName=%1
 if "%fileName%"=="" (
-    set fileName=main.cpp
+    set fileName=main
 )
 
-if not exist bin\debug\ mkdir bin\debug\
-g++ -ggdb -Wall bin-int\debug\x64\*.o %fileName% -Iinclude -o bin\debug\main.exe 
+g++ -ggdb -Wall  %fileName%.cpp -o %fileName%.exe 
 
 if errorlevel 1 ( exit /B 1 )
 

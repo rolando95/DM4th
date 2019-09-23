@@ -3,11 +3,10 @@ cd ../
 
 set fileName=%1
 if "%fileName%"=="" (
-    set fileName=main.cpp
+    set fileName=main
 )
 
-if not exist bin\release\ mkdir bin\release\
-g++    -Wall -O2 bin-int\release\x64\*.o %fileName% -Iinclude -o bin\release\main.exe -fopenmp -DDM4thParallel
+g++    -Wall -O2 %fileName%.cpp -Iinclude -o %fileName%.exe -fopenmp -DDM4thParallel
 
 if errorlevel 1 ( exit /B 1 )
 

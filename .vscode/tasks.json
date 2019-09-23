@@ -28,7 +28,8 @@
             "problemMatcher": [
                 "$gcc"
             ]
-        },
+        }
+        ,
         {
             "type": "shell",
             "label": "makeDM4th",

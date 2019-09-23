@@ -1,6 +1,7 @@
 *.exe
 /*.txt
 bin-int/
+bin/
 .vscode/*
 !.vscode/launch.json
 !.vscode/task.json
