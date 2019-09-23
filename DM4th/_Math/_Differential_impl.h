@@ -1,18 +1,18 @@
-#include "../DM4th/Math.h"
+#include "_Differential.h"
 
 
 namespace DM4th
 {
 
-number exp(number x){
+inline number exp(number x){
     return pow(e,x);
 }
 
-number PI(number z, number tolerance){
+inline number PI(number z, number tolerance){
     return gamma(z+1,tolerance);
 }
 // From Wikipedia https://es.wikipedia.org/wiki/Aproximaci%C3%B3n_de_Lanczos
-number gamma(number z, number tolerance){
+inline number gamma(number z, number tolerance){
     number result;
     number x;
     number t;
@@ -44,7 +44,7 @@ number gamma(number z, number tolerance){
 }
 
 // Derivative
-number derivative(Function f, const number &x0, const number order, const number h){
+inline number derivative(Function f, const number &x0, const number order, const number h){
     number o(std::abs(std::floor(order.real())));
     if(order<=0){
         return f(x0);
@@ -56,7 +56,7 @@ number derivative(Function f, const number &x0, const number order, const number
         return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
-NDArray<number> diff(NDArray<number> v, number iter){
+inline NDArray<number> diff(NDArray<number> v, number iter){
     if(iter<=0) return v;
     else{
         NDArray<number> diffV;
@@ -71,7 +71,7 @@ NDArray<number> diff(NDArray<number> v, number iter){
     }
 }
 // Integral
-number integral(Function f, const number &a, const number &b, const number subintervals){
+inline number integral(Function f, const number &a, const number &b, const number subintervals){
     number n = int(round(subintervals).real())/3*3;
     number h = (b-a)/n;
     

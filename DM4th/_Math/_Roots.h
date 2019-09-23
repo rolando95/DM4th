@@ -10,12 +10,12 @@ template<class A, class B, class C>
 NDArray<number> quadratic(const A&, const B&, const C&);
 
 // newtonRaphson(f, x0=seed, max iterations, tolerance)
-number newtonRaphson(Function f, number x0=1.01, number maxIter=100, number tolerance=1e-5);
+inline number newtonRaphson(Function f, number x0=1.01, number maxIter=100, number tolerance=1e-5);
 
 // newtonRaphson(f, f', x0=seed, max iterations, tolerance)
-number newtonRaphson(Function f, Function fd, number x0=1.01, number maxIter=100, number tolerance=1e-5);
+inline number newtonRaphson(Function f, Function fd, number x0=1.01, number maxIter=100, number tolerance=1e-5);
 // secantMethod(f, x0=seed, x1=seed2, max iterations, tolerance)
-number secantMethod(Function f, number x0=0.01, number x1=1.01, number maxIter=100, number tolerance=1e-5);
+inline number secantMethod(Function f, number x0=0.01, number x1=1.01, number maxIter=100, number tolerance=1e-5);
 
 template<class T>
 NDArray<number> bairstowsMethod(NDArray<T> polynomial, number r=0.1, number s=0.1, number maxIter=100, number tolerance=1e-5);

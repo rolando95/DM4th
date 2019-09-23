@@ -589,11 +589,7 @@ inline _number<T>  truncate(_number<T>  n, int p){
 
 template<class T>
 inline _number<T>  abs(_number<T>  n){
-    if(n.real()==INF || n.real()==-INF)
-    {
-        return _number<T>(INF,0);
-    }
-    return sqrt(norm(n));
+    return std::sqrt(norm(n).real());
 }
 
 template<class T>
