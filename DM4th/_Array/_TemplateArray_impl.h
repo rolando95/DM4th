@@ -405,7 +405,7 @@ inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ this->item(a
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
 {
-    this->_data->array += other._data->array;
+    this->_data->array += other._arrayData()->array;
     return *this;
 }
 
@@ -421,7 +421,7 @@ template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
 {
     DM4thAssert(super::_data->shape==other._arrayData()->shape);
-    this->_data->array -= other._data->array;
+    this->_data->array -= other._arrayData()->array;
     return *this;
 }
 

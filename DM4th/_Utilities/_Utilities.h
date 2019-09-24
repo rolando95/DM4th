@@ -12,6 +12,9 @@
 
 #ifdef DM4thParallel
     #include <omp.h>
+    #define DM4thParallelFor1 _Pragma("omp parallel for")
+#else
+    #define DM4thParallelFor1 {}
 #endif
 
 

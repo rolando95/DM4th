@@ -169,13 +169,17 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
     }
 
     #if defined DM4thParallelFor
-        #pragma omp parallel for
-        for(int j=0; j<this->size(); ++j)
+        #pragma omp parallel shared(result)
         {
-            if(this->_array[j] != other.get(j))
+            int threads = omp_get_num_threads();
+            int j = omp_get_thread_num();
+            while(j<this->size() && result)
             {
-                result = false;
-                #pragma omp cancel for
+                if(this->_array[j] != other.get(j))
+                {
+                    result = false;
+                }
+                j+= threads;
             }
         }
     #else
