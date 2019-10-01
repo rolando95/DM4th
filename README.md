@@ -20,7 +20,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
 ## Instalación
 * DM4th es un `header-only library`. No es necesario compilar dependencias para instalar. Basta con descargar o clonar la librería dentro de tu proyecto e incluir la cabecera `#include "DM4th/DM4th.h"`.
 
-    Si no tienes ningún entorno de desarrollo instalado, puedes puedes instalar un editor de código y compilador de C++ recomendado:
+    Si no tienes ningún entorno de desarrollo instalado, puedes instalar un editor de código y compilador de C++ recomendado:
     
    *  [Instalar compilador de C++ y editor de código en Windows](https://code.visualstudio.com/docs/cpp/config-mingw).
 
