@@ -646,6 +646,10 @@ inline _number<T>  sqrt(_number<T>  n){
 template<class T>
 inline _number<T> ln(_number<T>  n){
     if(n==0) return _number<T>(-INF,0);
+    else if (n.imag()==0 && n.real()>0)
+    {
+        return _number<T>(std::log(n.real()),0);
+    }
     else{
         return std::log(abs(n).real())+arg(n)*i;
     }
