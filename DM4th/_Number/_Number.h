@@ -267,4 +267,17 @@ template<class T> inline _number<T> acoth(_number<T>);
 template<class T> inline _number<T> asech(_number<T>);
 template<class T> inline _number<T> acsch(_number<T>);
 
+#if defined DM4thParallel
+    #pragma omp declare reduction(+ : number : omp_out = (omp_out+omp_in))
+    #pragma omp declare reduction(- : number : omp_out = (omp_out-omp_in))
+    #pragma omp declare reduction(* : number : omp_out = (omp_out*omp_in)) initializer (omp_priv=1)
+    #pragma omp declare reduction(max : number : omp_out = (omp_out>omp_in)? omp_out : omp_in) initializer (omp_priv=-INF)
+    #pragma omp declare reduction(min : number : omp_out = (omp_out<omp_in)? omp_out : omp_in) initializer (omp_priv=INF)
+
+    #define DM4thReductionSum(...) reduction(+: __VA_ARGS__)
+    #define DM4thReductionSub(...) reduction(-: __VA_ARGS__)
+    #define DM4thReductionMult(...) reduction(*: __VA_ARGS__)
+    #define DM4thReductionMax(...) reduction(max: __VA_ARGS__)
+    #define DM4thReductionMin(...) reduction(min: __VA_ARGS__)
+#endif
 }

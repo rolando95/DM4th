@@ -120,7 +120,7 @@ TemplateArray<int> TemplateArray<T>::shape() const
 }
 
 template<class T>
-int TemplateArray<T>::shape(int axis) const       
+inline int TemplateArray<T>::shape(int axis) const       
 {
     return super::_data->shape.get(axis);
 }

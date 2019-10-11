@@ -1,5 +1,8 @@
 #include "_Differential.h"
 
+#ifdef DM4thParallel
+    #define DM4thParallelFor
+#endif
 
 namespace DM4th
 {
@@ -60,29 +63,42 @@ inline number derivative(Function f, const number x0, const number order, const 
 inline NDArray<number> diff(NDArray<number> v, number iter){
     if(iter<=0) return v;
     else{
-        NDArray<number> diffV;
+
         if(v.shape(0) >= 2){
+            NDArray<number> diffV;
+            diffV.resize(v.shape(0)-1);
+            
+            #if defined DM4thParallelFor
+                #pragma omp parallel for
+            #endif
             for(auto j=0; j<v.shape(0)-1; ++j){
-                diffV.push(v(j+1) - v(j));
+                diffV(j) = (v(j+1) - v(j));
             }
             return diff(diffV,iter - 1);
         }else{
-            return NDArray<number>(0);
+            return NDArray<number>();
         }
     }
 }
 // Integral
 inline number integral(Function f, const number &a, const number &b, const number subintervals){
-    number n = int(round(subintervals).real())/3*3;
+    int n = subintervals.real();
     number h = (b-a)/n;
     
     number s=0;
-    for(number j=0; j<n; ++j){
+
+    #if defined DM4thParallelFor
+        #pragma omp parallel for DM4thReductionSum(s)
+    #endif
+    for(int j=0; j<n; ++j){
         s+=f(a+h*(j+0.5));
     }
     return s*h;
-    
+
     /*
+
+    int n = int(round(subintervals).real())/3*3;
+
     N x1 = a+h;
     N x2 = x1+h;
     N x3 = x2+h; 

@@ -3,8 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceRoot}",
-                "${workspaceFolder}/DM4th"
+                "${workspaceRoot}"
             ],
             "defines": [
                 "_DEBUG",
