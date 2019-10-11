@@ -6,7 +6,7 @@ if "%fileName%"=="" (
     set fileName=main
 )
 
-g++    -Wall -O2 %fileName%.cpp -Iinclude -o %fileName%.exe -fopenmp -DDM4thParallel
+g++  -std=c++11 -Wall -O2 %fileName%.cpp -o %fileName%.exe -fopenmp -D DM4thParallel
 
 if errorlevel 1 ( exit /B 1 )
 

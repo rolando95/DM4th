@@ -17,7 +17,7 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
   - Soporte de resultados con números reales y complejos en todos los métodos incluídos en la librería.
 - Entrada y salida por consola utilizando métodos input() y print() de números complejos, arreglos multidimensionales y árboles.
 
-## Instalación
+## Instalación y compilación
 * DM4th es un `header-only library`. No es necesario compilar dependencias para instalar. Basta con descargar o clonar la librería dentro de tu proyecto e incluir la cabecera `#include "DM4th/DM4th.h"`.
 
     Si no tienes ningún entorno de desarrollo instalado, puedes instalar un editor de código y compilador de C++ recomendado:
@@ -26,6 +26,16 @@ DM4th es una librería escrita en `C++` que prevee numerosos métodos y clases q
 
 
   **NOTA:** DM4th es compatible con versiones de C++11 en adelante.
+
+* Si usas g++, la siguiente instrucción de compilación con `DM4th` puede ser suficiente:
+
+    ```sh
+    g++ -std=c++11 main.cpp
+    ```
+    Para un mejor rendimiento, puedes activar el procesamiento multihilo incluído dentro de la librería agregando las banderas `-fopenmp` y `-D DM4thParallel`
+    ```sh
+    g++ -std=c++11 main.cpp -fopenmp -D DM4thParallel
+    ```
 
 ## Ejemplos
  

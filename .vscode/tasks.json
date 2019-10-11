@@ -42,6 +42,19 @@
             "problemMatcher": [
                 "$gcc"
             ],
+        },
+        {
+            "type": "shell",
+            "label": "getAssemblyRelease",
+            "command": "${workspaceFolder}/make/assemblyRelease.bat",
+            //"command" : "${workspaceFolder}/make/makeDM4thProject.sh",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}/make/"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
