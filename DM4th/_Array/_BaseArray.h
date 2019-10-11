@@ -61,10 +61,7 @@ class _BaseArray
     public:
         _BaseArray(int size=0);
         ~_BaseArray() {
-            if(this->_array != nullptr)
-            {
-                delete[] this->_array;
-            } 
+            this->clear();
         }
         inline void resize(int size);
 

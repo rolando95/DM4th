@@ -44,7 +44,7 @@ inline number gamma(number z, number tolerance){
 }
 
 // Derivative
-inline number derivative(Function f, const number &x0, const number order, const number h){
+inline number derivative(Function f, const number x0, const number order, const number h){
     number o(std::abs(std::floor(order.real())));
     if(order<=0){
         return f(x0);
@@ -56,6 +56,7 @@ inline number derivative(Function f, const number &x0, const number order, const
         return (derivative(f,x0+h/2,o-1,2*h) - derivative(f,x0-h/2,o-1,2*h) )/h;
     }
 }
+
 inline NDArray<number> diff(NDArray<number> v, number iter){
     if(iter<=0) return v;
     else{
