@@ -2,11 +2,6 @@
 
 #include "_Roots.h"
 
-#ifdef DM4thParallel
-    #define DM4thParallelSections
-#endif
-
-
 
 namespace DM4th
 {
@@ -94,7 +89,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         return seed;
     }
 
-    #if defined DM4thParallelSections
+    #if defined DM4thOmpSections
 
         number x1 = seed.real();
         number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
@@ -151,7 +146,7 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         return seed;
     }
 
-    #if defined DM4thParallelSections
+    #if defined DM4thOmpSections
     
         number x1 = seed.real();
         number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
@@ -211,7 +206,7 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         return seed1;
     }
     
-    #if defined DM4thParallelSections
+    #if defined DM4thOmpSections
         number x0 = seed0.real(); 
         number x1 = seed1.real();
         number x2;

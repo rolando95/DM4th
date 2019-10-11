@@ -3,9 +3,6 @@
 #include "_TemplateArray.h"
 #include "_ArrayUtilities.h"
 
-#ifdef DM4thParallel
-    #define DM4thParallelFor
-#endif
 
 namespace DM4th
 {
@@ -451,7 +448,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
 
-        #if defined DM4thParallelFor
+        #if defined DM4thOmpFor
             #pragma omp parallel for
         #endif
         for(int j=0; j<this->shape(0); ++j)
@@ -468,7 +465,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
 
         result.resize(maxX,maxY);
         
-        #if defined DM4thParallelFor
+        #if defined DM4thOmpFor
             #pragma omp parallel for
         #endif
         for(int x=0; x<maxX; ++x){

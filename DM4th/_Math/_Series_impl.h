@@ -3,10 +3,6 @@
 #include "_Series.h"
 #include "_Differential.h"
 
-#ifdef DM4thParallel
-    #define DM4thParallelFor
-#endif
-
 namespace DM4th
 {
 
@@ -37,7 +33,7 @@ inline number factorial2(const number iter)
     int n = abs(round(iter)).real();
     int x = 1;
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for DM4thReductionMult(x)
     #endif
     for(auto i=1; i<=n; ++i){
@@ -52,7 +48,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for DM4thReductionSum(x)
     #endif
     for(int j=0; j<v.shape(0); j+=iter){
@@ -64,7 +60,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
 inline number sumatory(Function f,  number begin,  number end, const number increment ){
     number x=0;
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel  DM4thReductionSum(x)
         {
             number j = begin + increment*omp_get_thread_num();
@@ -88,7 +84,7 @@ inline number sumatory(NDArray<number> v, number begin, number end, number incre
     number x=0;
     if(end==END) end = v.shape(0);
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel  DM4thReductionSum(x)
         {
             number j = begin + increment*omp_get_thread_num();
@@ -113,7 +109,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for DM4thReductionMult(x)
     #endif
     for(int j=0; j<v.shape(0); j+=iter){
@@ -125,7 +121,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
 inline number product(Function f, number begin, number end, const number increment){
     number x=1;
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel  DM4thReductionMult(x)
         {
             number j = begin + increment*omp_get_thread_num();
@@ -149,7 +145,7 @@ inline number product(NDArray<number> v, number begin, number end, number increm
     number x=1;
     if(end==END) end = v.shape(0);
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel  DM4thReductionMult(x) shared(v)
         {
             number j = begin + increment*omp_get_thread_num();

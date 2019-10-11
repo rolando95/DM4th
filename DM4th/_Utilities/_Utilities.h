@@ -10,11 +10,12 @@
 #include <sstream>
 #include <fstream>
 
+//#define DM4thParallel
 #ifdef DM4thParallel
     #include <omp.h>
-    #define DM4thParallelFor1 _Pragma("omp parallel for")
-#else
-    #define DM4thParallelFor1 {}
+    #define DM4thOmp
+    #define DM4thOmpFor
+    #define DM4thOmpSections
 #endif
 
 

@@ -1,8 +1,5 @@
 #include "_Differential.h"
 
-#ifdef DM4thParallel
-    #define DM4thParallelFor
-#endif
 
 namespace DM4th
 {
@@ -68,7 +65,7 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
             NDArray<number> diffV;
             diffV.resize(v.shape(0)-1);
             
-            #if defined DM4thParallelFor
+            #if defined DM4thOmpFor
                 #pragma omp parallel for
             #endif
             for(auto j=0; j<v.shape(0)-1; ++j){
@@ -87,7 +84,7 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     
     number s=0;
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for DM4thReductionSum(s)
     #endif
     for(int j=0; j<n; ++j){

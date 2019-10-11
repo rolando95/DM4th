@@ -2,10 +2,6 @@
 
 #include "_BaseArray.h"
 
-#ifdef DM4thParallel
-    #define DM4thParallelFor
-#endif
-
 namespace DM4th
 {
 
@@ -168,7 +164,7 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
         return false;
     }
 
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel shared(result)
         {
             int threads = omp_get_num_threads();
@@ -207,7 +203,7 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
 {
     DM4thAssert(this->size()==other.size());
     
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for
     #endif
     for(int j=0; j<this->size(); ++j)
@@ -221,7 +217,7 @@ const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other)
 {
     DM4thAssert(this->size()==other.size());
     
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for
     #endif
     for(int j=0; j<this->size(); ++j)
@@ -234,7 +230,7 @@ const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other)
 template<class T> template<class U>
 const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other) 
 {
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for
     #endif
     for(int j=0; j<this->size(); ++j)
@@ -247,7 +243,7 @@ const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other)
 template<class T> template<class U>
 const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other) 
 {
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for
     #endif
     for(int j=0; j<this->size(); ++j)
@@ -260,7 +256,7 @@ const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other)
 template<class T> template<class U>
 const _BaseArray<T> &_BaseArray<T>::operator%=(const U &other) 
 {
-    #if defined DM4thParallelFor
+    #if defined DM4thOmpFor
         #pragma omp parallel for
     #endif
     for(int j=0; j<this->size(); ++j)
