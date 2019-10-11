@@ -6,7 +6,7 @@ if "%fileName%"=="" (
     set fileName=main
 )
 
-g++ -ggdb -Wall  %fileName%.cpp -o %fileName%.exe 
+g++ -std=c++11 -ggdb -Wall  %fileName%.cpp -o %fileName%.exe 
 
 if errorlevel 1 ( exit /B 1 )
 

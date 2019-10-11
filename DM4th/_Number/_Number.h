@@ -16,8 +16,8 @@ class _number{
 public:
     _number(T=0, T=0);
 
-    template<class U>
-    _number(U=0, U=0);
+    // template<class U>
+    // _number(U=0, U=0);
 
     _number(std::string);
 
@@ -32,7 +32,12 @@ public:
     //inline double &imag() { return this->i; }
     
     // Asignacion de un valor numerico
-    _number<T> operator=(T);
+    template<class U, typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
+    _number<T> operator=(U);
+
+    // Asignacion de un valor numerico
+    template<class U>
+    _number<T> operator=(const _number<U>);
 
     template<class U>
     explicit operator U(){return (U)this->r;}
@@ -68,32 +73,32 @@ typedef _number<double> number;
 // template<typename T>
 // using enable_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
 
-// template<typename T, typename alt_type = number>
-// using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value || std::is_same<T, alt_type>::value, T>::type;
+template<typename T, typename alt_type = number>
+using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value || std::is_same<_number<T>, alt_type>::value, T>::type;
 
-template<typename T, typename alt_type = _number<double>>
-using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
+// template<typename T, typename alt_type = _number<double>>
+// using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
 
 #define enable_if_is_number(T,U) typename = check_if_is_number<T, _number<U>>
 
 // Define como constante el valor de i
-static const _number<double> i(0,1);
-static const _number<double> _i(0,1);
+static const number i(0,1);
+static const number _i(0,1);
 
 // Convert string to number
-inline _number<double> strTonumber(std::string);
+inline number strTonumber(std::string);
 
 // Conversion de expresion literal <double>i a tipo numero
-inline _number<double> operator""_i(long double);
+inline number operator""_i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-inline _number<double> operator""_i(unsigned long long int);
+inline number operator""_i(unsigned long long int);
 
 // Conversion de expresion literal <double>i a tipo numero
-inline _number<double> operator""i(long double);
+inline number operator""i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
-inline _number<double> operator""i(unsigned long long int);
+inline number operator""i(unsigned long long int);
 
 // Cambio a signo negativo
 template<class T>
@@ -207,6 +212,11 @@ template<class T> inline _number<T> ceil(_number<T>, int p=0);
 template<class T> inline _number<T> floor(_number<T>, int p=0);
 template<class T> inline _number<T> truncate(_number<T>, int p=0);
 template<class T> inline _number<T> trunc(const _number<T> &value, int p=0) { return truncate(value,p); }
+
+template<class T> inline bool isInf(_number<T>);
+template<class T> inline bool isReal(_number<T>);
+template<class T> inline bool isComplex(_number<T>);
+template<class T> inline bool isImag(_number<T>);
 
 template<class T> inline _number<T> abs(_number<T>);
 template<class T> inline _number<T> norm(_number<T>);

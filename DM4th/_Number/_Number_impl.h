@@ -14,12 +14,12 @@ _number<T>::_number(T a, T b){
     this->i = (T)b;
 }
 
-template<class T> template<class U>
-_number<T>::_number(U a, U b){
-    this->r = (T)a;
-    this->i = (T)b;
-}
-// _number<T>::number(_number<T>  n){
+// template<class T> template<class U>
+// _number<T>::_number(U a, U b){
+//     this->r = (T)a;
+//     this->i = (T)b;
+// }
+// _number<T>::number(_number<T> n){
 //     *this = n;
 // }
 
@@ -30,7 +30,7 @@ _number<T>::_number(std::string str){
     ss >> *this;
 }
 
-static int precision =  5;
+static int precision = 10;
 
 // const double _number<T>::real()const {return this->r;}
 // double _number<T>::real(double a){this->r = a; return this->r;}
@@ -40,10 +40,17 @@ static int precision =  5;
 // double _number<T>::imag(double a){this->i = a; return this->i;}
 // double &_number<T>::imag() { return this->i; }
 
-template<class T>
-_number<T> _number<T>::operator=(T a){
+template<class T> template<class U, typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
+_number<T> _number<T>::operator=(U a){
     this->real(a);
     this->imag(0);
+    return *this;
+}
+
+template<class T> template<class U>
+_number<T> _number<T>::operator=(const _number<U> a){
+    this->real((T)a.real());
+    this->imag((T)a.imag());
     return *this;
 }
 
@@ -85,62 +92,62 @@ void _number<T>::saveFile(std::string url){
 
 // Incremento prefijo
 template<class T>
-_number<T>  _number<T>::operator ++(){
+_number<T> _number<T>::operator ++(){
     this->r += 1;
     return *this;
 }
 // Incremento postfijo
 template<class T>
-_number<T>  _number<T>::operator ++(int){
-    _number<T>  a = *this;
+_number<T> _number<T>::operator ++(int){
+    _number<T> a = *this;
     this->r += 1;
     return a;
 }
 // Decremento prefijo
 template<class T>
-_number<T>  _number<T>::operator --(){
+_number<T> _number<T>::operator --(){
     this->r -= 1;
     return *this;
 }
 // Decremento postfijo
 template<class T>
-_number<T>  _number<T>::operator --(int){
-    _number<T>  a = *this;
+_number<T> _number<T>::operator --(int){
+    _number<T> a = *this;
     this->r -= 1;
     return a;
 }
 template<class T>
-_number<T>  _number<T>::operator+=(_number<T>  n){
+_number<T> _number<T>::operator+=(_number<T> n){
     *this = *this + n;
     return *this;
 }
 
 template<class T>
-_number<T>  _number<T>::operator-=(_number<T>  n){
+_number<T> _number<T>::operator-=(_number<T> n){
     *this = *this - n;
     return *this;
 }
 
 template<class T>
-_number<T>  _number<T>::operator*=(_number<T>  n){
+_number<T> _number<T>::operator*=(_number<T> n){
     *this = *this * n;
     return *this;
 }
 
 template<class T>
-_number<T>  _number<T>::operator/=(_number<T>  n){
+_number<T> _number<T>::operator/=(_number<T> n){
     *this = *this / n;
     return *this;
 }
 
 template<class T>
-_number<T>  _number<T>::operator%=(_number<T>  n){
+_number<T> _number<T>::operator%=(_number<T> n){
     *this = *this % n;
     return *this;
 }
 
-inline _number<double>  strTonumber(std::string str){
-    _number<double>  result;
+inline _number<double> strTonumber(std::string str){
+    _number<double> result;
     std::stringstream ss(str);
     ss>>result;
     return result;
@@ -163,13 +170,13 @@ inline _number<double> operator""i(long double a){
 }
 
 template<class T>
-inline _number<T> operator-(_number<T>  a){
+inline _number<T> operator-(_number<T> a){
     return _number<T>(-a.real(),-a.imag());
 }
 
 //Impresion en pantalla de numeros complejos
 template<class T>
-std::ostream& operator<<(std::ostream& stream, _number<T>  n){
+std::ostream& operator<<(std::ostream& stream, _number<T> n){
     if(n.real() == INF) stream<<"INF";
     else if(n.real() == -INF) stream<<"-INF";
     else if(std::isnan(n.real())) stream<<"NAN";
@@ -191,7 +198,7 @@ std::ostream& operator<<(std::ostream& stream, _number<T>  n){
 }
 //Entrada de numeros complejos
 template<class T>
-std::istream& operator>>(std::istream& stream, _number<T>  &n){
+std::istream& operator>>(std::istream& stream, _number<T> &n){
     n=0;
     int state = 1;
     int nextState;
@@ -285,16 +292,16 @@ std::istream& operator>>(std::istream& stream, _number<T>  &n){
 
 // Suma de numeros complejos
 template<class T>
-inline _number<T>  operator+(_number<T> n1,_number<T> n2){
+inline _number<T> operator+(_number<T> n1,_number<T> n2){
     return _number<T>(n1.real() + n2.real(), n1.imag() + n2.imag());
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator+(_number<T> n1, U n2)
 {
     return n1 + _number<T>(n2);
 }
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator+(U n1, _number<T> n2)
 {
      return  _number<T>(n1) + n2;
@@ -302,16 +309,16 @@ inline _number<T> operator+(U n1, _number<T> n2)
 
 // Resta de numeros complejos
 template<class T>
-inline _number<T>  operator-(_number<T>  n1,_number<T> n2){
+inline _number<T> operator-(_number<T> n1,_number<T> n2){
     return _number<T>(n1.real() - n2.real(), n1.imag() - n2.imag());
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator-(_number<T> n1, U n2)
 {
     return n1 - _number<T>(n2);
 }
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator-(U n1, _number<T> n2)
 {
     return  _number<T>(n1) - n2;
@@ -320,7 +327,7 @@ inline _number<T> operator-(U n1, _number<T> n2)
 template<class T>
 _number<T> operator*(_number<T> n1, _number<T> n2){
     //real*real
-    if(n1.imag()==0 && n2.imag()==0){
+    if(isReal(n1) && isReal(n2)){
         return n1.real()*n2.real();
     }
     //im*im
@@ -332,12 +339,12 @@ _number<T> operator*(_number<T> n1, _number<T> n2){
     }
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator*(_number<T> n1, U n2)
 {
     return n1 * _number<T>(n2);
 }
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator*(U n1, _number<T> n2)
 {
     return  _number<T>(n1) * n2;
@@ -345,13 +352,13 @@ inline _number<T> operator*(U n1, _number<T> n2)
 
 // Division de numeros complejos
 template<class T>
-_number<T>  operator/(_number<T> n1, _number<T> n2){
+_number<T> operator/(_number<T> n1, _number<T> n2){
 
     // n/INF
-    if(n2.real() == INF && n1.real() != INF)
+    if(isInf(n2) && !isInf(n1))
         return _number<T>(0,0);
     // real/real
-    else if(n1.imag()==0 && n2.imag()==0 && n2.real() != 0){
+    else if(isReal(n1) && isReal(n2) && n2.real() != 0){
         return _number<T>(n1.real()/n2.real(),0);
     // im/im
     }else{
@@ -365,7 +372,7 @@ _number<T>  operator/(_number<T> n1, _number<T> n2){
             );
         // n/0
         else
-            if(n1.real() != INF && n1 != 0){
+            if(!isInf(n1) && n1 != 0){
                 if(n1.real()>0)
                     return _number<T>(INF,0);
                 else    
@@ -375,13 +382,13 @@ _number<T>  operator/(_number<T> n1, _number<T> n2){
     }
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator/(_number<T> n1, U n2)
 {
     return n1 / _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator/(U n1, _number<T> n2)
 {
     return _number<T>(n1) / n2;
@@ -389,24 +396,24 @@ inline _number<T> operator/(U n1, _number<T> n2)
 
 // Residuo de numeros complejos
 template<class T>
-_number<T>  operator%(_number<T> n1, _number<T> n2){
-    _number<T>  result;
+_number<T> operator%(_number<T> n1, _number<T> n2){
+    _number<T> result;
     if(n2.real()!=0) result.real(std::fmod(n1.real(),n2.real()));
      else if(n1.real()==0) result.real(0);
     else return NAN;
-    if(n2.imag()!=0) result.imag(std::fmod(n1.imag(),n2.imag()));
-    else if(n1.imag()==0) result.imag(0);
+    if(!isReal(n2)) result.imag(std::fmod(n1.imag(),n2.imag()));
+    else if(isReal(n1)) result.imag(0);
     else return NAN;
     return result;
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator%(_number<T> n1, U n2)
 {
     return n1 % _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator%(U n1, _number<T> n2)
 {
     return _number<T>(n1) % n2;
@@ -414,51 +421,51 @@ inline _number<T> operator%(U n1, _number<T> n2)
 
 // Relacional
 template<class T>
-inline bool operator==(_number<T>  n1, _number<T>  n2){
+inline bool operator==(_number<T> n1, _number<T> n2){
     return (n1.real()==n2.real() && n1.imag()==n2.imag());
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator==(_number<T> n1, U n2)
 {
     return n1 == _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator==(U n1, _number<T> n2)
 {
     return _number<T>(n1) == n2;
 }
 
 template<class T>
-inline bool operator!=(_number<T> n1, _number<T>  n2){
+inline bool operator!=(_number<T> n1, _number<T> n2){
     return (n1.real()!=n2.real() || n1.imag()!=n2.imag());
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator!=(_number<T> n1, U n2)
 {
     return n1 != _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator!=(U n1, _number<T> n2)
 {
     return _number<T>(n1) != n2;
 }
 
 template<class T>
-inline bool operator>=(_number<T>  n1, _number<T> n2){
+inline bool operator>=(_number<T> n1, _number<T> n2){
     return n1>n2||n1==n2;
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator>=(_number<T> n1, U n2)
 {
     return n1 >= _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator>=(U n1, _number<T> n2)
 {
     return _number<T>(n1) >= n2;
@@ -470,13 +477,13 @@ inline bool operator<=(_number<T> n1, _number<T> n2){
     return !(n1>n2);
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator<=(_number<T> n1, U n2)
 {
     return n1 <= _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator<=(U n1, _number<T> n2)
 {
     return _number<T>(n1) <= n2;
@@ -484,20 +491,20 @@ inline _number<T> operator<=(U n1, _number<T> n2)
 
 
 template<class T>
-inline bool operator>(_number<T>  n1, _number<T> n2){
+inline bool operator>(_number<T> n1, _number<T> n2){
     bool result=false; 
     if(n1.real() > n2.real()) result=true;
     else if(n1.real()==n2.real() && n1.imag() > n2.imag()) result=true;
     return result;
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator>(_number<T> n1, U n2)
 {
     return n1 > _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator>(U n1, _number<T> n2)
 {
     return _number<T>(n1) > n2;
@@ -509,13 +516,13 @@ inline bool operator<(_number<T> n1, _number<T> n2){
 }
 
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator<(_number<T> n1, U n2)
 {
     return n1 < _number<T>(n2);
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> operator<(U n1, _number<T> n2)
 {
     return _number<T>(n1) < n2;
@@ -524,36 +531,36 @@ inline _number<T> operator<(U n1, _number<T> n2)
 
 // Math
 template<class T>
-inline _number<T>  rad(_number<T>  n1){
+inline _number<T> rad(_number<T> n1){
     return _number<T>(n1.real()*pi/180, n1.imag()*pi/(double)180.0);
 }
 
 template<class T>
-inline _number<T>  deg(_number<T>  n1){
+inline _number<T> deg(_number<T> n1){
     return _number<T>(n1.real()*180/pi, n1.imag()*(double)180.0/pi);
 }
 
 template<class T>
-inline _number<T>  fmod(_number<T>  n1, _number<T>  n2)
+inline _number<T> fmod(_number<T> n1, _number<T> n2)
 {
     return n1%n2;
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> fmod(_number<T> n1, U n2)
 {
     return fmod(n1,_number<T>(n2));
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> fmod(U n1, _number<T> n2)
 {
     return fmod(_number<T>(n1),n2);
 }
 
 template<class T>
-inline _number<T>  round(_number<T>  n, int p){
-        _number<T>  n1 = _number<T>(
+inline _number<T> round(_number<T> n, int p){
+        _number<T> n1 = _number<T>(
             std::round(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::round(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
@@ -561,8 +568,8 @@ inline _number<T>  round(_number<T>  n, int p){
 }
 
 template<class T>
-inline _number<T>  ceil(_number<T>  n, int p){
-        _number<T>  n1 = _number<T>(
+inline _number<T> ceil(_number<T> n, int p){
+        _number<T> n1 = _number<T>(
             std::ceil(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::ceil(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
@@ -570,8 +577,8 @@ inline _number<T>  ceil(_number<T>  n, int p){
 }
 
 template<class T>
-inline _number<T>  floor(_number<T>  n, int p){
-        _number<T>  n1 = _number<T>(
+inline _number<T> floor(_number<T> n, int p){
+        _number<T> n1 = _number<T>(
             std::floor(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::floor(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
@@ -579,26 +586,50 @@ inline _number<T>  floor(_number<T>  n, int p){
 }
 
 template<class T>
-inline _number<T>  truncate(_number<T>  n, int p){
-        _number<T>  n1 = _number<T>(
+inline _number<T> truncate(_number<T> n, int p){
+        _number<T> n1 = _number<T>(
             std::trunc(n.real() * std::pow(10,p)) / std::pow(10,p),
             std::trunc(n.imag() * std::pow(10,p)) / std::pow(10,p)
         );
         return n1;
 }
 
+template<class T> 
+inline bool isInf(_number<T> n)
+{
+    return std::abs(n.real()) == INF;
+}
+
+template<class T> 
+inline bool isReal(_number<T> n)
+{
+    return (n.imag()==0);
+}
+
+template<class T> 
+inline bool isComplex(_number<T> n)
+{
+    return (n.imag()!=0);
+}
+
+template<class T> 
+inline bool isImag(_number<T> n)
+{
+    return (n.real()==0 && n.imag()!=0);
+}
+
 template<class T>
-inline _number<T>  abs(_number<T>  n){
+inline _number<T> abs(_number<T> n){
     return std::sqrt(norm(n).real());
 }
 
 template<class T>
-inline _number<T>  norm(_number<T>  n){
+inline _number<T> norm(_number<T> n){
     return n.real()*n.real() + n.imag()*n.imag();
 }
 
 template<class T>
-inline _number<T>  arg(_number<T>  n){
+inline _number<T> arg(_number<T> n){
     if(n.real()>0 || n.imag() != 0){
         return _number<T>(
             2*std::atan(n.imag()/(std::sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())), 
@@ -611,42 +642,55 @@ inline _number<T>  arg(_number<T>  n){
 }
 
 template<class T>
-inline _number<T>  conjugate(_number<T>  n){
+inline _number<T> conjugate(_number<T> n){
     return _number<T>(n.real(), -n.imag());
 }
 
 template<class T>
-inline _number<T>  pow(_number<T>  n1,_number<T>  n2){
-    if(n1.imag()==0 && n2.imag()==0 && n1.real() >= 0)
+inline _number<T> pow(_number<T> n1,_number<T> n2){
+    if(
+        (n1==1 && isInf(n2)) ||
+        (n1==0 && n2==0) ||
+        (isInf(n1) && n2==0)
+    )
+    {
+        return NAN;
+    }
+    if(
+        isReal(n1) && isReal(n2) && 
+        (n1.real() >= 0 || std::abs(n2.real())>=1) // positive base o absolute exponent greater than 1
+    )
+    {
         return _number<T>(std::pow(n1.real(),n2.real()),0);
+    }
     else{
-        _number<T>  exponent = n2*ln(n1);
+        _number<T> exponent = n2*ln(n1);
         return std::pow(e,exponent.real())*(std::cos(exponent.imag())+std::sin(exponent.imag())*i);
     }
 }
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> pow(_number<T> n1, U n2)
 {
     return pow(n1,_number<T>(n2));
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> pow(U n1, _number<T> n2)
 {
     return pow(_number<T>(n1),n2);
 }
 
 template<class T>
-inline _number<T>  sqrt(_number<T>  n){
-    if(n.imag()==0 && n.real()>=0) return std::sqrt(n.real()); 
+inline _number<T> sqrt(_number<T> n){
+    if(isReal(n) && n.real()>=0) return std::sqrt(n.real()); 
     return pow(n,0.5);
 }
 
 template<class T>
-inline _number<T> ln(_number<T>  n){
+inline _number<T> ln(_number<T> n){
     if(n==0) return _number<T>(-INF,0);
-    else if (n.imag()==0 && n.real()>0)
+    else if (isReal(n) && n.real()>0)
     {
         return _number<T>(std::log(n.real()),0);
     }
@@ -656,57 +700,57 @@ inline _number<T> ln(_number<T>  n){
 }
 
 template<class T>
-inline _number<T>  log(_number<T>  n,_number<T>  base){return ln(n)/ln(base);}
+inline _number<T> log(_number<T> n,_number<T> base){return ln(n)/ln(base);}
 
-template<class  T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) > 
 inline _number<T> log(const _number<T> &n1, const U &n2)
 {
     return log(n1,_number<T>(n2));
 }
 
-template<class  U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) > 
 inline _number<T> log(const U &n1, const _number<T> &n2)
 {
     return log(_number<T>(n1),n2);
 }
 
 template<class T>
-inline _number<T>  sin(_number<T>  n){return (n.imag()==0)?std::sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
+inline _number<T> sin(_number<T> n){return (isReal(n))?std::sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
 
 template<class T>
-inline _number<T>  cos(_number<T>  n){return (n.imag()==0)?std::cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
+inline _number<T> cos(_number<T> n){return (isReal(n))?std::cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
 
 template<class T>
-inline _number<T>  tan(_number<T>  n){
-    _number<T>  c = cos(n);
+inline _number<T> tan(_number<T> n){
+    _number<T> c = cos(n);
     if(round(c,15)==0){
         return _number<T>(INF,0);
     }else
         return sin(n)/c;}
 
-template<class T> inline _number<T>  cot(_number<T>  n){return 1/tan(n);}
-template<class T> inline _number<T>  sec(_number<T>  n){return 1/cos(n);}
-template<class T> inline _number<T>  csc(_number<T>  n){return 1/sin(n);}
+template<class T> inline _number<T> cot(_number<T> n){return 1/tan(n);}
+template<class T> inline _number<T> sec(_number<T> n){return 1/cos(n);}
+template<class T> inline _number<T> csc(_number<T> n){return 1/sin(n);}
 
-template<class T> inline _number<T>  asin(_number<T>  n){return -i*ln(i*n+sqrt(1-n*n));}
-template<class T> inline _number<T>  acos(_number<T>  n){return pi/2-asin(n);}
-template<class T> inline _number<T>  atan(_number<T>  n){return i/2*(ln(1-i*n)-ln(1+i*n));}
-template<class T> inline _number<T>  acot(_number<T>  n){return atan(1/n);}
-template<class T> inline _number<T>  asec(_number<T>  n){return acos(1/n);}
-template<class T> inline _number<T>  acsc(_number<T>  n){return asin(1/n);}
+template<class T> inline _number<T> asin(_number<T> n){return -i*ln(i*n+sqrt(1-n*n));}
+template<class T> inline _number<T> acos(_number<T> n){return pi/2-asin(n);}
+template<class T> inline _number<T> atan(_number<T> n){return i/2*(ln(1-i*n)-ln(1+i*n));}
+template<class T> inline _number<T> acot(_number<T> n){return atan(1/n);}
+template<class T> inline _number<T> asec(_number<T> n){return acos(1/n);}
+template<class T> inline _number<T> acsc(_number<T> n){return asin(1/n);}
 
-template<class T> inline _number<T>  sinh(_number<T>  n){return (pow(e,n)-pow(e,-n))/2;}
-template<class T> inline _number<T>  cosh(_number<T>  n){return (pow(e,n)+pow(e,-n))/2;}
-template<class T> inline _number<T>  tanh(_number<T>  n){return sinh(n)/cosh(n);}
-template<class T> inline _number<T>  coth(_number<T>  n){return cosh(n)/sinh(n);}
-template<class T> inline _number<T>  sech(_number<T>  n){return 1/cosh(n);}
-template<class T> inline _number<T>  csch(_number<T>  n){return 1/sinh(n);}
+template<class T> inline _number<T> sinh(_number<T> n){return (pow(e,n)-pow(e,-n))/2;}
+template<class T> inline _number<T> cosh(_number<T> n){return (pow(e,n)+pow(e,-n))/2;}
+template<class T> inline _number<T> tanh(_number<T> n){return sinh(n)/cosh(n);}
+template<class T> inline _number<T> coth(_number<T> n){return cosh(n)/sinh(n);}
+template<class T> inline _number<T> sech(_number<T> n){return 1/cosh(n);}
+template<class T> inline _number<T> csch(_number<T> n){return 1/sinh(n);}
 
-template<class T> inline _number<T>  asinh(_number<T>  n){return ln(n+sqrt(n*n+1));}
-template<class T> inline _number<T>  acosh(_number<T>  n){return ln(n+sqrt(n*n-1));}
-template<class T> inline _number<T>  atanh(_number<T>  n){return 0.5*ln((1+n)/(1-n));}
-template<class T> inline _number<T>  acoth(_number<T>  n){return atanh<T>(1/n);}
-template<class T> inline _number<T>  asech(_number<T>  n){return acosh<T>(1/n);}
-template<class T> inline _number<T>  acsch(_number<T>  n){return asinh<T>(1/n);}
+template<class T> inline _number<T> asinh(_number<T> n){return ln(n+sqrt(n*n+1));}
+template<class T> inline _number<T> acosh(_number<T> n){return ln(n+sqrt(n*n-1));}
+template<class T> inline _number<T> atanh(_number<T> n){return 0.5*ln((1+n)/(1-n));}
+template<class T> inline _number<T> acoth(_number<T> n){return atanh<T>(1/n);}
+template<class T> inline _number<T> asech(_number<T> n){return acosh<T>(1/n);}
+template<class T> inline _number<T> acsch(_number<T> n){return asinh<T>(1/n);}
 
 }
