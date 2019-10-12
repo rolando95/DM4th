@@ -56,9 +56,13 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
         template<class U> inline const TemplateArray<T> operator+=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
+        inline const TemplateArray<T>  operator+=(const T &other);
+        inline TemplateArray<T> operator+(const T &other) const;
 
         template<class U> inline const TemplateArray<T> operator-=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator-(const TemplateArray<U> &other) const;
+        inline const TemplateArray<T>  operator-=(const T &other);
+        inline TemplateArray<T> operator-(const T &other) const;
 
         template<class U> const TemplateArray<T> operator*=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator*(const TemplateArray<U> &other) const;

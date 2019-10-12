@@ -212,6 +212,33 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
     }
     return *this;
 }
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator+=(const U &other) 
+{
+    #if defined DM4thOmpFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) + (T)other);
+    }
+    return *this;
+}
+
+template<class T> template<class U>
+const _BaseArray<T> &_BaseArray<T>::operator-=(const U &other) 
+{
+    #if defined DM4thOmpFor
+        #pragma omp parallel for
+    #endif
+    for(int j=0; j<this->size(); ++j)
+    {
+        this->set(j, this->get(j) - (T)other);
+    }
+    return *this;
+}
+
 template<class T> template<class U>
 const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other) 
 {

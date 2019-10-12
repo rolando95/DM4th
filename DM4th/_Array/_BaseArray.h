@@ -79,6 +79,8 @@ class _BaseArray
         
         template<class U> const _BaseArray<T> &operator+=(const _BaseArray<U> &other);
         template<class U> const _BaseArray<T> &operator-=(const _BaseArray<U> &other);
+        template<class U> const _BaseArray<T> &operator+=(const U &other);
+        template<class U> const _BaseArray<T> &operator-=(const U &other);
         template<class U> const _BaseArray<T> &operator*=(const U &other);
         template<class U> const _BaseArray<T> &operator/=(const U &other);
         template<class U> const _BaseArray<T> &operator%=(const U &other);

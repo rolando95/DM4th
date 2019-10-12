@@ -414,6 +414,21 @@ inline TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &othe
     return result;
 }
 
+template<class T>
+const TemplateArray<T> TemplateArray<T>::operator+=(const T &other)
+{
+    this->_data->array += other;
+    return *this;
+}
+
+template<class T>
+inline TemplateArray<T> TemplateArray<T>::operator+(const T &other) const
+{
+    TemplateArray<T> result = this->getCopy();
+    result += other;
+    return result;
+}
+
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
 {
@@ -424,6 +439,21 @@ inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U
 
 template<class T> template<class U>
 inline TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) const
+{
+    TemplateArray<T> result = this->getCopy();
+    result -= other;
+    return result;
+}
+
+template<class T>
+const TemplateArray<T> TemplateArray<T>::operator-=(const T &other)
+{
+    this->_data->array -= other;
+    return *this;
+}
+
+template<class T>
+inline TemplateArray<T> TemplateArray<T>::operator-(const T &other) const
 {
     TemplateArray<T> result = this->getCopy();
     result -= other;
