@@ -122,8 +122,8 @@ inline int TemplateArray<T>::shapeSize() const { return super::_data->shape.size
 template<class T>
 int TemplateArray<T>::size() const { return super::_data->shape.get(0); }
 
-template<class T>
-int TemplateArray<T>::itemsCount() const { return super::_data->array.size(); }
+// template<class T>
+// int TemplateArray<T>::itemsCount() const { return super::_data->array.size(); }
 
 template<class T>
 TemplateArray<int> TemplateArray<T>::shape() const
@@ -489,11 +489,11 @@ template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &other)
 {   
     TemplateArray<T> result;
-    if(this->itemsCount()==1)
+    if(this->data_size()()==1)
     {
         result = other * this->item(0);
     }
-    else if(other.itemsCount()==1)
+    else if(other.data_size()==1)
     {
         result = *this * other.item(0);
     }

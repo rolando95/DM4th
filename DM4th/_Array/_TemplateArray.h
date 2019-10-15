@@ -26,7 +26,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline int shapeSize() const;
 
         int size() const;
-        int itemsCount() const;
+        //int itemsCount() const;
         
         TemplateArray<int> shape() const;
         inline int shape(int axis) const;
