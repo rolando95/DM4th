@@ -98,7 +98,8 @@ inline void _BaseArray<T>::reallocArray(int size)
     {
         T *tmp = new T[size]();
         int min = _min(size, this->_size);
-        for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
+        //for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
+        memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min);
         delete[] _array;
         _array = tmp;
         tmp = nullptr;
