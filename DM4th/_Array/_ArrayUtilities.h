@@ -8,10 +8,10 @@ template<class T>
 T mult(TemplateArray<T> arr)
 {
     T result = 1;
-    T* c_arr = arr.c_arr();
-    int size = arr.c_arr_size();
+    T* data = arr.data();
+    int size = arr.data_size();
     for(int j=0; j<size; ++j){
-        result*=c_arr[j];
+        result*=data[j];
     }
     return result;
 }
@@ -21,21 +21,21 @@ template<class T>
 T sum(TemplateArray<T> arr)
 {
     T result = 0;
-    T* c_arr = arr.c_arr();
-    int size = arr.c_arr_size();
+    T* data = arr.data();
+    int size = arr.data_size();
     for(int j=0; j<size; ++j){
-        result+=c_arr[j];
+        result+=data[j];
     }
     return result;
 }
 
 template<class T>
-int count(TemplateArray<T> arr){ return arr.c_arr_size(); }
+int count(TemplateArray<T> arr){ return arr.data_size(); }
 
 template<class T, class U, class ... V>
 void _items(TemplateArray<T> &arr, int axis, U first, V ... args)
 {
-    arr.c_arr()[axis] = (T)first;
+    arr.data_item(axis) = (T)first;
     _items(arr, axis+1, args...);
 }
 

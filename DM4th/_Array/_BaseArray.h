@@ -113,7 +113,7 @@ class _ShapeData
         inline const int get(int idx) const;
         inline void set(int idx, int value);
 
-        inline const int *c_arr();
+        inline const int *data();
 };
 
 template<class T>

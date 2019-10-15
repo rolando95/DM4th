@@ -326,7 +326,7 @@ inline bool _ShapeData::operator==(const _ShapeData &other) const { return this-
 inline bool _ShapeData::operator!=(const _ShapeData &other) const { return this->_shape!=other._shape; }
 inline const int _ShapeData::get(int idx) const { return this->_shape.get(idx); }
 inline void _ShapeData::set(int idx, int value) { this->_shape.set(idx,value); }
-inline const int *_ShapeData::c_arr(){ return &_shape[0]; }
+inline const int *_ShapeData::data(){ return &_shape[0]; }
 
 //////////////////// _ArrayData
 

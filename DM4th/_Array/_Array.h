@@ -11,9 +11,11 @@ class NDArray: public TemplateArray<T>
     typedef TemplateArray<T> super;
     public:
         NDArray(){}
+        template<class ...U> NDArray(T *data, U ... axis) { static_cast<super&>(*this) = TemplateArray<T>(data, axis ...); }
+        NDArray(T *data, const TemplateArray<int> &axisArray) { static_cast<super&>(*this) = TemplateArray<T>(data, axisArray); };
         NDArray(const super &other){ static_cast<super&>(*this) = other; }
-        NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
-        NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        explicit NDArray(const std::string &other){ static_cast<super&>(*this) = TemplateArray<T>(other); };
+        explicit NDArray(const char *other){ static_cast<super&>(*this) = TemplateArray<T>(std::string(other)); };
 };
 
 template<>
@@ -23,16 +25,16 @@ class NDArray<bool>: public TemplateArray<bool>
     public:
         NDArray(){}
         NDArray(const super &other){ static_cast<super&>(*this) = other; }
-        NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
-        NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        explicit NDArray(const std::string &other){ static_cast<super&>(*this) = TemplateArray<bool>(other); };
+        explicit NDArray(const char *other){ static_cast<super&>(*this) = TemplateArray<bool>(std::string(other)); };
         
         NDArray<bool> operator!() 
         {
             NDArray<bool> result;
             result.resize(super::shape());
-            for(int j=0; j<super::c_arr_size(); ++j)
+            for(int j=0; j<super::data_size(); ++j)
             {
-                result.c_arr_item(j) = !super::c_arr_item(j); 
+                result.data_item(j) = !super::data_item(j); 
             }
             return result;
         }

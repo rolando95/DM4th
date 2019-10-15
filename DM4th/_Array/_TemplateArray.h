@@ -13,7 +13,9 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
     public:
         TemplateArray();  
-        TemplateArray(const std::string &other);
+        template<class ... U> TemplateArray(T *data, U ... args);
+        TemplateArray(T *data, const TemplateArray<int> &axisArray);
+        explicit TemplateArray(const std::string &other);
 
         template<class ... U>
         inline void resize(int axis1, U ... args);
@@ -89,11 +91,11 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         void saveFile(std::string path);
 
         inline void _resize1DArray(int size);
-        inline T *c_arr();
-        inline const T *c_arr() const;
-        inline const int c_arr_size() const;
-        inline T &c_arr_item(int idx);
-        inline const T c_arr_item(int idx) const;
+        inline T *data();
+        inline const T *data() const;
+        inline const int data_size() const;
+        inline T &data_item(int idx);
+        inline const T data_item(int idx) const;
 
     private:
         void _resize(int axis, int oldDispCount, int newDispCount, 

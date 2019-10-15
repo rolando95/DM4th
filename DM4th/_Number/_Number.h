@@ -19,7 +19,7 @@ public:
     // template<class U>
     // _number(U=0, U=0);
 
-    _number(std::string);
+    explicit _number(std::string);
 
     // get set parte real
     inline const double real() const {return this->r;}
