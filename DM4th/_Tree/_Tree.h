@@ -12,8 +12,8 @@ class Tree: public TemplateTree<T>
     public:
         Tree(){}
         Tree(const super &other){ static_cast<super&>(*this) = other; }
-        Tree(const std::string &other){ static_cast<super&>(*this) = other; };
-        Tree(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        explicit Tree(const std::string &other){ static_cast<super&>(*this) = other; };
+        explicit Tree(const char *other){ static_cast<super&>(*this) = std::string(other); };
 };
 
 template<>
@@ -23,8 +23,8 @@ class Tree<bool>: public TemplateTree<bool>
     public:
         Tree(){}
         Tree(const super &other){ static_cast<super&>(*this) = other; }
-        Tree(const std::string &other){ static_cast<super&>(*this) = other; };
-        Tree(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        explicit Tree(const std::string &other){ static_cast<super&>(*this) = other; };
+        explicit Tree(const char *other){ static_cast<super&>(*this) = std::string(other); };
 };
 
 }

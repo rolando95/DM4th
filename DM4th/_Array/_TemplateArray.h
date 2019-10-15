@@ -15,7 +15,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         TemplateArray();  
         template<class ... U> TemplateArray(T *data, U ... args);
         TemplateArray(T *data, const TemplateArray<int> &axisArray);
-        explicit TemplateArray(const std::string &other);
+        TemplateArray(const std::string &other);
 
         template<class ... U>
         inline void resize(int axis1, U ... args);
