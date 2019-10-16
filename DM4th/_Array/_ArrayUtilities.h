@@ -8,10 +8,9 @@ template<class T>
 T mult(TemplateArray<T> arr)
 {
     T result = 1;
-    T* data = arr.data();
     int size = arr.data_size();
     for(int j=0; j<size; ++j){
-        result*=data[j];
+        result*=arr.data_item(j);
     }
     return result;
 }
@@ -21,10 +20,37 @@ template<class T>
 T sum(TemplateArray<T> arr)
 {
     T result = 0;
-    T* data = arr.data();
     int size = arr.data_size();
     for(int j=0; j<size; ++j){
-        result+=data[j];
+        result+=arr.data_item(j);
+    }
+    return result;
+}
+
+template<class T>
+T min(TemplateArray<T> arr)
+{
+    T result = INF;
+    int size = arr.data_size();
+    for(int j=0; j<size; ++j){
+        if(arr.data_item(j) < result)
+        {
+            result=arr.data_item(j);
+        }
+    }
+    return result;
+}
+
+template<class T>
+T max(TemplateArray<T> arr)
+{
+    T result = INF;
+    int size = arr.data_size();
+    for(int j=0; j<size; ++j){
+        if(arr.data_item(j) > result)
+        {
+            result=arr.data_item(j);
+        }
     }
     return result;
 }
@@ -112,22 +138,69 @@ inline TemplateArray<T> range(T begin, T end)
     return range<T>(begin, end, step);
 }
 
-
 template<class T, class ... U>
 TemplateArray<T> repeat(T value, U ... axisSize)
 {
     TemplateArray<T> result;
     int size = (int)mult(axisSize ...);
-    result.resize(size);
+    result.resize(axisSize...);
+
     for(int j=0; j<size; ++j)
     {
-        result.item(j) = value;
-    }
-    if(count(axisSize...)>1)
-    {
-        result.reshape(axisSize...);
+        result.data_item(j) = value;
     }
     
+    return result;
+}
+
+template<class T, class ...U>
+TemplateArray<T> zeros(U ... axisSize)
+{
+    // TemplateArray<T> result;
+    // int size = (int)mult(axisSize ...);
+    // result.resize(axisSize...);
+
+    // for(int j=0; j<size; ++j)
+    // {
+    //     result.data_item(j) = 0;
+    // }
+
+    
+    // return result;
+    return repeat<T>(0, axisSize...);
+}
+
+template<class T, class ...U>
+TemplateArray<T> ones(U ... axisSize)
+{
+    // TemplateArray<T> result;
+    // int size = (int)mult(axisSize ...);
+    // result.resize(axisSize...);
+
+    // for(int j=0; j<size; ++j)
+    // {
+    //     result.data_item(j) = 1;
+    // }
+
+    
+    // return result;
+    return repeat<T>(1, axisSize...);
+}
+
+template<class T, class ...U>
+TemplateArray<T> identity(U ... axisSize)
+{
+    TemplateArray<T> result = zeros<T>(axisSize ...);
+    //result.resize(axisSize...);
+
+    TemplateArray<T> axis = items<T>(axisSize ...);
+    int size = min<T>(axis);
+    int disp = result._getAxisDisplacement(0) + 1;
+    for(int j=0, idx=0; j<size; ++j, idx+=disp)
+    {
+        result.data_item(idx) = 1;
+    }
+
     return result;
 }
 

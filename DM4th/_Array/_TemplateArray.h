@@ -90,6 +90,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         void loadFile(std::string path);
         void saveFile(std::string path);
 
+        const TemplateArray<T> sort(bool reverse=false, int lo=0, int hi=END);
+
         inline void _resize1DArray(int size);
         inline T *data();
         inline const T *data() const;

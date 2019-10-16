@@ -706,6 +706,43 @@ void TemplateArray<T>::saveFile(std::string url){
     file.close();
 }
 
+// namespace DM4thInternal {
+//     template<class T>
+//     int partition(TemplateArray<T> v, bool reverse, const int lo, const int hi)
+//     {
+//         T pivot = v.data_item(hi);
+//         int i = lo;
+//         for(int j=lo; j<=hi-1; ++j)
+//         {
+//             std::cout<<v.data_item(j)<<" "<<pivot<<std::endl;
+//             if(reverse && v.data_item(j)>pivot){
+//                 T tmp = v.data_item(i);
+//                 v.data_item(i) = v.data_item(j);
+//                 v.data_item(j) = tmp;
+//                 i+=1;
+//             }else if(!reverse && v.data_item(j)<pivot){
+//                 T tmp = v.data_item(i);
+//                 v.data_item(i) = v.data_item(j);
+//                 v.data_item(j) = tmp;
+//                 i+=1;
+//             }
+//         }
+//         return i;
+//     }
+// }
+
+// template<class T>
+// const TemplateArray<T> TemplateArray<T>::sort(bool reverse, int lo, int hi)
+// {
+//     if(hi==(int)INF) hi = this->data_size()-1;
+//     if(lo<hi){ 
+//         int p = DM4thInternal::partition(*this, reverse, lo,hi);
+//         this->sort(reverse, lo, p-1);
+//         this->sort(reverse, p+1,hi);
+//     }
+//     return *this;
+// }
+
 template<class T>
 inline void TemplateArray<T>::_resize1DArray(int size)
 {
