@@ -43,7 +43,7 @@ public:
     
     // Asignacion de un valor numerico
     template<class U, typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-    _number<T> operator=(U a)
+    _number operator=(U a)
     {
         this->real() = a;
         this->imag() = 0;
@@ -52,7 +52,7 @@ public:
 
     // Asignacion de un valor numerico
     template<class U>
-    _number<T> operator=(const _number<U> a)
+    _number operator=(const _number<U> a)
     {
         this->real((T)a.real());
         this->imag((T)a.imag());
@@ -62,14 +62,6 @@ public:
     template<class U> explicit operator U(){return (U)this->r;}
 
     inline explicit operator int () { return (int)round(this->r); }
-
-    // explicit operator char *()
-    // {
-    //     std::string str = (std::string)*this;
-    //     char *cstr = new char[str.length()+1];
-    //     sprintf(cstr,"%s",str.c_str());
-    //     return cstr;
-    // };
 
     explicit operator std::string()
     {
@@ -97,21 +89,19 @@ public:
         file.close();
     }
 
-    inline _number<T> operator+=(_number<T> n){
+    inline _number operator+=(_number n){
         this->real() += n.real();
         this->imag() += n.imag();
         return *this;
     }
 
-    inline _number<T> operator-=(_number<T> n){
+    inline _number operator-=(_number n){
         this->real() -= n.real();
         this->imag() -= n.imag();
         return *this;
     }
 
-    _number<T> operator*=(_number<T> n){
-        // *this = *this * n;
-        // return *this;
+    _number operator*=(_number n){
 
         //real*real
         if(isReal(*this) && isReal(n)){
@@ -119,7 +109,7 @@ public:
         }
         //im*im
         else{
-            *this = _number<T>(
+            *this = _number(
                 this->real()*n.real() - this->imag()*n.imag(),
                 this->real()*n.imag() + this->imag()*n.real()
             );
@@ -128,7 +118,7 @@ public:
         return *this;
     }
     
-    _number<T> operator/=(_number<T> n){
+    _number operator/=(_number n){
         // n/INF
         if(isInf(*this) && !isInf(n))
         {
@@ -144,7 +134,7 @@ public:
 
             // n1/n2
             if(denominator != 0)
-                *this = _number<T>(
+                *this = _number(
                     (this->real()*n.real() + this->imag()*n.imag())/ denominator,
                     (this->imag()*n.real() - this->real()*n.imag())/ denominator
                 );
@@ -162,7 +152,7 @@ public:
         return *this;
     }
 
-    _number<T> operator%=(_number<T> n){
+    _number operator%=(_number n){
         if(!isInf(n) && n.real() !=0 && isReal(*this) && isReal(n))
         {
             this->real() = std::fmod(this->real(), n.real());
@@ -175,6 +165,7 @@ public:
         return *this;
     }
 };
+
 #include <type_traits>
 typedef _number<double> number;
 
