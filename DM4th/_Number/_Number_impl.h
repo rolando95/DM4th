@@ -1,6 +1,6 @@
+#pragma once
+
 #include "_Number.h"
-
-
 
 namespace DM4th
 {
@@ -90,59 +90,87 @@ void _number<T>::saveFile(std::string url){
     file.close();
 }
 
-// Incremento prefijo
-template<class T>
-_number<T> _number<T>::operator ++(){
-    this->r += 1;
-    return *this;
-}
-// Incremento postfijo
-template<class T>
-_number<T> _number<T>::operator ++(int){
-    _number<T> a = *this;
-    this->r += 1;
-    return a;
-}
-// Decremento prefijo
-template<class T>
-_number<T> _number<T>::operator --(){
-    this->r -= 1;
-    return *this;
-}
-// Decremento postfijo
-template<class T>
-_number<T> _number<T>::operator --(int){
-    _number<T> a = *this;
-    this->r -= 1;
-    return a;
-}
+
 template<class T>
 _number<T> _number<T>::operator+=(_number<T> n){
-    *this = *this + n;
+    this->real() += n.real();
+    this->imag() += n.imag();
     return *this;
 }
 
 template<class T>
 _number<T> _number<T>::operator-=(_number<T> n){
-    *this = *this - n;
+    this->real() -= n.real();
+    this->imag() -= n.imag();
     return *this;
 }
 
 template<class T>
 _number<T> _number<T>::operator*=(_number<T> n){
-    *this = *this * n;
+    // *this = *this * n;
+    // return *this;
+
+    //real*real
+    if(isReal(*this) && isReal(n)){
+        this->real() *= n.real();
+    }
+    //im*im
+    else{
+        *this = _number<T>(
+            this->real()*n.real() - this->imag()*n.imag(),
+            this->real()*n.imag() + this->imag()*n.real()
+        );
+    }
+
     return *this;
 }
 
 template<class T>
 _number<T> _number<T>::operator/=(_number<T> n){
-    *this = *this / n;
+    // n/INF
+    if(isInf(*this) && !isInf(n))
+    {
+        if(n!=0) *this = 0;
+        else *this = NAN;
+    }
+    // real/real
+    else if(isReal(*this) && isReal(n) && n.real() != 0){
+        this->real() /= n.real();
+    // im/im
+    }else{
+        double denominator = std::pow(n.real(),2) + std::pow(n.imag(),2);
+
+        // n1/n2
+        if(denominator != 0)
+            *this = _number<T>(
+                (this->real()*n.real() + this->imag()*n.imag())/ denominator,
+                (this->imag()*n.real() - this->real()*n.imag())/ denominator
+            );
+        // n/0
+        else
+            if(!isInf(*this) && *this != 0){
+                if(this->real()>0)
+                    *this = INF;
+                else
+                    *this = -INF;
+            }else
+                *this = NAN;
+    }
+
     return *this;
 }
 
 template<class T>
 _number<T> _number<T>::operator%=(_number<T> n){
-    *this = *this % n;
+    if(!isInf(n) && n.real() !=0 && isReal(*this) && isReal(n))
+    {
+        this->real() = std::fmod(this->real(), n.real());
+    }
+    else
+    {
+        *this = NAN;
+    }
+
     return *this;
 }
 
@@ -238,7 +266,7 @@ std::istream& operator>>(std::istream& stream, _number<T> &n){
                 else if(next=='i') nextState = 9;
                 else nextState = 10;
             break;
-        
+
             case 5:
                 if(next>='0'&& next<='9') nextState = 5;
                 else if(next=='e' || next=='E') nextState = 6;
@@ -293,15 +321,17 @@ std::istream& operator>>(std::istream& stream, _number<T> &n){
 // Suma de numeros complejos
 template<class T>
 inline _number<T> operator+(_number<T> n1,_number<T> n2){
-    return _number<T>(n1.real() + n2.real(), n1.imag() + n2.imag());
+    _number<T> result = n1;
+    result += n2;
+    return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator+(_number<T> n1, U n2)
 {
     return n1 + _number<T>(n2);
 }
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator+(U n1, _number<T> n2)
 {
      return  _number<T>(n1) + n2;
@@ -310,15 +340,17 @@ inline _number<T> operator+(U n1, _number<T> n2)
 // Resta de numeros complejos
 template<class T>
 inline _number<T> operator-(_number<T> n1,_number<T> n2){
-    return _number<T>(n1.real() - n2.real(), n1.imag() - n2.imag());
+    _number<T> result = n1;
+    result -= n2;
+    return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator-(_number<T> n1, U n2)
 {
     return n1 - _number<T>(n2);
 }
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator-(U n1, _number<T> n2)
 {
     return  _number<T>(n1) - n2;
@@ -326,25 +358,17 @@ inline _number<T> operator-(U n1, _number<T> n2)
 
 template<class T>
 _number<T> operator*(_number<T> n1, _number<T> n2){
-    //real*real
-    if(isReal(n1) && isReal(n2)){
-        return n1.real()*n2.real();
-    }
-    //im*im
-    else{
-        return _number<T>(
-            n1.real()*n2.real() - n1.imag()*n2.imag(), 
-            n1.real()*n2.imag() + n1.imag()*n2.real()
-        );
-    }
+    _number<T> result = n1;
+    result *= n2;
+    return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator*(_number<T> n1, U n2)
 {
     return n1 * _number<T>(n2);
 }
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator*(U n1, _number<T> n2)
 {
     return  _number<T>(n1) * n2;
@@ -353,42 +377,18 @@ inline _number<T> operator*(U n1, _number<T> n2)
 // Division de numeros complejos
 template<class T>
 _number<T> operator/(_number<T> n1, _number<T> n2){
-
-    // n/INF
-    if(isInf(n2) && !isInf(n1))
-        return _number<T>(0,0);
-    // real/real
-    else if(isReal(n1) && isReal(n2) && n2.real() != 0){
-        return _number<T>(n1.real()/n2.real(),0);
-    // im/im
-    }else{
-        double denominator = std::pow(n2.real(),2) + std::pow(n2.imag(),2);
-        
-        // n1/n2
-        if(denominator != 0)
-            return _number<T>(
-                (n1.real()*n2.real() + n1.imag()*n2.imag())/ denominator,
-                (n1.imag()*n2.real() - n1.real()*n2.imag())/ denominator  
-            );
-        // n/0
-        else
-            if(!isInf(n1) && n1 != 0){
-                if(n1.real()>0)
-                    return _number<T>(INF,0);
-                else    
-                    return _number<T>(-INF,0);
-            }else
-                return _number<T>(NAN,0);
-    }
+    _number<T> result = n1;
+    result /= n2;
+    return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator/(_number<T> n1, U n2)
 {
     return n1 / _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator/(U n1, _number<T> n2)
 {
     return _number<T>(n1) / n2;
@@ -397,23 +397,18 @@ inline _number<T> operator/(U n1, _number<T> n2)
 // Residuo de numeros complejos
 template<class T>
 _number<T> operator%(_number<T> n1, _number<T> n2){
-    _number<T> result;
-    if(n2.real()!=0) result.real(std::fmod(n1.real(),n2.real()));
-     else if(n1.real()==0) result.real(0);
-    else return NAN;
-    if(!isReal(n2)) result.imag(std::fmod(n1.imag(),n2.imag()));
-    else if(isReal(n1)) result.imag(0);
-    else return NAN;
+    _number<T> result = n1;
+    result /= n2;
     return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator%(_number<T> n1, U n2)
 {
     return n1 % _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator%(U n1, _number<T> n2)
 {
     return _number<T>(n1) % n2;
@@ -425,13 +420,13 @@ inline bool operator==(_number<T> n1, _number<T> n2){
     return (n1.real()==n2.real() && n1.imag()==n2.imag());
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator==(_number<T> n1, U n2)
 {
     return n1 == _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator==(U n1, _number<T> n2)
 {
     return _number<T>(n1) == n2;
@@ -442,13 +437,13 @@ inline bool operator!=(_number<T> n1, _number<T> n2){
     return (n1.real()!=n2.real() || n1.imag()!=n2.imag());
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator!=(_number<T> n1, U n2)
 {
     return n1 != _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator!=(U n1, _number<T> n2)
 {
     return _number<T>(n1) != n2;
@@ -459,13 +454,13 @@ inline bool operator>=(_number<T> n1, _number<T> n2){
     return n1>n2||n1==n2;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator>=(_number<T> n1, U n2)
 {
     return n1 >= _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator>=(U n1, _number<T> n2)
 {
     return _number<T>(n1) >= n2;
@@ -477,13 +472,13 @@ inline bool operator<=(_number<T> n1, _number<T> n2){
     return !(n1>n2);
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator<=(_number<T> n1, U n2)
 {
     return n1 <= _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator<=(U n1, _number<T> n2)
 {
     return _number<T>(n1) <= n2;
@@ -492,19 +487,19 @@ inline _number<T> operator<=(U n1, _number<T> n2)
 
 template<class T>
 inline bool operator>(_number<T> n1, _number<T> n2){
-    bool result=false; 
+    bool result=false;
     if(n1.real() > n2.real()) result=true;
     else if(n1.real()==n2.real() && n1.imag() > n2.imag()) result=true;
     return result;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator>(_number<T> n1, U n2)
 {
     return n1 > _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator>(U n1, _number<T> n2)
 {
     return _number<T>(n1) > n2;
@@ -516,13 +511,13 @@ inline bool operator<(_number<T> n1, _number<T> n2){
 }
 
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator<(_number<T> n1, U n2)
 {
     return n1 < _number<T>(n2);
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator<(U n1, _number<T> n2)
 {
     return _number<T>(n1) < n2;
@@ -546,13 +541,13 @@ inline _number<T> fmod(_number<T> n1, _number<T> n2)
     return n1%n2;
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> fmod(_number<T> n1, U n2)
 {
     return fmod(n1,_number<T>(n2));
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> fmod(U n1, _number<T> n2)
 {
     return fmod(_number<T>(n1),n2);
@@ -594,25 +589,25 @@ inline _number<T> truncate(_number<T> n, int p){
         return n1;
 }
 
-template<class T> 
+template<class T>
 inline bool isInf(_number<T> n)
 {
     return std::abs(n.real()) == INF;
 }
 
-template<class T> 
+template<class T>
 inline bool isReal(_number<T> n)
 {
     return (n.imag()==0);
 }
 
-template<class T> 
+template<class T>
 inline bool isComplex(_number<T> n)
 {
     return (n.imag()!=0);
 }
 
-template<class T> 
+template<class T>
 inline bool isImag(_number<T> n)
 {
     return (n.real()==0 && n.imag()!=0);
@@ -632,7 +627,7 @@ template<class T>
 inline _number<T> arg(_number<T> n){
     if(n.real()>0 || n.imag() != 0){
         return _number<T>(
-            2*std::atan(n.imag()/(std::sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())), 
+            2*std::atan(n.imag()/(std::sqrt(n.real()*n.real() + n.imag()*n.imag())+n.real())),
             0
         );
     }else if(n.real()<0 && n.imag() == 0){
@@ -657,7 +652,7 @@ inline _number<T> pow(_number<T> n1,_number<T> n2){
         return NAN;
     }
     if(
-        isReal(n1) && isReal(n2) && 
+        isReal(n1) && isReal(n2) &&
         (n1.real() >= 0 || std::abs(n2.real())>=1) // positive base o absolute exponent greater than 1
     )
     {
@@ -669,13 +664,13 @@ inline _number<T> pow(_number<T> n1,_number<T> n2){
     }
 }
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> pow(_number<T> n1, U n2)
 {
     return pow(n1,_number<T>(n2));
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> pow(U n1, _number<T> n2)
 {
     return pow(_number<T>(n1),n2);
@@ -683,7 +678,7 @@ inline _number<T> pow(U n1, _number<T> n2)
 
 template<class T>
 inline _number<T> sqrt(_number<T> n){
-    if(isReal(n) && n.real()>=0) return std::sqrt(n.real()); 
+    if(isReal(n) && n.real()>=0) return std::sqrt(n.real());
     return pow(n,0.5);
 }
 
@@ -702,13 +697,13 @@ inline _number<T> ln(_number<T> n){
 template<class T>
 inline _number<T> log(_number<T> n,_number<T> base){return ln(n)/ln(base);}
 
-template<class T, typename U, enable_if_is_number(U, _number<T>) > 
+template<class T, typename U, enable_if_is_number(U, _number<T>) >
 inline _number<T> log(const _number<T> &n1, const U &n2)
 {
     return log(n1,_number<T>(n2));
 }
 
-template<class U, typename T, enable_if_is_number(U, _number<T>) > 
+template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> log(const U &n1, const _number<T> &n2)
 {
     return log(_number<T>(n1),n2);

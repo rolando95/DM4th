@@ -142,10 +142,10 @@ inline void TemplateTree<T>::resize(int size)
 template<class T> template<class U>
 void TemplateTree<T>::push(U value, int pos)
 {
-    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==END);
+    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==(int)END);
     this->resize(this->size()+1);
     //Append
-    if(pos >= this->size() || pos==END) 
+    if(pos >= this->size() || pos==(int)END) 
     {
         super::_data->array(this->size()-1).item() = value;
     }
@@ -169,10 +169,10 @@ void TemplateTree<T>::pushTree(const TemplateTree<U> &tree, const int pos)
 template<class T> template<class U>
 void TemplateTree<T>::pushTreeRef(const TemplateTree<U> &tree, const int pos)
 {
-    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==END);
+    DM4thAssert( (pos>=0 && pos<= this->size()) || pos==(int)END);
     this->resize(this->size()+1);
     //Append
-    if(pos >= this->size() || pos==END) 
+    if(pos >= this->size() || pos==(int)END) 
     {
         super::_data->array(this->size()-1) = tree;
     }
@@ -191,9 +191,9 @@ template<class T>
 TemplateTree<T> TemplateTree<T>::pop(const int idx)
 {
     TemplateTree<T> result;
-    DM4thAssert( (idx>=0 && idx<this->size()) || idx==END ); 
+    DM4thAssert( (idx>=0 && idx<this->size()) || idx==(int)END ); 
 
-    if(idx==END || idx==this->size()-1)
+    if(idx==(int)END || idx==this->size()-1)
     {
         result = this->child(this->size()-1);
     }else{

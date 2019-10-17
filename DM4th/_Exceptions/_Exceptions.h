@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef NDEBUG
     #define DM4thAssert(...) {}
 #else

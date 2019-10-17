@@ -23,12 +23,14 @@ public:
 
     // get set parte real
     inline const double real() const {return this->r;}
-    inline double real(double a) {this->r = a; return this->r;}
+    inline double &real() { return this->r; };
+    inline double &real(double a) {this->r = a; return this->r;}
     //inline double &real() { return this->r; }
 
     // get set parte imaginaria
     inline const double imag() const  {return this->i;}
-    inline double imag(double a) {this->i = a; return this->i;}
+    inline double &imag() { return this->i; };
+    inline double &imag(double a) {this->i = a; return this->i;}
     //inline double &imag() { return this->i; }
     
     // Asignacion de un valor numerico
@@ -48,15 +50,6 @@ public:
     void loadFile(std::string url);
     void saveFile(std::string url);
 
-    // Incremento prefijo
-    _number<T> operator ++();
-    // Incremento postfijo
-    _number<T> operator ++(int);
-    // Decremento prefijo
-    _number<T> operator --();
-    // Decremento postfijo
-    _number<T> operator --(int);
-    // Asignacion aditiva
     _number<T> operator +=(_number<T>);
     // Asignacion sustractiva
     _number<T> operator -=(_number<T>);
@@ -111,6 +104,38 @@ std::ostream& operator<<(std::ostream&, _number<T>);
 // Lectura en pantalla de numeros complejos
 template<class T>
 std::istream& operator>>(std::istream&, _number<T>&);
+
+// Incremento y decremento
+template<class T>
+inline _number<T> operator ++(_number<T> &n)
+{
+    ++n.real();
+    return n;
+}
+
+template<class T>
+inline _number<T> operator ++(_number<T> &n, int)
+{
+    _number<T> result = n;
+    ++n.real();
+    return result;
+}
+
+template<class T>
+inline _number<T> operator --(_number<T> &n)
+{
+    --n.real();
+    return n;
+}
+
+template<class T>
+inline _number<T> operator --(_number<T> &n, int)
+{
+    _number<T> result = n;
+    --n.real();
+    return result;
+}
+
 
 // Suma de numeros complejos
 template<class T>

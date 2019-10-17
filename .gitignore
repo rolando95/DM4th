@@ -4,6 +4,7 @@
 bin-int/
 bin/
 .vscode/*
+local/**
 !.vscode/launch.json
 !.vscode/task.json
 !.vscode/c_cpp_properties.json
