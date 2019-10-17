@@ -706,42 +706,37 @@ void TemplateArray<T>::saveFile(std::string url){
     file.close();
 }
 
-// namespace DM4thInternal {
-//     template<class T>
-//     int partition(TemplateArray<T> v, bool reverse, const int lo, const int hi)
-//     {
-//         T pivot = v.data_item(hi);
-//         int i = lo;
-//         for(int j=lo; j<=hi-1; ++j)
-//         {
-//             std::cout<<v.data_item(j)<<" "<<pivot<<std::endl;
-//             if(reverse && v.data_item(j)>pivot){
-//                 T tmp = v.data_item(i);
-//                 v.data_item(i) = v.data_item(j);
-//                 v.data_item(j) = tmp;
-//                 i+=1;
-//             }else if(!reverse && v.data_item(j)<pivot){
-//                 T tmp = v.data_item(i);
-//                 v.data_item(i) = v.data_item(j);
-//                 v.data_item(j) = tmp;
-//                 i+=1;
-//             }
-//         }
-//         return i;
-//     }
-// }
+template<class T>
+int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
+{
+    T pivot = this->data_item(hi);
+    int i = lo;
+    for(int j=lo; j<hi; ++j)
+    {
+        if(
+            (reverse && this->data_item(j)>pivot) ||
+            (!reverse && this->data_item(j)<pivot)
+        )
+        {
+            super::_data->array.swap(i,j);
+            i+=1;
+        }
+    }
+    super::_data->array.swap(i,hi);
+    return i;
+}
 
-// template<class T>
-// const TemplateArray<T> TemplateArray<T>::sort(bool reverse, int lo, int hi)
-// {
-//     if(hi==(int)INF) hi = this->data_size()-1;
-//     if(lo<hi){ 
-//         int p = DM4thInternal::partition(*this, reverse, lo,hi);
-//         this->sort(reverse, lo, p-1);
-//         this->sort(reverse, p+1,hi);
-//     }
-//     return *this;
-// }
+template<class T>
+//const TemplateArray<T> &TemplateArray<T>::sort(bool reverse, int lo, int hi)
+void TemplateArray<T>::sort(bool reverse, int lo, int hi)
+{
+    if(hi==(int)END) hi = this->data_size()-1;
+    if(lo<hi){ 
+        int p = this->_partition(reverse, lo,hi);
+        this->sort(reverse, lo, p-1);
+        this->sort(reverse, p+1,hi);
+    }
+}
 
 template<class T>
 inline void TemplateArray<T>::_resize1DArray(int size)
@@ -750,6 +745,22 @@ inline void TemplateArray<T>::_resize1DArray(int size)
     super::_data->array.resize(size);
     super::_data->shape.resize(1);
     super::_data->shape(0) = size;
+}
+
+template<class T> template<class U, class V>
+inline void TemplateArray<T>::swap(U idx1, V idx2)
+{
+    DM4thAssert(idx1<this->size() && idx2<this->size());
+    int disp = this->_getAxisDisplacement(0);
+
+    int pos1 = (int)idx1*disp;
+    int pos2 = (int)idx2*disp;
+
+    
+    for(int j=0; j<disp; ++j)
+    {
+        super::_data->array.swap(pos1+j, pos2+j);
+    }
 }
 
 template<class T>

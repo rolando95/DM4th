@@ -80,8 +80,14 @@ class _BaseArray
         template<class U> const _BaseArray<T> &operator%=(const U &other);
 
         inline void clear();
-
         inline void moveReferenceTo(_BaseArray<T> &other);
+
+        inline void swap(int idx1, int idx2)
+        {
+            T tmp = this->get(idx1);
+            this->set(idx1, this->get(idx2));
+            this->set(idx2, tmp);
+        }
 };
 #endif
 

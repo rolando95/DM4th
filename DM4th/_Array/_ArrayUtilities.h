@@ -204,4 +204,11 @@ TemplateArray<T> identity(U ... axisSize)
     return result;
 }
 
+template<class T>
+TemplateArray<T> sort(TemplateArray<T> arr, bool reverse=false)
+{
+    TemplateArray<T> result = arr.getCopy();
+    result.sort(reverse);
+    return result;
+}
 }

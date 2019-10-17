@@ -90,7 +90,11 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         void loadFile(std::string path);
         void saveFile(std::string path);
 
-        const TemplateArray<T> sort(bool reverse=false, int lo=0, int hi=END);
+        //const TemplateArray<T> &sort(bool reverse=false, int lo=0, int hi=END);
+        void sort(bool reverse=false, int lo=0, int hi=END);
+        
+        template<class U, class V>
+        inline void swap(U idx1, V idx2);
 
         inline void _resize1DArray(int size);
         inline T *data();
@@ -100,6 +104,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline const T data_item(int idx) const;
 
     private:
+        int _partition(bool reverse, const int lo, const int hi);
+        
         void _resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
             TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
