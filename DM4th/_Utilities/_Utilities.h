@@ -12,12 +12,21 @@
 
 //#define DM4thParallel
 #ifdef DM4thParallel
-    #include <omp.h>
     #define DM4thOmp
+    #define DM4thSIMD
+#endif
+
+//#define DM4thOmp
+#ifdef DM4thOmp
+    #include <omp.h>
     #define DM4thOmpFor
     #define DM4thOmpSections
 #endif
 
+//#define DM4thSIMD
+#ifdef DM4thSIMD
+    #include <xmmintrin.h>
+#endif
 
 
 namespace DM4th

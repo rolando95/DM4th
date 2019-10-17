@@ -17,7 +17,7 @@
             "type" : "shell",
             "label": "startRelease",
             "command": "g++",
-            "args": ["-Wall", "-O2", "-o", "main.exe", "main.cpp", "-fopenmp", "-D", "DM4thParallel"],
+            "args": ["-Wall", "-O2", "-o", "main.exe", "main.cpp", "-fopenmp", "-D", "DM4thParallel"]
         }
         ,
         // {
