@@ -14,12 +14,20 @@ template<class T>
 class _number{
    T r=0, i=0;
 public:
-    _number(T=0, T=0);
+    _number(T a=0, T b=0){
+        this->real() = (T)a;
+        this->imag() = (T)b;
+    }
 
     // template<class U>
     // _number(U=0, U=0);
 
-    explicit _number(std::string);
+    explicit _number(std::string str)
+    {
+        std::stringstream ss;
+        ss << str;
+        ss >> *this;
+    }
 
     // get set parte real
     inline const double real() const {return this->r;}
@@ -35,30 +43,137 @@ public:
     
     // Asignacion de un valor numerico
     template<class U, typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
-    _number<T> operator=(U);
+    _number<T> operator=(U a)
+    {
+        this->real() = a;
+        this->imag() = 0;
+        return *this;
+    }
 
     // Asignacion de un valor numerico
     template<class U>
-    _number<T> operator=(const _number<U>);
+    _number<T> operator=(const _number<U> a)
+    {
+        this->real((T)a.real());
+        this->imag((T)a.imag());
+        return *this;
+    }
 
-    template<class U>
-    explicit operator U(){return (U)this->r;}
+    template<class U> explicit operator U(){return (U)this->r;}
+
     inline explicit operator int () { return (int)round(this->r); }
-    explicit operator char *();
-    explicit operator std::string();
 
-    void loadFile(std::string url);
-    void saveFile(std::string url);
+    // explicit operator char *()
+    // {
+    //     std::string str = (std::string)*this;
+    //     char *cstr = new char[str.length()+1];
+    //     sprintf(cstr,"%s",str.c_str());
+    //     return cstr;
+    // };
 
-    _number<T> operator +=(_number<T>);
-    // Asignacion sustractiva
-    _number<T> operator -=(_number<T>);
-    // Asignacion multiplicativa
-    _number<T> operator *=(_number<T>);
-    // Asignacion divisiva
-    _number<T> operator /=(_number<T>);
-    // Residuo
-    _number<T> operator %=(_number<T>);
+    explicit operator std::string()
+    {
+        std::ostringstream strs;
+        strs << *this;
+        std::string str = strs.str();
+        return str;
+    };
+
+    void loadFile(std::string url){
+        std::ifstream file;
+        file.open(url);
+        if(file.fail()) {
+            *this = 0;
+        }else{
+            file>>*this;
+        }
+        file.close();
+    }
+
+    void saveFile(std::string url){
+        std::ofstream file;
+        file.open(url);
+        file<<*this;
+        file.close();
+    }
+
+    inline _number<T> operator+=(_number<T> n){
+        this->real() += n.real();
+        this->imag() += n.imag();
+        return *this;
+    }
+
+    inline _number<T> operator-=(_number<T> n){
+        this->real() -= n.real();
+        this->imag() -= n.imag();
+        return *this;
+    }
+
+    _number<T> operator*=(_number<T> n){
+        // *this = *this * n;
+        // return *this;
+
+        //real*real
+        if(isReal(*this) && isReal(n)){
+            this->real() *= n.real();
+        }
+        //im*im
+        else{
+            *this = _number<T>(
+                this->real()*n.real() - this->imag()*n.imag(),
+                this->real()*n.imag() + this->imag()*n.real()
+            );
+        }
+
+        return *this;
+    }
+    
+    _number<T> operator/=(_number<T> n){
+        // n/INF
+        if(isInf(*this) && !isInf(n))
+        {
+            if(n!=0) *this = 0;
+            else *this = NAN;
+        }
+        // real/real
+        else if(isReal(*this) && isReal(n) && n.real() != 0){
+            this->real() /= n.real();
+        // im/im
+        }else{
+            double denominator = std::pow(n.real(),2) + std::pow(n.imag(),2);
+
+            // n1/n2
+            if(denominator != 0)
+                *this = _number<T>(
+                    (this->real()*n.real() + this->imag()*n.imag())/ denominator,
+                    (this->imag()*n.real() - this->real()*n.imag())/ denominator
+                );
+            // n/0
+            else
+                if(!isInf(*this) && *this != 0){
+                    if(this->real()>0)
+                        *this = INF;
+                    else
+                        *this = -INF;
+                }else
+                    *this = NAN;
+        }
+
+        return *this;
+    }
+
+    _number<T> operator%=(_number<T> n){
+        if(!isInf(n) && n.real() !=0 && isReal(*this) && isReal(n))
+        {
+            this->real() = std::fmod(this->real(), n.real());
+        }
+        else
+        {
+            *this = NAN;
+        }
+
+        return *this;
+    }
 };
 #include <type_traits>
 typedef _number<double> number;
