@@ -8,27 +8,27 @@ namespace DM4th
 static int precision = 10;
 
 
-inline _number<double> strTonumber(std::string str){
-    _number<double> result;
+inline number strTonumber(std::string str){
+    number result;
     std::stringstream ss(str);
     ss>>result;
     return result;
 }
 
-inline _number<double> operator""_i(long double a){
-    return _number<double> (0,a);
+inline number operator""_i(long double a){
+    return number (0,a);
 }
 
-inline _number<double> operator""_i(unsigned long long int a){
-    return _number<double>(0,a);
+inline number operator""_i(unsigned long long int a){
+    return number(0,a);
 }
 
-inline _number<double> operator""i(unsigned long long int a){
-    return _number<double>(0,a);
+inline number operator""i(unsigned long long int a){
+    return number(0,a);
 }
 
-inline _number<double> operator""i(long double a){
-    return _number<double>(0,a);
+inline number operator""i(long double a){
+    return number(0,a);
 }
 
 template<class T>

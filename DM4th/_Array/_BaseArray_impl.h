@@ -2,11 +2,16 @@
 
 #include "_BaseArray.h"
 
+
 namespace DM4th
 {
 
 namespace DM4thInternal
 {
+
+//#define sizeAligned(x)   (x + 3) & -4
+#define sizeAligned(x)   (x + 3) & ~0x03
+
 //////////////////// _BaseArray
 #if defined BASEARRAY_STD_VECTOR
 
@@ -42,7 +47,7 @@ const inline T _BaseArray<T>::get(int idx) const
 }
 
 template<class T>
-void _BaseArray<T>::set(int idx, T value)
+void inline _BaseArray<T>::set(int idx, T value)
 {
     this->_array[idx] = value;
 }
@@ -96,7 +101,7 @@ inline void _BaseArray<T>::reallocArray(int size)
     DM4thAssert(this->_array && size>0);
     if(size!=_size)
     {
-        T *tmp = new T[size]();
+        T *tmp = new T[sizeAligned(size)]();
         int min = _min(size, this->_size);
         //for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
         memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min);
@@ -150,7 +155,7 @@ const inline T _BaseArray<T>::get(int idx) const
 }
 
 template<class T>
-void _BaseArray<T>::set(int idx, T value) 
+void inline _BaseArray<T>::set(int idx, T value) 
 {  
     this->_array[idx]=value;
 }
@@ -205,12 +210,21 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
     DM4thAssert(this->size()==other.size());
     
     #if defined DM4thOmpFor
-        #pragma omp parallel for
+        #pragma omp parallel
+        {
+            
+            #pragma omp for
+            for(int j=0; j<this->size(); ++j)
+            {
+                this->set(j, this->get(j) + other.get(j));
+            }
+        }
+    #else
+        for(int j=0; j<this->size(); ++j)
+        {
+            this->set(j, this->get(j) + other.get(j));
+        }
     #endif
-    for(int j=0; j<this->size(); ++j)
-    {
-        this->set(j, this->get(j) + other.get(j));
-    }
     return *this;
 }
 
@@ -218,12 +232,21 @@ template<class T> template<class U>
 const _BaseArray<T> &_BaseArray<T>::operator+=(const U &other) 
 {
     #if defined DM4thOmpFor
-        #pragma omp parallel for
+        #pragma omp parallel
+        {
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->size(); ++j)
+            {
+                this->set(j, this->get(j) + (T)other);
+            }
+        }
+        
+    #else
+        for(int j=0; j<this->size(); ++j)
+        {
+            this->set(j, this->get(j) + (T)other);
+        }
     #endif
-    for(int j=0; j<this->size(); ++j)
-    {
-        this->set(j, this->get(j) + (T)other);
-    }
     return *this;
 }
 

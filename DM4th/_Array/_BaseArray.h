@@ -5,12 +5,6 @@
 #include "../_Utilities/_c_arr_Utilities.h"
 #include "../_Number/_Number.h"
 
-#include <string>
-
-#include <memory>
-#include <atomic>
-#include <sstream>
-
 //#define BASEARRAY_STD_VECTOR
 
 namespace DM4th
@@ -36,7 +30,7 @@ class _BaseArray
     inline T &operator[](int idx);
     inline T &operator()(int idx);
     const inline T get(int idx) const;
-    void set(int idx, T value);
+    void inline set(int idx, T value);
 
 
 
@@ -69,7 +63,7 @@ class _BaseArray
         inline T &operator[](int idx);
         inline T &operator()(int idx);
         const inline T get(int idx) const;
-        void set(int idx, T value);
+        void inline set(int idx, T value);
 
 
 

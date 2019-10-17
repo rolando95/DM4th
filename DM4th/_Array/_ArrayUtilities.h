@@ -142,10 +142,10 @@ template<class T, class ... U>
 TemplateArray<T> repeat(T value, U ... axisSize)
 {
     TemplateArray<T> result;
-    int size = (int)mult(axisSize ...);
+    unsigned int size = (unsigned int)mult(axisSize ...);
     result.resize(axisSize...);
 
-    for(int j=0; j<size; ++j)
+    for(unsigned int j=0; j<size; ++j)
     {
         result.data_item(j) = value;
     }

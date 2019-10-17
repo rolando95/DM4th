@@ -3,12 +3,37 @@
 #include "_Constants.h"
 #include "../_Exceptions/_Exceptions.h"
 
+#include <string>
+#include <string.h>
+
 #include <istream>
 #include <iostream>
 #include <limits>
+
 #include <queue>
+
 #include <sstream>
 #include <fstream>
+
+#include <memory>
+#include <atomic>
+
+// Check windows
+#if _WIN32 || _WIN64
+    #if _WIN64
+        #define DM4th64
+    #else
+        #define DM4th32
+    #endif
+#elif __GNUC__
+    #if __x86_64__ || __ppc64__
+        #define DM4th64
+    #else
+        #define DM4th32
+    #endif
+#else
+    #define DM4th32
+#endif
 
 //#define DM4thParallel
 #ifdef DM4thParallel
@@ -23,10 +48,19 @@
     #define DM4thOmpSections
 #endif
 
+#if !defined DM4th64
+    #undef DM4thSIMD
+#endif
+
 //#define DM4thSIMD
 #ifdef DM4thSIMD
-    #include <xmmintrin.h>
+    #include <x86intrin.h>
+
+    //#define DM4thSIMDNumber
+    #define DM4thSIMDArray
 #endif
+
+
 
 
 namespace DM4th

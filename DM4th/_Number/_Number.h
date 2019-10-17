@@ -14,14 +14,14 @@ class _number
     union
     {
         struct {
-            T r = 0; 
+            T r = 0;
             T i = 0;
         }ref;
         #if defined DM4thSIMD
             __m128d _ddata;
         #endif
     };
-    
+
 
 public:
     _number(T a = 0, T b = 0)
@@ -490,7 +490,7 @@ inline _number<T> asech(_number<T>);
 template <class T>
 inline _number<T> acsch(_number<T>);
 
-#ifdef DM4thSIMD
+#ifdef DM4thSIMDNumber
 
 template<>
 inline number number::operator+=(number n)
@@ -515,10 +515,54 @@ number number::operator*=(number n)
     }
     else
     {
-        __m128d real = _mm_mul_pd(this->_ddata, n._ddata);
-        __m128d imag = _mm_mul_pd(this->_ddata, _mm_setr_pd(n.imag(), n.real()));
-        
-        this->_ddata = _mm_add_pd(_mm_setr_pd(real[0], imag[0]), _mm_setr_pd(-real[1], imag[1]));
+        // __m128d real = _mm_mul_pd(this->_ddata, n._ddata);
+        // __m128d imag = _mm_mul_pd(this->_ddata, _mm_setr_pd(n.imag(), n.real()));
+
+        // this->_ddata = _mm_add_pd(_mm_setr_pd(real[0], imag[0]), _mm_setr_pd(-real[1], imag[1]));
+
+        __m128d num1, num2, num3, num4;
+
+        // Copies a single element into the vector
+
+        //   num1:  [x.real, x.real]
+
+        num1 = _mm_load1_pd(&this->real());
+
+        // Move y elements into a vector
+
+        //   num2: [y.img, y.real]
+
+        num2 = _mm_set_pd(n.imag(), n.real());
+
+        // Multiplies vector elements
+
+        //   num3: [(x.real*y.img), (x.real*y.real)]
+
+        num3 = _mm_mul_pd(num2, num1);
+
+        //   num1: [x.img, x.img]
+
+        num1 = _mm_load1_pd(&this->imag());
+
+        // Swaps the vector elements.
+
+        //   num2: [y.real, y.img]
+
+        num2 = _mm_shuffle_pd(num2, num2, 1);
+
+        //   num2: [(x.img*y.real), (x.img*y.img)]
+
+        num2 = _mm_mul_pd(num2, num1);
+
+        num4 = _mm_add_pd(num3, num2);
+
+        num3 = _mm_sub_pd(num3, num2);
+
+        num4 = _mm_shuffle_pd(num3, num4, 2);
+
+        // Stores the elements of num4 into z
+
+        _mm_storeu_pd(reinterpret_cast<double*>(this), num4);
 
     }
 
