@@ -48,16 +48,17 @@ class _BaseArray
 {
     private:
         int _size=0;
+        int _top=0; // Real size of array
         T *_array=nullptr;
 
         inline void allocArray(int size);
-        inline void reallocArray(int size, bool useMemcpy=true);
+        inline void reallocArray(int size);
     public:
         _BaseArray(int size=0);
         ~_BaseArray() {
             this->clear();
         }
-        inline void resize(int size, bool useMemcpy=true);
+        inline void resize(int size);
 
         inline const int size() const;
         inline T &operator[](int idx);

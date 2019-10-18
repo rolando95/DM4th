@@ -130,7 +130,7 @@ inline int TemplateTree<T>::size() const {
 template<class T> 
 inline void TemplateTree<T>::resize(int size)
 {
-    super::_data->array.resize(size, false);
+    super::_data->array.resize(size);
 } 
 
 template<class T> template<class U>
@@ -152,8 +152,6 @@ void TemplateTree<T>::push(const U &value, const int pos)
         }
         super::_data->array(pos).item() = value;
     }
-
-    this->printTreeStructure();
 }
 
 template<class T> template<class U>
