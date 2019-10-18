@@ -23,7 +23,6 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         template<class ... U> TemplateTree<T> &child(number idx, U ... args) const;
         template<class ... U> TemplateTree<T> &child(int idx, U ... args) const;
         template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
-        template<class U> TemplateTree<T> &child(const NDArray<U> &axis, int level=0) const;
 
         TemplateTree<T> getCopy() const;
         void printTreeStructure() const;
@@ -40,8 +39,8 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         void push(const U &value, const int idx=END);
 
         /*
-        The tree will be copy before insert!!!
-        To insert by ref, use pushTreeRef
+        A copy of the tree is going to be inserted
+        To insert by reference use pushTreeRef
         */
         template<class U>
         inline void pushTree(const TemplateTree<U> &value, const int idx=END);

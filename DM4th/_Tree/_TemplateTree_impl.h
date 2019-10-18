@@ -58,12 +58,6 @@ TemplateTree<T> &TemplateTree<T>::child(int idx, U ... args) const
 template<class T> template<class U>
 TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level) const
 {
-    return this->child((NDArray<U>)axis, level);
-}
-
-template<class T> template<class U>
-TemplateTree<T> &TemplateTree<T>::child(const NDArray<U> &axis, int level) const
-{
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
@@ -165,7 +159,7 @@ void TemplateTree<T>::push(const U &value, const int pos)
 template<class T> template<class U>
 void TemplateTree<T>::pushTree(const TemplateTree<U> &tree, const int pos)
 {
-    this->pushTree(tree.getCopy(), pos);
+    this->pushTreeRef(tree.getCopy(), pos);
 }
 
 template<class T> template<class U>
