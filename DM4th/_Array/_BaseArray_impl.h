@@ -96,15 +96,17 @@ inline void _BaseArray<T>::allocArray(int size)
 }
 
 template<class T>
-inline void _BaseArray<T>::reallocArray(int size)
+inline void _BaseArray<T>::reallocArray(int size, bool useMemcpy)
 {
     DM4thAssert(this->_array && size>0);
     if(size!=_size)
     {
         T *tmp = new T[sizeAligned(size)]();
         int min = _min(size, this->_size);
-        //for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
-        memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min);
+
+        if(useMemcpy) memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min); 
+        else for(int j=0; j<min; ++j){ tmp[j] = _array[j]; }
+        
         delete[] _array;
         _array = tmp;
         tmp = nullptr;
@@ -119,7 +121,7 @@ _BaseArray<T>::_BaseArray(int size)
 }
 
 template<class T>
-inline void _BaseArray<T>::resize(int size)
+inline void _BaseArray<T>::resize(int size, bool useMemcpy)
 {
     if(size==0) 
     {
@@ -127,7 +129,7 @@ inline void _BaseArray<T>::resize(int size)
         return;
     }
     if(this->_array==nullptr){ this->allocArray(size); }
-    else{ this->reallocArray(size); }
+    else{ this->reallocArray(size, useMemcpy); }
 }
 
 template<class T>

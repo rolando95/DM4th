@@ -709,7 +709,7 @@ void TemplateArray<T>::saveFile(std::string url){
 template<class T>
 int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
 {
-    T pivot = this->data_item(hi);
+    T pivot = this->data_item( (lo+hi)/2 );
     int i = lo;
     for(int j=lo; j<hi; ++j)
     {

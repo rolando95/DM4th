@@ -51,13 +51,13 @@ class _BaseArray
         T *_array=nullptr;
 
         inline void allocArray(int size);
-        inline void reallocArray(int size);
+        inline void reallocArray(int size, bool useMemcpy=true);
     public:
         _BaseArray(int size=0);
         ~_BaseArray() {
             this->clear();
         }
-        inline void resize(int size);
+        inline void resize(int size, bool useMemcpy=true);
 
         inline const int size() const;
         inline T &operator[](int idx);

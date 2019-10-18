@@ -37,7 +37,7 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         inline void resize(int size);
 
         template<class U>
-        void push(U value, const int idx=END);
+        void push(const U &value, const int idx=END);
 
         /*
         The tree will be copy before insert!!!

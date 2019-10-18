@@ -136,11 +136,11 @@ inline int TemplateTree<T>::size() const {
 template<class T> 
 inline void TemplateTree<T>::resize(int size)
 {
-    super::_data->array.resize(size);
+    super::_data->array.resize(size, false);
 } 
 
 template<class T> template<class U>
-void TemplateTree<T>::push(U value, int pos)
+void TemplateTree<T>::push(const U &value, const int pos)
 {
     DM4thAssert( (pos>=0 && pos<= this->size()) || pos==(int)END);
     this->resize(this->size()+1);
@@ -158,6 +158,8 @@ void TemplateTree<T>::push(U value, int pos)
         }
         super::_data->array(pos).item() = value;
     }
+
+    this->printTreeStructure();
 }
 
 template<class T> template<class U>
