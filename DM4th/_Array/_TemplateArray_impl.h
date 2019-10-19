@@ -422,7 +422,7 @@ template<class T> template<class ... U>
 const inline T &TemplateArray<T>::operator()(U ... args) const { return this->item(args...); }
 
 template<class T> template<class U>
-inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ this->item(axisArray); }
+inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this->item(axisArray); }
 
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
