@@ -56,8 +56,21 @@ TemplateTree<T> &TemplateTree<T>::child(int idx, U ... args) const
 }
 
 template<class T> template<class U>
-TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level) const
+const TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level) const
 {
+    if(axis.size()==0) return *this;
+    DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
+    if(level<axis.size()-1)
+    {
+        return super::_data->array[(int)axis.item(level)].child(axis, level+1);
+    }
+    return super::_data->array[(int)axis.item(level)];
+}
+
+template<class T> template<class U>
+TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level)
+{
+    if(axis.size()==0) return *this;
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {

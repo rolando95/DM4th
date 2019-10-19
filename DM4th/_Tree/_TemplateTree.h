@@ -22,8 +22,9 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         inline TemplateTree<T> &child(int idx) const;
         template<class ... U> TemplateTree<T> &child(number idx, U ... args) const;
         template<class ... U> TemplateTree<T> &child(int idx, U ... args) const;
-        template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
-
+        template<class U> const TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0) const;
+        template<class U> TemplateTree<T> &child(const TemplateArray<U> &axis, int level=0);
+        
         TemplateTree<T> getCopy() const;
         void printTreeStructure() const;
 
