@@ -78,66 +78,6 @@ TemplateArray<T> items(T first, U ... args)
     return result;
 }
 
-// template<class T>
-// TemplateArray<T> range(T begin, T end, T step)
-// {
-//     TemplateArray<T> result;
-//     DM4thAssert( (end>begin && step>0) || (end<begin && step<0));
-//     int count = 0;
-//     T j = begin;
-//     if(step>0)
-//     {
-//         while(j<end)
-//         {
-//             ++count;
-//             j += step;
-//         }
-//     }else
-//     {
-//         while(j>end)
-//         {
-//             ++count;
-//             j += step;
-//         }
-//     }
-
-//     j = begin;
-//     result.resize(count);
-//     int idx=0;
-    
-//     while(idx<count)
-//     {
-//         result.item(idx) = j;
-//         j+=step;
-//         ++idx;
-//     }
-
-//     return result;
-// }
-
-// template<class T>
-// inline TemplateArray<T> range(T end)
-// {
-//     T begin = 0;
-//     T step = 1;
-//     if(end<begin)
-//     {
-//         step = -1;
-//     }
-//     return range<T>(begin, end, step);
-// }
-
-// template<class T>
-// inline TemplateArray<T> range(T begin, T end)
-// {
-//     T step = 1;
-//     if(end<begin)
-//     {
-//         step = -1;
-//     }
-//     return range<T>(begin, end, step);
-// }
-
 template<class T, class ... U>
 TemplateArray<T> repeat(T value, U ... axisSize)
 {
@@ -231,34 +171,12 @@ public:
 template<class T, class ...U>
 TemplateArray<T> zeros(U ... axisSize)
 {
-    // TemplateArray<T> result;
-    // int size = (int)mult(axisSize ...);
-    // result.resize(axisSize...);
-
-    // for(int j=0; j<size; ++j)
-    // {
-    //     result.data_item(j) = 0;
-    // }
-
-    
-    // return result;
     return repeat<T>(0, axisSize...);
 }
 
 template<class T, class ...U>
 TemplateArray<T> ones(U ... axisSize)
 {
-    // TemplateArray<T> result;
-    // int size = (int)mult(axisSize ...);
-    // result.resize(axisSize...);
-
-    // for(int j=0; j<size; ++j)
-    // {
-    //     result.data_item(j) = 1;
-    // }
-
-    
-    // return result;
     return repeat<T>(1, axisSize...);
 }
 

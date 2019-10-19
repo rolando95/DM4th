@@ -103,6 +103,52 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline T &data_item(int idx);
         inline const T data_item(int idx) const;
 
+        class iterator 
+        {
+        private:
+            TemplateArray<T> &_data;
+            int _ptr;
+        public:
+            iterator(TemplateArray<T> &data, int idx=0) : _data(data), _ptr(idx) {};
+            bool operator==(iterator other){ return (this->_ptr == other._ptr); }
+            bool operator!=(iterator other){ return !(*this==other); }
+            const T &operator=(const T value){ return this->_data.data_item(this->_ptr) = value; }
+            iterator &operator++(){ ++this->_ptr; return *this; }
+            iterator operator++(int){ iterator result(this->_data, this->_ptr); ++this->_ptr; return result; }
+            T &operator*(){ return this->_data.data_item(this->_ptr); }
+        };
+
+        class iterator_const
+        {
+        private:
+            const TemplateArray<T> &_data;
+            int _ptr;
+        public:
+            iterator_const(const TemplateArray<T> &data, int idx=0) : _data(data), _ptr(idx) {};
+            bool operator==(iterator_const other) const { return (this->_ptr == other._ptr); }
+            bool operator!=(iterator_const other) const { return !(*this==other); }
+            const T &operator=(const T value) const { return this->_data.data_item(this->_ptr) = value; }
+            iterator_const &operator++(){ ++this->_ptr; return *this; }
+            iterator_const operator++(int){ iterator_const result(this->_data, this->_ptr); ++this->_ptr; return result; }
+            const T &operator*()  { return this->_data.data_item(this->_ptr); }
+        };
+
+        iterator begin(){
+            return iterator(*this);
+        }
+
+        iterator end(){
+            return iterator(*this, this->data_size());
+        }
+
+        iterator_const begin() const{
+            return iterator(*this);
+        }
+
+        iterator_const end() const{
+            return iterator(*this, this->data_size());
+        }
+
     private:
         int _partition(bool reverse, const int lo, const int hi);
         
