@@ -16,6 +16,7 @@ class NDArray: public TemplateArray<T>
         NDArray(const super &other){ static_cast<super&>(*this) = other; }
         explicit NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
         explicit NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        NDArray(range<T> other) { static_cast<super&>(*this) = other; }
 };
 
 template<>
@@ -24,9 +25,12 @@ class NDArray<bool>: public TemplateArray<bool>
     typedef TemplateArray super;
     public:
         NDArray(){}
+        template<class ...U> NDArray(bool *data, U ... axis) { static_cast<super&>(*this) = TemplateArray<bool>(data, axis ...); }
+        NDArray(bool *data, const TemplateArray<int> &axisArray) { static_cast<super&>(*this) = TemplateArray<bool>(data, axisArray); };
         NDArray(const super &other){ static_cast<super&>(*this) = other; }
         explicit NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
         explicit NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
+        NDArray(range<bool> other) { static_cast<super&>(*this) = other; }
         
         NDArray<bool> operator!() 
         {

@@ -78,65 +78,65 @@ TemplateArray<T> items(T first, U ... args)
     return result;
 }
 
-template<class T>
-TemplateArray<T> range(T begin, T end, T step)
-{
-    TemplateArray<T> result;
-    DM4thAssert( (end>begin && step>0) || (end<begin && step<0));
-    int count = 0;
-    T j = begin;
-    if(step>0)
-    {
-        while(j<end)
-        {
-            ++count;
-            j += step;
-        }
-    }else
-    {
-        while(j>end)
-        {
-            ++count;
-            j += step;
-        }
-    }
+// template<class T>
+// TemplateArray<T> range(T begin, T end, T step)
+// {
+//     TemplateArray<T> result;
+//     DM4thAssert( (end>begin && step>0) || (end<begin && step<0));
+//     int count = 0;
+//     T j = begin;
+//     if(step>0)
+//     {
+//         while(j<end)
+//         {
+//             ++count;
+//             j += step;
+//         }
+//     }else
+//     {
+//         while(j>end)
+//         {
+//             ++count;
+//             j += step;
+//         }
+//     }
 
-    j = begin;
-    result.resize(count);
-    int idx=0;
+//     j = begin;
+//     result.resize(count);
+//     int idx=0;
     
-    while(idx<count)
-    {
-        result.item(idx) = j;
-        j+=step;
-        ++idx;
-    }
+//     while(idx<count)
+//     {
+//         result.item(idx) = j;
+//         j+=step;
+//         ++idx;
+//     }
 
-    return result;
-}
+//     return result;
+// }
 
-template<class T>
-inline TemplateArray<T> range(T end)
-{
-    T begin = 0;
-    T step = 1;
-    if(end<begin)
-    {
-        step = -1;
-    }
-    return range<T>(begin, end, step);
-}
+// template<class T>
+// inline TemplateArray<T> range(T end)
+// {
+//     T begin = 0;
+//     T step = 1;
+//     if(end<begin)
+//     {
+//         step = -1;
+//     }
+//     return range<T>(begin, end, step);
+// }
 
-template<class T>
-inline TemplateArray<T> range(T begin, T end)
-{
-    T step = 1;
-    if(end<begin)
-    {
-        step = -1;
-    }
-    return range<T>(begin, end, step);
-}
+// template<class T>
+// inline TemplateArray<T> range(T begin, T end)
+// {
+//     T step = 1;
+//     if(end<begin)
+//     {
+//         step = -1;
+//     }
+//     return range<T>(begin, end, step);
+// }
 
 template<class T, class ... U>
 TemplateArray<T> repeat(T value, U ... axisSize)
@@ -152,6 +152,81 @@ TemplateArray<T> repeat(T value, U ... axisSize)
     
     return result;
 }
+
+template<class T>
+class range {
+    T _begin;
+    T _end;
+    T _step;
+
+public:
+    range(T end) : _begin(0), _end(end), _step(1) 
+    {
+        if(this->_begin>this->_end)
+        {
+            this->_step = -1;
+        }
+    };
+
+    range(T begin, T end) : _begin(begin), _end(end), _step(1) 
+    {
+        if(this->_begin>this->_end)
+        {
+            this->_step = -1;
+        }
+    };
+    
+    range(T begin, T end, T step) : _begin(begin), _end(end), _step(step)  
+    {
+        DM4thAssert( (end>=begin && step>0) || (end<=begin && step<0));
+    };
+
+    int size() 
+    { 
+        int size = 0;
+        T j = this->_begin; 
+        if(this->_step>0)
+        {
+            while(j<this->_end)
+            {
+                ++size;
+                j += this->_step;
+            }
+        }else
+        {
+            while(j>this->_end)
+            {
+                ++size;
+                j += this->_step;
+            }
+        }
+
+        return size; 
+    }
+
+    T begin() { return this->_begin; }
+    T end() { return this->_end; }
+    T step() { return this->_step; }
+
+
+    operator TemplateArray<T>()
+    {
+        int size = this->size();
+        TemplateArray<T> result;
+        T j = this->_begin;
+        result.resize(size);
+        int idx=0;
+        
+        while(idx<size)
+        {
+            result.item(idx) = j;
+            j+=this->_step;
+            ++idx;
+        }
+
+        return result;
+    }
+};
 
 template<class T, class ...U>
 TemplateArray<T> zeros(U ... axisSize)
