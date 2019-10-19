@@ -1,7 +1,7 @@
 #pragma once
 
 #include "_TemplateArray.h"
-#include "_ArrayUtilities.h"
+#include "_TemplateArrayUtilities.h"
 
 
 namespace DM4th
