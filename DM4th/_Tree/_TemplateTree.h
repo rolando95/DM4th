@@ -49,6 +49,9 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         void pushTreeRef(const TemplateTree<U> &value, const int idx=END);
 
         TemplateTree<T> pop(const int idx=END);
+        //TemplateTree<T> pop(TemplateTree<T> &ref);
+
+        TemplateArray<int> indexOf(const T value);
 
         inline TemplateTree<T> &left();
         inline TemplateTree<T> &right();
@@ -60,6 +63,7 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         void saveFile(std::string path);
     private:
         void _printTreeStructure(int level=0, std::string tab="", bool last=false) const;
+        bool _indexOf(const T value, TemplateArray<int> &result);
 };
 
 template<class T>

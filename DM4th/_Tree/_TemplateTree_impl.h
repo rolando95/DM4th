@@ -201,6 +201,53 @@ TemplateTree<T> TemplateTree<T>::pop(const int idx)
     return result;
 }
 
+// template<class T>
+// TemplateTree<T> TemplateTree<T>::pop(TemplateTree<T> &ref)
+// {
+//     TemplateTree<T> result;
+//     bool found = false;
+//     for(int j=0; j<this->size(); ++j)
+//     {
+
+//     }
+// }
+
+template<class T>
+TemplateArray<int> TemplateTree<T>::indexOf(const T value)
+{
+    TemplateArray<int> result;
+    if(this->node()!=value)
+    {
+        bool found = this->_indexOf(value, result);
+        if(!found)
+        {
+            result.push(-1);
+        }
+    }
+    return result;
+}
+
+template<class T>
+bool TemplateTree<T>::_indexOf(const T value, TemplateArray<int> &result)
+{
+
+    bool found = false;
+    if(this->node()==value) found = true;
+    else{
+        for(int j=0; j<this->size(); ++j)
+        {
+            found = this->child(j)._indexOf(value, result);
+            if(found)
+            {
+                result.push(j,0);
+                break;
+            }
+        }
+        
+    }
+    return found;
+}
+
 template<class T> 
 inline TemplateTree<T> &TemplateTree<T>::left()
 {
