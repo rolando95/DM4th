@@ -66,7 +66,10 @@ class _BaseArray
         const inline T get(int idx) const;
         void inline set(int idx, T value);
 
-
+        void operator=(const _BaseArray<T> &other)
+        {
+            other.copyReferenceTo(*this);
+        }
 
         template<class U> bool operator==(const _BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const _BaseArray<U> &other) const;

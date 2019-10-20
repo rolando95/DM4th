@@ -782,7 +782,7 @@ inline const T TemplateArray<T>::data_item(int idx) const { return super::_data-
 ///////////////////// SubArray
 template<class T> template<class ...U>
 TemplateArray<T>::SubArray::SubArray(TemplateArray<T> &ptr, U ... args) : _ptr(ptr) {
-    this->setRef( args...);
+    this->setRef( castToTemplateArray(args) ...);
 }
 
 template<class T>
@@ -821,6 +821,17 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
     }
     return *this;
 }
+
+template<class T>
+const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const T &other)
+{
+    for(int j=0; j<this->_subArray.data_size(); ++j)
+    {
+        *this->_subArray.data_item(j) = other;
+    }
+    return *this;
+}
+
 template<class T>
 const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const TemplateArray<T> &other)
 {
@@ -846,11 +857,13 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
     return *this;
 }
 
+
+
 template<class T> template<class U, class ... V>
 void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape, TemplateArray<U> first, V ... args)
 {
     shape(axis) = first.size();
-    this->setShapeRef(axis+1, shape, args ...);
+    this->setShapeRef(axis+1, shape, castToTemplateArray(args) ...);
 }
 
 template<class T>
@@ -860,7 +873,7 @@ void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape
 
     for(int j=axis; j<this->_ptr.shapeSize(); ++j)
     {
-        shape(axis) = this->_ptr.shape(j); // All elemenents of these axis
+        shape(j) = this->_ptr.shape(j); // All elemenents of these axis
     }
 }
 
@@ -872,7 +885,7 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
 
     TemplateArray<int> newShape;
     newShape.resize(this->_ptr.shapeSize());
-    this->setShapeRef(0,newShape, first, args...);
+    this->setShapeRef(0,newShape, castToTemplateArray(first), castToTemplateArray(args)...);
     this->_subArray.resize(newShape);
     
     TemplateArray<int> newDisp = this->_subArray._getAxisDisplacement();
@@ -884,7 +897,7 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
             oldDisp.item(0)*(int)first(j),
             newDisp.item(0)*j,
             oldDisp, newDisp,
-            args...
+            castToTemplateArray(args) ...
         );
     }
 
@@ -894,18 +907,26 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
     {
         if(newShape(j)>1) ++realSize;
     }
-    realNewShape.resize(realSize);
-    realSize=0;
-    for(int j=0; j<newShape.size(); ++j)
+
+    if(realSize>1)
     {
-        if(newShape(j)>1)
+        realNewShape.resize(realSize);
+        realSize=0;
+        for(int j=0; j<newShape.size(); ++j)
         {
-            realNewShape(realSize) = newShape(j);
-            ++realSize;
+            if(newShape(j)>1)
+            {
+                realNewShape(realSize) = newShape(j);
+                ++realSize;
+            }
         }
+        this->_subArray.reshape(realNewShape);
+    }else{
+        this->_subArray.reshape(DM4thTemplateArrayUtils::mult(newShape));
     }
 
-    this->_subArray.reshape(realNewShape);
+
+    
 }
 
 template<class T> template<class U, class ... V>
@@ -925,7 +946,7 @@ void TemplateArray<T>::SubArray::slider(
                 oldDispCount+oldDisp.item(axis)*(int)first(j),
                 newDispCount+newDisp.item(axis)*j,
                 oldDisp, newDisp,
-                args ...
+                castToTemplateArray(args) ...
             );
         }
     }else{

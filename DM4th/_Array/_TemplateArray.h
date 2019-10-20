@@ -70,6 +70,9 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             }
             return result;
         }
+
+        void operator=(const T &other){ this->resize(1); this->item(0)=other; } 
+        
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(TemplateArray<U> axisArray);
@@ -168,6 +171,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             
             operator TemplateArray<T>() const;
             const SubArray &operator=(const SubArray &other);
+            const SubArray &operator=(const T &other);
             const SubArray &operator=(const TemplateArray<T> &other);
             
         private:
@@ -190,6 +194,20 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
                 int oldDispCount, int newDispCount,
                 TemplateArray<int> oldDisp, TemplateArray<int> newDisp
             );
+
+            template<class U>
+            TemplateArray<int> castToTemplateArray(TemplateArray<U> value){ return TemplateArray<int>(value); }
+
+            template<class U>
+            TemplateArray<int> castToTemplateArray(range<U> value){ return TemplateArray<int>(value); }
+
+            TemplateArray<int> castToTemplateArray(number value)
+            { 
+                TemplateArray<int> result;
+                result.resize(1);
+                result(0) = (int)value;
+                return result; 
+            }
         };
 
         template<class ...U>
