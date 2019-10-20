@@ -159,48 +159,43 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
         class SubArray
         {
-            DM4thInternal::_BaseArray<DM4thInternal::_BaseArray<int>> _idxs;
-            TemplateArray<T> &_data;
-            TemplateArray<T*> _ref;
-            int _totalSize;
+            TemplateArray<T> &_ptr;
+            TemplateArray<T*> _subArray;
 
         public:
-            SubArray(TemplateArray<T> &data);
-
             template<class ... U>
-            void setIdxs(U ... args);
-
+            SubArray(TemplateArray<T> &data, U ... args);
+            
             operator TemplateArray<T>() const;
             const SubArray &operator=(const SubArray &other);
             const SubArray &operator=(const TemplateArray<T> &other);
             
         private:
-            void _setRef();
-            
-            void _slider(
+            template<class U, class ... V>
+            void setRef(TemplateArray<U> first, V... args);
+
+            template<class U, class ... V>
+            void setShapeRef(int axis, TemplateArray<int> &shape, TemplateArray<U> first, V ... args);
+
+            void setShapeRef(int axis, TemplateArray<int> &shape);
+
+            template<class U, class ... V>
+            void slider(                
+                int axis,
+                int oldDispCount, int newDispCount,
+                TemplateArray<int> oldDisp, TemplateArray<int> newDisp, TemplateArray<U> first, V ... args
+            );
+            void slider(                
                 int axis,
                 int oldDispCount, int newDispCount,
                 TemplateArray<int> oldDisp, TemplateArray<int> newDisp
             );
-
-
-            template<class U, class ... V>
-            void _setIdxs(int idx, TemplateArray<U> first, V ... args);
-            template<class U, class ... V>
-            void _setIdxs(int idx, range<U> first, V ... args);
-
-            template<class ... V>
-            void _setIdxs(int idx, number first, V ... args);
-
-            void _setIdxs(int idx);
-
         };
 
         template<class ...U>
         SubArray subArr(U ... args)
         {
-            SubArray result(*this);
-            result.setIdxs(args ...);
+            SubArray result(*this, args ...);
             return result;
         }
 
