@@ -5,7 +5,7 @@
 namespace DM4th
 {
 
-template<class T=float>
+template<class T=number>
 class NDArray: public TemplateArray<T>
 {
     typedef TemplateArray<T> super;
