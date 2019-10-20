@@ -23,7 +23,7 @@ TemplateArray<T>::TemplateArray(T *data, const TemplateArray<int> &axisArray)
     DM4thAssert(axisArray.shapeSize()==1);
 
     this->resize(axisArray);
-    int size = mult(axisArray);
+    int size = DM4thTemplateArrayUtils::mult(axisArray);
     for(int j=0; j<size; ++j)
     {
         std::cout<<data[j]<<std::endl;
@@ -147,11 +147,11 @@ template<class T> template<class ... U>
 const TemplateArray<T> &TemplateArray<T>::reshape(int axis1, U ... args)
 {
     //int oldShapeMult = mult(this->shape().data(), this->shapeSize());
-    int oldShapeMult = mult(super::_data->shape.data(), this->shapeSize());
-    int newShapeMult = mult(axis1,args...);
+    int oldShapeMult = DM4thCArrayUtils::mult(super::_data->shape.data(), this->shapeSize());
+    int newShapeMult = DM4thUtils::mult(axis1,args...);
     DM4thAssert(oldShapeMult==newShapeMult);
     
-    super::_data->shape.resize(count(axis1,args...));
+    super::_data->shape.resize(DM4thUtils::count(axis1,args...));
     this->_reshape(0, axis1, args...);
 
     return *this;
@@ -160,8 +160,8 @@ const TemplateArray<T> &TemplateArray<T>::reshape(int axis1, U ... args)
 template<class T>
 const TemplateArray<T> & TemplateArray<T>::reshape(TemplateArray<int> newShape)
 {
-    int oldShapeMult = mult(super::_data->shape.data(), this->shapeSize());
-    int newShapeMult = mult(newShape.data(), newShape.size());     
+    int oldShapeMult = DM4thCArrayUtils::mult(super::_data->shape.data(), this->shapeSize());
+    int newShapeMult = DM4thCArrayUtils::mult(newShape.data(), newShape.size());     
     DM4thAssert(newShape.shapeSize()==1);    
     DM4thAssert(oldShapeMult==newShapeMult);
 

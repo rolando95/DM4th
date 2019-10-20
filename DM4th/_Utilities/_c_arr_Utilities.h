@@ -3,6 +3,9 @@
 namespace DM4th
 {
 
+namespace DM4thCArrayUtils
+{
+
 template<class T>
 T mult(const T* data, int size){
     T result = 1;
@@ -19,6 +22,8 @@ T sum(T* data, int size){
         result+=data[j];
     }
     return result;
+}
+
 }
 
 }

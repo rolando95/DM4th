@@ -82,12 +82,24 @@ class _BaseArray
 
         inline void clear();
         inline void moveReferenceTo(_BaseArray<T> &other);
+        inline void copyReferenceTo(_BaseArray<T> &other) const;
 
         inline void swap(int idx1, int idx2)
         {
             T tmp = this->get(idx1);
             this->set(idx1, this->get(idx2));
             this->set(idx2, tmp);
+        }
+
+        void log() const
+        {
+            std::cout<<"[";
+            for(int j=0; j<this->size();++j)
+            {
+                if(j!=0) std::cout<<", ";
+                std::cout<<this->get(j);
+            }
+            std::cout<<"]\n";
         }
 };
 #endif

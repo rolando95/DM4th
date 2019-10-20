@@ -29,6 +29,9 @@ class TemplateTree: public DM4thInternal::_TreeDataManager<TemplateTree,T>
         void printTreeStructure() const;
 
         template<class U>
+        inline explicit operator U() { return (U)this->node(); }
+
+        template<class U>
         inline TemplateTree<T> &operator()(U axis);
         template<class ... U>
         inline TemplateTree<T> &operator()(U ... args);

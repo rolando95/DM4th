@@ -75,6 +75,9 @@ constexpr int ALL = std::numeric_limits<int>::max();
 #define _min(a,b) (a<b)? a: b
 #define _max(a,b) (a>b)? a: b
 
+namespace DM4thUtils
+{
+
 template<class T>
 T mult(T last){
     return last;
@@ -101,6 +104,8 @@ int count(T last){
 template<class T, class ... U>
 int count(T first, U ... args){
     return 1+count(args...);
+}
+
 }
 
 inline void _handleIstreamSpacesAndNewLines(std::istream &stream)

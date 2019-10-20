@@ -4,59 +4,65 @@
 namespace DM4th
 {
 
-template<class T>
-T mult(TemplateArray<T> arr)
+namespace DM4thTemplateArrayUtils
 {
-    T result = 1;
-    int size = arr.data_size();
-    for(int j=0; j<size; ++j){
-        result*=arr.data_item(j);
-    }
-    return result;
-}
 
-
-template<class T>
-T sum(TemplateArray<T> arr)
-{
-    T result = 0;
-    int size = arr.data_size();
-    for(int j=0; j<size; ++j){
-        result+=arr.data_item(j);
-    }
-    return result;
-}
-
-template<class T>
-T min(TemplateArray<T> arr)
-{
-    T result = INF;
-    int size = arr.data_size();
-    for(int j=0; j<size; ++j){
-        if(arr.data_item(j) < result)
-        {
-            result=arr.data_item(j);
+    template<class T>
+    T mult(TemplateArray<T> arr)
+    {
+        T result = 1;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            result*=arr.data_item(j);
         }
+        return result;
     }
-    return result;
-}
 
-template<class T>
-T max(TemplateArray<T> arr)
-{
-    T result = INF;
-    int size = arr.data_size();
-    for(int j=0; j<size; ++j){
-        if(arr.data_item(j) > result)
-        {
-            result=arr.data_item(j);
+
+    template<class T>
+    T sum(TemplateArray<T> arr)
+    {
+        T result = 0;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            result+=arr.data_item(j);
         }
+        return result;
     }
-    return result;
-}
 
-template<class T>
-int count(TemplateArray<T> arr){ return arr.data_size(); }
+    template<class T>
+    T min(TemplateArray<T> arr)
+    {
+        T result = INF;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            if(arr.data_item(j) < result)
+            {
+                result=arr.data_item(j);
+            }
+        }
+        return result;
+    }
+
+    template<class T>
+    T max(TemplateArray<T> arr)
+    {
+        T result = INF;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            if(arr.data_item(j) > result)
+            {
+                result=arr.data_item(j);
+            }
+        }
+        return result;
+    }
+
+
+    template<class T>
+    int count(TemplateArray<T> arr){ return arr.data_size(); }
+
+}
 
 template<class T, class U, class ... V>
 void _items(TemplateArray<T> &arr, int axis, U first, V ... args)
@@ -72,7 +78,7 @@ template<class T, class ... U>
 TemplateArray<T> items(T first, U ... args)
 {
     TemplateArray<T> result;
-    int size = count(first, args...);
+    int size = DM4thUtils::count(first, args...);
     result.resize(size);
     _items(result, 0, first, args...);
     return result;
@@ -82,7 +88,7 @@ template<class T, class ... U>
 TemplateArray<T> repeat(T value, U ... axisSize)
 {
     TemplateArray<T> result;
-    unsigned int size = (unsigned int)mult(axisSize ...);
+    unsigned int size = (unsigned int)DM4thUtils::mult(axisSize ...);
     result.resize(axisSize...);
 
     for(unsigned int j=0; j<size; ++j)
@@ -114,7 +120,7 @@ TemplateArray<T> identity(U ... axisSize)
     //result.resize(axisSize...);
 
     TemplateArray<T> axis = items<T>(axisSize ...);
-    int size = min<T>(axis);
+    int size = DM4thTemplateArrayUtils::min<T>(axis);
     int disp = result._getAxisDisplacement(0) + 1;
     for(int j=0, idx=0; j<size; ++j, idx+=disp)
     {

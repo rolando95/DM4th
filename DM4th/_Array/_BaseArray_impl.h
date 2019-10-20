@@ -112,7 +112,7 @@ inline void _BaseArray<T>::reallocArray(int size)
             //memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min);
             for (int j = 0; j < min; ++j)
             {
-                tmp[j] = _array[j];
+                tmp[j] = this->_array[j];
             }
 
             for (int j = min; j < size; ++j)
@@ -372,6 +372,16 @@ inline void _BaseArray<T>::moveReferenceTo(_BaseArray<T> &other)
     other._size = this->_size;
     this->_array = nullptr;
     this->_size = 0;
+}
+
+template<class T>
+inline void _BaseArray<T>::copyReferenceTo(_BaseArray<T> &other) const
+{
+    other.resize(this->size());
+    for(int j=0; j<this->size(); ++j)
+    {
+        other.set(j,this->get(j));
+    }
 }
 #endif
 //////////////////// _ShapeData
