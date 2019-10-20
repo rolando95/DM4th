@@ -6,6 +6,8 @@
 namespace DM4th
 {
 
+template<class T> class range;
+
 template<class T>
 class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 {
@@ -183,7 +185,12 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
 
             template<class U, class ... V>
-            void _setIdxs(int idx, U first, V ... args);
+            void _setIdxs(int idx, TemplateArray<U> first, V ... args);
+            template<class U, class ... V>
+            void _setIdxs(int idx, range<U> first, V ... args);
+
+            template<class ... V>
+            void _setIdxs(int idx, number first, V ... args);
 
             void _setIdxs(int idx);
 

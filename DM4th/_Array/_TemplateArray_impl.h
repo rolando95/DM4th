@@ -927,9 +927,29 @@ void TemplateArray<T>::SubArray::_slider(
 }
 
 template<class T> template<class U, class ... V>
-void TemplateArray<T>::SubArray::_setIdxs(int idx, U first, V ... args)
+void TemplateArray<T>::SubArray::_setIdxs(int idx, TemplateArray<U> first, V ... args)
 {
     TemplateArray<int>(first)._arrayData()->array.copyReferenceTo(this->_idxs(idx));
+    this->_totalSize += this->_idxs(idx).size();
+    this->_setIdxs(idx+1, args...);
+}
+
+template<class T> template<class U, class ... V>
+void TemplateArray<T>::SubArray::_setIdxs(int idx, range<U> first, V ... args)
+{
+    TemplateArray<int>(first)._arrayData()->array.copyReferenceTo(this->_idxs(idx));
+    this->_totalSize += this->_idxs(idx).size();
+    this->_setIdxs(idx+1, args...);
+}
+
+
+template<class T> template<class ... V>
+void TemplateArray<T>::SubArray::_setIdxs(int idx, number first, V ... args)
+{
+    //TemplateArray<int>(first)._arrayData()->array.copyReferenceTo(this->_idxs(idx));
+    this->_idxs(idx).resize(1);
+    this->_idxs(idx).set(0, (int)first);
+    
     this->_totalSize += this->_idxs(idx).size();
     this->_setIdxs(idx+1, args...);
 }
