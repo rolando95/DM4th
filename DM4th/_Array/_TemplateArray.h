@@ -165,12 +165,9 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
             template<class ... U>
             void setIdxs(U ... args){
-                int size = DM4thUtils::count(args ...);
-                _idxs.resize(size);
+                this->_idxs.resize(this->_data.shapeSize());
                 this->_setIdxs(0, args...);
             }
-
-            void setIdx(){}
 
             operator TemplateArray<T>()
             {
@@ -276,7 +273,18 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
                 this->_totalSize += this->_idxs(idx).size();
                 this->_setIdxs(idx+1, args...);
             }
-            void _setIdxs(int idx){}
+            void _setIdxs(int idx){
+                if(idx<this->_data.shapeSize())
+                {
+                    TemplateArray<int> result;
+                    result.resize(this->_data.shape(idx));
+                    for(int j=0; j<this->_data.shape(idx); ++j)
+                    {
+                        result(j) = j;
+                    }
+                    this->_setIdxs(idx, result);
+                }
+            }
 
         };
 

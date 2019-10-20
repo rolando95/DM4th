@@ -8,17 +8,9 @@ int main(){
     print(myList);
     NDArray<number>::SubArray query = myList.subArr(
         range<int>(0,2), 
-        items<int>(0), 
-        items<int>(0,1)
+        items<int>(0)
     );
-
-    NDArray<number>::SubArray query2 = myList.subArr(
-        range<int>(0,2), 
-        items<int>(0), 
-        items<int>(0,1)
-    );
-
-    query = query2;
+    //query = query2;
 
     print(NDArray<number>(query));
 
