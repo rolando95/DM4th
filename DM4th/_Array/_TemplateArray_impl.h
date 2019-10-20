@@ -828,6 +828,30 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
     }
     return *this;
 }
+template<class T>
+const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const TemplateArray<T> &other)
+{
+    DM4thAssert(this->_ref.data_size()==other.data_size());
+    if(&this->_data!=&other)
+    {
+        for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            *this->_ref.data_item(j) = other.data_item(j);
+        }
+    }else{
+        TemplateArray<T> tmp;
+        tmp.resize(this->_ref.shape());
+        for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            tmp.data_item(j) = other.data_item(j);
+        }
+                for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            *this->_ref.data_item(j) = tmp.data_item(j);
+        }
+    }
+    return *this;
+}
 
 template<class T>
 void TemplateArray<T>::SubArray::_setRef()

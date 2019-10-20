@@ -170,7 +170,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
             operator TemplateArray<T>() const;
             const SubArray &operator=(const SubArray &other);
-
+            const SubArray &operator=(const TemplateArray<T> &other);
+            
         private:
             void _setRef();
             
