@@ -159,132 +159,31 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         {
             DM4thInternal::_BaseArray<DM4thInternal::_BaseArray<int>> _idxs;
             TemplateArray<T> &_data;
+            TemplateArray<T*> _ref;
             int _totalSize;
+
         public:
-            SubArray(TemplateArray<T> &data) : _data(data), _totalSize(0) {};
+            SubArray(TemplateArray<T> &data);
 
             template<class ... U>
-            void setIdxs(U ... args){
-                this->_idxs.resize(this->_data.shapeSize());
-                this->_setIdxs(0, args...);
-            }
+            void setIdxs(U ... args);
 
-            operator TemplateArray<T>()
-            {
-                TemplateArray<T> result;
-
-                TemplateArray<int> oldShape = this->_data.shape();
-                TemplateArray<int> oldDisp = this->_data._getAxisDisplacement();
-
-                TemplateArray<int> newShape;
-                int realSize=0;
-                newShape.resize(this->_idxs.size());
-                for(int j=0; j<this->_idxs.size();++j)
-                {
-                    newShape(j) = this->_idxs(j).size();
-                    if(newShape(j)>1)
-                    {
-                        ++realSize;
-                    }
-                }
-
-                result.resize(newShape);
-                TemplateArray<int> newDisp = result._getAxisDisplacement();
-
-                for( int j=0; j<this->_idxs(0).size(); ++j )
-                {
-                    this->_slider(
-                        1,
-                        oldDisp.item(0)*this->_idxs(0)(j),
-                        newDisp.item(0)*j,
-                        oldDisp, newDisp,
-                        result
-                    );
-                }
-
-                TemplateArray<int> realNewShape;
-                realNewShape.resize(realSize);
-                realSize=0;
-                for(int j=0; j<this->_idxs.size(); ++j)
-                {
-                    if(this->_idxs(j).size()>1)
-                    {
-                        realNewShape(realSize) = this->_idxs(j).size();
-                        ++realSize;
-                    }
-                }
-
-                result.reshape(realNewShape);
-                return result;
-            }
-
-            // const SubArray &operator=(const SubArray &other)
-            // {
-            //     if(this!=&other)
-            //     {
-            //         if(other._totalSize==this->_totalSize)
-            //         {
-
-            //         }else if(other._totalSize == 1)
-            //         {
-
-            //         }else
-            //         {
-            //             DM4thAssert(false);
-            //         }
-            //     }
-            //     return *this;
-            // }
+            operator TemplateArray<T>();
 
         private:
-
+            void _setRef();
+            
             void _slider(
                 int axis,
                 int oldDispCount, int newDispCount,
-                TemplateArray<int> oldDisp, TemplateArray<int> newDisp,
-                TemplateArray<T> &result
-            )
-            {
-                if(axis<this->_idxs.size()-1)
-                {
-                    for(int j=0; j<this->_idxs(axis).size(); ++j)
-                    {
-                        this->_slider(axis+1,
-                            oldDispCount+oldDisp.item(axis)*this->_idxs(axis)(j),
-                            newDispCount+newDisp.item(axis)*j,
-                            oldDisp, newDisp,
-                            result
-                        );
-                    }
-                }else{
-                    for(int j=0; j<this->_idxs(axis).size(); ++j)
-                    {
-                        int to = newDispCount+newDisp.item(axis)*j;
-                        int from = oldDispCount+oldDisp.item(axis)*this->_idxs(axis)(j);
-                        result.data_item(to) = this->_data.data_item(from);
-                    }
-                }
-            }
+                TemplateArray<int> oldDisp, TemplateArray<int> newDisp
+            );
+
 
             template<class U, class ... V>
-            void _setIdxs(int idx, U first, V ... args)
-            {
-                TemplateArray<int>(first)._arrayData()->array.copyReferenceTo(this->_idxs(idx));
-                this->_totalSize += this->_idxs(idx).size();
-                this->_setIdxs(idx+1, args...);
-            }
-            void _setIdxs(int idx){
-                if(idx<this->_data.shapeSize())
-                {
-                    TemplateArray<int> result;
-                    result.resize(this->_data.shape(idx));
-                    for(int j=0; j<this->_data.shape(idx); ++j)
-                    {
-                        result(j) = j;
-                    }
-                    this->_setIdxs(idx, result);
-                }
-            }
+            void _setIdxs(int idx, U first, V ... args);
+
+            void _setIdxs(int idx);
 
         };
 

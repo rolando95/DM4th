@@ -778,6 +778,129 @@ inline T &TemplateArray<T>::data_item(int idx) { return super::_data->array[idx]
 template<class T>
 inline const T TemplateArray<T>::data_item(int idx) const { return super::_data->array.get(idx); }
 
+
+///////////////////// SubArray
+template<class T>
+TemplateArray<T>::SubArray::SubArray(TemplateArray<T> &data)
+: _data(data), _totalSize(0) {};
+
+template<class T> template<class ... U>
+void TemplateArray<T>::SubArray::setIdxs(U ... args)
+{
+    this->_idxs.resize(this->_data.shapeSize());
+    this->_setIdxs(0, args...);
+    this->_setRef();
+}
+
+template<class T>
+TemplateArray<T>::SubArray::operator TemplateArray<T>()
+{
+    TemplateArray<T> result;
+    result.resize(this->_ref.shape());
+    for(int j=0; j<this->_ref.data_size(); ++j)
+    {
+        result.data_item(j) = *this->_ref.data_item(j);
+    }
+    return result;
+}
+
+template<class T>
+void TemplateArray<T>::SubArray::_setRef()
+{
+    TemplateArray<int> oldShape = this->_data.shape();
+    TemplateArray<int> oldDisp = this->_data._getAxisDisplacement();
+
+    TemplateArray<int> newShape;
+    int realSize=0;
+    newShape.resize(this->_idxs.size());
+    for(int j=0; j<this->_idxs.size();++j)
+    {
+        newShape(j) = this->_idxs(j).size();
+        if(newShape(j)>1)
+        {
+            ++realSize;
+        }
+    }
+
+    this->_ref.resize(newShape);
+    TemplateArray<int> newDisp = this->_ref._getAxisDisplacement();
+
+    for( int j=0; j<this->_idxs(0).size(); ++j )
+    {
+        this->_slider(
+            1,
+            oldDisp.item(0)*this->_idxs(0)(j),
+            newDisp.item(0)*j,
+            oldDisp, newDisp
+        );
+    }
+
+    TemplateArray<int> realNewShape;
+    realNewShape.resize(realSize);
+    realSize=0;
+    for(int j=0; j<this->_idxs.size(); ++j)
+    {
+        if(this->_idxs(j).size()>1)
+        {
+            realNewShape(realSize) = this->_idxs(j).size();
+            ++realSize;
+        }
+    }
+
+    this->_ref.reshape(realNewShape);
+}
+
+template<class T>
+void TemplateArray<T>::SubArray::_slider(
+    int axis,
+    int oldDispCount, int newDispCount,
+    TemplateArray<int> oldDisp, TemplateArray<int> newDisp
+)
+{
+    if(axis<this->_idxs.size()-1)
+    {
+        for(int j=0; j<this->_idxs(axis).size(); ++j)
+        {
+            this->_slider(axis+1,
+                oldDispCount+oldDisp.item(axis)*this->_idxs(axis)(j),
+                newDispCount+newDisp.item(axis)*j,
+                oldDisp, newDisp
+            );
+        }
+    }else{
+        for(int j=0; j<this->_idxs(axis).size(); ++j)
+        {
+            int to = newDispCount+newDisp.item(axis)*j;
+            int from = oldDispCount+oldDisp.item(axis)*this->_idxs(axis)(j);
+            this->_ref.data_item(to) = &this->_data.data_item(from);
+        }
+    }
+}
+
+template<class T> template<class U, class ... V>
+void TemplateArray<T>::SubArray::_setIdxs(int idx, U first, V ... args)
+{
+    TemplateArray<int>(first)._arrayData()->array.copyReferenceTo(this->_idxs(idx));
+    this->_totalSize += this->_idxs(idx).size();
+    this->_setIdxs(idx+1, args...);
+}
+
+template<class T>
+void TemplateArray<T>::SubArray::_setIdxs(int idx)
+{
+    if(idx<this->_data.shapeSize())
+    {
+        TemplateArray<int> result;
+        result.resize(this->_data.shape(idx));
+        for(int j=0; j<this->_data.shape(idx); ++j)
+        {
+            result(j) = j;
+        }
+        this->_setIdxs(idx, result);
+    }
+}
+
+/////////////////////
 template<class T>
 void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
             TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
