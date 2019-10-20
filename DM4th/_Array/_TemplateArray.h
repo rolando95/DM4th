@@ -168,7 +168,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             template<class ... U>
             void setIdxs(U ... args);
 
-            operator TemplateArray<T>();
+            operator TemplateArray<T>() const;
+            const SubArray &operator=(const SubArray &other);
 
         private:
             void _setRef();

@@ -1,19 +1,10 @@
 #include "DM4th/DM4th.h"
 
 int main(){
-    NDArray<number> myList = range<number>(12);
-    myList.reshape(3,2,2);
-
-    myList += 1;
-    print(myList);
-    NDArray<number>::SubArray query = myList.subArr(
-        range<int>(0,2), 
-        items<int>(0)
-    );
-    //query = query2;
-
-    print(NDArray<number>(query));
-
+    NDArray<string> hello  = items<string>("Hello","World");
+    NDArray<number> myList = range<number>(10);
+    print(hello,myList);
+    
     input();
     return 0;
 }

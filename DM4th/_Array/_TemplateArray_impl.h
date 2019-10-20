@@ -665,12 +665,12 @@ std::istream& TemplateArray<T>::istream(std::istream& stream)
     int c_size = 0;
     std::queue<T> values;
     bool shapeAllocated = false;
-    _handleIstreamSpacesAndNewLines(stream);
+    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
 
     DM4thAssert(stream.peek()=='['); stream.get();
     
     this->_istream(stream, values, 0, c_size, shapeAllocated);
-    _handleIstreamSpacesAndNewLines(stream);
+    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
 
     DM4thAssert(stream.peek()==']'); stream.get();
 
@@ -793,7 +793,7 @@ void TemplateArray<T>::SubArray::setIdxs(U ... args)
 }
 
 template<class T>
-TemplateArray<T>::SubArray::operator TemplateArray<T>()
+TemplateArray<T>::SubArray::operator TemplateArray<T>() const
 {
     TemplateArray<T> result;
     result.resize(this->_ref.shape());
@@ -802,6 +802,31 @@ TemplateArray<T>::SubArray::operator TemplateArray<T>()
         result.data_item(j) = *this->_ref.data_item(j);
     }
     return result;
+}
+
+template<class T>
+const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const TemplateArray<T>::SubArray &other)
+{
+    DM4thAssert(this->_ref.data_size()==other._ref.data_size());
+    if(&this->_data!=&other._data)
+    {
+        for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            *this->_ref.data_item(j) = *other._ref.data_item(j);
+        }
+    }else{
+        TemplateArray<T> tmp;
+        tmp.resize(this->_ref.shape());
+        for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            tmp.data_item(j) = *other._ref.data_item(j);
+        }
+                for(int j=0; j<this->_ref.data_size(); ++j)
+        {
+            *this->_ref.data_item(j) = tmp.data_item(j);
+        }
+    }
+    return *this;
 }
 
 template<class T>
@@ -1014,15 +1039,15 @@ template<class T>
 void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
 {
     int size=0;
-    _handleIstreamSpacesAndNewLines(stream);
+    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()=='[')
     {
         while (true)
         {
-            _handleIstreamSpacesAndNewLines(stream);
+            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
             DM4thAssert(stream.peek()=='['); stream.get();
 
-            _handleIstreamSpacesAndNewLines(stream);
+            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']') break; //This dim is empty
 
             this->_istream(stream, values, shapeIdx+1, c_size, shapeAllocated);
@@ -1030,7 +1055,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             
             DM4thAssert(stream.peek()==']'); stream.get();
 
-            _handleIstreamSpacesAndNewLines(stream);
+            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else DM4thAssert(false);
@@ -1040,7 +1065,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
         T value;
         while (true)
         {
-            _handleIstreamSpacesAndNewLines(stream);
+            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']') break; //This dim is empty
             
             stream>>value;
@@ -1048,7 +1073,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
             size += 1;
             c_size += 1;
             
-            _handleIstreamSpacesAndNewLines(stream);
+            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else DM4thAssert(false);

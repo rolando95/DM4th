@@ -108,6 +108,9 @@ int count(T first, U ... args){
 
 }
 
+namespace DM4thInternal 
+{
+
 inline void _handleIstreamSpacesAndNewLines(std::istream &stream)
 {
     while(stream.peek()==' ' || stream.peek()=='\n')
@@ -126,6 +129,8 @@ inline void _handleStringInQuotes(std::istream &stream, std::string &value)
     else DM4thAssert(false);
     std::getline(stream, value, delimeter);
     _handleIstreamSpacesAndNewLines(stream);
+}
+
 }
 
 }
