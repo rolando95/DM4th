@@ -16,6 +16,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
     public:
         class iterator;
         class iterator_const;
+        class SubArray;
 
         TemplateArray();
         template<class ... U> TemplateArray(T *data, U ... args);
@@ -31,7 +32,6 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline int shapeSize() const;
 
         int size() const;
-        //int itemsCount() const;
 
         TemplateArray<int> shape() const;
         inline int shape(int axis) const;
@@ -39,9 +39,10 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class ... U>
         const TemplateArray<T> & reshape(int axis1, U ... args);
         const TemplateArray<T> & reshape(TemplateArray<int> newShape);
-
-        TemplateArray<int> _getAxisDisplacement() const;
-        int _getAxisDisplacement(int axis) const;
+        
+        TemplateArray<T> flatten();
+        void sort(bool reverse=false, int lo=0, int hi=END);
+        template<class U, class V> inline void swap(U idx1, V idx2);
 
         template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
         template<class AXIS> T &item(AXIS x) const;
@@ -57,18 +58,13 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         T pop(const int idx=END);
         TemplateArray<T> popArray(const int idx=END);
 
-        // template<class U>
-        // inline explicit operator U() { return (U)this->data_item(0); }
-
         template<class U>
-        explicit operator TemplateArray<U>(){
-            TemplateArray<U> result;
-            result.resize(this->shape());
-            for(int j=0; j<this->data_size(); ++j)
-            {
-                result.data_item(j) = (U)this->data_item(j);
-            }
-            return result;
+        explicit operator TemplateArray<U>();
+
+        template<class U, enable_if_is_number(U, _number<U>)>
+        explicit operator U()
+        {
+            return (U)this->data_item(0);
         }
 
         void operator=(const T &other){ this->resize(1); this->item(0)=other; } 
@@ -76,7 +72,9 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(TemplateArray<U> axisArray);
-
+        // template<class U> TemplateArray<T>::SubArray operator[](TemplateArray<U> idx);
+        // TemplateArray<T>::SubArray operator[](number idx);
+        
         template<class U> inline const TemplateArray<T> operator+=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
         inline const TemplateArray<T>  operator+=(const T &other);
@@ -111,18 +109,15 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         void loadFile(std::string path);
         void saveFile(std::string path);
 
-        //const TemplateArray<T> &sort(bool reverse=false, int lo=0, int hi=END);
-        void sort(bool reverse=false, int lo=0, int hi=END);
-
-        template<class U, class V>
-        inline void swap(U idx1, V idx2);
-
         inline void _resize1DArray(int size);
         inline T *data();
         inline const T *data() const;
         inline const int data_size() const;
         inline T &data_item(int idx);
         inline const T data_item(int idx) const;
+        
+        TemplateArray<int> _getAxisDisplacement() const;
+        int _getAxisDisplacement(int axis) const;
 
         iterator begin(){ return iterator(*this); }
         iterator end(){ return iterator(*this, this->data_size()); }

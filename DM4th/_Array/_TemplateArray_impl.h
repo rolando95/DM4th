@@ -175,29 +175,58 @@ const TemplateArray<T> & TemplateArray<T>::reshape(TemplateArray<int> newShape)
 }
 
 template<class T>
-TemplateArray<int> TemplateArray<T>::_getAxisDisplacement() const
+TemplateArray<T> TemplateArray<T>::flatten()
 {
-    TemplateArray<int> result;
-    result._resize1DArray(super::_data->shape.size());
-    int disp = 1;
-    for(int j=super::_data->shape.size()-1; j>=0; --j)
-    {
-        result.item(j) = disp;
-        disp *= super::_data->shape.get(j);
-    }
-
+    TemplateArray<T> result = this->getCopy();
+    result.reshape(this->data_size());
     return result;
 }
 
 template<class T>
-int TemplateArray<T>::_getAxisDisplacement(int axis) const
+int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
 {
-    int disp = 1;
-    for(int j=super::_data->shape.size()-1; j>axis; --j)
+    T pivot = this->data_item( (lo+hi)/2 );
+    int i = lo;
+    for(int j=lo; j<hi; ++j)
     {
-        disp *= super::_data->shape.get(j);
+        if(
+            (reverse && this->data_item(j)>pivot) ||
+            (!reverse && this->data_item(j)<pivot)
+        )
+        {
+            super::_data->array.swap(i,j);
+            i+=1;
+        }
     }
-    return disp;
+    super::_data->array.swap(i,hi);
+    return i;
+}
+
+template<class T>
+void TemplateArray<T>::sort(bool reverse, int lo, int hi)
+{
+    if(hi==(int)END) hi = this->data_size()-1;
+    if(lo<hi){ 
+        int p = this->_partition(reverse, lo,hi);
+        this->sort(reverse, lo, p-1);
+        this->sort(reverse, p+1,hi);
+    }
+}
+
+template<class T> template<class U, class V>
+inline void TemplateArray<T>::swap(U idx1, V idx2)
+{
+    DM4thAssert(idx1<this->size() && idx2<this->size());
+    int disp = this->_getAxisDisplacement(0);
+
+    int pos1 = (int)idx1*disp;
+    int pos2 = (int)idx2*disp;
+
+    
+    for(int j=0; j<disp; ++j)
+    {
+        super::_data->array.swap(pos1+j, pos2+j);
+    }
 }
 
 template<class T> template<class AXIS, class ... U>
@@ -415,6 +444,18 @@ TemplateArray<T> TemplateArray<T>::popArray(const int pos)
     return result;
 }
 
+template<class T> template<class U>
+TemplateArray<T>::operator TemplateArray<U>()
+{
+    TemplateArray<U> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = (U)this->data_item(j);
+    }
+    return result;
+}
+
 template<class T> template<class ... U>
 inline T &TemplateArray<T>::operator()(U ... args){ return this->item(args...); }
 
@@ -423,6 +464,18 @@ const inline T &TemplateArray<T>::operator()(U ... args) const { return this->it
 
 template<class T> template<class U>
 inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this->item(axisArray); }
+
+// template<class T> template<class U>
+// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
+// {
+//     return this->subArr(idx);
+// } 
+// template<class T>
+// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
+// {
+//     return this->subArr(idx);
+// } 
+
 
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
@@ -707,60 +760,12 @@ void TemplateArray<T>::saveFile(std::string url){
 }
 
 template<class T>
-int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
-{
-    T pivot = this->data_item( (lo+hi)/2 );
-    int i = lo;
-    for(int j=lo; j<hi; ++j)
-    {
-        if(
-            (reverse && this->data_item(j)>pivot) ||
-            (!reverse && this->data_item(j)<pivot)
-        )
-        {
-            super::_data->array.swap(i,j);
-            i+=1;
-        }
-    }
-    super::_data->array.swap(i,hi);
-    return i;
-}
-
-template<class T>
-//const TemplateArray<T> &TemplateArray<T>::sort(bool reverse, int lo, int hi)
-void TemplateArray<T>::sort(bool reverse, int lo, int hi)
-{
-    if(hi==(int)END) hi = this->data_size()-1;
-    if(lo<hi){ 
-        int p = this->_partition(reverse, lo,hi);
-        this->sort(reverse, lo, p-1);
-        this->sort(reverse, p+1,hi);
-    }
-}
-
-template<class T>
 inline void TemplateArray<T>::_resize1DArray(int size)
 {
     //DM4thAssert(this->shapeSize()<=1); // Can be 0 || 1
     super::_data->array.resize(size);
     super::_data->shape.resize(1);
     super::_data->shape(0) = size;
-}
-
-template<class T> template<class U, class V>
-inline void TemplateArray<T>::swap(U idx1, V idx2)
-{
-    DM4thAssert(idx1<this->size() && idx2<this->size());
-    int disp = this->_getAxisDisplacement(0);
-
-    int pos1 = (int)idx1*disp;
-    int pos2 = (int)idx2*disp;
-
-    
-    for(int j=0; j<disp; ++j)
-    {
-        super::_data->array.swap(pos1+j, pos2+j);
-    }
 }
 
 template<class T>
@@ -778,6 +783,31 @@ inline T &TemplateArray<T>::data_item(int idx) { return super::_data->array[idx]
 template<class T>
 inline const T TemplateArray<T>::data_item(int idx) const { return super::_data->array.get(idx); }
 
+template<class T>
+TemplateArray<int> TemplateArray<T>::_getAxisDisplacement() const
+{
+    TemplateArray<int> result;
+    result._resize1DArray(super::_data->shape.size());
+    int disp = 1;
+    for(int j=super::_data->shape.size()-1; j>=0; --j)
+    {
+        result.item(j) = disp;
+        disp *= super::_data->shape.get(j);
+    }
+
+    return result;
+}
+
+template<class T>
+int TemplateArray<T>::_getAxisDisplacement(int axis) const
+{
+    int disp = 1;
+    for(int j=super::_data->shape.size()-1; j>axis; --j)
+    {
+        disp *= super::_data->shape.get(j);
+    }
+    return disp;
+}
 
 ///////////////////// SubArray
 template<class T> template<class ...U>
