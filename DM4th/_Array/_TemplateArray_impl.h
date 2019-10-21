@@ -542,7 +542,7 @@ template<class T> template<class U>
 const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &other)
 {   
     TemplateArray<T> result;
-    if(this->data_size()()==1)
+    if(this->data_size()==1)
     {
         result = other * this->item(0);
     }

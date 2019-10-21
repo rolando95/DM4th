@@ -81,5 +81,24 @@ private:
     }
 };
 
+template<class T, class U, class ... V>
+void _map(std::function<T(T)> f, NDArray<T> &arr, int axis, U first, V ... args)
+{
+    arr.data_item(axis) = (T)f(first);
+    _map(f, arr, axis+1, args...);
+}
+
+template<class T>
+void _map(std::function<T(T)> f, NDArray<T> &arr, int axis){}
+
+template<class T, class ... U>
+NDArray<T> map(std::function<T(T)> f, T first, U ... args)
+{
+    NDArray<T> result;
+    int size = DM4thUtils::count(first, args ...);
+    result.resize(size);
+    _map(f, result, 0, first, args...);
+    return result;
+}
 typedef range<int> slice;
 }

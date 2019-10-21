@@ -168,7 +168,6 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             const SubArray &operator=(const SubArray &other);
             const SubArray &operator=(const T &other);
             const SubArray &operator=(const TemplateArray<T> &other);
-            
         private:
             template<class U, class ... V>
             void setRef(TemplateArray<U> first, V... args);
@@ -205,6 +204,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
                 result(0) = (int)value;
                 return result; 
             }
+
+
         };
 
         template<class ...U>
@@ -214,6 +215,17 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             return result;
         }
 
+        template<class ...U>
+        SubArray subArray(U ... args)
+        {
+            SubArray result(*this, args ...);
+            return result;
+        }
+
+        friend std::ostream& operator<<(std::ostream& stream, const TemplateArray<T>::SubArray &arr){
+            stream<<TemplateArray<T>(arr);
+            return stream;
+        }
     private:
         int _partition(bool reverse, const int lo, const int hi);
 
