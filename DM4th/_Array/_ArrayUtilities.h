@@ -100,5 +100,17 @@ NDArray<T> map(std::function<T(T)> f, T first, U ... args)
     _map(f, result, 0, first, args...);
     return result;
 }
+
+template<class T>
+NDArray<T> map(std::function<T(T)> f, NDArray<T> args)
+{
+    NDArray<T> result;
+    result.resize(args.data_size());
+    for(int j=0; j<args.data_size(); ++j)
+    {
+        result(j) = f(args(j));
+    }
+    return result;
+}
 typedef range<int> slice;
 }
