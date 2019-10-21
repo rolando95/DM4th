@@ -920,16 +920,27 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
     
     TemplateArray<int> newDisp = this->_subArray._getAxisDisplacement();
 
-    for( int j=0; j<first.size(); ++j )
+    if(this->_ptr.shapeSize()>1)
     {
-        this->slider(
-            1,
-            oldDisp.item(0)*(int)first(j),
-            newDisp.item(0)*j,
-            oldDisp, newDisp,
-            castToTemplateArray(args) ...
-        );
+        for( int j=0; j<first.size(); ++j )
+        {
+            this->slider(
+                1,
+                oldDisp.item(0)*(int)first(j),
+                newDisp.item(0)*j,
+                oldDisp, newDisp,
+                castToTemplateArray(args) ...
+            );
+        }
     }
+    else{
+        DM4thAssert(DM4thUtils::count(first, args...)==1);
+        for( int j=0; j<first.size(); ++j )
+        {
+            this->_1DSlider(first(j),j);
+        }
+    }
+
 
     TemplateArray<int> realNewShape;
     int realSize=0;
@@ -967,7 +978,7 @@ void TemplateArray<T>::SubArray::slider(
     TemplateArray<U> first, V ... args
 )
 {
-    if(axis<this->_ptr.size()-1)
+    if(axis<this->_ptr.shapeSize()-1)
     {
         for(int j=0; j<first.size(); ++j)
         {
@@ -996,7 +1007,7 @@ void TemplateArray<T>::SubArray::slider(
     TemplateArray<int> oldDisp, TemplateArray<int> newDisp
 )
 {
-    if(axis<this->_ptr.size()-1)
+    if(axis<this->_ptr.shapeSize()-1)
     {
         for(int j=0; j<this->_ptr.shape(axis); ++j)
         {
@@ -1015,6 +1026,12 @@ void TemplateArray<T>::SubArray::slider(
             this->_subArray.data_item(to) = &this->_ptr.data_item(from);
         }
     }
+}
+
+template<class T>
+void TemplateArray<T>::SubArray::_1DSlider(int oldDisp, int newDisp)
+{
+    this->_subArray.data_item(newDisp) = &this->_ptr.data_item(oldDisp);
 }
 
 /////////////////////

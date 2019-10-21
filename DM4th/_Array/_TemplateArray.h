@@ -190,6 +190,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
                 TemplateArray<int> oldDisp, TemplateArray<int> newDisp
             );
 
+            void _1DSlider(int oldDisp, int newDisp);
+
             template<class U>
             TemplateArray<int> castToTemplateArray(TemplateArray<U> value){ return TemplateArray<int>(value); }
 

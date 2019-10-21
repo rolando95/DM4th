@@ -81,4 +81,5 @@ private:
     }
 };
 
+typedef range<int> slice;
 }
