@@ -59,97 +59,123 @@ std::ostream& operator<<(std::ostream& stream, _number<T> n){
     return stream;
 }
 //Entrada de numeros complejos
+// template<class T>
+// std::istream& operator>>(std::istream& stream, _number<T> &n){
+//     n=0;
+//     int state = 1;
+//     int nextState;
+//     char next;
+//     int count=0;
+//     char value[100];
+//     bool ok = true;
+//     //stream>>std::ws;
+//     //Maquina de estado para la lectura de valores complejos
+//     while(ok){
+//         if(stream.peek()==' ')stream>>std::ws;
+//         next = stream.peek();
+//         nextState = -1;
+//         switch (state){
+//             case 1:
+//                 if(next==' ') nextState = 1;
+//                 if(next=='+' || next=='-') nextState = 2;
+//                 else if(next=='.') nextState = 3;
+//                 else if(next>='0' && next<='9') nextState = 4;
+//                 else if(next=='i'){ value[count++] = '1'; nextState = 9;}
+//             break;
+
+//             case 2:
+//                 if(next=='.') nextState = 3;
+//                 else if(next>='0' && next<='9') nextState = 4;
+//                 else if(next=='i'){ value[count++] = '1'; nextState = 9;}
+//             break;
+
+//             case 3:
+//                 if(next>='0' && next<='9') nextState = 5;
+//             break;
+
+//             case 4:
+//                 if(next=='.')nextState = 3;
+//                 else if(next>='0' && next<='9') nextState = 4;
+//                 else if(next=='e' || next=='E') nextState = 6;
+//                 else if(next=='i') nextState = 9;
+//                 else nextState = 10;
+//             break;
+
+//             case 5:
+//                 if(next>='0'&& next<='9') nextState = 5;
+//                 else if(next=='e' || next=='E') nextState = 6;
+//                 else if(next=='i') nextState = 9;
+//                 else nextState = 10;
+//             break;
+
+//             case 6:
+//                 if(next=='+'||next=='-') nextState = 7;
+//                 else if(next>='0' && next<='9') nextState = 8;
+//             break;
+
+//             case 7:
+//                 if(next>='0' && next<='9') nextState = 8;
+//             break;
+
+//             case 8:
+//                 if(next>='0' && next<='9') nextState = 8;
+//                 else if(next=='i') nextState = 9;
+//                 else nextState = 10;
+//             break;
+
+//         }
+//         //std::cout<<state<<" '"<<next<<"' "<<nextState<<std::endl;
+//         //El proximo estado es de aceptacion
+//         if(nextState==9 || nextState==10){
+//             value[count] = '\0';
+//             if(nextState==9) n.imag(strtod(value,NULL));
+//             else n.real(strtod(value,NULL));
+//             count = 0;
+
+//             //Vuelve a estados anteriores si es un numero complejo
+//             if(next=='\n' || next==',') nextState = -1;
+//             else if(next==' ') nextState = 1;
+//             else if(next=='+'||next=='-')nextState = 2;
+//         }
+
+//         if(nextState >= 0 && count<100 ){
+//             state = nextState;
+//             if(next!='\n' && next!=',' && next!=']') stream>>value[count++];
+//             else value[count++] = '\0'; // Fuerza fin de lectura de numero complejo
+//         }else{
+//             ok = false;
+//         }
+//     }
+//     if(stream.peek()==' ')stream>>std::ws;
+//     if(stream.peek()=='\n') stream.get();
+//     return stream;
+
+// }
+
 template<class T>
-std::istream& operator>>(std::istream& stream, _number<T> &n){
-    n=0;
-    int state = 1;
-    int nextState;
-    char next;
-    int count=0;
-    char value[100];
-    bool ok = true;
-    //stream>>std::ws;
-    //Maquina de estado para la lectura de valores complejos
-    while(ok){
-        if(stream.peek()==' ')stream>>std::ws;
-        next = stream.peek();
-        nextState = -1;
-        switch (state){
-            case 1:
-                if(next==' ') nextState = 1;
-                if(next=='+' || next=='-') nextState = 2;
-                else if(next=='.') nextState = 3;
-                else if(next>='0' && next<='9') nextState = 4;
-                else if(next=='i'){ value[count++] = '1'; nextState = 9;}
-            break;
-
-            case 2:
-                if(next=='.') nextState = 3;
-                else if(next>='0' && next<='9') nextState = 4;
-                else if(next=='i'){ value[count++] = '1'; nextState = 9;}
-            break;
-
-            case 3:
-                if(next>='0' && next<='9') nextState = 5;
-            break;
-
-            case 4:
-                if(next=='.')nextState = 3;
-                else if(next>='0' && next<='9') nextState = 4;
-                else if(next=='e' || next=='E') nextState = 6;
-                else if(next=='i') nextState = 9;
-                else nextState = 10;
-            break;
-
-            case 5:
-                if(next>='0'&& next<='9') nextState = 5;
-                else if(next=='e' || next=='E') nextState = 6;
-                else if(next=='i') nextState = 9;
-                else nextState = 10;
-            break;
-
-            case 6:
-                if(next=='+'||next=='-') nextState = 7;
-                else if(next>='0' && next<='9') nextState = 8;
-            break;
-
-            case 7:
-                if(next>='0' && next<='9') nextState = 8;
-            break;
-
-            case 8:
-                if(next>='0' && next<='9') nextState = 8;
-                else if(next=='i') nextState = 9;
-                else nextState = 10;
-            break;
-
-        }
-        //std::cout<<state<<" '"<<next<<"' "<<nextState<<std::endl;
-        //El proximo estado es de aceptacion
-        if(nextState==9 || nextState==10){
-            value[count] = '\0';
-            if(nextState==9) n.imag(strtod(value,NULL));
-            else n.real(strtod(value,NULL));
-            count = 0;
-
-            //Vuelve a estados anteriores si es un numero complejo
-            if(next=='\n' || next==',') nextState = -1;
-            else if(next==' ') nextState = 1;
-            else if(next=='+'||next=='-')nextState = 2;
+// template<class T>
+std::istream& operator>>(std::istream& stream, _number<T> &n)
+{
+    T tmp;
+    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    while(true)
+    {
+        stream>>tmp;
+        DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+        if(stream.peek()=='i')
+        {
+            n.imag() = tmp;
+            stream.get();
+        }else
+        {
+            n.real() = tmp;
         }
 
-        if(nextState >= 0 && count<100 ){
-            state = nextState;
-            if(next!='\n' && next!=',' && next!=']') stream>>value[count++];
-            else value[count++] = '\0'; // Fuerza fin de lectura de numero complejo
-        }else{
-            ok = false;
+        if(stream.peek()!='+' && stream.peek()!='-' && stream.peek()!='i') {
+            break;
         }
     }
-    if(stream.peek()==' ')stream>>std::ws;
-    if(stream.peek()=='\n') stream.get();
     return stream;
-
 }
 
 // Suma de numeros complejos
