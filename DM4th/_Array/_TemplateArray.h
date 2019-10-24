@@ -8,7 +8,7 @@ namespace DM4th
 
 template<class T> class range;
 
-template<class T>
+template<typename T>
 class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 {
     typedef DM4thInternal::_ArrayDataManager<T> super;
@@ -61,11 +61,11 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class U>
         explicit operator TemplateArray<U>();
 
-        template<class U, enable_if_is_number(U, _number<U>)>
-        explicit operator U()
-        {
-            return (U)this->data_item(0);
-        }
+        // template<class U, enable_if_is_number(U, _number<U>)>
+        // explicit operator U()
+        // {
+        //     return (U)this->data_item(0);
+        // }
 
         void operator=(const T &other){ this->resize(1); this->item(0)=other; } 
         
@@ -96,12 +96,30 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline const TemplateArray<T> operator%=(const T &other);
         inline TemplateArray<T> operator%(const T &other);
 
-        template<class U> inline bool operator==(const TemplateArray<U> &other);
-        template<class U> inline bool operator!=(const TemplateArray<U> &other);
-        template<class U> bool operator>(const TemplateArray<U> &other);
-        template<class U> inline bool operator<=(const TemplateArray<U> &other);
-        template<class U> bool operator>=(const TemplateArray<U> &other);
-        template<class U> inline bool operator<(TemplateArray<U> &other);
+        // template<class U> inline bool operator==(const TemplateArray<U> &other);
+        template<class U> inline bool isEqualTo(const TemplateArray<U> &other) const;
+
+        TemplateArray<bool> operator==(T other) const;
+        TemplateArray<bool> operator!=(T other) const;
+        TemplateArray<bool> operator> (T other) const;
+        TemplateArray<bool> operator<=(T other) const;
+        TemplateArray<bool> operator>=(T other) const;
+        TemplateArray<bool> operator< (T other) const;
+
+        TemplateArray<bool> operator==(const TemplateArray<T> &other) const;
+        TemplateArray<bool> operator!=(const TemplateArray<T> &other) const;
+        TemplateArray<bool> operator> (const TemplateArray<T> &other) const;
+        TemplateArray<bool> operator<=(const TemplateArray<T> &other) const;
+        TemplateArray<bool> operator>=(const TemplateArray<T> &other) const;
+        TemplateArray<bool> operator< (const TemplateArray<T> &other) const;
+
+        bool any(T value);
+        bool all(T value);
+        
+        template<typename U=T, typename = typename std::enable_if<std::is_same<U,bool>::value>::type> 
+        inline bool any() { return this->any(true); }
+        template<typename U=T, typename = typename std::enable_if<std::is_same<U,bool>::value>::type> 
+        inline bool all() { return this->all(true); }
 
         std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);

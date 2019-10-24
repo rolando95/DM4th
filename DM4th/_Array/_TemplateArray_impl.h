@@ -647,62 +647,313 @@ inline TemplateArray<T> TemplateArray<T>::operator%(const T &other)
     return result;
 }
 
+// template<class T> template<class U>
+// inline bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
 template<class T> template<class U>
-inline bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
+inline bool TemplateArray<T>::isEqualTo(const TemplateArray<U> &other) const
 {
     return super::_data->shape==other._arrayData()->shape && other._arrayData()->array==super::_data->array;
 }
 
-template<class T> template<class U>
-inline bool TemplateArray<T>::operator!=(const TemplateArray<U> &other){ return !(*this==other); }
-
-template<class T> template<class U>
-bool TemplateArray<T>::operator>(const TemplateArray<U> &other)
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator==(T other) const
 {
-    const int sizeArr = this->data_size();
-    const int oSizeArr = other.data_size();
-
-    int size = _min(sizeArr,oSizeArr); 
-
-    const T* data = this->data();
-    const U* odata = other.data();
-
-    for(int j=0; j<size; ++j)
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
     {
-        if(data[j]>odata[j]) return true;
-        if(data[j]<odata[j]) return false;
-    }            
-
-    if(oSizeArr>=sizeArr) return false;
-    return true;
+        result.data_item(j) = this->data_item(j) == other; 
+    }
+    return result;
 }
 
-template<class T> template<class U>
-inline bool TemplateArray<T>::operator<=(const TemplateArray<U> &other){ return !(*this>other); }
-
-template<class T> template<class U>
-bool TemplateArray<T>::operator>=(const TemplateArray<U> &other)
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator!=(T other) const
 {
-    const int sizeArr = this->data_size();
-    const int oSizeArr = other.data_size();
-
-    int size = _min(sizeArr,oSizeArr); 
-
-    T* data = this->data();
-    const U* odata = other.data();
-
-    for(int j=0; j<size; ++j)
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
     {
-        if(data[j]>odata[j]) return true;
-        if(data[j]<odata[j]) return false;
-    }            
-
-    if(oSizeArr>sizeArr) return false;
-    return true;
+        result.data_item(j) = this->data_item(j) != other; 
+    }
+    return result;
 }
 
-template<class T> template<class U>
-inline bool TemplateArray<T>::operator<(TemplateArray<U> &other){ return !(*this>=other); }
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator> (T other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) > other; 
+    }
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator<=(T other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) <= other; 
+    }
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator>=(T other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) >= other; 
+    }
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator<(T other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) < other; 
+    }
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator==(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) == other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other==this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this==other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator!=(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) != other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other!=this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this!=other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator>(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) > other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other>this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this>other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator<=(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) <= other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other<=this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this<=other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator>=(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) >= other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other>=this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this!=other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) const
+{
+    TemplateArray<bool> result;
+    if(super::_data->shape==other._arrayData()->shape)
+    {
+        result.resize(this->shape());
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) < other.data_item(j);
+        }
+    }
+    else if(this->data_size()==1)
+    {
+        result = other<this->data_item(0);
+    }
+    else if(other.data_size()==1)
+    {
+        result = *this<other.data_item(0);
+    }
+    else
+    {
+        DM4thAssert(false);
+    }
+
+    return result;
+}
+
+template<class T>
+bool TemplateArray<T>::any(T value)
+{
+    bool result = false;
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        if(this->data_item(j)==value)
+        {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+template<class T>
+bool TemplateArray<T>::all(T value)
+{
+    bool result = true;
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        if(this->data_item(j)!=value)
+        {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
+
+// template<class T> template<typename U=T, typename std::enable_if<std::is_same<U,bool>::value>::type> 
+// bool TemplateArray<T>::any()
+// {
+//     bool result = false;
+//     for(int j=0; j<this->data_size(); ++j)
+//     {
+//         if(this->data_item(j)==T())
+//         {
+//             result = true;
+//             break;
+//         }
+//     }
+//     return result;
+// }
+
+// template<class T>
+// bool TemplateArray<T>::all()
+// {
+//     bool result = true;
+//     for(int j=0; j<this->data_size(); ++j)
+//     {
+//         if(this->data_item(j)!=T())
+//         {
+//             result = false;
+//             break;
+//         }
+//     }
+//     return result;
+// }
 
 template<class T>
 std::ostream& TemplateArray<T>::ostream(std::ostream& stream, int ident, bool quotes) const
