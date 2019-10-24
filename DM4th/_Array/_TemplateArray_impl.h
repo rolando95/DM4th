@@ -26,7 +26,6 @@ TemplateArray<T>::TemplateArray(T *data, const TemplateArray<int> &axisArray)
     int size = DM4thTemplateArrayUtils::mult(axisArray);
     for(int j=0; j<size; ++j)
     {
-        std::cout<<data[j]<<std::endl;
         this->data_item(j) = data[j];
     }
 }
@@ -578,6 +577,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
         #endif
         for(int x=0; x<maxX; ++x){
             for(int y=0; y<maxY; ++y){
+                result.item(x,y) = 0;
                 for(int z=0;z<maxZ; ++z){
                     result.item(x,y) += this->item(x,z) * other.item(z,y);
                 }
@@ -1207,7 +1207,6 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
         )
     );
     super::_data->shape.set(shapeIdx, size);
-    //std::cout<<size<<" "<<shapeIdx+1<<std::endl;      
 }
 
 template<class T>

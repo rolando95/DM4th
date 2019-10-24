@@ -80,7 +80,7 @@ TemplateArray<T> items(T first, U ... args)
     TemplateArray<T> result;
     int size = DM4thUtils::count(first, args...);
     result.resize(size);
-    _items(result, 0, args...);
+    _items(result, 0, first, args...);
     return result;
 }
 
