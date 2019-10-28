@@ -42,13 +42,13 @@ inline void input()
 }
 
 template<class T>
-inline void input(T last)
+inline void input(T &last)
 {
     std::cin>>last;
 }
 
 template<class T, class ... U>
-void input(T first, U... args)
+void input(T &first, U... args)
 {
     std::cin>>first;
     input(args ...);

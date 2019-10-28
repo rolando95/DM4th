@@ -39,23 +39,25 @@ inline _number<T> operator-(_number<T> a){
 //Impresion en pantalla de numeros complejos
 template<class T>
 std::ostream& operator<<(std::ostream& stream, _number<T> n){
-    if(n.real() == INF) stream<<"INF";
-    else if(n.real() == -INF) stream<<"-INF";
-    else if(std::isnan(n.real())) stream<<"NAN";
-    else{
-        n = round(n,precision); // Es necesario corregir problemas de redondeo
-        //stream
-        if(n==0) stream<<"0";
-        else{
-            if(n.real() != 0) stream<<n.real();
-            if(n.imag() > 0 && n.real()!=0)  stream<<"+";
-            if(n.imag() != 0) {
-                if(n.imag() != 1 && n.imag() != -1) stream<<n.imag();
-                if(n.imag() == -1) stream<<"-";
-                stream<<"i";
-            }
-        }
+    if(n.real() == INF)  { stream<<"INF"; return stream; }
+    else if(n.real() == -INF) { stream<<"-INF"; return stream; }
+    else if(std::isnan(n.real())) { stream<<"NAN"; return stream; }
+
+    n = round(n,precision); // Es necesario corregir problemas de redondeo
+    //stream
+    if(n==0) { stream<<"0"; return stream; }
+
+    if(n.real() != 0) {
+        stream<<n.real();
+        if(n.imag() > 0) stream<<"+";
     }
+
+    if(n.imag() != 0) {
+        if(n.imag() != 1 && n.imag() != -1) stream<<n.imag();
+        if(n.imag() == -1) stream<<"-";
+        stream<<"i";
+    }
+    
     return stream;
 }
 //Entrada de numeros complejos

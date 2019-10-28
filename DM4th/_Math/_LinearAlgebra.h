@@ -4,7 +4,7 @@
 
 namespace DM4th
 {
-    NDArray<number> LU(NDArray<number> matrix, NDArray<number> rightPart)
+    inline NDArray<number> LU(const NDArray<number> &matrix, const NDArray<number> &rightPart)
     {
         DM4thAssert(matrix.shapeSize()==2 && matrix.data_size()==(rightPart.size()*rightPart.size()));
 
@@ -60,30 +60,37 @@ namespace DM4th
         return x;
     }
 
-    // NDArray<number> Inv(NDArray<number> A, NDArray<number> P)
-    // {
-        
-    //     DM4thAssert(A.shapeSize()==2, A.shape(0)==A.shape(1));
-    //     NDArray<number> IA = zeros<number>(A.shape(0), A.shape(1));
-    //     int n = A.size();
-    //     for (int j = 0; j < n; j++) {
-    //         for (int i = 0; i < n; i++) {
-    //             if (P(i) == j) 
-    //                 IA(i,j) = 1.0;
-    //             else
-    //                 IA(i,j) = 0.0;
+    namespace DM4thInternal
+    {
+        inline NDArray<number> _dijkstra(NDArray<number> input, int p=0)
+        {
+            NDArray<number> result = input.getCopy();
 
-    //             for (int k = 0; k < i; k++)
-    //                 IA(i,j) -= A(i,k) * IA(k,j);
-    //         }
+            for(int x=0; x<input.size(); ++x)
+            {
+                if(input(x,p)>0 && input(x,p) < INF)
+                {
+                    for(int y=0; y<input.size(); ++y)
+                    {
+                        if(input(p,y) > INF && input(p,y) < INF)
+                        {
+                            result(x,y) = _min(input(x,y), input(x,p) + input(p,y));
+                        }
+                    }
+                }
+            }
+            
+            if(p<input.size()-1)
+                result = _dijkstra(result, p+1);
+            return result;
+        }
+    }
 
-    //         for (int i = n - 1; i >= 0; i--) {
-    //             for (int k = i + 1; k < n; k++)
-    //                 IA(i,j) -= A(i,k) * IA(k,j);
+    inline NDArray<number> dijkstra(const NDArray<number> &matrix)
+    {
+        DM4thAssert(matrix.shapeSize()==2 && matrix.shape(0)==matrix.shape(1));
 
-    //             IA(i,j) = IA(i,j) / A(i,i);
-    //         }
-    //     }
-    //     return IA;
-    // }
+        NDArray<number> result = DM4thInternal::_dijkstra(matrix.getCopy());
+        return result;
+    }
 }

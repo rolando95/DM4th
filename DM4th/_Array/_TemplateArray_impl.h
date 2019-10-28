@@ -1426,7 +1426,7 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
         while (true)
         {
             DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
-            if(stream.peek()==']') break; //This dim is empty
+            if(stream.peek()==']') { break;} //This dim is empty
             
             stream>>value;
             values.push(value);
