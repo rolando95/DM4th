@@ -93,4 +93,27 @@ namespace DM4th
         NDArray<number> result = DM4thInternal::_dijkstra(matrix.getCopy());
         return result;
     }
+
+
+    inline NDArray<number> warshall(const NDArray<number> &matrix)
+    {
+        DM4thAssert(matrix.shapeSize()==2 && matrix.shape(0)==matrix.shape(1));
+
+        NDArray<number> before; 
+        NDArray<number> result = matrix.getCopy();
+        result.resize(matrix.shape());
+
+        for(int k=0; k<matrix.size(); ++k)
+        {
+            before = result.getCopy();
+            for(int i=0; i<matrix.size(); ++i)
+            {
+                for(int j=0; j<matrix.size(); ++j)
+                {
+                    result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+                }
+            }
+        }
+        return result;
+    }
 }

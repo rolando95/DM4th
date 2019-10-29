@@ -2,8 +2,10 @@
 
 int main()
 {
+    NDArray<string> hello  = items<string>("Hello", "World");
     NDArray<number> myList = range<number>(10);
-    print(myList);
+
+    print(hello, myList);
 
     input();
     return 0;
