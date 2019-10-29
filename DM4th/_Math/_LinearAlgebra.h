@@ -101,7 +101,6 @@ namespace DM4th
 
         NDArray<number> before; 
         NDArray<number> result = matrix.getCopy();
-        result.resize(matrix.shape());
 
         for(int k=0; k<matrix.size(); ++k)
         {
