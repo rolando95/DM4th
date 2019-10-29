@@ -60,40 +60,27 @@ namespace DM4th
         return x;
     }
 
-    namespace DM4thInternal
-    {
-        inline NDArray<number> _dijkstra(NDArray<number> input, int p=0)
-        {
-            NDArray<number> result = input.getCopy();
-
-            for(int x=0; x<input.size(); ++x)
-            {
-                if(input(x,p)>0 && input(x,p) < INF)
-                {
-                    for(int y=0; y<input.size(); ++y)
-                    {
-                        if(input(p,y) > INF && input(p,y) < INF)
-                        {
-                            result(x,y) = _min(input(x,y), input(x,p) + input(p,y));
-                        }
-                    }
-                }
-            }
-            
-            if(p<input.size()-1)
-                result = _dijkstra(result, p+1);
-            return result;
-        }
-    }
 
     inline NDArray<number> dijkstra(const NDArray<number> &matrix)
     {
         DM4thAssert(matrix.shapeSize()==2 && matrix.shape(0)==matrix.shape(1));
 
-        NDArray<number> result = DM4thInternal::_dijkstra(matrix.getCopy());
+        NDArray<number> before; 
+        NDArray<number> result = matrix.getCopy();
+
+        for(int k=0; k<matrix.size(); ++k)
+        {
+            before = result.getCopy();
+            for(int i=0; i<matrix.size(); ++i)
+            {
+                for(int j=0; j<matrix.size(); ++j)
+                {
+                    result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
+                }
+            }
+        }
         return result;
     }
-
 
     inline NDArray<number> warshall(const NDArray<number> &matrix)
     {
