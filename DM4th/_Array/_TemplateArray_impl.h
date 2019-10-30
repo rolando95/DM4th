@@ -464,16 +464,16 @@ const inline T &TemplateArray<T>::operator()(U ... args) const { return this->it
 template<class T> template<class U>
 inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this->item(axisArray); }
 
-// template<class T> template<class U>
-// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
-// {
-//     return this->subArr(idx);
-// } 
-// template<class T>
-// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
-// {
-//     return this->subArr(idx);
-// } 
+template<class T> template<class U>
+typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
+{
+    return this->subArr(idx);
+} 
+template<class T>
+typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
+{
+    return this->subArr(idx);
+} 
 
 
 template<class T> template<class U>
@@ -1139,6 +1139,17 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
 }
 
 
+template<class T> template<class ... U>
+typename TemplateArray<T>::SubArray TemplateArray<T>::SubArray::operator()(U ... args)
+{
+    return TemplateArray(*this).subArray(args...);
+}
+
+template<class T> template<class U>
+typename TemplateArray<T>::SubArray TemplateArray<T>::SubArray::operator[](U idx)
+{
+    return TemplateArray(*this).subArray(idx);
+}
 
 template<class T> template<class U, class ... V>
 void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape, TemplateArray<U> first, V ... args)

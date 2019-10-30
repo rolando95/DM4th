@@ -72,8 +72,9 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(TemplateArray<U> axisArray);
-        // template<class U> TemplateArray<T>::SubArray operator[](TemplateArray<U> idx);
-        // TemplateArray<T>::SubArray operator[](number idx);
+
+        template<class U> TemplateArray<T>::SubArray operator[](TemplateArray<U> idx);
+        TemplateArray<T>::SubArray operator[](number idx);
         
         template<class U> inline const TemplateArray<T> operator+=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
@@ -175,7 +176,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
         class SubArray
         {
-            TemplateArray<T> &_ptr;
+            TemplateArray<T> _ptr;
             TemplateArray<T*> _subArray;
 
         public:
@@ -186,6 +187,10 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
             const SubArray &operator=(const SubArray &other);
             const SubArray &operator=(const T &other);
             const SubArray &operator=(const TemplateArray<T> &other);
+
+            template<class ... U> TemplateArray<T>::SubArray operator()(U ... args);
+            template<class U> TemplateArray<T>::SubArray operator[](U idx);
+
         private:
             template<class U, class ... V>
             void setRef(TemplateArray<U> first, V... args);
