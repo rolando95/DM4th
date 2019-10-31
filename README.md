@@ -1,5 +1,5 @@
 # D-M4th
-D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases que permitirán un fácil manejo de operaciones con vectores, matrices, árboles y números complejos. 
+D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases que permitirán un fácil manejo de operaciones con vectores, matrices, arreglos dinámicos de N dimensiones y números complejos. 
 
 ![Calculator Screenshot](resources/screenshots/DM4thScreenshot.png)
 
@@ -33,9 +33,11 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
     ```
 
 ## Ejemplos
- 
-* Impresión en consola de arreglos de diferentes tipos
-    ```C#
+<details>
+<summary>Impresión por consola de arreglos de diferentes tipos</summary> 
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -53,15 +55,18 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
+* Salida
     ```C++
-    SALIDA:
-
     ["Hello", "World"]
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     ```
-* Operaciones básicas con números complejos
- 
-    ```C#
+</details>
+
+<details>
+<summary>Operaciones con números complejos</summary>
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -83,9 +88,8 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
-    ```json
-    SALIDA:
-
+* Salida
+    ```C++
     sum:  15+5i
     sub:  -5+9i
     mult: 64+60i
@@ -93,9 +97,13 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
     sqrt: 5i
     sin:  -0.422618
     ```
+</details>
 
-* Operaciones con arreglos
-    ```C#
+<details>
+<summary>Operaciones con arreglos</summary> 
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -117,21 +125,22 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
-    ```json
-    SALIDA:
-
+* Salida
+    ```C++
     arr1: [0, 1, 2, 3, 4]
     arr2: [10, 9, 8, 7, 6]
     sum:  [10, 10, 10, 10, 10]
     sub:  [-10, -8, -6, -4, -2]
     mult: [70]
     div:  [0, 0.1, 0.2, 0.3, 0.4]
-
-
     ```
+</details>
 
-* Inserción y eliminación de elementos en arreglos de una dimensión
-    ```C#
+<details>
+<summary>Inserción y eliminación de elementos en arreglos de una dimensión</summary> 
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -153,7 +162,7 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         arr1.pushArray(arr2);
         cout << arr1 << endl << endl;
 
-        cout << "Inserting " << value << " into arr1 at index 3: ";
+        cout << "Inserting " << -999 << " into arr1 at index 3: ";
         arr1.push(-999, 3);
         cout << arr1 << endl << endl;
 
@@ -168,9 +177,8 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
+* Salida
     ```c++
-    SALIDA: 
-
     arr1: [1, 3, 5, 7, 9]
     arr2: [2, 4, 6, 8, 0]
 
@@ -178,15 +186,19 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
 
     Inserting arr2 into arr1: [1, 3, 5, 7, 9, 1000, 2, 4, 6, 8, 0]
 
-    Inserting 1000 into arr1 at index 3: [1, 3, 5, -999, 7, 9, 1000, 2, 4, 6, 8, 0]
+    Inserting -999 into arr1 at index 3: [1, 3, 5, -999, 7, 9, 1000, 2, 4, 6, 8, 0]
 
     Removing some elements from arr1:
     [1, 3, 5, -999, 7, 9, 1000, 2, 4, 6, 8]
     [3, 5, -999, 7, 9, 1000, 2, 4, 6, 8]
     ```
+</details>
 
-* Operaciones con arreglos de 2 dimensiones
-    ```C#
+<details>
+<summary>Operaciones con arreglos de 2 dimensiones</summary>
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -215,9 +227,8 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
+* Salida
     ```c++
-    SALIDA: 
-
     arr1:
     [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     Reshape 3x5:
@@ -255,8 +266,13 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         [-140i, 0, 0, 0]
     ]
     ```
-* Trabajando con elementos de Array (Se usan paréntesis en vez de corchetes por razones de rendimiento)
-  ```C#
+</details>
+
+<details>
+<summary>Trabajando con elementos de Array</summary>
+
+* Código
+  ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -304,9 +320,8 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
   ```
+* Salida
   ```C++
-    SALIDA: 
-
     arr1:
     [
         [10, 12],
@@ -346,8 +361,13 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         [14, 16]
     ]
   ```
-* Arrays de N dimensiones
-  ```C#
+</details>
+
+<details>
+<summary>Arreglos dinámicos de más de 2 dimensiones</summary>
+
+* Código
+  ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -374,9 +394,8 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         return 0;
     }
     ```
+* Salida
     ```c++
-    SALIDA:
-
     arr1
     [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
 
@@ -422,9 +441,13 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         [1.2, 1.4, 9999, 1.8, 2, 2.2]
     ]
     ```
+</details>
 
-* Métodos numéricos I
-    ```C#
+<details>
+<summary>Métodos numéricos</summary>
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -439,7 +462,10 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
         number a = 5;
         number b = 3.5;
         number c = -0.2i;
+        
+        NDArray<number> polynomial = items<number>(6, 1, -1, -3);
 
+        
         cout << "Factorial: " << factorial(a) << " " << factorial(b) << " " << factorial(c) << endl;
 
         // Root of f(x)=x*x+25
@@ -447,41 +473,60 @@ D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases 
 
         // Area of f(x)=x*x+25 [from 0 to 10]
         cout << "Integral: " << integral(myFunction, 0, 10) << endl;
+    
+        // All roots of f(x)=6x^(3)+x^(2)-x-3
+        cout << "Roots: " << bairstowsMethod(polynomial) << endl;
 
         cin.get();
         return 0;
     }
     ```
+* Salida
     ```c++
-    SALIDA: 
-
     Factorial: 120 11.6317 0.961947
     Root of myFunction: 5i
     Integral: 583.333
+    Roots: [-0.486931+0.618327i, -0.486931-0.618327i, 0.807195]
     ```
+</details>
 
-* Métodos numéricos II
-    ```C#
+<details>
+<summary>Lectura y escritura de archivos</summary>
+
+* Código
+    ```C++
     #include "DM4th/DM4th.h"
 
     using namespace std;
 
     int main()
     {
-        //f(x)=6x^(3)+x^(2)-x-3
-        NDArray<number> polynomial = items<number>(6, 1, -1, 3);
+        NDArray<number> arr1 = identity<number>(10,10);
 
-        cout << "Roots: " << bairstowsMethod(polynomial) << endl;
+        arr1.saveFile("example.txt"); // example.txt is created automatically if it doesn't exist
 
-        cout << "Gamma:" <<  gamma(5.999) << endl;
-        
+        NDArray<number> arr2;
+        arr2.loadFile("example.txt");
+
+        cout << arr2 << endl;
+
         cin.get();
         return 0;
     }
     ```
-    ```c++
-    SALIDA:
-
-    Roots: [0.380434+0.62796i, 0.380434-0.62796i, -0.927534]
-    Gamma:119.795
+* Salida
+    ```C++
+    [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    ]
     ```
+</details>
