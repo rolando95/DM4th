@@ -227,8 +227,6 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
                 result(0) = (int)value;
                 return result; 
             }
-
-
         };
 
         template<class ...U>
