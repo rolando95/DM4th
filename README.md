@@ -1,5 +1,5 @@
 # D-M4th
-D-M4th es una librería escrita en `C++` que prevee numerosos métodos y clases que permitirán un fácil manejo de operaciones con vectores, matrices, arreglos dinámicos de N dimensiones y números complejos. 
+D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases que permitirán un fácil manejo de operaciones con vectores, matrices, arreglos dinámicos de N dimensiones y números complejos. 
 
 ![Calculator Screenshot](resources/screenshots/DM4thScreenshot.png)
 
