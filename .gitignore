@@ -4,7 +4,7 @@
 /*.txt
 bin-int/
 bin/
-.vscode/*
+.vscode/**
 local/**
 !.vscode/launch.json
 !.vscode/task.json
