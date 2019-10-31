@@ -5,9 +5,9 @@
     "tasks": [
         {
             "type" : "shell",
-            "label": "startDebug",
+            "label": "startRelease",
             "command": "g++",
-            "args": ["-Wall", "-pedantic", "-ggdb", "-o", "main.exe", "main.cpp", "-fopenmp"],
+            "args": ["-Wall", "-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "DM4thParallel"],
             "group":{
                 "kind" : "build",
                 "isDefault": true
@@ -15,40 +15,9 @@
         },
         {
             "type" : "shell",
-            "label": "startRelease",
+            "label": "startDebug",
             "command": "g++",
-            "args": ["-Wall", "-pedantic", "-O2", "-o", "main.exe", "main.cpp", "-fopenmp", "-D", "DM4thParallel"]
-        }
-        ,
-        // {
-        //     "type": "shell",
-        //     "label": "makeDM4th",
-        //     "command": "${workspaceFolder}/make/makeDM4thProject.bat",
-        //     //"command" : "${workspaceFolder}/make/makeDM4thProject.sh",
-        //     "args": [],
-        //     "options": {
-        //         "cwd": "${workspaceFolder}/make/"
-        //     },
-        //     "problemMatcher": [
-        //         "$gcc"
-        //     ],
-        // },
-        // {
-        //     "type": "shell",
-        //     "label": "getAssemblyRelease",
-        //     "command": "${workspaceFolder}/make/assemblyRelease.bat",
-        //     //"command" : "${workspaceFolder}/make/makeDM4thProject.sh",
-        //     "args": [],
-        //     "options": {
-        //         "cwd": "${workspaceFolder}/make/"
-        //     },
-        //     "problemMatcher": [
-        //         "$gcc"
-        //     ],
-        //     "group": {
-        //         "kind": "build",
-        //         "isDefault": true
-        //     }
-        // }
+            "args": ["-Wall", "-pedantic", "-ggdb", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp"],
+        },
     ]
 }

@@ -1,4 +1,5 @@
 *.exe
+*.cpp
 *.asm
 /*.txt
 bin-int/

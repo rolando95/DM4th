@@ -5,49 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin/gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing ",
-                    "ignoreFailures": false
-                }
-            ],
-            "preLaunchTask": "startDebug"
-        },
-        {
             "name": "Release",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main.exe",
+            "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,
             "preLaunchTask": "startRelease"
-        },
-        // {
-        //     "name": "Make DM4th Binaries",
-        //     "type": "cppvsdbg",
-        //     "request": "launch",
-        //     "program": "${workspaceFolder}/make/empty.bat",
-        //     "args": [],
-        //     "stopAtEntry": false,
-        //     "cwd": "${workspaceFolder}",
-        //     "environment": [],
-        //     "externalConsole": false,
-        //     "preLaunchTask": "makeDM4th"
-        // }
+        }
     ]
 }
