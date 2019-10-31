@@ -1,5 +1,5 @@
 *.exe
-
+*.cpp
 *.asm
 /*.txt
 bin-int/
@@ -10,3 +10,4 @@ local/**
 !.vscode/task.json
 !.vscode/c_cpp_properties.json
 bash.exe.stackdump
+main.cpp
