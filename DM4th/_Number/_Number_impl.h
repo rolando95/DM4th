@@ -283,13 +283,13 @@ inline bool operator==(_number<T> n1, _number<T> n2){
 }
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator==(_number<T> n1, U n2)
+inline bool operator==(_number<T> n1, U n2)
 {
     return n1 == _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator==(U n1, _number<T> n2)
+inline bool operator==(U n1, _number<T> n2)
 {
     return _number<T>(n1) == n2;
 }
@@ -300,13 +300,13 @@ inline bool operator!=(_number<T> n1, _number<T> n2){
 }
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator!=(_number<T> n1, U n2)
+inline bool operator!=(_number<T> n1, U n2)
 {
     return n1 != _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator!=(U n1, _number<T> n2)
+inline bool operator!=(U n1, _number<T> n2)
 {
     return _number<T>(n1) != n2;
 }
@@ -317,13 +317,13 @@ inline bool operator>=(_number<T> n1, _number<T> n2){
 }
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator>=(_number<T> n1, U n2)
+inline bool operator>=(_number<T> n1, U n2)
 {
     return n1 >= _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator>=(U n1, _number<T> n2)
+inline bool operator>=(U n1, _number<T> n2)
 {
     return _number<T>(n1) >= n2;
 }
@@ -335,13 +335,13 @@ inline bool operator<=(_number<T> n1, _number<T> n2){
 }
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator<=(_number<T> n1, U n2)
+inline bool operator<=(_number<T> n1, U n2)
 {
     return n1 <= _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator<=(U n1, _number<T> n2)
+inline bool operator<=(U n1, _number<T> n2)
 {
     return _number<T>(n1) <= n2;
 }
@@ -356,13 +356,13 @@ inline bool operator>(_number<T> n1, _number<T> n2){
 }
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator>(_number<T> n1, U n2)
+inline bool operator>(_number<T> n1, U n2)
 {
     return n1 > _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator>(U n1, _number<T> n2)
+inline bool operator>(U n1, _number<T> n2)
 {
     return _number<T>(n1) > n2;
 }
@@ -374,13 +374,13 @@ inline bool operator<(_number<T> n1, _number<T> n2){
 
 
 template<class T, typename U, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator<(_number<T> n1, U n2)
+inline bool operator<(_number<T> n1, U n2)
 {
     return n1 < _number<T>(n2);
 }
 
 template<class U, typename T, enable_if_is_number(U, _number<T>) >
-inline _number<T> operator<(U n1, _number<T> n2)
+inline bool operator<(U n1, _number<T> n2)
 {
     return _number<T>(n1) < n2;
 }

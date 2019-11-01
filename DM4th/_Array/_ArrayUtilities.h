@@ -81,6 +81,8 @@ private:
     }
 };
 
+typedef range<int> slice;
+
 template<class T, class U, class ... V>
 void _map(std::function<T(T)> f, NDArray<T> &arr, int axis, U first, V ... args)
 {
@@ -112,5 +114,17 @@ NDArray<T> map(std::function<T(T)> f, NDArray<T> args)
     }
     return result;
 }
-typedef range<int> slice;
+
+template<class T, class U>
+NDArray<U> map(std::function<U(T)> f, NDArray<T> args)
+{
+    NDArray<U> result;
+    result.resize(args.data_size());
+    for(int j=0; j<args.data_size(); ++j)
+    {
+        result(j) = f(args(j));
+    }
+    return result;
+}
+
 }

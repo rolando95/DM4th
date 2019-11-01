@@ -336,44 +336,44 @@ inline _number<T> operator%(U, _number<T>);
 template <class T>
 inline bool operator==(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator==(_number<T>, U);
+inline bool operator==(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator==(U, _number<T>);
+inline bool operator==(U, _number<T>);
 
 template <class T>
 inline bool operator!=(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator!=(_number<T>, U);
+inline bool operator!=(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator!=(U, _number<T>);
+inline bool operator!=(U, _number<T>);
 
 template <class T>
 inline bool operator>=(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator>=(_number<T>, U);
+inline bool operator>=(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator>=(U, _number<T>);
+inline bool operator>=(U, _number<T>);
 
 template <class T>
 inline bool operator<=(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator<=(_number<T>, U);
+inline bool operator<=(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator<=(U, _number<T>);
+inline bool operator<=(U, _number<T>);
 
 template <class T>
 inline bool operator>(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator>(_number<T>, U);
+inline bool operator>(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator>(U, _number<T>);
+inline bool operator>(U, _number<T>);
 
 template <class T>
 inline bool operator<(_number<T>, _number<T>);
 template <class T, typename U, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator<(_number<T>, U);
+inline bool operator<(_number<T>, U);
 template <class U, typename T, enable_if_is_number(U, _number<T>)>
-inline _number<T> operator<(U, _number<T>);
+inline bool operator<(U, _number<T>);
 
 // Math
 template <class T>
