@@ -46,7 +46,4 @@ class NDArray<bool>: public TemplateArray<bool>
 };
 
 
-// Specialization methods
-inline std::ostream& operator<<(std::ostream& stream, const NDArray<std::string> &arr){ return arr.ostream(stream,4,true); }
-
 }

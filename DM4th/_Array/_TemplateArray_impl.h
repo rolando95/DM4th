@@ -1477,10 +1477,30 @@ inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<T> &ar
     return arr.ostream(stream,4);
 }
 
+// Specialization methods
+inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<std::string> &arr){ 
+    return arr.ostream(stream,4,true); 
+}
+
+inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<bool> &arr){ 
+    stream << std::boolalpha;
+    arr.ostream(stream,4);
+    stream << std::noboolalpha;
+    return stream;
+}
+
 template<class T>
 inline std::istream& operator>>(std::istream& stream, TemplateArray<T> &arr)
 {
     return arr.istream(stream);
+}
+
+inline std::istream& operator>>(std::istream& stream, TemplateArray<bool> &arr)
+{
+    stream >> std::boolalpha;
+    arr.istream(stream);
+    stream >> std::noboolalpha;
+    return stream;
 }
 
 }

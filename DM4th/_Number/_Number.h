@@ -205,7 +205,7 @@ public:
     }
 };
 
-#include <type_traits>
+
 typedef _number<double> number;
 
 // template<typename T>
