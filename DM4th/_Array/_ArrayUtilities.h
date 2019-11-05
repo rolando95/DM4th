@@ -9,6 +9,9 @@ class range {
     T _step;
     int _size;
 public:
+
+    friend class iterator;
+
     range(T end) : _begin(0), _end(end), _step(1) 
     {
         if(this->_begin>this->_end)
@@ -33,9 +36,6 @@ public:
         this->_size = this->_setSize();
     };
 
-    T begin() { return this->_begin; }
-    T end() { return this->_end; }
-    T step() { return this->_step; }
     int size() { return this->_size; }
 
     operator NDArray<T>()
@@ -55,6 +55,25 @@ public:
 
         return result;
     }
+
+    class iterator
+    {
+        private:
+            range<T> _data;
+            T _ptr;
+        public:
+            iterator(range<T> &data, T ptr=0) : _data(data), _ptr(ptr) {};
+            bool operator==(iterator other){ return (this->_ptr == other._ptr); }
+            bool operator!=(iterator other){ return !(*this==other); }
+            const T &operator=(const T value){ return this->_data.data_item(this->_ptr) = value; }
+            iterator &operator++(){ this->_ptr+=_data._step; return *this; }
+            iterator operator++(int){ iterator result(this->_data, this->_ptr); this->_ptr+=_data._step; return result; }
+            const T &operator*(){ return this->_ptr; }
+    };
+
+    iterator begin(){ return iterator(*this, this->_begin); }
+    iterator end(){ return iterator(*this, this->_end); }
+
 
 private:
     int _setSize() 
@@ -77,6 +96,7 @@ private:
             }
         }
 
+        this->_end = j;
         return size; 
     }
 };

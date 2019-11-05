@@ -146,7 +146,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         class iterator
         {
         private:
-            TemplateArray<T> &_data;
+            TemplateArray<T> _data;
             int _ptr;
         public:
             iterator(TemplateArray<T> &data, int idx=0) : _data(data), _ptr(idx) {};
@@ -161,7 +161,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         class iterator_const
         {
         private:
-            const TemplateArray<T> &_data;
+            const TemplateArray<T> _data;
             int _ptr;
         public:
             iterator_const(const TemplateArray<T> &data, int idx=0) : _data(data), _ptr(idx) {};
