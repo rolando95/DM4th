@@ -65,7 +65,6 @@ public:
             iterator(range<T> &data, T ptr=0) : _data(data), _ptr(ptr) {};
             bool operator==(iterator other){ return (this->_ptr == other._ptr); }
             bool operator!=(iterator other){ return !(*this==other); }
-            const T &operator=(const T value){ return this->_data.data_item(this->_ptr) = value; }
             iterator &operator++(){ this->_ptr+=_data._step; return *this; }
             iterator operator++(int){ iterator result(this->_data, this->_ptr); this->_ptr+=_data._step; return result; }
             const T &operator*(){ return this->_ptr; }
