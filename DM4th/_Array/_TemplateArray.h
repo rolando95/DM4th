@@ -73,8 +73,8 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(TemplateArray<U> axisArray);
 
-        template<class U> TemplateArray<T>::SubArray operator[](TemplateArray<U> idx);
-        TemplateArray<T>::SubArray operator[](number idx);
+        // template<class U> TemplateArray<T>::SubArray operator[](TemplateArray<U> idx);
+        // TemplateArray<T>::SubArray operator[](number idx);
         
         template<class U> inline const TemplateArray<T> operator+=(const TemplateArray<U> &other);
         template<class U> inline TemplateArray<T> operator+(const TemplateArray<U> &other) const;
@@ -131,6 +131,7 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         inline void _resize1DArray(int size);
         inline T *data();
         inline const T *data() const;
+        inline T *data_copy();
         inline const int data_size() const;
         inline T &data_item(int idx);
         inline const T data_item(int idx) const;

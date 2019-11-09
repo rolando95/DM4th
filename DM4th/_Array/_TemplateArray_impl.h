@@ -464,16 +464,16 @@ const inline T &TemplateArray<T>::operator()(U ... args) const { return this->it
 template<class T> template<class U>
 inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this->item(axisArray); }
 
-template<class T> template<class U>
-typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
-{
-    return this->subArr(idx);
-} 
-template<class T>
-typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
-{
-    return this->subArr(idx);
-} 
+// template<class T> template<class U>
+// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
+// {
+//     return this->subArr(idx);
+// } 
+// template<class T>
+// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
+// {
+//     return this->subArr(idx);
+// } 
 
 
 template<class T> template<class U>
@@ -1024,6 +1024,17 @@ inline T *TemplateArray<T>::data(){ return &super::_data->array[0]; }
 
 template<class T>
 inline const T *TemplateArray<T>::data() const { return &super::_data->array[0]; }
+
+template<class T>
+inline T *TemplateArray<T>::data_copy() 
+{
+    T *ptr = new T[this->data_size()];
+    for(int j=0; j<data_size(); ++j)
+    {
+        ptr[j] = this->data_item(j);
+    }
+    return ptr;
+}
 
 template<class T>
 inline const int TemplateArray<T>::data_size() const { return super::_data->array.size(); }
