@@ -555,13 +555,17 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
 
+        result.item(0) = 0;
+        
         #if defined DM4thOmpFor
-            #pragma omp parallel for
+           #pragma omp parallel for shared(other)
         #endif
+
         for(int j=0; j<this->shape(0); ++j)
         {
             result.item(0) += this->item(j)*other.item(j);
         }
+
     }
     else if(this->shapeSize()<=2 && other.shapeSize()<=2)
     {
@@ -573,8 +577,9 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
         result.resize(maxX,maxY);
         
         #if defined DM4thOmpFor
-            #pragma omp parallel for
+            #pragma omp parallel for shared(other)
         #endif
+
         for(int x=0; x<maxX; ++x){
             for(int y=0; y<maxY; ++y){
                 result.item(x,y) = 0;

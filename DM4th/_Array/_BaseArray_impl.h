@@ -200,7 +200,7 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
     }
 
 #if defined DM4thOmpFor
-#pragma omp parallel shared(result)
+    #pragma omp parallel shared(result)
     {
         int threads = omp_get_num_threads();
         int j = omp_get_thread_num();
@@ -240,22 +240,15 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-#if defined DM4thOmpFor
-#pragma omp parallel
-    {
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
 
-#pragma omp for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + other.get(j));
-        }
-    }
-#else
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) + other.get(j));
     }
-#endif
+
     return *this;
 }
 
@@ -263,22 +256,14 @@ template <class T>
 template <class U>
 const _BaseArray<T> &_BaseArray<T>::operator+=(const U &other)
 {
-#if defined DM4thOmpFor
-#pragma omp parallel
-    {
-#pragma omp parallel for shared(other)
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + (T)other);
-        }
-    }
-
-#else
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) + (T)other);
     }
-#endif
+
     return *this;
 }
 
@@ -286,13 +271,15 @@ template <class T>
 template <class U>
 const _BaseArray<T> &_BaseArray<T>::operator-=(const U &other)
 {
-#if defined DM4thOmpFor
-#pragma omp parallel for
-#endif
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) - (T)other);
     }
+
     return *this;
 }
 
@@ -302,23 +289,28 @@ const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-#if defined DM4thOmpFor
-#pragma omp parallel for
-#endif
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) - (T)other.get(j));
     }
+
     return *this;
+
 }
 
 template <class T>
 template <class U>
 const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other)
 {
-#if defined DM4thOmpFor
-#pragma omp parallel for
-#endif
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) * (T)other);
@@ -330,9 +322,10 @@ template <class T>
 template <class U>
 const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other)
 {
-#if defined DM4thOmpFor
-#pragma omp parallel for
-#endif
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, this->get(j) / (T)other);
@@ -344,9 +337,10 @@ template <class T>
 template <class U>
 const _BaseArray<T> &_BaseArray<T>::operator%=(const U &other)
 {
-#if defined DM4thOmpFor
-#pragma omp parallel for
-#endif
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for (int j = 0; j < this->size(); ++j)
     {
         this->set(j, fmod(this->get(j), (T)other));
