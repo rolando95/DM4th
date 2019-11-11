@@ -42,7 +42,6 @@
 //#define DM4thParallel
 #ifdef DM4thParallel
     #define DM4thOmp
-    #define DM4thSIMD
 #endif
 
 //#define DM4thOmp
@@ -51,21 +50,6 @@
     #define DM4thOmpFor
     #define DM4thOmpSections
 #endif
-
-#if !defined DM4th64
-    #undef DM4thSIMD
-#endif
-
-//#define DM4thSIMD
-#ifdef DM4thSIMD
-    #include <x86intrin.h>
-
-    //#define DM4thSIMDNumber
-    #define DM4thSIMDArray
-#endif
-
-
-
 
 namespace DM4th
 {

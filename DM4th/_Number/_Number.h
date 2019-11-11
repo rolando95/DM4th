@@ -11,17 +11,7 @@ namespace DM4th
 template <class T>
 class _number
 {
-    union
-    {
-        struct {
-            T r = 0;
-            T i = 0;
-        }ref;
-        #if defined DM4thSIMD
-            __m128d _ddata;
-        #endif
-    };
-
+    T r=0, i=0;
 
 public:
     _number(T a = 0, T b = 0)
@@ -41,22 +31,22 @@ public:
     }
 
     // get set parte real
-    inline const T real() const { return this->ref.r; }
-    inline T &real() { return this->ref.r; };
+    inline const T real() const { return this->r; }
+    inline T &real() { return this->r; };
     inline T &real(T a)
     {
-        this->ref.r = a;
-        return this->ref.r;
+        this->r = a;
+        return this->r;
     }
     //inline double &real() { return this->r; }
 
     // get set parte imaginaria
-    inline const T imag() const { return this->ref.i; }
-    inline T &imag() { return this->ref.i; };
+    inline const T imag() const { return this->i; }
+    inline T &imag() { return this->i; };
     inline T &imag(T a)
     {
-        this->ref.i = a;
-        return this->ref.i;
+        this->i = a;
+        return this->i;
     }
     //inline double &imag() { return this->i; }
 
@@ -114,95 +104,11 @@ public:
         file.close();
     }
 
-
-    inline _number operator+=(_number n)
-    {
-
-        this->real() += n.real();
-        this->imag() += n.imag();
-        return *this;
-    }
-
-    inline _number operator-=(_number n)
-    {
-        this->real() -= n.real();
-        this->imag() -= n.imag();
-        return *this;
-    }
-
-    _number operator*=(_number n)
-    {
-
-        //real*real
-        if (isReal(*this) && isReal(n))
-        {
-            this->real() *= n.real();
-        }
-        //im*im
-        else
-        {
-            *this = _number(
-                this->real() * n.real() - this->imag() * n.imag(),
-                this->real() * n.imag() + this->imag() * n.real()
-            );
-        }
-
-        return *this;
-    }
-
-    _number operator/=(_number n)
-    {
-        // n/INF
-        if (isInf(*this) && !isInf(n))
-        {
-            if (n != 0)
-                *this = 0;
-            else
-                *this = NAN;
-        }
-        // real/real
-        else if (isReal(*this) && isReal(n) && n.real() != 0)
-        {
-            this->real() /= n.real();
-            // im/im
-        }
-        else
-        {
-            double denominator = std::pow(n.real(), 2) + std::pow(n.imag(), 2);
-
-            // n1/n2
-            if (denominator != 0)
-                *this = _number(
-                    (this->real() * n.real() + this->imag() * n.imag()) / denominator,
-                    (this->imag() * n.real() - this->real() * n.imag()) / denominator);
-            // n/0
-            else if (!isInf(*this) && *this != 0)
-            {
-                if (this->real() > 0)
-                    *this = INF;
-                else
-                    *this = -INF;
-            }
-            else
-                *this = NAN;
-        }
-
-        return *this;
-    }
-
-    _number operator%=(_number n)
-    {
-        if (!isInf(n) && n.real() != 0 && isReal(*this) && isReal(n))
-        {
-            this->real() = std::fmod(this->real(), n.real());
-        }
-        else
-        {
-            *this = NAN;
-        }
-
-        return *this;
-    }
+    inline _number operator+=(_number n);
+    inline _number operator-=(_number n);
+    _number operator*=(_number n);
+    _number operator/=(_number n);
+    _number operator%=(_number n);
 };
 
 
@@ -490,86 +396,86 @@ inline _number<T> asech(_number<T>);
 template <class T>
 inline _number<T> acsch(_number<T>);
 
-#ifdef DM4thSIMDNumber
+// #ifdef DM4thSIMDNumber
 
-template<>
-inline number number::operator+=(number n)
-{
-    this->_ddata = _mm_add_pd(this->_ddata, n._ddata);
-    return *this;
-}
+// template<>
+// inline number number::operator+=(number n)
+// {
+//     this->_ddata = _mm_add_pd(this->_ddata, n._ddata);
+//     return *this;
+// }
 
-template<>
-inline number number::operator-=(number n)
-{
-    this->_ddata = _mm_sub_pd(this->_ddata, n._ddata);
-    return *this;
-}
+// template<>
+// inline number number::operator-=(number n)
+// {
+//     this->_ddata = _mm_sub_pd(this->_ddata, n._ddata);
+//     return *this;
+// }
 
-template<>
-number number::operator*=(number n)
-{
-    if (isReal(*this) && isReal(n))
-    {
-        this->_ddata = _mm_mul_pd(this->_ddata, n._ddata);
-    }
-    else
-    {
-        // __m128d real = _mm_mul_pd(this->_ddata, n._ddata);
-        // __m128d imag = _mm_mul_pd(this->_ddata, _mm_setr_pd(n.imag(), n.real()));
+// template<>
+// number number::operator*=(number n)
+// {
+//     if (isReal(*this) && isReal(n))
+//     {
+//         this->_ddata = _mm_mul_pd(this->_ddata, n._ddata);
+//     }
+//     else
+//     {
+//         // __m128d real = _mm_mul_pd(this->_ddata, n._ddata);
+//         // __m128d imag = _mm_mul_pd(this->_ddata, _mm_setr_pd(n.imag(), n.real()));
 
-        // this->_ddata = _mm_add_pd(_mm_setr_pd(real[0], imag[0]), _mm_setr_pd(-real[1], imag[1]));
+//         // this->_ddata = _mm_add_pd(_mm_setr_pd(real[0], imag[0]), _mm_setr_pd(-real[1], imag[1]));
 
-        __m128d num1, num2, num3, num4;
+//         __m128d num1, num2, num3, num4;
 
-        // Copies a single element into the vector
+//         // Copies a single element into the vector
 
-        //   num1:  [x.real, x.real]
+//         //   num1:  [x.real, x.real]
 
-        num1 = _mm_load1_pd(&this->real());
+//         num1 = _mm_load1_pd(&this->real());
 
-        // Move y elements into a vector
+//         // Move y elements into a vector
 
-        //   num2: [y.img, y.real]
+//         //   num2: [y.img, y.real]
 
-        num2 = _mm_set_pd(n.imag(), n.real());
+//         num2 = _mm_set_pd(n.imag(), n.real());
 
-        // Multiplies vector elements
+//         // Multiplies vector elements
 
-        //   num3: [(x.real*y.img), (x.real*y.real)]
+//         //   num3: [(x.real*y.img), (x.real*y.real)]
 
-        num3 = _mm_mul_pd(num2, num1);
+//         num3 = _mm_mul_pd(num2, num1);
 
-        //   num1: [x.img, x.img]
+//         //   num1: [x.img, x.img]
 
-        num1 = _mm_load1_pd(&this->imag());
+//         num1 = _mm_load1_pd(&this->imag());
 
-        // Swaps the vector elements.
+//         // Swaps the vector elements.
 
-        //   num2: [y.real, y.img]
+//         //   num2: [y.real, y.img]
 
-        num2 = _mm_shuffle_pd(num2, num2, 1);
+//         num2 = _mm_shuffle_pd(num2, num2, 1);
 
-        //   num2: [(x.img*y.real), (x.img*y.img)]
+//         //   num2: [(x.img*y.real), (x.img*y.img)]
 
-        num2 = _mm_mul_pd(num2, num1);
+//         num2 = _mm_mul_pd(num2, num1);
 
-        num4 = _mm_add_pd(num3, num2);
+//         num4 = _mm_add_pd(num3, num2);
 
-        num3 = _mm_sub_pd(num3, num2);
+//         num3 = _mm_sub_pd(num3, num2);
 
-        num4 = _mm_shuffle_pd(num3, num4, 2);
+//         num4 = _mm_shuffle_pd(num3, num4, 2);
 
-        // Stores the elements of num4 into z
+//         // Stores the elements of num4 into z
 
-        _mm_storeu_pd(reinterpret_cast<double*>(this), num4);
+//         _mm_storeu_pd(reinterpret_cast<double*>(this), num4);
 
-    }
+//     }
 
-    return *this;
-}
+//     return *this;
+// }
 
-#endif
+// #endif
 
 #if defined DM4thOmp
 #pragma omp declare reduction(+        \

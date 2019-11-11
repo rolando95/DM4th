@@ -199,6 +199,14 @@ inline _number<T> operator+(U n1, _number<T> n2)
      return  _number<T>(n1) + n2;
 }
 
+template<class T>
+inline _number<T> _number<T>::operator+=(_number<T> n)
+{
+    this->real() += n.real();
+    this->imag() += n.imag();
+    return *this;
+}
+
 // Resta de numeros complejos
 template<class T>
 inline _number<T> operator-(_number<T> n1,_number<T> n2){
@@ -219,6 +227,14 @@ inline _number<T> operator-(U n1, _number<T> n2)
 }
 
 template<class T>
+inline _number<T> _number<T>::operator-=(_number<T> n)
+{
+    this->real() -= n.real();
+    this->imag() -= n.imag();
+    return *this;
+}
+
+template<class T>
 _number<T> operator*(_number<T> n1, _number<T> n2){
     _number<T> result = n1;
     result *= n2;
@@ -234,6 +250,27 @@ template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator*(U n1, _number<T> n2)
 {
     return  _number<T>(n1) * n2;
+}
+
+template<class T>
+_number<T> _number<T>::operator*=(_number<T> n)
+{
+
+    //real*real
+    if (isReal(*this) && isReal(n))
+    {
+        this->real() *= n.real();
+    }
+    //im*im
+    else
+    {
+        *this = _number(
+            this->real() * n.real() - this->imag() * n.imag(),
+            this->real() * n.imag() + this->imag() * n.real()
+        );
+    }
+
+    return *this;
 }
 
 // Division de numeros complejos
@@ -256,11 +293,52 @@ inline _number<T> operator/(U n1, _number<T> n2)
     return _number<T>(n1) / n2;
 }
 
+template<class T>
+_number<T> _number<T>::operator/=(_number<T> n)
+{
+    // n/INF
+    if (isInf(*this) && !isInf(n))
+    {
+        if (n != 0)
+            *this = 0;
+        else
+            *this = NAN;
+    }
+    // real/real
+    else if (isReal(*this) && isReal(n) && n.real() != 0)
+    {
+        this->real() /= n.real();
+        // im/im
+    }
+    else
+    {
+        double denominator = std::pow(n.real(), 2) + std::pow(n.imag(), 2);
+
+        // n1/n2
+        if (denominator != 0)
+            *this = _number(
+                (this->real() * n.real() + this->imag() * n.imag()) / denominator,
+                (this->imag() * n.real() - this->real() * n.imag()) / denominator);
+        // n/0
+        else if (!isInf(*this) && *this != 0)
+        {
+            if (this->real() > 0)
+                *this = INF;
+            else
+                *this = -INF;
+        }
+        else
+            *this = NAN;
+    }
+
+    return *this;
+} 
+
 // Residuo de numeros complejos
 template<class T>
 _number<T> operator%(_number<T> n1, _number<T> n2){
     _number<T> result = n1;
-    result /= n2;
+    result %= n2;
     return result;
 }
 
@@ -274,6 +352,21 @@ template<class U, typename T, enable_if_is_number(U, _number<T>) >
 inline _number<T> operator%(U n1, _number<T> n2)
 {
     return _number<T>(n1) % n2;
+}
+
+template<class T>
+_number<T> _number<T>::operator%=(_number<T> n)
+{
+    if (!isInf(n) && n.real() != 0 && isReal(*this) && isReal(n))
+    {
+        this->real() = std::fmod(this->real(), n.real());
+    }
+    else
+    {
+        *this = NAN;
+    }
+
+    return *this;
 }
 
 // Relacional
