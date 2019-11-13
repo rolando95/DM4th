@@ -156,9 +156,9 @@ class _ArrayDataManager
 
         void incrRef();
         void decrRef();
-
-    public:
         
+    public:
+
         _ArrayDataManager();
         _ArrayDataManager(const _ArrayDataManager<T> &other);
         ~_ArrayDataManager();
@@ -170,6 +170,7 @@ class _ArrayDataManager
         int shape(int axis);
 
         _ArrayData<T> const *_arrayData() const;
+        int refCount() const;
 
 };
 

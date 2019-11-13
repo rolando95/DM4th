@@ -444,6 +444,13 @@ void _ArrayDataManager<T>::decrRef()
 }
 
 template <class T>
+int _ArrayDataManager<T>::refCount() const
+{
+    if(this->_data!=nullptr) return this->_data->refCount();
+    else return 0;
+}
+
+template <class T>
 _ArrayDataManager<T>::_ArrayDataManager()
 {
     this->incrRef();
