@@ -489,10 +489,10 @@ inline _number<T> acsch(_number<T>);
                               : omp_out = (omp_out * omp_in)) initializer(omp_priv = 1)
 #pragma omp declare reduction(max      \
                               : number \
-                              : omp_out = (omp_out > omp_in) ? omp_out : omp_in) initializer(omp_priv = -INF)
+                              : omp_out = (omp_out > omp_in) ? omp_out : omp_in) initializer(omp_priv = -std::numeric_limits<double>::infinity())
 #pragma omp declare reduction(min      \
                               : number \
-                              : omp_out = (omp_out < omp_in) ? omp_out : omp_in) initializer(omp_priv = INF)
+                              : omp_out = (omp_out < omp_in) ? omp_out : omp_in) initializer(omp_priv = std::numeric_limits<double>::infinity())
 
 #define DM4thReductionSum(...) reduction(+ \
                                          : __VA_ARGS__)
