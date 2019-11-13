@@ -1,6 +1,7 @@
 *.exe
 *.cpp
 !test/**
+test/**.exe
 *.asm
 /*.txt
 bin-int/
