@@ -31,6 +31,7 @@ class TEST
         catch(...)
         {
             failed += 1;
+            std::cout<< "--TEST FAILED--" <<std::endl;
         }
     }
 
