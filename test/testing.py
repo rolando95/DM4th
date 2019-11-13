@@ -2,8 +2,8 @@ import os
 import sys
 import subprocess
 import glob
-
-testFiles=list(glob.glob("*.cpp"))
+print("Uhmm")
+testFiles=glob.glob("**/*.cpp", recursive=True)
 
 print("Test Files:", testFiles)
 

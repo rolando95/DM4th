@@ -1,5 +1,5 @@
-#include "../DM4th/DM4th.h"
-#include "_DM4thTest.h"
+#include "../../DM4th/DM4th.h"
+#include "../DM4thTest.h"
 
 int main()
 {
