@@ -4,7 +4,7 @@ before_install:
 
 python:
   - "3.8"
-  
+
 os:
   - linux
 
@@ -14,4 +14,4 @@ language:
 
 script:
   - cd test/
-  - python testing.py usevalgrind
+  - python3 testing.py usevalgrind
