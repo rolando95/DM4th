@@ -2,6 +2,9 @@ before_install:
   - sudo apt-get update -y
   - sudo apt-get install -y valgrind
 
+python:
+  - "3.8"
+  
 os:
   - linux
 
