@@ -130,6 +130,8 @@ class _ShapeData
         inline void set(int idx, int value);
 
         inline const int *data();
+
+        inline void moveReferenceTo(_ShapeData &other) { this->_shape.moveReferenceTo(other._shape); }
 };
 
 template<class T>
@@ -141,9 +143,12 @@ class _ArrayData
 
         _ShapeData    shape;
         _BaseArray<T> array;
+
         void incrRef();
         void decrRef();
         int refCount() const;
+
+        void moveReferenceTo(_ArrayData<T> &other);
 };
 
 
@@ -172,6 +177,8 @@ class _ArrayDataManager
         _ArrayData<T> const *_arrayData() const;
         int refCount() const;
 
+        inline void _moveDataRefTo(_ArrayDataManager<T> &other);
+        inline bool isSameRef(_ArrayDataManager<T> &other);
 };
 
 }

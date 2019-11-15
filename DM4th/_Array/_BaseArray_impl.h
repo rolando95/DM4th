@@ -352,6 +352,7 @@ template <class T>
 inline void _BaseArray<T>::clear()
 {
     this->_size = 0;
+    this->_top = 0;
     if (this->_array == nullptr)
         return;
     delete[] this->_array;
@@ -418,6 +419,15 @@ template <class T>
 int _ArrayData<T>::refCount() const
 {
     return this->_ref;
+}
+
+template<class T>
+void _ArrayData<T>::moveReferenceTo(_ArrayData<T> &other)
+{
+    this->shape.moveReferenceTo(other.shape);
+    this->array.moveReferenceTo(other.array);
+    this->shape.resize(1);
+    this->shape.set(0,0);
 }
 
 //////////////////// _ArrayDataManager
@@ -497,6 +507,18 @@ _ArrayData<T> const *_ArrayDataManager<T>::_arrayData() const
     return _data;
 }
 
+template<class T>
+inline void _ArrayDataManager<T>::_moveDataRefTo(_ArrayDataManager<T> &other)
+{
+    if(this->_data == nullptr) this->_data = new _ArrayData<T>();
+    this->_data->moveReferenceTo(*other._data);
+}
+
+template<class T>
+inline bool _ArrayDataManager<T>::isSameRef(_ArrayDataManager<T> &other)
+{
+    return (this->_data == other._data);
+}
 } // namespace DM4thInternal
 
 } // namespace DM4th

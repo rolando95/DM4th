@@ -593,8 +593,7 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
     {
         DM4thAssert(false);
     }
-
-    *this = result;
+    result._moveDataRefTo(*this);
     return *this;
 }
 
@@ -1518,5 +1517,4 @@ inline std::istream& operator>>(std::istream& stream, TemplateArray<bool> &arr)
     stream >> std::noboolalpha;
     return stream;
 }
-
 }
