@@ -114,17 +114,27 @@ TemplateArray<T> ones(U ... axisSize)
 }
 
 template<class T, class ...U>
-TemplateArray<T> identity(U ... axisSize)
+TemplateArray<T> identity(int axis0, U ... axisSize)
 {
-    TemplateArray<T> result = zeros<T>(axisSize ...);
-    //result.resize(axisSize...);
-
-    TemplateArray<T> axis = items<T>(axisSize ...);
-    int size = DM4thTemplateArrayUtils::min<T>(axis);
-    int disp = result._getAxisDisplacement(0) + 1;
-    for(int j=0, idx=0; j<size; ++j, idx+=disp)
+    TemplateArray<T> result;
+    if(DM4thUtils::count(axis0, axisSize...)>1)
     {
-        result.data_item(idx) = 1;
+        result = zeros<T>(axis0, axisSize ...);
+        //result.resize(axisSize...);
+
+        TemplateArray<T> axis = items<T>(axis0, axisSize ...);
+        int size = DM4thTemplateArrayUtils::min<T>(axis);
+        int disp = result._getAxisDisplacement(0) + 1;
+        for(int j=0, idx=0; j<size; ++j, idx+=disp)
+        {
+            result.data_item(idx) = 1;
+        }
+    }else{
+        result = zeros<T>(axis0, axis0);
+        for(int j=0; j<axis0; ++j)
+        {
+            result(j,j) = 1;
+        }
     }
 
     return result;
