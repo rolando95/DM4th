@@ -73,7 +73,7 @@ namespace DM4th
             before = result.getCopy();
 
             #if defined DM4thOmpFor
-                #pragma omp parallel for shared(other)
+                #pragma omp parallel for shared(matrix)
             #endif
 
             for(int i=0; i<matrix.size(); ++i)
@@ -99,7 +99,7 @@ namespace DM4th
             before = result.getCopy();
 
             #if defined DM4thOmpFor
-                #pragma omp parallel for shared(other)
+                #pragma omp parallel for shared(matrix)
             #endif 
 
             for(int i=0; i<matrix.size(); ++i)
