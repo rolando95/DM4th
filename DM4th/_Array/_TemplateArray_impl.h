@@ -479,7 +479,27 @@ inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this-
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
 {
-    this->_data->array += other._arrayData()->array;
+    if(this->data_size()==1)
+    {
+        T item = this->data_item(0);
+        this->resize(other.shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif 
+
+        for(int j=0; j<other.data_size(); ++j)
+        {
+            this->data_item(j) = item + other.data_item(j);
+        }
+
+    }else if(other.data_size()==1)
+    {
+        this->_data->array += other.data_item(0);
+    }else
+    {
+        this->_data->array += other._arrayData()->array;
+    }
     return *this;
 }
 
@@ -509,8 +529,27 @@ inline const TemplateArray<T> TemplateArray<T>::operator+(const T &other) const
 template<class T> template<class U>
 inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
 {
-    DM4thAssert(super::_data->shape==other._arrayData()->shape);
-    this->_data->array -= other._arrayData()->array;
+    if(this->data_size()==1)
+    {
+        T item = this->data_item(0);
+        this->resize(other.shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif 
+
+        for(int j=0; j<other.data_size(); ++j)
+        {
+            this->data_item(j) = item - other.data_item(j);
+        }
+
+    }else if(other.data_size()==1)
+    {
+        this->_data->array -= other.data_item(0);
+    }else
+    {
+        this->_data->array -= other._arrayData()->array;
+    }
     return *this;
 }
 
