@@ -17,7 +17,17 @@ class TEST
 
     TEST(const char *name, std::function<void(void)> f)
     {
-        std::cout<<"Running test: "<<name<<std::endl;
+        #ifdef DM4thParallel
+            #pragma omp parallel 
+            {
+                #pragma omp single
+                {
+                    std::cout<<"Running test: "<<name<<".\nDM4thParallel threads:"<<omp_get_num_threads()<<std::endl;
+                }
+            }
+        #else
+            std::cout<<"Running test: "<<name<<std::endl;
+        #endif
         try{
             //clock_t begin = clock();
             f();

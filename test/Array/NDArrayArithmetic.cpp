@@ -33,20 +33,23 @@ int main()
 
         EXPECT_TRUE(A.isEqualTo(items<number>(1)));
 
-        A = map<number>([](number x){return x*x;}, items<number>(1,2,3,4,5)) * 2i;
+        A = map<number>([](number x){return x*x;}, range<number>(5)) * 2i;
         A = A / 2i;
         A = A + 3i;
         A = A - 3i;
         A = A + A;
         A = A - A/2;
-    
-        EXPECT_TRUE(A.isEqualTo(items<number>(1,4,9,16,25)));
+
+        EXPECT_TRUE(A.isEqualTo(items<number>(0,1,4,9,16)));
 
         A = A % 2;
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(1,0,1,0,1)));
+        EXPECT_TRUE(A.isEqualTo(items<number>(0,1,0,1,0)));
 
     });
-    
+
+    // TEST("NDArray Matrix Aritmethic", []{
+    //     NDArray<number> A = 
+    // });
     return TEST::ERROR_LEVEL();
 }
