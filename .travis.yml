@@ -5,6 +5,9 @@ before_install:
 python:
   - "3.8"
 
+env:
+  - OMP_NUM_THREADS=4
+  
 os:
   - linux
 
