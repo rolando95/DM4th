@@ -5,7 +5,7 @@ int main()
 {
     TEST("BaseArray References", []{
 
-        DM4thInternal::_BaseArray<number> A, B;
+        DM4thInternal::BaseArray<number> A, B;
 
         A.resize(5);
 
@@ -22,7 +22,7 @@ int main()
     });
 
     TEST("Base Array EQ NEQ", []{
-        DM4thInternal::_BaseArray<number> A, B;
+        DM4thInternal::BaseArray<number> A, B;
 
         A.resize(10);
         B.resize(10);
@@ -44,7 +44,7 @@ int main()
     });
 
     TEST("BaseArray Arithmetic", []{
-        DM4thInternal::_BaseArray<number> A, B;
+        DM4thInternal::BaseArray<number> A, B;
 
         A.resize(10);
         for(int j=0; j<A.size(); ++j)
@@ -67,7 +67,7 @@ int main()
         }
 
         
-        DM4thInternal::_BaseArray<number> C;
+        DM4thInternal::BaseArray<number> C;
         C = A;
         C.set(0,-1);
         EXPECT_NE(C,A);

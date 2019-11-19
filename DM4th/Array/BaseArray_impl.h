@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_BaseArray.h"
+#include "BaseArray.h"
 
 namespace DM4th
 {
@@ -11,48 +11,48 @@ namespace DM4thInternal
 //#define sizeAligned(x)   (x + 3) & -4
 #define sizeAligned(x) (x + 3) & ~0x03
 
-//////////////////// _BaseArray
+//////////////////// BaseArray
 #if defined BASEARRAY_STD_VECTOR
 
 template <class T>
-inline void _BaseArray<T>::resize(int size)
+inline void BaseArray<T>::resize(int size)
 {
-    this->_array.resize(size);
+    this->Array.resize(size);
 }
 
 template <class T>
-inline const int _BaseArray<T>::size() const
+inline const int BaseArray<T>::size() const
 {
-    return this->_array.size();
+    return this->Array.size();
 }
 
 template <class T>
-inline T &_BaseArray<T>::operator[](int idx)
+inline T &BaseArray<T>::operator[](int idx)
 {
-    return this->_array[idx]; //// FIX THIS
+    return this->Array[idx]; //// FIX THIS
 }
 
 template <class T>
-inline T &_BaseArray<T>::operator()(int idx)
+inline T &BaseArray<T>::operator()(int idx)
 {
-    return this->_array[idx]; /// FIX THIS
+    return this->Array[idx]; /// FIX THIS
 }
 
 template <class T>
-const inline T _BaseArray<T>::get(int idx) const
+const inline T BaseArray<T>::get(int idx) const
 {
-    return this->_array[idx];
+    return this->Array[idx];
 }
 
 template <class T>
-void inline _BaseArray<T>::set(int idx, T value)
+void inline BaseArray<T>::set(int idx, T value)
 {
-    this->_array[idx] = value;
+    this->Array[idx] = value;
 }
 
 template <class T>
 template <class U>
-bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
+bool BaseArray<T>::operator==(const BaseArray<U> &other) const
 {
     if (this->size() != other.size())
     {
@@ -69,37 +69,37 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
 }
 template <class T>
 template <class U>
-inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
+inline bool BaseArray<T>::operator!=(const BaseArray<U> &other) const
 {
     return !(*this == other);
 }
 
 template <class T>
-inline void _BaseArray<T>::clear()
+inline void BaseArray<T>::clear()
 {
-    this->_array.clear();
+    this->Array.clear();
 }
 
 template <class T>
-inline void _BaseArray<T>::moveReferenceTo(_BaseArray<T> &other)
+inline void BaseArray<T>::moveReferenceTo(BaseArray<T> &other)
 {
-    other._array = std::move(this->_array);
+    other.Array = std::move(this->Array);
 }
 #else
 
 template <class T>
-inline void _BaseArray<T>::allocArray(int size)
+inline void BaseArray<T>::allocArray(int size)
 {
-    DM4thAssert(!this->_array && size > 0);
-    this->_array = new T[size]();
+    DM4thAssert(!this->Array && size > 0);
+    this->Array = new T[size]();
     this->_size = size;
     this->_top = this->_size;
 }
 
 template <class T>
-inline void _BaseArray<T>::reallocArray(int size)
+inline void BaseArray<T>::reallocArray(int size)
 {
-    DM4thAssert(this->_array && size > 0);
+    DM4thAssert(this->Array && size > 0);
     if (size != _size)
     {
         if (size > this->_top)
@@ -109,10 +109,10 @@ inline void _BaseArray<T>::reallocArray(int size)
             T *tmp = new T[this->_top];
             int min = (size < this->_size) ? size : this->_size;
 
-            //memcpy((void*)tmp, (void*)this->_array, sizeof(T)*min);
+            //memcpy((void*)tmp, (void*)this->Array, sizeof(T)*min);
             for (int j = 0; j < min; ++j)
             {
-                tmp[j] = this->_array[j];
+                tmp[j] = this->Array[j];
             }
 
             for (int j = min; j < size; ++j)
@@ -120,8 +120,8 @@ inline void _BaseArray<T>::reallocArray(int size)
                 tmp[j] = T();
             }
 
-            delete[] this->_array;
-            this->_array = tmp;
+            delete[] this->Array;
+            this->Array = tmp;
             tmp = nullptr;
             this->_size = size;
         }
@@ -133,7 +133,7 @@ inline void _BaseArray<T>::reallocArray(int size)
 }
 
 template <class T>
-_BaseArray<T>::_BaseArray(int size)
+BaseArray<T>::BaseArray(int size)
 {
     if (size > 0)
     {
@@ -142,14 +142,14 @@ _BaseArray<T>::_BaseArray(int size)
 }
 
 template <class T>
-inline void _BaseArray<T>::resize(int size)
+inline void BaseArray<T>::resize(int size)
 {
     if (size == 0)
     {
         this->clear();
         return;
     }
-    if (this->_array == nullptr)
+    if (this->Array == nullptr)
     {
         this->allocArray(size);
     }
@@ -160,38 +160,38 @@ inline void _BaseArray<T>::resize(int size)
 }
 
 template <class T>
-inline const int _BaseArray<T>::size() const { return this->_size; }
+inline const int BaseArray<T>::size() const { return this->_size; }
 
 template <class T>
-inline T &_BaseArray<T>::operator[](int idx)
+inline T &BaseArray<T>::operator[](int idx)
 {
     DM4thAssert(idx < this->size());
-    return this->_array[idx];
+    return this->Array[idx];
 }
 
 template <class T>
-inline T &_BaseArray<T>::operator()(int idx)
+inline T &BaseArray<T>::operator()(int idx)
 {
     DM4thAssert(idx < this->size());
-    return this->_array[idx];
+    return this->Array[idx];
 }
 
 template <class T>
-const inline T _BaseArray<T>::get(int idx) const
+const inline T BaseArray<T>::get(int idx) const
 {
     DM4thAssert(idx < this->size());
-    return this->_array[idx];
+    return this->Array[idx];
 }
 
 template <class T>
-void inline _BaseArray<T>::set(int idx, T value)
+void inline BaseArray<T>::set(int idx, T value)
 {
-    this->_array[idx] = value;
+    this->Array[idx] = value;
 }
 
 template <class T>
 template <class U>
-bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
+bool BaseArray<T>::operator==(const BaseArray<U> &other) const
 {
     bool result = true;
     if (this->size() != other.size())
@@ -206,7 +206,7 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
         int j = omp_get_thread_num();
         while (j < this->size() && result)
         {
-            if (this->_array[j] != other.get(j))
+            if (this->Array[j] != other.get(j))
             {
                 result = false;
             }
@@ -216,7 +216,7 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
 #else
     for (int j = 0; j < this->size(); ++j)
     {
-        if (this->_array[j] != other.get(j))
+        if (this->Array[j] != other.get(j))
         {
             result = false;
             break;
@@ -229,14 +229,14 @@ bool _BaseArray<T>::operator==(const _BaseArray<U> &other) const
 
 template <class T>
 template <class U>
-inline bool _BaseArray<T>::operator!=(const _BaseArray<U> &other) const
+inline bool BaseArray<T>::operator!=(const BaseArray<U> &other) const
 {
     return !(*this == other);
 }
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
+const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -254,7 +254,7 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const _BaseArray<U> &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator+=(const U &other)
+const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
     #if defined DM4thOmpFor
         #pragma omp parallel for shared(other)
@@ -269,7 +269,7 @@ const _BaseArray<T> &_BaseArray<T>::operator+=(const U &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator-=(const U &other)
+const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
     #if defined DM4thOmpFor
         #pragma omp parallel for shared(other)
@@ -285,7 +285,7 @@ const _BaseArray<T> &_BaseArray<T>::operator-=(const U &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other)
+const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -304,7 +304,7 @@ const _BaseArray<T> &_BaseArray<T>::operator-=(const _BaseArray<U> &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other)
+const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
 
     #if defined DM4thOmpFor
@@ -320,7 +320,7 @@ const _BaseArray<T> &_BaseArray<T>::operator*=(const U &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other)
+const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
     #if defined DM4thOmpFor
         #pragma omp parallel for shared(other)
@@ -335,7 +335,7 @@ const _BaseArray<T> &_BaseArray<T>::operator/=(const U &other)
 
 template <class T>
 template <class U>
-const _BaseArray<T> &_BaseArray<T>::operator%=(const U &other)
+const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
     #if defined DM4thOmpFor
         #pragma omp parallel for shared(other)
@@ -349,28 +349,28 @@ const _BaseArray<T> &_BaseArray<T>::operator%=(const U &other)
 }
 
 template <class T>
-inline void _BaseArray<T>::clear()
+inline void BaseArray<T>::clear()
 {
     this->_size = 0;
     this->_top = 0;
-    if (this->_array == nullptr)
+    if (this->Array == nullptr)
         return;
-    delete[] this->_array;
-    this->_array = nullptr;
+    delete[] this->Array;
+    this->Array = nullptr;
 }
 
 template <class T>
-inline void _BaseArray<T>::moveReferenceTo(_BaseArray<T> &other)
+inline void BaseArray<T>::moveReferenceTo(BaseArray<T> &other)
 {
     other.clear();
-    other._array = this->_array;
+    other.Array = this->Array;
     other._size = this->_size;
-    this->_array = nullptr;
+    this->Array = nullptr;
     this->_size = 0;
 }
 
 template<class T>
-inline void _BaseArray<T>::copyReferenceTo(_BaseArray<T> &other) const
+inline void BaseArray<T>::copyReferenceTo(BaseArray<T> &other) const
 {
     other.resize(this->size());
     for(int j=0; j<this->size(); ++j)
@@ -379,32 +379,32 @@ inline void _BaseArray<T>::copyReferenceTo(_BaseArray<T> &other) const
     }
 }
 #endif
-//////////////////// _ShapeData
+//////////////////// ShapeData
 
-inline _ShapeData::_ShapeData(int size) { _shape.resize(size); }
-inline _ShapeData::~_ShapeData() {}
-inline void _ShapeData::resize(int size) { _shape.resize(size); }
-inline const int _ShapeData::size() { return _shape.size(); }
-inline void _ShapeData::clear() { this->_shape.clear(); }
-inline int &_ShapeData::operator[](int idx) { return this->_shape[idx]; }
-inline int &_ShapeData::operator()(int idx) { return this->_shape[idx]; }
-inline bool _ShapeData::operator==(const _ShapeData &other) const { return this->_shape == other._shape; }
-inline bool _ShapeData::operator!=(const _ShapeData &other) const { return this->_shape != other._shape; }
-inline const int _ShapeData::get(int idx) const { return this->_shape.get(idx); }
-inline void _ShapeData::set(int idx, int value) { this->_shape.set(idx, value); }
-inline const int *_ShapeData::data() { return &_shape[0]; }
+inline ShapeData::ShapeData(int size) { _shape.resize(size); }
+inline ShapeData::~ShapeData() {}
+inline void ShapeData::resize(int size) { _shape.resize(size); }
+inline const int ShapeData::size() { return _shape.size(); }
+inline void ShapeData::clear() { this->_shape.clear(); }
+inline int &ShapeData::operator[](int idx) { return this->_shape[idx]; }
+inline int &ShapeData::operator()(int idx) { return this->_shape[idx]; }
+inline bool ShapeData::operator==(const ShapeData &other) const { return this->_shape == other._shape; }
+inline bool ShapeData::operator!=(const ShapeData &other) const { return this->_shape != other._shape; }
+inline const int ShapeData::get(int idx) const { return this->_shape.get(idx); }
+inline void ShapeData::set(int idx, int value) { this->_shape.set(idx, value); }
+inline const int *ShapeData::data() { return &_shape[0]; }
 
-//////////////////// _ArrayData
+//////////////////// ArrayData
 
 template <class T>
-void _ArrayData<T>::incrRef()
+void ArrayData<T>::incrRef()
 {
     ++_ref;
     //std::cout<<this<<" INCR+ REF: "<<_ref<<std::endl;
 }
 
 template <class T>
-void _ArrayData<T>::decrRef()
+void ArrayData<T>::decrRef()
 {
     _ref -= 1;
     //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
@@ -416,13 +416,13 @@ void _ArrayData<T>::decrRef()
 }
 
 template <class T>
-int _ArrayData<T>::refCount() const
+int ArrayData<T>::refCount() const
 {
     return this->_ref;
 }
 
 template<class T>
-void _ArrayData<T>::moveReferenceTo(_ArrayData<T> &other)
+void ArrayData<T>::moveReferenceTo(ArrayData<T> &other)
 {
     this->shape.moveReferenceTo(other.shape);
     this->array.moveReferenceTo(other.array);
@@ -430,20 +430,20 @@ void _ArrayData<T>::moveReferenceTo(_ArrayData<T> &other)
     this->shape.set(0,0);
 }
 
-//////////////////// _ArrayDataManager
+//////////////////// ArrayDataManager
 
 template <class T>
-void _ArrayDataManager<T>::incrRef()
+void ArrayDataManager<T>::incrRef()
 {
     if (this->_data == nullptr)
     {
-        this->_data = new _ArrayData<T>();
+        this->_data = new ArrayData<T>();
     }
     this->_data->incrRef();
 }
 
 template <class T>
-void _ArrayDataManager<T>::decrRef()
+void ArrayDataManager<T>::decrRef()
 {
     this->_data->decrRef();
     if (this->_data->refCount() <= 0)
@@ -454,32 +454,32 @@ void _ArrayDataManager<T>::decrRef()
 }
 
 template <class T>
-int _ArrayDataManager<T>::refCount() const
+int ArrayDataManager<T>::refCount() const
 {
     if(this->_data!=nullptr) return this->_data->refCount();
     else return 0;
 }
 
 template <class T>
-_ArrayDataManager<T>::_ArrayDataManager()
+ArrayDataManager<T>::ArrayDataManager()
 {
     this->incrRef();
 }
 
 template <class T>
-_ArrayDataManager<T>::_ArrayDataManager(const _ArrayDataManager<T> &other)
+ArrayDataManager<T>::ArrayDataManager(const ArrayDataManager<T> &other)
 {
     _data = other._data;
     this->incrRef();
 }
 template <class T>
-_ArrayDataManager<T>::~_ArrayDataManager()
+ArrayDataManager<T>::~ArrayDataManager()
 {
     this->decrRef();
 }
 
 template <class T>
-_ArrayDataManager<T> const &_ArrayDataManager<T>::operator=(const _ArrayDataManager<T> &other)
+ArrayDataManager<T> const &ArrayDataManager<T>::operator=(const ArrayDataManager<T> &other)
 {
     if (this->_data == other._data)
         return *this;
@@ -490,32 +490,32 @@ _ArrayDataManager<T> const &_ArrayDataManager<T>::operator=(const _ArrayDataMana
 }
 
 template <class T>
-int _ArrayDataManager<T>::shapeSize()
+int ArrayDataManager<T>::shapeSize()
 {
     return this->_data->shape.size();
 }
 
 template <class T>
-int _ArrayDataManager<T>::shape(int axis)
+int ArrayDataManager<T>::shape(int axis)
 {
     return this->_data->shape(axis);
 }
 
 template <class T>
-_ArrayData<T> const *_ArrayDataManager<T>::_arrayData() const
+ArrayData<T> const &ArrayDataManager<T>::getArrayData() const
 {
-    return _data;
+    return *_data;
 }
 
 template<class T>
-inline void _ArrayDataManager<T>::_moveDataRefTo(_ArrayDataManager<T> &other)
+inline void ArrayDataManager<T>::_moveDataRefTo(ArrayDataManager<T> &other)
 {
-    if(this->_data == nullptr) this->_data = new _ArrayData<T>();
+    if(this->_data == nullptr) this->_data = new ArrayData<T>();
     this->_data->moveReferenceTo(*other._data);
 }
 
 template<class T>
-inline bool _ArrayDataManager<T>::isSameRef(_ArrayDataManager<T> &other)
+inline bool ArrayDataManager<T>::isSameRef(ArrayDataManager<T> &other)
 {
     return (this->_data == other._data);
 }

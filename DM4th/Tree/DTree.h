@@ -1,16 +1,15 @@
 #pragma once
 
-#include "_BaseTree_impl.h"
-#include "../_Array/_NDArray.h"
-//class Tree: public _TreeManager<Tree,number>{
+#include "BaseTree_impl.h"
+#include "../Array/NDArray.h"
+//class Tree: public TreeManager<Tree,number>{
 
 namespace DM4th
 {
 
 template<class T>
-class DTree: public DM4thInternal::_TreeDataManager<DTree,T>
+class DTree: public DM4thInternal::TreeDataManager<DTree,T>
 {
-        typedef DM4thInternal::_TreeDataManager<DTree,T> super;
     public:
         DTree();  
         DTree(const std::string &other);

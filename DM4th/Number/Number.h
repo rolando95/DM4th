@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "../_Utilities/_Utilities.h"
-//#include "../_Math/_Math.h"
+#include "../Utilities/Utilities.h"
+//#include "../Math/Math.h"
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 namespace DM4th

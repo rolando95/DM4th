@@ -3,7 +3,7 @@
 #ifndef __CONSTANTS_H__
 #define __CONSTANTS_H__
 
-#define _USE_MATH_DEFINES
+#define _USEMath_DEFINES
 #include <cmath>
 #include <limits>
 

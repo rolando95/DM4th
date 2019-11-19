@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_DTree.h"
+#include "DTree.h"
 
 namespace DM4th
 {
@@ -22,37 +22,37 @@ DTree<T>::DTree(const std::string &str)
 template<class T>
 inline T &DTree<T>::node() const
 {
-    return super::_data->node;
+    return this->_data->node;
 }
 
 template<class T>
 inline T &DTree<T>::item() const
 {
-    return super::_data->node;
+    return this->_data->node;
 }
 
 template<class T> 
 inline DTree<T> &DTree<T>::child(number idx) const
 {
-    return super::_data->array[(int)idx];
+    return this->_data->array[(int)idx];
 }
 
 template<class T> 
 inline DTree<T> &DTree<T>::child(int idx) const
 {
-    return super::_data->array[(int)idx];
+    return this->_data->array[(int)idx];
 }
 
 template<class T> template<class ... U>
 DTree<T> &DTree<T>::child(number idx, U ... args) const
 {
-    return super::_data->array[(int)idx].child(args ...);
+    return this->_data->array[(int)idx].child(args ...);
 }
 
 template<class T> template<class ... U>
 DTree<T> &DTree<T>::child(int idx, U ... args) const
 {
-    return super::_data->array[(int)idx].child(args ...);
+    return this->_data->array[(int)idx].child(args ...);
 }
 
 template<class T> template<class U>
@@ -62,9 +62,9 @@ const DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level) const
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
-        return super::_data->array[(int)axis.item(level)].child(axis, level+1);
+        return this->_data->array[(int)axis.item(level)].child(axis, level+1);
     }
-    return super::_data->array[(int)axis.item(level)];
+    return this->_data->array[(int)axis.item(level)];
 }
 
 template<class T> template<class U>
@@ -74,9 +74,9 @@ DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level)
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
-        return super::_data->array[(int)axis.item(level)].child(axis, level+1);
+        return this->_data->array[(int)axis.item(level)].child(axis, level+1);
     }
-    return super::_data->array[(int)axis.item(level)];
+    return this->_data->array[(int)axis.item(level)];
 }
 
 template<class T>
@@ -143,7 +143,7 @@ inline int DTree<T>::size() const {
 template<class T> 
 inline void DTree<T>::resize(int size)
 {
-    super::_data->array.resize(size);
+    this->_data->array.resize(size);
 } 
 
 template<class T> template<class U>
@@ -154,16 +154,16 @@ void DTree<T>::push(const U &value, const int pos)
     //Append
     if(pos >= this->size() || pos==(int)END) 
     {
-        super::_data->array(this->size()-1).item() = value;
+        this->_data->array(this->size()-1).item() = value;
     }
     //Insert
     else
     {
         for(int j=this->size()-1; j > pos; --j)
         {
-            super::_data->array(j) = super::_data->array(j-1).getCopy();
+            this->_data->array(j) = this->_data->array(j-1).getCopy();
         }
-        super::_data->array(pos).item() = value;
+        this->_data->array(pos).item() = value;
     }
 }
 
@@ -181,16 +181,16 @@ void DTree<T>::pushTreeRef(const DTree<U> &tree, const int pos)
     //Append
     if(pos >= this->size() || pos==(int)END) 
     {
-        super::_data->array(this->size()-1) = tree;
+        this->_data->array(this->size()-1) = tree;
     }
     //Insert
     else
     {
         for(int j=this->size()-1; j > pos; --j)
         {
-            super::_data->array(j) = super::_data->array(j-1);
+            this->_data->array(j) = this->_data->array(j-1);
         }
-        super::_data->array(pos) = tree;
+        this->_data->array(pos) = tree;
     }
 }
 
@@ -265,14 +265,14 @@ template<class T>
 inline DTree<T> &DTree<T>::left()
 {
     if(this->size()<1) this->resize(1);
-    return super::_data->array[0];
+    return this->_data->array[0];
 }
 
 template<class T> 
 inline DTree<T> &DTree<T>::right()
 {
     if(this->size()<2) this->resize(2);
-    return super::_data->array[1];
+    return this->_data->array[1];
 }
 
 

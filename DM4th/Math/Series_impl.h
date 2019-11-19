@@ -1,7 +1,7 @@
 #pragma once 
 
-#include "_Series.h"
-#include "_Differential.h"
+#include "Series.h"
+#include "Differential.h"
 
 namespace DM4th
 {

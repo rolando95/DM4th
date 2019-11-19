@@ -1,10 +1,10 @@
 #pragma once
 
-#include "_Math/_Differential_impl.h"
-#include "_Math/_Series_impl.h"
-#include "_Math/_MathUtilities.h"
-#include "_Math/_Roots_impl.h"
-#include "_Math/_LinearAlgebra.h"
+#include "Math/Differential_impl.h"
+#include "Math/Series_impl.h"
+#include "Math/MathUtilities.h"
+#include "Math/Roots_impl.h"
+#include "Math/LinearAlgebra.h"
 #include "Number.h"
 namespace DM4th
 {

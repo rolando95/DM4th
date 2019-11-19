@@ -1,7 +1,7 @@
 #pragma once
 
-#include "_BaseArray_impl.h"
-#include "../_Utilities/_Utilities.h"
+#include "BaseArray_impl.h"
+#include "../Utilities/Utilities.h"
 
 namespace DM4th
 {
@@ -9,10 +9,8 @@ namespace DM4th
 template<class T> class range;
 
 template<typename T>
-class NDArray: public DM4thInternal::_ArrayDataManager<T>
+class NDArray: public DM4thInternal::ArrayDataManager<T>
 {
-    typedef DM4thInternal::_ArrayDataManager<T> super;
-
     public:
         class iterator;
         class iterator_const;
@@ -255,7 +253,7 @@ class NDArray: public DM4thInternal::_ArrayDataManager<T>
         void _resize(int axis, int oldDispCount, int newDispCount,
             NDArray<int> &oldDisp,  NDArray<int> &newDisp,
             NDArray<int> &oldShape,  NDArray<int> &newShape,
-            const DM4thInternal::_BaseArray<T> &oldArray);
+            const DM4thInternal::BaseArray<T> &oldArray);
 
         template<class ... U>
         void _reshape(int axis, int first, U ... args);
@@ -265,7 +263,7 @@ class NDArray: public DM4thInternal::_ArrayDataManager<T>
         int _item(int axis, int pos, int idx, U ... args) const;
         int _item(int axis, int pos, int idx) const;
 
-        DM4thInternal::_BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
+        DM4thInternal::BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
 
         void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
         void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);

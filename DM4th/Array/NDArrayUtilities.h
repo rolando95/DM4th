@@ -1,5 +1,5 @@
 #pragma once
-#include "_NDArray.h"
+#include "NDArray.h"
 
 namespace DM4th
 {

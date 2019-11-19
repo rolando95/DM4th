@@ -9,9 +9,7 @@ int main()
 
     cout << hello << endl;
     cout << myList << endl;
-    
-    NDArray<double> a = NDArray<double>(myList);
-    print(a);
+
     cin.get();
     return 0;
 }

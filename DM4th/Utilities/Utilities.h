@@ -1,7 +1,7 @@
 #pragma once
 
 #include "_Constants.h"
-#include "../_Exceptions/_Exceptions.h"
+#include "../Exceptions/Exceptions.h"
 
 #include <string>
 #include <string.h>
