@@ -26,7 +26,7 @@ class TEST
                 }
             }
         #else
-            std::cout<<"Running test: "<<" (Threads:"<<1<<")"<<std::endl;
+            std::cout<<"Running test: "<<name<<" (Threads:"<<1<<")"<<std::endl;
         #endif
         try{
             //clock_t begin = clock();
