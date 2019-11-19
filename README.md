@@ -7,10 +7,14 @@ D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases 
 ![Calculator Screenshot](resources/screenshots/DM4thScreenshot.png)
 
 ## Características
-- Clase tipo `NDArray` que permitirán manejar vectores y matrices multidimensionales de manera dinámica.
-  - Métodos de push, pop, resize y reshape incluídos.
-  - Sobrecarga de operadores aritméticos y binarios.
-  - Sistema de conteo de referencias por array que permitirán administrar memoria sin pensar en punteros por parte del programador .
+- Clase tipo `NDArray` que permitirán manejar vectores, matrices y arreglos de N dimensiones.
+  - Modificar el número de elementos y dimensiones de un arreglo con métodos resize() o reshape().
+  - Inserción y eliminación de elementos con push() y pop().
+  - Operaciones algebráicas entre arreglos y escalares usando operadores de suma, resta, multiplicación, división, residuo, etc. Ejemplo: `arr1`+`arr2`, `arr1`*`10`, etc.
+  - Operaciones relacionales y lógicas entre arreglos y escalares usando operadores relacionales o lógicos. Ejemplo:  `arr`==`arr2`, `arr`>`arr2`, etc.
+  - Sistema de conteo de referencias por array que permitirán administrar memoria sin pensar en punteros por parte del programador.
+  - Obtener subArreglos (array slicing) de forma similar a Matlab y Python con el método subArray() y slice().
+
 - Métodos numéricos de utilidad para diferentes operaciones de cálculo diferencial e integral, álgebra lineal, entre otros.
   - Soluciones de métodos de búsqueda de raíces de función como Newthon-Raphson y el Método de Bairstow con soporte de raíces complejas.
   - Soporte de resultados con números reales y complejos en todos los métodos incluídos en la librería.
@@ -41,6 +45,7 @@ D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases 
 
 * Código
     ```C++
+    
     #include "DM4th/DM4th.h"
 
     using namespace std;
@@ -414,6 +419,86 @@ D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases 
         [0, 0.2, 0.4, 0.6, 0.8, 1],
         [1.2, 1.4, 9999, 1.8, 2, 2.2]
     ]
+    ```
+</details>
+
+<details>
+<summary>Array Slicing</summary>
+
+* Código
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    using namespace std;
+
+    int main()
+    {
+        NDArray<number> matrix = items<number>(
+            12, 90, 34,
+            78, 56, 65,
+            87, 43, 21
+        ).reshape(3, 3);
+
+        cout << "Matrix:\n" << matrix << endl;
+
+        cout << "\nGet column 1 of matrix" << endl;
+        NDArray<number> vector = matrix.subArr(slice(0,3), 1);
+        cout << vector << endl;
+
+        cout << "\nSet 1000 to row 2 of matrix" << endl;
+        matrix.subArr(2) = 1000;
+        cout << matrix << endl;
+
+        cout << "\nSet 3+2i to column 0 of matrix" << endl;
+        matrix.subArr(slice(0,3), 0) = 3+2i;
+        cout << matrix << endl;
+
+
+        NDArray<number> arr1 = range<number>(10);
+        NDArray<number> arr2 = items<number>(1i, 3i, 5i, 7i, 9i, 11i, 13i, 15i, 17i, 19i);
+        cout << "\narr1:" << arr1 << endl;
+        cout << "arr2:" << arr2 << endl;
+
+        cout << "\nSetting 3rd, 4th and 5th elements of arr1 from some elements of arr2" << endl;
+        arr1.subArr(slice(2,5)) = arr2.subArr(slice(2,5));
+        cout << arr1 << endl;
+
+        cin.get();
+        return 0;
+    }
+    ```
+* Salida
+    ```C++
+    Matrix:
+    [
+        [12, 90, 34],
+        [78, 56, 65],
+        [87, 43, 21]
+    ]
+
+    Get column 1 of matrix
+    [90, 56, 43]
+
+    Set 1000 to row 2 of matrix
+    [
+        [12, 90, 34],
+        [78, 56, 65],
+        [1000, 1000, 1000]
+    ]
+
+    Set 3+2i to column 0 of matrix
+    [
+        [3+2i, 90, 34],
+        [3+2i, 56, 65],
+        [3+2i, 1000, 1000]
+    ]
+
+    arr1:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    arr2:[i, 3i, 5i, 7i, 9i, 11i, 13i, 15i, 17i, 19i]
+
+    Setting 3rd, 4th and 5th elements of arr1 from some elements of arr2
+    [0, 1, 5i, 7i, 9i, 5, 6, 7, 8, 9]
+
     ```
 </details>
 
