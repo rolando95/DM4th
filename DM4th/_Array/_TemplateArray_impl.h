@@ -1039,9 +1039,9 @@ inline TemplateArray<bool> TemplateArray<bool>::operator!() const
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
+        #pragma omp parallel for
     #endif
-    
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = !this->data_item(j); 
