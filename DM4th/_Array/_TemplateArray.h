@@ -21,8 +21,12 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         TemplateArray();
         template<class ... U> TemplateArray(T *data, U ... args);
         TemplateArray(T *data, const TemplateArray<int> &axisArray);
-        TemplateArray(const std::string &other);
-
+        //TemplateArray(const typename TemplateArray<T>::SubArray &other) { *this = TemplateArray(other); }
+        explicit TemplateArray(const std::string &other);
+        //explicit TemplateArray(const char *other) { *this = std::string(other); }
+        template<class U>
+        explicit operator TemplateArray<U>();
+        
         template<class ... U>
         inline void resize(int axis1, U ... args);
         inline void resize(int axis1);
@@ -57,9 +61,6 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
 
         T pop(const int idx=END);
         TemplateArray<T> popArray(const int idx=END);
-
-        template<class U>
-        explicit operator TemplateArray<U>();
 
         // template<class U, enable_if_is_number(U, _number<U>)>
         // explicit operator U()

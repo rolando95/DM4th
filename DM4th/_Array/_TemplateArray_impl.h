@@ -38,6 +38,18 @@ TemplateArray<T>::TemplateArray(const std::string &str)
     ss >> *this;
 }
 
+template<class T> template<class U>
+TemplateArray<T>::operator TemplateArray<U>()
+{
+    TemplateArray<U> result;
+    result.resize(this->shape());
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = (U)this->data_item(j);
+    }
+    return result;
+}
+
 template<class T> template<class ... U>
 inline void TemplateArray<T>::resize(int axis1, U ... args)
 {
@@ -440,18 +452,6 @@ TemplateArray<T> TemplateArray<T>::popArray(const int pos)
     }
     
     this->resize(this->shape(0)-1, this->shape(1));
-    return result;
-}
-
-template<class T> template<class U>
-TemplateArray<T>::operator TemplateArray<U>()
-{
-    TemplateArray<U> result;
-    result.resize(this->shape());
-    for(int j=0; j<this->data_size(); ++j)
-    {
-        result.data_item(j) = (U)this->data_item(j);
-    }
     return result;
 }
 

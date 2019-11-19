@@ -10,6 +10,8 @@ int main()
     cout << hello << endl;
     cout << myList << endl;
     
+    TemplateArray<double> a = TemplateArray<double>(myList);
+    print(a);
     cin.get();
     return 0;
 }
