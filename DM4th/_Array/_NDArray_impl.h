@@ -1,29 +1,29 @@
 #pragma once
 
-#include "_TemplateArray.h"
-#include "_TemplateArrayUtilities.h"
+#include "_NDArray.h"
+#include "_NDArrayUtilities.h"
 
 
 namespace DM4th
 {
 
 template<class T>
-TemplateArray<T>::TemplateArray() {}
+NDArray<T>::NDArray() {}
 
 template<class T> template<class ... U>
-TemplateArray<T>::TemplateArray(T *data, U ... args)
+NDArray<T>::NDArray(T *data, U ... args)
 {
-    *this = TemplateArray<T>(data, items<int>(args ...));
+    *this = NDArray<T>(data, items<int>(args ...));
 }
 
 template<class T>
-TemplateArray<T>::TemplateArray(T *data, const TemplateArray<int> &axisArray)
+NDArray<T>::NDArray(T *data, const NDArray<int> &axisArray)
 {
     DM4thAssert(axisArray.size()>0);
     DM4thAssert(axisArray.shapeSize()==1);
 
     this->resize(axisArray);
-    int size = DM4thTemplateArrayUtils::mult(axisArray);
+    int size = DM4thNDArrayUtils::mult(axisArray);
     for(int j=0; j<size; ++j)
     {
         this->data_item(j) = data[j];
@@ -31,7 +31,7 @@ TemplateArray<T>::TemplateArray(T *data, const TemplateArray<int> &axisArray)
 }
 
 template<class T>
-TemplateArray<T>::TemplateArray(const std::string &str) 
+NDArray<T>::NDArray(const std::string &str) 
 {    
     std::stringstream ss;
     ss << str;
@@ -39,9 +39,9 @@ TemplateArray<T>::TemplateArray(const std::string &str)
 }
 
 template<class T> template<class U>
-TemplateArray<T>::operator TemplateArray<U>()
+NDArray<T>::operator NDArray<U>()
 {
-    TemplateArray<U> result;
+    NDArray<U> result;
     result.resize(this->shape());
     for(int j=0; j<this->data_size(); ++j)
     {
@@ -51,14 +51,14 @@ TemplateArray<T>::operator TemplateArray<U>()
 }
 
 template<class T> template<class ... U>
-inline void TemplateArray<T>::resize(int axis1, U ... args)
+inline void NDArray<T>::resize(int axis1, U ... args)
 {
-    TemplateArray<int> axisArray = items<int>(axis1, args...);
+    NDArray<int> axisArray = items<int>(axis1, args...);
     this->resize(axisArray);
 }
 
 template<class T>
-inline void TemplateArray<T>::resize(int axis1)
+inline void NDArray<T>::resize(int axis1)
 {
     if(this->shapeSize()<=1) this->_resize1DArray(axis1); // 0 || 1 dim to 1 dim
     else
@@ -82,7 +82,7 @@ inline void TemplateArray<T>::resize(int axis1)
 }
 
 template<class T>
-void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
+void NDArray<T>::resize(const NDArray<int> &axisArray)
 {
     DM4thAssert(axisArray.shapeSize()==1);
 
@@ -102,13 +102,13 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
         //delete[] oldArray;
     }else
     { //N dim to M dim
-        TemplateArray<int> oldShape = this->shape();
-        TemplateArray<int> oldDisp = this->_getAxisDisplacement();
+        NDArray<int> oldShape = this->shape();
+        NDArray<int> oldDisp = this->_getAxisDisplacement();
 
         DM4thInternal::_BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
-        TemplateArray<int> newShape = this->shape();
-        TemplateArray<int> newDisp = this->_getAxisDisplacement();
+        NDArray<int> newShape = this->shape();
+        NDArray<int> newDisp = this->_getAxisDisplacement();
 
         if(oldArray.size() == 0) return;
 
@@ -128,18 +128,18 @@ void TemplateArray<T>::resize(const TemplateArray<int> &axisArray)
 }
 
 template<class T>
-inline int TemplateArray<T>::shapeSize() const { return super::_data->shape.size(); }
+inline int NDArray<T>::shapeSize() const { return super::_data->shape.size(); }
 
 template<class T>
-int TemplateArray<T>::size() const { return super::_data->shape.get(0); }
+int NDArray<T>::size() const { return super::_data->shape.get(0); }
 
 // template<class T>
-// int TemplateArray<T>::itemsCount() const { return super::_data->array.size(); }
+// int NDArray<T>::itemsCount() const { return super::_data->array.size(); }
 
 template<class T>
-TemplateArray<int> TemplateArray<T>::shape() const
+NDArray<int> NDArray<T>::shape() const
 {
-    TemplateArray<int> result;
+    NDArray<int> result;
     result._resize1DArray(super::_data->shape.size());
     for(int j=0; j<super::_data->shape.size(); ++j)
     {
@@ -149,13 +149,13 @@ TemplateArray<int> TemplateArray<T>::shape() const
 }
 
 template<class T>
-inline int TemplateArray<T>::shape(int axis) const       
+inline int NDArray<T>::shape(int axis) const       
 {
     return super::_data->shape.get(axis);
 }
 
 template<class T> template<class ... U>
-const TemplateArray<T> &TemplateArray<T>::reshape(int axis1, U ... args)
+const NDArray<T> &NDArray<T>::reshape(int axis1, U ... args)
 {
     //int oldShapeMult = mult(this->shape().data(), this->shapeSize());
     int oldShapeMult = DM4thCArrayUtils::mult(super::_data->shape.data(), this->shapeSize());
@@ -169,7 +169,7 @@ const TemplateArray<T> &TemplateArray<T>::reshape(int axis1, U ... args)
 }
 
 template<class T>
-const TemplateArray<T> & TemplateArray<T>::reshape(TemplateArray<int> newShape)
+const NDArray<T> & NDArray<T>::reshape(NDArray<int> newShape)
 {
     int oldShapeMult = DM4thCArrayUtils::mult(super::_data->shape.data(), this->shapeSize());
     int newShapeMult = DM4thCArrayUtils::mult(newShape.data(), newShape.size());     
@@ -186,15 +186,15 @@ const TemplateArray<T> & TemplateArray<T>::reshape(TemplateArray<int> newShape)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::flatten()
+NDArray<T> NDArray<T>::flatten()
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result.reshape(this->data_size());
     return result;
 }
 
 template<class T>
-int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
+int NDArray<T>::_partition(bool reverse, const int lo, const int hi)
 {
     T pivot = this->data_item( (lo+hi)/2 );
     int i = lo;
@@ -214,7 +214,7 @@ int TemplateArray<T>::_partition(bool reverse, const int lo, const int hi)
 }
 
 template<class T>
-void TemplateArray<T>::sort(bool reverse, int lo, int hi)
+void NDArray<T>::sort(bool reverse, int lo, int hi)
 {
     if(hi==(int)END) hi = this->data_size()-1;
     if(lo<hi){ 
@@ -225,7 +225,7 @@ void TemplateArray<T>::sort(bool reverse, int lo, int hi)
 }
 
 template<class T> template<class U, class V>
-inline void TemplateArray<T>::swap(U idx1, V idx2)
+inline void NDArray<T>::swap(U idx1, V idx2)
 {
     DM4thAssert(idx1<this->size() && idx2<this->size());
     int disp = this->_getAxisDisplacement(0);
@@ -241,7 +241,7 @@ inline void TemplateArray<T>::swap(U idx1, V idx2)
 }
 
 template<class T> template<class AXIS, class ... U>
-T &TemplateArray<T>::item(AXIS axis, U ... args) const
+T &NDArray<T>::item(AXIS axis, U ... args) const
 { 
     int x = (int)axis;
     const int pos = this->_item(1,x,args ...); 
@@ -249,7 +249,7 @@ T &TemplateArray<T>::item(AXIS axis, U ... args) const
 }
 
 template<class T> template<class AXIS>
-T &TemplateArray<T>::item(AXIS axis) const
+T &NDArray<T>::item(AXIS axis) const
 {
     int x = (AXIS)axis;
     DM4thAssert(super::_data->shape.size()==1);
@@ -259,7 +259,7 @@ T &TemplateArray<T>::item(AXIS axis) const
 }
 
 template<class T> template<class AXIS>
-T &TemplateArray<T>::item(const TemplateArray<AXIS> &axisArray)
+T &NDArray<T>::item(const NDArray<AXIS> &axisArray)
 {
     DM4thAssert(axisArray.shapeSize()==1);
     DM4thAssert(axisArray.size()==this->shapeSize());
@@ -280,9 +280,9 @@ T &TemplateArray<T>::item(const TemplateArray<AXIS> &axisArray)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::getCopy() const
+NDArray<T> NDArray<T>::getCopy() const
 {
-    TemplateArray<T> result;
+    NDArray<T> result;
     result.resize(this->shape());
     for(int j=0; j<this->data_size(); ++j)
     {
@@ -292,7 +292,7 @@ TemplateArray<T> TemplateArray<T>::getCopy() const
 }
 
 template<class T> template<class U>
-void TemplateArray<T>::push(const U &value, const int pos)
+void NDArray<T>::push(const U &value, const int pos)
 {
     DM4thAssert(this->shapeSize()<=1);
     DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
@@ -314,7 +314,7 @@ void TemplateArray<T>::push(const U &value, const int pos)
 }
 
 template<class T> template<class U>
-void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
+void NDArray<T>::pushArray(const NDArray<U> &other, const int pos){
 
     if(this->shapeSize()<=1 && other.shapeSize()==1)
     {
@@ -387,7 +387,7 @@ void TemplateArray<T>::pushArray(const TemplateArray<U> &other, const int pos){
 }
 
 template<class T>
-T TemplateArray<T>::pop(const int idx)
+T NDArray<T>::pop(const int idx)
 {
     T result;
     DM4thAssert(this->shapeSize()==1 && this->shape(0)>0);
@@ -409,9 +409,9 @@ T TemplateArray<T>::pop(const int idx)
 }
 
 template<class T>
-TemplateArray<T> TemplateArray<T>::popArray(const int pos)
+NDArray<T> NDArray<T>::popArray(const int pos)
 {
-    TemplateArray<T> result;
+    NDArray<T> result;
     DM4thAssert( (pos>=0 && pos<this->shape(0)) || pos==END ); 
     
     if(this->shapeSize()==1)
@@ -456,28 +456,28 @@ TemplateArray<T> TemplateArray<T>::popArray(const int pos)
 }
 
 template<class T> template<class ... U>
-inline T &TemplateArray<T>::operator()(U ... args){ return this->item(args...); }
+inline T &NDArray<T>::operator()(U ... args){ return this->item(args...); }
 
 template<class T> template<class ... U>
-const inline T &TemplateArray<T>::operator()(U ... args) const { return this->item(args...); }
+const inline T &NDArray<T>::operator()(U ... args) const { return this->item(args...); }
 
 template<class T> template<class U>
-inline T &TemplateArray<T>::operator()(TemplateArray<U> axisArray){ return this->item(axisArray); }
+inline T &NDArray<T>::operator()(NDArray<U> axisArray){ return this->item(axisArray); }
 
 // template<class T> template<class U>
-// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](TemplateArray<U> idx)
+// typename NDArray<T>::SubArray NDArray<T>::operator[](NDArray<U> idx)
 // {
 //     return this->subArr(idx);
 // } 
 // template<class T>
-// typename TemplateArray<T>::SubArray TemplateArray<T>::operator[](number idx)
+// typename NDArray<T>::SubArray NDArray<T>::operator[](number idx)
 // {
 //     return this->subArr(idx);
 // } 
 
 
 template<class T> template<class U>
-inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U> &other)
+inline const NDArray<T> NDArray<T>::operator+=(const NDArray<U> &other)
 {
     if(this->data_size()==1)
     {
@@ -504,30 +504,30 @@ inline const TemplateArray<T> TemplateArray<T>::operator+=(const TemplateArray<U
 }
 
 template<class T> template<class U>
-inline TemplateArray<T> TemplateArray<T>::operator+(const TemplateArray<U> &other) const
+inline NDArray<T> NDArray<T>::operator+(const NDArray<U> &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result += other;
     return result;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator+=(const T &other)
+inline const NDArray<T> NDArray<T>::operator+=(const T &other)
 {
     this->_data->array += other;
     return *this;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator+(const T &other) const
+inline const NDArray<T> NDArray<T>::operator+(const T &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result += other;
     return result;
 }
 
 template<class T> template<class U>
-inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U> &other)
+inline const NDArray<T> NDArray<T>::operator-=(const NDArray<U> &other)
 {
     if(this->data_size()==1)
     {
@@ -554,32 +554,32 @@ inline const TemplateArray<T> TemplateArray<T>::operator-=(const TemplateArray<U
 }
 
 template<class T> template<class U>
-inline TemplateArray<T> TemplateArray<T>::operator-(const TemplateArray<U> &other) const
+inline NDArray<T> NDArray<T>::operator-(const NDArray<U> &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result -= other;
     return result;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator-=(const T &other)
+inline const NDArray<T> NDArray<T>::operator-=(const T &other)
 {
     this->_data->array -= other;
     return *this;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator-(const T &other) const
+inline const NDArray<T> NDArray<T>::operator-(const T &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result -= other;
     return result;
 }
 
 template<class T> template<class U>
-const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &other)
+const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 {   
-    TemplateArray<T> result;
+    NDArray<T> result;
     if(this->data_size()==1)
     {
         result = other * this->item(0);
@@ -637,71 +637,71 @@ const TemplateArray<T> TemplateArray<T>::operator*=(const TemplateArray<U> &othe
 }
 
 template<class T> template<class U>
-inline TemplateArray<T> TemplateArray<T>::operator*(const TemplateArray<U> &other) const
+inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result *= other;
     return result;
 }
 
 
 template<class T>
-const TemplateArray<T> TemplateArray<T>::operator*=(const T &other)
+const NDArray<T> NDArray<T>::operator*=(const T &other)
 {
     this->_data->array *= other;
     return *this;
 }
 
 template<class T>
-inline TemplateArray<T> TemplateArray<T>::operator*(const T &other) const
+inline NDArray<T> NDArray<T>::operator*(const T &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result *= other;
     return result;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator/=(const T &other)
+inline const NDArray<T> NDArray<T>::operator/=(const T &other)
 {
     this->_data->array /= other;
     return *this;
 }
 
 template<class T>
-inline TemplateArray<T> TemplateArray<T>::operator/(const T &other) const
+inline NDArray<T> NDArray<T>::operator/(const T &other) const
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result /= other;
     return result;
 }
 
 template<class T>
-inline const TemplateArray<T> TemplateArray<T>::operator%=(const T &other)
+inline const NDArray<T> NDArray<T>::operator%=(const T &other)
 {
     this->_data->array %= other;
     return *this;
 }
 
 template<class T>
-inline TemplateArray<T> TemplateArray<T>::operator%(const T &other)
+inline NDArray<T> NDArray<T>::operator%(const T &other)
 {
-    TemplateArray<T> result = this->getCopy();
+    NDArray<T> result = this->getCopy();
     result %= other;
     return result;
 }
 
 // template<class T> template<class U>
-// inline bool TemplateArray<T>::operator==(const TemplateArray<U> &other)
+// inline bool NDArray<T>::operator==(const NDArray<U> &other)
 template<class T> template<class U>
-inline bool TemplateArray<T>::isEqualTo(const TemplateArray<U> &other) const
+inline bool NDArray<T>::isEqualTo(const NDArray<U> &other) const
 {
     return other._arrayData()->array==super::_data->array;
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator==(T other) const
+NDArray<bool> NDArray<T>::operator==(T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -716,9 +716,9 @@ TemplateArray<bool> TemplateArray<T>::operator==(T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator!=(T other) const
+NDArray<bool> NDArray<T>::operator!=(T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -733,9 +733,9 @@ TemplateArray<bool> TemplateArray<T>::operator!=(T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator> (T other) const
+NDArray<bool> NDArray<T>::operator> (T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -750,9 +750,9 @@ TemplateArray<bool> TemplateArray<T>::operator> (T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator<=(T other) const
+NDArray<bool> NDArray<T>::operator<=(T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -767,9 +767,9 @@ TemplateArray<bool> TemplateArray<T>::operator<=(T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator>=(T other) const
+NDArray<bool> NDArray<T>::operator>=(T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -784,9 +784,9 @@ TemplateArray<bool> TemplateArray<T>::operator>=(T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator<(T other) const
+NDArray<bool> NDArray<T>::operator<(T other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -801,9 +801,9 @@ TemplateArray<bool> TemplateArray<T>::operator<(T other) const
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator==(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -834,9 +834,9 @@ TemplateArray<bool> TemplateArray<T>::operator==(const TemplateArray<T> &other) 
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator!=(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator!=(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -867,9 +867,9 @@ TemplateArray<bool> TemplateArray<T>::operator!=(const TemplateArray<T> &other) 
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator>(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator>(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -900,9 +900,9 @@ TemplateArray<bool> TemplateArray<T>::operator>(const TemplateArray<T> &other) c
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator<=(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator<=(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -933,9 +933,9 @@ TemplateArray<bool> TemplateArray<T>::operator<=(const TemplateArray<T> &other) 
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator>=(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator>=(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -966,9 +966,9 @@ TemplateArray<bool> TemplateArray<T>::operator>=(const TemplateArray<T> &other) 
 }
 
 template<class T>
-TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) const
+NDArray<bool> NDArray<T>::operator<(const NDArray<T> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
@@ -999,9 +999,9 @@ TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) c
 }
 
 template<> template<>
-inline TemplateArray<bool> TemplateArray<bool>::operator&&(const TemplateArray<bool> &other) const
+inline NDArray<bool> NDArray<bool>::operator&&(const NDArray<bool> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -1016,9 +1016,9 @@ inline TemplateArray<bool> TemplateArray<bool>::operator&&(const TemplateArray<b
 }
 
 template<> template<>
-inline TemplateArray<bool> TemplateArray<bool>::operator||(const TemplateArray<bool> &other) const
+inline NDArray<bool> NDArray<bool>::operator||(const NDArray<bool> &other) const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -1033,9 +1033,9 @@ inline TemplateArray<bool> TemplateArray<bool>::operator||(const TemplateArray<b
 }
 
 template<> template<>
-inline TemplateArray<bool> TemplateArray<bool>::operator!() const
+inline NDArray<bool> NDArray<bool>::operator!() const
 {
-    TemplateArray<bool> result;
+    NDArray<bool> result;
     result.resize(this->shape());
 
     #if defined DM4thOmpFor
@@ -1050,7 +1050,7 @@ inline TemplateArray<bool> TemplateArray<bool>::operator!() const
 }
 
 template<class T>
-bool TemplateArray<T>::any(T value)
+bool NDArray<T>::any(T value)
 {
     bool result = false;
     for(int j=0; j<this->data_size(); ++j)
@@ -1065,7 +1065,7 @@ bool TemplateArray<T>::any(T value)
 }
 
 template<class T>
-bool TemplateArray<T>::all(T value)
+bool NDArray<T>::all(T value)
 {
     bool result = true;
     for(int j=0; j<this->data_size(); ++j)
@@ -1080,7 +1080,7 @@ bool TemplateArray<T>::all(T value)
 }
 
 template<class T>
-std::ostream& TemplateArray<T>::ostream(std::ostream& stream, int ident, bool quotes) const
+std::ostream& NDArray<T>::ostream(std::ostream& stream, int ident, bool quotes) const
 {
     int c_idx = 0;          
     this->_ostream(stream, 0, c_idx, ident, quotes);
@@ -1088,7 +1088,7 @@ std::ostream& TemplateArray<T>::ostream(std::ostream& stream, int ident, bool qu
 }
 
 template<class T>
-std::istream& TemplateArray<T>::istream(std::istream& stream)
+std::istream& NDArray<T>::istream(std::istream& stream)
 {
     int c_size = 0;
     std::queue<T> values;
@@ -1113,7 +1113,7 @@ std::istream& TemplateArray<T>::istream(std::istream& stream)
 }
 
 template<class T>
-void TemplateArray<T>::loadFile(std::string url){
+void NDArray<T>::loadFile(std::string url){
     std::ifstream file;
     file.open(url);
     if(file.fail()) {
@@ -1126,7 +1126,7 @@ void TemplateArray<T>::loadFile(std::string url){
 }
 
 template<class T>
-void TemplateArray<T>::saveFile(std::string url){
+void NDArray<T>::saveFile(std::string url){
     // Crear ruta si no existe  
     std::ofstream file;
     file.open(url);
@@ -1135,7 +1135,7 @@ void TemplateArray<T>::saveFile(std::string url){
 }
 
 template<class T>
-inline void TemplateArray<T>::_resize1DArray(int size)
+inline void NDArray<T>::_resize1DArray(int size)
 {
     //DM4thAssert(this->shapeSize()<=1); // Can be 0 || 1
     super::_data->array.resize(size);
@@ -1144,13 +1144,13 @@ inline void TemplateArray<T>::_resize1DArray(int size)
 }
 
 template<class T>
-inline T *TemplateArray<T>::data(){ return &super::_data->array[0]; }
+inline T *NDArray<T>::data(){ return &super::_data->array[0]; }
 
 template<class T>
-inline const T *TemplateArray<T>::data() const { return &super::_data->array[0]; }
+inline const T *NDArray<T>::data() const { return &super::_data->array[0]; }
 
 template<class T>
-inline T *TemplateArray<T>::data_copy() 
+inline T *NDArray<T>::data_copy() 
 {
     T *ptr = new T[this->data_size()];
     for(int j=0; j<data_size(); ++j)
@@ -1161,18 +1161,18 @@ inline T *TemplateArray<T>::data_copy()
 }
 
 template<class T>
-inline const int TemplateArray<T>::data_size() const { return super::_data->array.size(); }
+inline const int NDArray<T>::data_size() const { return super::_data->array.size(); }
 
 template<class T>
-inline T &TemplateArray<T>::data_item(int idx) { return super::_data->array[idx]; }
+inline T &NDArray<T>::data_item(int idx) { return super::_data->array[idx]; }
 
 template<class T>
-inline const T TemplateArray<T>::data_item(int idx) const { return super::_data->array.get(idx); }
+inline const T NDArray<T>::data_item(int idx) const { return super::_data->array.get(idx); }
 
 template<class T>
-TemplateArray<int> TemplateArray<T>::_getAxisDisplacement() const
+NDArray<int> NDArray<T>::_getAxisDisplacement() const
 {
-    TemplateArray<int> result;
+    NDArray<int> result;
     result._resize1DArray(super::_data->shape.size());
     int disp = 1;
     for(int j=super::_data->shape.size()-1; j>=0; --j)
@@ -1185,7 +1185,7 @@ TemplateArray<int> TemplateArray<T>::_getAxisDisplacement() const
 }
 
 template<class T>
-int TemplateArray<T>::_getAxisDisplacement(int axis) const
+int NDArray<T>::_getAxisDisplacement(int axis) const
 {
     int disp = 1;
     for(int j=super::_data->shape.size()-1; j>axis; --j)
@@ -1197,14 +1197,14 @@ int TemplateArray<T>::_getAxisDisplacement(int axis) const
 
 ///////////////////// SubArray
 template<class T> template<class ...U>
-TemplateArray<T>::SubArray::SubArray(TemplateArray<T> &ptr, U ... args) : _ptr(ptr) {
-    this->setRef( castToTemplateArray(args) ...);
+NDArray<T>::SubArray::SubArray(NDArray<T> &ptr, U ... args) : _ptr(ptr) {
+    this->setRef( castToNDArray(args) ...);
 }
 
 template<class T>
-TemplateArray<T>::SubArray::operator TemplateArray<T>() const
+NDArray<T>::SubArray::operator NDArray<T>() const
 {
-    TemplateArray<T> result;
+    NDArray<T> result;
     result.resize(this->_subArray.shape());
     for(int j=0; j<this->_subArray.data_size(); ++j)
     {
@@ -1214,7 +1214,7 @@ TemplateArray<T>::SubArray::operator TemplateArray<T>() const
 }
 
 template<class T>
-const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const TemplateArray<T>::SubArray &other)
+const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const NDArray<T>::SubArray &other)
 {
     DM4thAssert(this->_subArray.data_size()==other._subArray.data_size());
     if(&this->_ptr!=&other._ptr)
@@ -1224,7 +1224,7 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
             *this->_subArray.data_item(j) = *other._subArray.data_item(j);
         }
     }else{
-        TemplateArray<T> tmp;
+        NDArray<T> tmp;
         tmp.resize(this->_subArray.shape());
         for(int j=0; j<this->_subArray.data_size(); ++j)
         {
@@ -1239,7 +1239,7 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
 }
 
 template<class T>
-const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const T &other)
+const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const T &other)
 {
     for(int j=0; j<this->_subArray.data_size(); ++j)
     {
@@ -1249,7 +1249,7 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
 }
 
 template<class T>
-const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=(const TemplateArray<T> &other)
+const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const NDArray<T> &other)
 {
     DM4thAssert(this->_subArray.data_size()==other.data_size());
     if(&this->_ptr!=&other)
@@ -1259,7 +1259,7 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
             *this->_subArray.data_item(j) = other.data_item(j);
         }
     }else{
-        TemplateArray<T> tmp;
+        NDArray<T> tmp;
         tmp.resize(this->_subArray.shape());
         for(int j=0; j<this->_subArray.data_size(); ++j)
         {
@@ -1275,26 +1275,26 @@ const typename TemplateArray<T>::SubArray &TemplateArray<T>::SubArray::operator=
 
 
 template<class T> template<class ... U>
-typename TemplateArray<T>::SubArray TemplateArray<T>::SubArray::operator()(U ... args)
+typename NDArray<T>::SubArray NDArray<T>::SubArray::operator()(U ... args)
 {
-    return TemplateArray(*this).subArray(args...);
+    return NDArray(*this).subArray(args...);
 }
 
 template<class T> template<class U>
-typename TemplateArray<T>::SubArray TemplateArray<T>::SubArray::operator[](U idx)
+typename NDArray<T>::SubArray NDArray<T>::SubArray::operator[](U idx)
 {
-    return TemplateArray(*this).subArray(idx);
+    return NDArray(*this).subArray(idx);
 }
 
 template<class T> template<class U, class ... V>
-void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape, TemplateArray<U> first, V ... args)
+void NDArray<T>::SubArray::setShapeRef(int axis, NDArray<int> &shape, NDArray<U> first, V ... args)
 {
     shape(axis) = first.size();
-    this->setShapeRef(axis+1, shape, castToTemplateArray(args) ...);
+    this->setShapeRef(axis+1, shape, castToNDArray(args) ...);
 }
 
 template<class T>
-void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape)
+void NDArray<T>::SubArray::setShapeRef(int axis, NDArray<int> &shape)
 {
     DM4thAssert(axis<=this->_ptr.shapeSize());
 
@@ -1305,17 +1305,17 @@ void TemplateArray<T>::SubArray::setShapeRef(int axis, TemplateArray<int> &shape
 }
 
 template<class T> template<class U, class ... V>
-void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
+void NDArray<T>::SubArray::setRef(NDArray<U> first, V... args)
 {
-    TemplateArray<int> oldShape = this->_ptr.shape();
-    TemplateArray<int> oldDisp = this->_ptr._getAxisDisplacement();
+    NDArray<int> oldShape = this->_ptr.shape();
+    NDArray<int> oldDisp = this->_ptr._getAxisDisplacement();
 
-    TemplateArray<int> newShape;
+    NDArray<int> newShape;
     newShape.resize(this->_ptr.shapeSize());
-    this->setShapeRef(0,newShape, castToTemplateArray(first), castToTemplateArray(args)...);
+    this->setShapeRef(0,newShape, castToNDArray(first), castToNDArray(args)...);
     this->_subArray.resize(newShape);
     
-    TemplateArray<int> newDisp = this->_subArray._getAxisDisplacement();
+    NDArray<int> newDisp = this->_subArray._getAxisDisplacement();
 
     if(this->_ptr.shapeSize()>1)
     {
@@ -1326,7 +1326,7 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
                 oldDisp.item(0)*(int)first(j),
                 newDisp.item(0)*j,
                 oldDisp, newDisp,
-                castToTemplateArray(args) ...
+                castToNDArray(args) ...
             );
         }
     }
@@ -1339,7 +1339,7 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
     }
 
 
-    TemplateArray<int> realNewShape;
+    NDArray<int> realNewShape;
     int realSize=0;
     for(int j=0; j<newShape.size();++j)
     {
@@ -1360,7 +1360,7 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
         }
         this->_subArray.reshape(realNewShape);
     }else{
-        this->_subArray.reshape(DM4thTemplateArrayUtils::mult(newShape));
+        this->_subArray.reshape(DM4thNDArrayUtils::mult(newShape));
     }
 
 
@@ -1368,11 +1368,11 @@ void TemplateArray<T>::SubArray::setRef(TemplateArray<U> first, V... args)
 }
 
 template<class T> template<class U, class ... V>
-void TemplateArray<T>::SubArray::slider(
+void NDArray<T>::SubArray::slider(
     int axis,
     int oldDispCount, int newDispCount,
-    TemplateArray<int> oldDisp, TemplateArray<int> newDisp,
-    TemplateArray<U> first, V ... args
+    NDArray<int> oldDisp, NDArray<int> newDisp,
+    NDArray<U> first, V ... args
 )
 {
     if(axis<this->_ptr.shapeSize()-1)
@@ -1384,7 +1384,7 @@ void TemplateArray<T>::SubArray::slider(
                 oldDispCount+oldDisp.item(axis)*(int)first(j),
                 newDispCount+newDisp.item(axis)*j,
                 oldDisp, newDisp,
-                castToTemplateArray(args) ...
+                castToNDArray(args) ...
             );
         }
     }else{
@@ -1398,10 +1398,10 @@ void TemplateArray<T>::SubArray::slider(
 }
 
 template<class T>
-void TemplateArray<T>::SubArray::slider(
+void NDArray<T>::SubArray::slider(
     int axis,
     int oldDispCount, int newDispCount,
-    TemplateArray<int> oldDisp, TemplateArray<int> newDisp
+    NDArray<int> oldDisp, NDArray<int> newDisp
 )
 {
     if(axis<this->_ptr.shapeSize()-1)
@@ -1426,16 +1426,16 @@ void TemplateArray<T>::SubArray::slider(
 }
 
 template<class T>
-void TemplateArray<T>::SubArray::_1DSlider(int oldDisp, int newDisp)
+void NDArray<T>::SubArray::_1DSlider(int oldDisp, int newDisp)
 {
     this->_subArray.data_item(newDisp) = &this->_ptr.data_item(oldDisp);
 }
 
 /////////////////////
 template<class T>
-void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
-            TemplateArray<int> &oldDisp,  TemplateArray<int> &newDisp, 
-            TemplateArray<int> &oldShape,  TemplateArray<int> &newShape,
+void NDArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
+            NDArray<int> &oldDisp,  NDArray<int> &newDisp, 
+            NDArray<int> &oldShape,  NDArray<int> &newShape,
             const DM4thInternal::_BaseArray<T> &oldArray)
 {
     int end = _min(oldShape.item(axis), newShape.item(axis));
@@ -1459,27 +1459,27 @@ void TemplateArray<T>::_resize(int axis, int oldDispCount, int newDispCount,
 }
 
 template<class T> template<class ... U>
-void TemplateArray<T>::_reshape(int axis, int first, U ... args)
+void NDArray<T>::_reshape(int axis, int first, U ... args)
 {
     super::_data->shape.set(axis, first);
     this->_reshape(axis+1, args...);
 }
 
 template<class T>
-void TemplateArray<T>::_reshape(int axis, int last)
+void NDArray<T>::_reshape(int axis, int last)
 {
     super::_data->shape.set(axis, last);
 }
 
 template<class T> template<class ... U>
-int TemplateArray<T>::_item(int axis, int pos, int idx, U ... args) const
+int NDArray<T>::_item(int axis, int pos, int idx, U ... args) const
 {
     pos = pos*super::_data->shape.get(axis) + idx;
     return _item(axis+1, pos, args ...);
 }
 
 template<class T>
-int TemplateArray<T>::_item(int axis, int pos, int idx) const
+int NDArray<T>::_item(int axis, int pos, int idx) const
 {
     DM4thAssert(axis+1 == super::_data->shape.size());
     pos = pos*super::_data->shape.get(axis) + idx;
@@ -1487,7 +1487,7 @@ int TemplateArray<T>::_item(int axis, int pos, int idx) const
 }
 
 template<class T>
-DM4thInternal::_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<int> &axisArray)
+DM4thInternal::_BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArray)
 {
     int count = 1;
     for(int j=0; j<axisArray.size(); ++j)
@@ -1507,7 +1507,7 @@ DM4thInternal::_BaseArray<T> TemplateArray<T>::_allocZeros(const TemplateArray<i
 }
 
 template<class T>
-void TemplateArray<T>::_ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident, bool quotes) const       
+void NDArray<T>::_ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int ident, bool quotes) const       
 {
     for(int j=0; j<shapeIdx; ++j)
     {
@@ -1542,7 +1542,7 @@ void TemplateArray<T>::_ostream(std::ostream& stream, int shapeIdx, int& c_idx, 
 }
 
 template<class T>
-void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
+void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
 {
     int size=0;
     DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
@@ -1607,17 +1607,17 @@ void TemplateArray<T>::_istream(std::istream& stream, std::queue<T> &values, int
 }
 
 template<class T>
-inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<T> &arr)
+inline std::ostream& operator<<(std::ostream& stream, const NDArray<T> &arr)
 {
     return arr.ostream(stream,4);
 }
 
 // Specialization methods
-inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<std::string> &arr){ 
+inline std::ostream& operator<<(std::ostream& stream, const NDArray<std::string> &arr){ 
     return arr.ostream(stream,4,true); 
 }
 
-inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<bool> &arr){ 
+inline std::ostream& operator<<(std::ostream& stream, const NDArray<bool> &arr){ 
     stream << std::boolalpha;
     arr.ostream(stream,4);
     stream << std::noboolalpha;
@@ -1625,12 +1625,12 @@ inline std::ostream& operator<<(std::ostream& stream, const TemplateArray<bool> 
 }
 
 template<class T>
-inline std::istream& operator>>(std::istream& stream, TemplateArray<T> &arr)
+inline std::istream& operator>>(std::istream& stream, NDArray<T> &arr)
 {
     return arr.istream(stream);
 }
 
-inline std::istream& operator>>(std::istream& stream, TemplateArray<bool> &arr)
+inline std::istream& operator>>(std::istream& stream, NDArray<bool> &arr)
 {
     stream >> std::boolalpha;
     arr.istream(stream);

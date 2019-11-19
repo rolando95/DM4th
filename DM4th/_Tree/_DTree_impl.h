@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_TemplateTree.h"
+#include "_DTree.h"
 
 namespace DM4th
 {
@@ -8,10 +8,10 @@ namespace DM4th
 
 
 template<class T>
-TemplateTree<T>::TemplateTree() {}
+DTree<T>::DTree() {}
 
 template<class T>
-TemplateTree<T>::TemplateTree(const std::string &str) 
+DTree<T>::DTree(const std::string &str) 
 {    
     std::stringstream ss;
     ss << str;
@@ -20,43 +20,43 @@ TemplateTree<T>::TemplateTree(const std::string &str)
 
 
 template<class T>
-inline T &TemplateTree<T>::node() const
+inline T &DTree<T>::node() const
 {
     return super::_data->node;
 }
 
 template<class T>
-inline T &TemplateTree<T>::item() const
+inline T &DTree<T>::item() const
 {
     return super::_data->node;
 }
 
 template<class T> 
-inline TemplateTree<T> &TemplateTree<T>::child(number idx) const
+inline DTree<T> &DTree<T>::child(number idx) const
 {
     return super::_data->array[(int)idx];
 }
 
 template<class T> 
-inline TemplateTree<T> &TemplateTree<T>::child(int idx) const
+inline DTree<T> &DTree<T>::child(int idx) const
 {
     return super::_data->array[(int)idx];
 }
 
 template<class T> template<class ... U>
-TemplateTree<T> &TemplateTree<T>::child(number idx, U ... args) const
+DTree<T> &DTree<T>::child(number idx, U ... args) const
 {
     return super::_data->array[(int)idx].child(args ...);
 }
 
 template<class T> template<class ... U>
-TemplateTree<T> &TemplateTree<T>::child(int idx, U ... args) const
+DTree<T> &DTree<T>::child(int idx, U ... args) const
 {
     return super::_data->array[(int)idx].child(args ...);
 }
 
 template<class T> template<class U>
-const TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level) const
+const DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level) const
 {
     if(axis.size()==0) return *this;
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
@@ -68,7 +68,7 @@ const TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int 
 }
 
 template<class T> template<class U>
-TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level)
+DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level)
 {
     if(axis.size()==0) return *this;
     DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
@@ -80,9 +80,9 @@ TemplateTree<T> &TemplateTree<T>::child(const TemplateArray<U> &axis, int level)
 }
 
 template<class T>
-TemplateTree<T> TemplateTree<T>::getCopy() const
+DTree<T> DTree<T>::getCopy() const
 {
-    TemplateTree<T> result;
+    DTree<T> result;
     result.item() = this->item();
     if(this->size()>0){
         result.resize(this->size());
@@ -94,7 +94,7 @@ TemplateTree<T> TemplateTree<T>::getCopy() const
 }
 
 template<class T>
-void TemplateTree<T>::_printTreeStructure(int level, std::string tab, bool last) const{
+void DTree<T>::_printTreeStructure(int level, std::string tab, bool last) const{
     if(level==0){
         std::cout<<this->item()<<std::endl;
     }else{
@@ -116,38 +116,38 @@ void TemplateTree<T>::_printTreeStructure(int level, std::string tab, bool last)
 
 
 template<class T>
-void TemplateTree<T>::printTreeStructure() const
+void DTree<T>::printTreeStructure() const
 {
     this->_printTreeStructure();
 }
 
 template<class T> template<class U>
-inline TemplateTree<T> &TemplateTree<T>::operator()(U axis)
+inline DTree<T> &DTree<T>::operator()(U axis)
 {
     return this->child(axis);
 }
 
 
 template<class T> template<class ... U>
-inline TemplateTree<T> &TemplateTree<T>::operator()(U ... args)
+inline DTree<T> &DTree<T>::operator()(U ... args)
 {
     return this->child(args ...);
 }
 template<class T>
-inline int TemplateTree<T>::size() const {
+inline int DTree<T>::size() const {
     return this->_data->array.size();
 }
 
 
 
 template<class T> 
-inline void TemplateTree<T>::resize(int size)
+inline void DTree<T>::resize(int size)
 {
     super::_data->array.resize(size);
 } 
 
 template<class T> template<class U>
-void TemplateTree<T>::push(const U &value, const int pos)
+void DTree<T>::push(const U &value, const int pos)
 {
     DM4thAssert( (pos>=0 && pos<= this->size()) || pos==(int)END);
     this->resize(this->size()+1);
@@ -168,13 +168,13 @@ void TemplateTree<T>::push(const U &value, const int pos)
 }
 
 template<class T> template<class U>
-void TemplateTree<T>::pushTree(const TemplateTree<U> &tree, const int pos)
+void DTree<T>::pushTree(const DTree<U> &tree, const int pos)
 {
     this->pushTreeRef(tree.getCopy(), pos);
 }
 
 template<class T> template<class U>
-void TemplateTree<T>::pushTreeRef(const TemplateTree<U> &tree, const int pos)
+void DTree<T>::pushTreeRef(const DTree<U> &tree, const int pos)
 {
     DM4thAssert( (pos>=0 && pos<= this->size()) || pos==(int)END);
     this->resize(this->size()+1);
@@ -195,9 +195,9 @@ void TemplateTree<T>::pushTreeRef(const TemplateTree<U> &tree, const int pos)
 }
 
 template<class T>
-TemplateTree<T> TemplateTree<T>::pop(const int idx)
+DTree<T> DTree<T>::pop(const int idx)
 {
-    TemplateTree<T> result;
+    DTree<T> result;
     DM4thAssert( (idx>=0 && idx<this->size()) || idx==(int)END ); 
 
     if(idx==(int)END || idx==this->size()-1)
@@ -215,9 +215,9 @@ TemplateTree<T> TemplateTree<T>::pop(const int idx)
 }
 
 // template<class T>
-// TemplateTree<T> TemplateTree<T>::pop(TemplateTree<T> &ref)
+// DTree<T> DTree<T>::pop(DTree<T> &ref)
 // {
-//     TemplateTree<T> result;
+//     DTree<T> result;
 //     bool found = false;
 //     for(int j=0; j<this->size(); ++j)
 //     {
@@ -226,9 +226,9 @@ TemplateTree<T> TemplateTree<T>::pop(const int idx)
 // }
 
 template<class T>
-TemplateArray<int> TemplateTree<T>::indexOf(const T value)
+NDArray<int> DTree<T>::indexOf(const T value)
 {
-    TemplateArray<int> result;
+    NDArray<int> result;
     if(this->node()!=value)
     {
         bool found = this->_indexOf(value, result);
@@ -241,7 +241,7 @@ TemplateArray<int> TemplateTree<T>::indexOf(const T value)
 }
 
 template<class T>
-bool TemplateTree<T>::_indexOf(const T value, TemplateArray<int> &result)
+bool DTree<T>::_indexOf(const T value, NDArray<int> &result)
 {
 
     bool found = false;
@@ -262,14 +262,14 @@ bool TemplateTree<T>::_indexOf(const T value, TemplateArray<int> &result)
 }
 
 template<class T> 
-inline TemplateTree<T> &TemplateTree<T>::left()
+inline DTree<T> &DTree<T>::left()
 {
     if(this->size()<1) this->resize(1);
     return super::_data->array[0];
 }
 
 template<class T> 
-inline TemplateTree<T> &TemplateTree<T>::right()
+inline DTree<T> &DTree<T>::right()
 {
     if(this->size()<2) this->resize(2);
     return super::_data->array[1];
@@ -277,7 +277,7 @@ inline TemplateTree<T> &TemplateTree<T>::right()
 
 
 template<class T>
-std::ostream& TemplateTree<T>::ostream(std::ostream& stream, int level, int ident, bool quotes) const
+std::ostream& DTree<T>::ostream(std::ostream& stream, int level, int ident, bool quotes) const
 {
     std::string valueStr = "value";
     std::string childStr = "child";
@@ -312,10 +312,10 @@ std::ostream& TemplateTree<T>::ostream(std::ostream& stream, int level, int iden
 }
 
 template<class T>
-std::istream& TemplateTree<T>::istream(std::istream& stream)
+std::istream& DTree<T>::istream(std::istream& stream)
 {
-    std::queue<TemplateTree<T>> trees;
-    TemplateTree<T> &t = *this;
+    std::queue<DTree<T>> trees;
+    DTree<T> &t = *this;
     std::string inStr = "XXXXX";
     T value;
 
@@ -364,7 +364,7 @@ std::istream& TemplateTree<T>::istream(std::istream& stream)
         if(stream.peek()==']'){stream.get();break;}
 
         // Lee el arbol recursivamente
-        TemplateTree<T> lT;
+        DTree<T> lT;
         lT.istream(stream);
         trees.push(lT);
 
@@ -391,7 +391,7 @@ std::istream& TemplateTree<T>::istream(std::istream& stream)
 }
 
 template<class T>
-void TemplateTree<T>::loadFile(std::string path){
+void DTree<T>::loadFile(std::string path){
     std::ifstream file;
     file.open(path);
     if(file.fail()) {
@@ -404,7 +404,7 @@ void TemplateTree<T>::loadFile(std::string path){
 }
 
 template<class T>
-void TemplateTree<T>::saveFile(std::string path){
+void DTree<T>::saveFile(std::string path){
     // Crear ruta si no existe  
     std::ofstream file;
     file.open(path);
@@ -413,13 +413,13 @@ void TemplateTree<T>::saveFile(std::string path){
 }
 
 template<class T>
-inline std::ostream& operator<<(std::ostream& stream, const TemplateTree<T> &tree)
+inline std::ostream& operator<<(std::ostream& stream, const DTree<T> &tree)
 {
     return tree.ostream(stream);
 }
 
 template<class T>
-inline std::istream& operator>>(std::istream& stream, TemplateTree<T> &tree)
+inline std::istream& operator>>(std::istream& stream, DTree<T> &tree)
 {
     return tree.istream(stream);
 }

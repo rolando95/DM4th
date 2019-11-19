@@ -1,9 +1,156 @@
-#include "_Array.h"
+#pragma once
+#include "_NDArray.h"
 
-namespace DM4th {
+namespace DM4th
+{
+
+namespace DM4thNDArrayUtils
+{
+
+    template<class T>
+    T mult(NDArray<T> arr)
+    {
+        T result = 1;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            result*=arr.data_item(j);
+        }
+        return result;
+    }
+
+
+    template<class T>
+    T sum(NDArray<T> arr)
+    {
+        T result = 0;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            result+=arr.data_item(j);
+        }
+        return result;
+    }
+
+    template<class T>
+    T min(NDArray<T> arr)
+    {
+        T result = INF;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            if(arr.data_item(j) < result)
+            {
+                result=arr.data_item(j);
+            }
+        }
+        return result;
+    }
+
+    template<class T>
+    T max(NDArray<T> arr)
+    {
+        T result = INF;
+        int size = arr.data_size();
+        for(int j=0; j<size; ++j){
+            if(arr.data_item(j) > result)
+            {
+                result=arr.data_item(j);
+            }
+        }
+        return result;
+    }
+
+
+    template<class T>
+    int count(NDArray<T> arr){ return arr.data_size(); }
+
+}
+
+template<class T, class U, class ... V>
+void _items(NDArray<T> &arr, int axis, U first, V ... args)
+{
+    arr.data_item(axis) = (T)first;
+    _items(arr, axis+1, args...);
+}
+
+template<class T>
+void _items(NDArray<T> &arr, int axis){}
+
+template<class T, class ... U>
+NDArray<T> items(T first, U ... args)
+{
+    NDArray<T> result;
+    int size = DM4thUtils::count(first, args...);
+    result.resize(size);
+    _items(result, 0, first, args...);
+    return result;
+}
+
+template<class T, class ... U>
+NDArray<T> repeat(T value, U ... axisSize)
+{
+    NDArray<T> result;
+    unsigned int size = (unsigned int)DM4thUtils::mult(axisSize ...);
+    result.resize(axisSize...);
+
+    for(unsigned int j=0; j<size; ++j)
+    {
+        result.data_item(j) = value;
+    }
+    
+    return result;
+}
+
+
+
+template<class T, class ...U>
+NDArray<T> zeros(U ... axisSize)
+{
+    return repeat<T>(0, axisSize...);
+}
+
+template<class T, class ...U>
+NDArray<T> ones(U ... axisSize)
+{
+    return repeat<T>(1, axisSize...);
+}
+
+template<class T, class ...U>
+NDArray<T> identity(int axis0, U ... axisSize)
+{
+    NDArray<T> result;
+    if(DM4thUtils::count(axis0, axisSize...)>1)
+    {
+        result = zeros<T>(axis0, axisSize ...);
+        //result.resize(axisSize...);
+
+        NDArray<T> axis = items<T>(axis0, axisSize ...);
+        int size = DM4thNDArrayUtils::min<T>(axis);
+        int disp = result._getAxisDisplacement(0) + 1;
+        for(int j=0, idx=0; j<size; ++j, idx+=disp)
+        {
+            result.data_item(idx) = 1;
+        }
+    }else{
+        result = zeros<T>(axis0, axis0);
+        for(int j=0; j<axis0; ++j)
+        {
+            result(j,j) = 1;
+        }
+    }
+
+    return result;
+}
+
+template<class T>
+NDArray<T> sort(NDArray<T> arr, bool reverse=false)
+{
+    NDArray<T> result = arr.getCopy();
+    result.sort(reverse);
+    return result;
+}
 
 template<class T=number>
-class range {
+class range 
+{
     T _begin;
     T _end;
     T _step;
@@ -41,7 +188,7 @@ public:
     operator NDArray<T>()
     {
         int size = this->_size;
-        TemplateArray<T> result;
+        NDArray<T> result;
         T j = this->_begin;
         result.resize(size);
         int idx=0;

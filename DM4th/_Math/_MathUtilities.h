@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../_Array/_Array.h"
-#include "../_Number/_Number.h"
-#include <functional>
+#include "../Array.h"
+#include "../Number.h"
 
 namespace DM4th
 {
