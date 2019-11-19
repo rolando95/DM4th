@@ -695,7 +695,7 @@ inline TemplateArray<T> TemplateArray<T>::operator%(const T &other)
 template<class T> template<class U>
 inline bool TemplateArray<T>::isEqualTo(const TemplateArray<U> &other) const
 {
-    return super::_data->shape==other._arrayData()->shape && other._arrayData()->array==super::_data->array;
+    return other._arrayData()->array==super::_data->array;
 }
 
 template<class T>
@@ -774,7 +774,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator==(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)
@@ -802,7 +802,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator!=(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)
@@ -830,7 +830,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator>(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)
@@ -858,7 +858,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator<=(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)
@@ -886,7 +886,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator>=(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)
@@ -914,7 +914,7 @@ template<class T>
 TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) const
 {
     TemplateArray<bool> result;
-    if(super::_data->shape==other._arrayData()->shape)
+    if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
         for(int j=0; j<this->data_size(); ++j)

@@ -48,8 +48,38 @@ int main()
 
     });
 
-    // TEST("NDArray Matrix Aritmethic", []{
-    //     NDArray<number> A = 
-    // });
+    TEST("NDArray Matrix Aritmethic", []{
+        NDArray<number> A = items<number>(
+            1,2,
+            2,3,
+            1,5
+        ).reshape(3,2);
+
+        NDArray<number> B = items<number>(
+            3,2,5,
+            4,5,4
+        ).reshape(2,3);
+
+        NDArray<number> C = items<number>(
+            11,12,13,
+            18,19,22,
+            23,27,25
+        ).reshape(3,3);
+
+        A = A*2 + A;
+        A /= 3;
+
+        EXPECT_TRUE((A*B).isEqualTo(C));
+
+        A.resize(2,2);
+        B = A.reshape(1,4).getCopy().reshape(4,1);
+
+        NDArray<number> D = items<number>(18);
+
+        EXPECT_TRUE( (A*B).isEqualTo(D) );
+
+        
+    });
+
     return TEST::ERROR_LEVEL();
 }

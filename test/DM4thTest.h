@@ -22,11 +22,11 @@ class TEST
             {
                 #pragma omp single
                 {
-                    std::cout<<"Running test: "<<name<<".\nDM4thParallel threads:"<<omp_get_num_threads()<<std::endl;
+                    std::cout<<"Running test: "<<name<<" (Threads:"<<omp_get_num_threads()<<")"<<std::endl;
                 }
             }
         #else
-            std::cout<<"Running test: "<<name<<std::endl;
+            std::cout<<"Running test: "<<" (Threads:"<<1<<")"<<std::endl;
         #endif
         try{
             //clock_t begin = clock();
