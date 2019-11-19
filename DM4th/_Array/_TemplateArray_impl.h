@@ -703,6 +703,11 @@ TemplateArray<bool> TemplateArray<T>::operator==(T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) == other; 
@@ -715,6 +720,11 @@ TemplateArray<bool> TemplateArray<T>::operator!=(T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) != other; 
@@ -727,6 +737,11 @@ TemplateArray<bool> TemplateArray<T>::operator> (T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) > other; 
@@ -739,6 +754,11 @@ TemplateArray<bool> TemplateArray<T>::operator<=(T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) <= other; 
@@ -751,6 +771,11 @@ TemplateArray<bool> TemplateArray<T>::operator>=(T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) >= other; 
@@ -763,6 +788,11 @@ TemplateArray<bool> TemplateArray<T>::operator<(T other) const
 {
     TemplateArray<bool> result;
     result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
     for(int j=0; j<this->data_size(); ++j)
     {
         result.data_item(j) = this->data_item(j) < other; 
@@ -777,6 +807,11 @@ TemplateArray<bool> TemplateArray<T>::operator==(const TemplateArray<T> &other) 
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) == other.data_item(j);
@@ -805,6 +840,11 @@ TemplateArray<bool> TemplateArray<T>::operator!=(const TemplateArray<T> &other) 
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) != other.data_item(j);
@@ -833,6 +873,11 @@ TemplateArray<bool> TemplateArray<T>::operator>(const TemplateArray<T> &other) c
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) > other.data_item(j);
@@ -861,6 +906,11 @@ TemplateArray<bool> TemplateArray<T>::operator<=(const TemplateArray<T> &other) 
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) <= other.data_item(j);
@@ -889,6 +939,11 @@ TemplateArray<bool> TemplateArray<T>::operator>=(const TemplateArray<T> &other) 
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) >= other.data_item(j);
@@ -917,6 +972,11 @@ TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) c
     if(this->data_size()==other.data_size())
     {
         result.resize(this->shape());
+
+        #if defined DM4thOmpFor
+            #pragma omp parallel for shared(other)
+        #endif
+
         for(int j=0; j<this->data_size(); ++j)
         {
             result.data_item(j) = this->data_item(j) < other.data_item(j);
@@ -935,6 +995,57 @@ TemplateArray<bool> TemplateArray<T>::operator<(const TemplateArray<T> &other) c
         DM4thAssert(false);
     }
 
+    return result;
+}
+
+template<> template<>
+inline TemplateArray<bool> TemplateArray<bool>::operator&&(const TemplateArray<bool> &other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) && other.data_item(j); 
+    }
+    return result;
+}
+
+template<> template<>
+inline TemplateArray<bool> TemplateArray<bool>::operator||(const TemplateArray<bool> &other) const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = this->data_item(j) || other.data_item(j); 
+    }
+    return result;
+}
+
+template<> template<>
+inline TemplateArray<bool> TemplateArray<bool>::operator!() const
+{
+    TemplateArray<bool> result;
+    result.resize(this->shape());
+
+    #if defined DM4thOmpFor
+        #pragma omp parallel for shared(other)
+    #endif
+    
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = !this->data_item(j); 
+    }
     return result;
 }
 
@@ -967,36 +1078,6 @@ bool TemplateArray<T>::all(T value)
     }
     return result;
 }
-
-// template<class T> template<typename U=T, typename std::enable_if<std::is_same<U,bool>::value>::type> 
-// bool TemplateArray<T>::any()
-// {
-//     bool result = false;
-//     for(int j=0; j<this->data_size(); ++j)
-//     {
-//         if(this->data_item(j)==T())
-//         {
-//             result = true;
-//             break;
-//         }
-//     }
-//     return result;
-// }
-
-// template<class T>
-// bool TemplateArray<T>::all()
-// {
-//     bool result = true;
-//     for(int j=0; j<this->data_size(); ++j)
-//     {
-//         if(this->data_item(j)!=T())
-//         {
-//             result = false;
-//             break;
-//         }
-//     }
-//     return result;
-// }
 
 template<class T>
 std::ostream& TemplateArray<T>::ostream(std::ostream& stream, int ident, bool quotes) const

@@ -33,16 +33,7 @@ class NDArray<bool>: public TemplateArray<bool>
         explicit NDArray(const std::string &other){ static_cast<super&>(*this) = other; };
         explicit NDArray(const char *other){ static_cast<super&>(*this) = std::string(other); };
         
-        NDArray<bool> operator!() 
-        {
-            NDArray<bool> result;
-            result.resize(super::shape());
-            for(int j=0; j<super::data_size(); ++j)
-            {
-                result.data_item(j) = !super::data_item(j); 
-            }
-            return result;
-        }
+
 };
 
 

@@ -113,14 +113,14 @@ class TemplateArray: public DM4thInternal::_ArrayDataManager<T>
         TemplateArray<bool> operator<=(const TemplateArray<T> &other) const;
         TemplateArray<bool> operator>=(const TemplateArray<T> &other) const;
         TemplateArray<bool> operator< (const TemplateArray<T> &other) const;
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, TemplateArray<bool>>::type operator&&(const TemplateArray<bool> &other) const;
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, TemplateArray<bool>>::type operator||(const TemplateArray<bool> &other) const;
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, TemplateArray<bool>>::type operator!() const;
 
         bool any(T value);
         bool all(T value);
-        
-        template<typename U=T, typename = typename std::enable_if<std::is_same<U,bool>::value>::type> 
-        inline bool any() { return this->any(true); }
-        template<typename U=T, typename = typename std::enable_if<std::is_same<U,bool>::value>::type> 
-        inline bool all() { return this->all(true); }
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type any() { return this->any(true); }
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type all() { return this->all(true); }
 
         std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);
