@@ -11,7 +11,7 @@ int main()
 
         A.moveDataTo(B);
 
-        EXPECT_EQ(1+A.size(), 0);
+        EXPECT_EQ(A.size(), 0);
         EXPECT_EQ(B.size(), 5);
 
         B.copyDataTo(A);
