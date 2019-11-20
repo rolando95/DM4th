@@ -18,16 +18,14 @@ class BaseArray
 {
     private:
         int _size=0;
-        int _top=0; // Real size of array
-        T *_data=nullptr;
+        int _top=0;
+        T*  _data=nullptr;
 
         inline void allocArray(int size);
         inline void reallocArray(int size);
     public:
         BaseArray(int size=0);
-        ~BaseArray() {
-            this->clear();
-        }
+        ~BaseArray() { this->clear(); }
         inline void resize(int size);
 
         inline const int size() const;
@@ -52,7 +50,7 @@ class BaseArray
         template<class U> const BaseArray<T> &operator*=(const U &other);
         template<class U> const BaseArray<T> &operator/=(const U &other);
         template<class U> const BaseArray<T> &operator%=(const U &other);
-
+        
         inline void clear();
         inline void moveReferenceTo(BaseArray<T> &other);
         inline void copyReferenceTo(BaseArray<T> &other) const;
@@ -64,7 +62,7 @@ class BaseArray
             this->set(idx2, tmp);
         }
 
-        inline const *data() { return &this->_data[0]; }
+        inline const *data() { return this->_data; }
 };
 
 template<class T>
@@ -73,7 +71,7 @@ inline std::ostream& operator<<(std::ostream& stream, const BaseArray<T> &arr);
 class ShapeData : public BaseArray<int>
 {
     public:
-        inline ShapeData(int size=1);
+        inline ShapeData(int size=1){ this->resize(size); }
 };
 
 template<class T>

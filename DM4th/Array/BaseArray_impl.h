@@ -319,10 +319,6 @@ inline std::ostream& operator<<(std::ostream& stream, const BaseArray<T> &arr)
     return stream;
 }
 
-//////////////////// ShapeData
-
-inline ShapeData::ShapeData(int size) { this->resize(size); }
-
 //////////////////// ArrayData
 
 template <class T>
