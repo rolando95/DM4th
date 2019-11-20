@@ -47,7 +47,7 @@ namespace DM4thNDArrayUtils
     template<class T>
     T max(NDArray<T> arr)
     {
-        T result = INF;
+        T result = -INF;
         int size = arr.data_size();
         for(int j=0; j<size; ++j){
             if(arr.data_item(j) > result)

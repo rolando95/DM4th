@@ -12,36 +12,6 @@ namespace DM4th
 
 namespace DM4thInternal
 {
-#if defined BASEARRAY_STD_VECTOR
-template<class T>
-class BaseArray
-{
-    std::vector<T> Array;
-    private:
-
-    public:
-    BaseArray(int size=0){
-        this->resize(size);
-    }
-
-    inline void resize(int size);
-    inline const int size() const;
-
-    inline T &operator[](int idx);
-    inline T &operator()(int idx);
-    const inline T get(int idx) const;
-    void inline set(int idx, T value);
-
-
-
-    template<class U> bool operator==(const BaseArray<U> &other) const;
-    template<class U> inline bool operator!=(const BaseArray<U> &other) const;
-
-    inline void clear();
-
-    inline void moveReferenceTo(BaseArray<T> &other);
-};
-#else 
 
 template<class T> 
 class BaseArray
@@ -49,7 +19,7 @@ class BaseArray
     private:
         int _size=0;
         int _top=0; // Real size of array
-        T *Array=nullptr;
+        T *_data=nullptr;
 
         inline void allocArray(int size);
         inline void reallocArray(int size);
@@ -94,44 +64,16 @@ class BaseArray
             this->set(idx2, tmp);
         }
 
-        void log() const
-        {
-            std::cout<<"[";
-            for(int j=0; j<this->size();++j)
-            {
-                if(j!=0) std::cout<<", ";
-                std::cout<<this->get(j);
-            }
-            std::cout<<"]\n";
-        }
+        inline const *data() { return &this->_data[0]; }
 };
-#endif
 
-class ShapeData
+template<class T>
+inline std::ostream& operator<<(std::ostream& stream, const BaseArray<T> &arr);
+
+class ShapeData : public BaseArray<int>
 {
-    protected:
-        BaseArray<int> _shape;
     public:
         inline ShapeData(int size=1);
-        inline ~ShapeData();
-
-        inline void resize(int size);
-        inline const int size();
-
-        inline void clear();
-        
-        inline int &operator[](int idx);
-        inline int &operator()(int idx);
-
-        inline bool operator==(const ShapeData &other) const;
-        inline bool operator!=(const ShapeData &other) const;
-
-        inline const int get(int idx) const;
-        inline void set(int idx, int value);
-
-        inline const int *data();
-
-        inline void moveReferenceTo(ShapeData &other) { this->_shape.moveReferenceTo(other._shape); }
 };
 
 template<class T>
