@@ -293,4 +293,21 @@ NDArray<U> map(std::function<U(T)> f, NDArray<T> args)
     return result;
 }
 
+template<class T>
+NDArray<T> linespace(T begin, T end, number num, bool endPoint=true)
+{
+    int size = (int)num;
+    DM4thAssert(size>0);
+    T step = (T)((end-begin) / (num-(endPoint?1:0)));
+    NDArray<T> result;
+    result.resize(size);
+
+    T iter = begin;
+    for(int j=0; j<size; ++j)
+    {
+        result(j) = iter;
+        iter += step;
+    }
+    return result;
+}
 }
