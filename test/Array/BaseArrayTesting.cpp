@@ -9,12 +9,12 @@ int main()
 
         A.resize(5);
 
-        A.moveReferenceTo(B);
+        A.moveDataTo(B);
 
         EXPECT_EQ(A.size(), 0);
         EXPECT_EQ(B.size(), 5);
 
-        B.copyReferenceTo(A);
+        B.copyDataTo(A);
 
         EXPECT_EQ(B.size(), A.size());
 
@@ -51,7 +51,7 @@ int main()
         {
             A.set(j, 1);
         }
-        A.copyReferenceTo(B);
+        A.copyDataTo(B);
         A += 4;
         B *= 20;
         B /= 2;

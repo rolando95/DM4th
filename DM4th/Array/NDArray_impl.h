@@ -67,7 +67,7 @@ inline void NDArray<T>::resize(int axis1)
         int end = _min(axis1, this->shape(0));
         //T* old = this->_data->array._allocAndReturnOldArray(axis1);
         DM4thInternal::BaseArray<T> old;
-        this->_data->array.moveReferenceTo(old);
+        this->_data->array.moveDataTo(old);
         this->_data->array.resize(axis1);
 
         this->_data->shape.resize(1);
@@ -632,7 +632,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
     {
         DM4thAssert(false);
     }
-    result._moveDataRefTo(*this);
+    result.moveDataTo(*this);
     return *this;
 }
 
@@ -1496,7 +1496,7 @@ DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArra
     }
     //T* oldArray = this->_data->array._allocAndReturnOldArray(count);
     DM4thInternal::BaseArray<T> oldArray;
-    this->_data->array.moveReferenceTo(oldArray);
+    this->_data->array.moveDataTo(oldArray);
     this->_data->array.resize(count);
     this->_data->shape.resize(axisArray.size());
     for(int j=0; j<axisArray.size(); ++j)

@@ -287,7 +287,7 @@ inline void BaseArray<T>::clear()
 }
 
 template <class T>
-inline void BaseArray<T>::moveReferenceTo(BaseArray<T> &other)
+inline void BaseArray<T>::moveDataTo(BaseArray<T> &other)
 {
     other.clear();
     other._data = this->_data;
@@ -297,7 +297,7 @@ inline void BaseArray<T>::moveReferenceTo(BaseArray<T> &other)
 }
 
 template<class T>
-inline void BaseArray<T>::copyReferenceTo(BaseArray<T> &other) const
+inline void BaseArray<T>::copyDataTo(BaseArray<T> &other) const
 {
     other.resize(this->size());
     for(int j=0; j<this->size(); ++j)
@@ -347,10 +347,10 @@ int ArrayData<T>::refCount() const
 }
 
 template<class T>
-void ArrayData<T>::moveReferenceTo(ArrayData<T> &other)
+void ArrayData<T>::moveDataTo(ArrayData<T> &other)
 {
-    this->shape.moveReferenceTo(other.shape);
-    this->array.moveReferenceTo(other.array);
+    this->shape.moveDataTo(other.shape);
+    this->array.moveDataTo(other.array);
     this->shape.resize(1);
     this->shape.set(0,0);
 }
@@ -433,10 +433,22 @@ ArrayData<T> const &ArrayDataManager<T>::getArrayData() const
 }
 
 template<class T>
-inline void ArrayDataManager<T>::_moveDataRefTo(ArrayDataManager<T> &other)
+inline void ArrayDataManager<T>::moveDataTo(ArrayDataManager<T> &other)
 {
-    if(this->_data == nullptr) this->_data = new ArrayData<T>();
-    this->_data->moveReferenceTo(*other._data);
+    if(this->_data != nullptr)
+    {
+        if(other._data == nullptr) other._data = new ArrayData<T>();
+        this->_data->shape.moveDataTo(other._data->shape);
+        this->_data->array.moveDataTo(other._data->array);
+        this->_data->shape.resize(1);
+        this->_data->shape(0) = 0;
+    }
+    else if(other._data != nullptr)
+    {
+        other._data->array.resize(0);
+        other._data->shape.resize(1);
+        other._data->shape(0) = 0;
+    }
 }
 
 template<class T>

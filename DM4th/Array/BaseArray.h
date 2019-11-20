@@ -36,7 +36,7 @@ class BaseArray
 
         void operator=(const BaseArray<T> &other)
         {
-            other.copyReferenceTo(*this);
+            other.copyDataTo(*this);
         }
 
         template<class U> bool operator==(const BaseArray<U> &other) const;
@@ -52,8 +52,8 @@ class BaseArray
         template<class U> const BaseArray<T> &operator%=(const U &other);
         
         inline void clear();
-        inline void moveReferenceTo(BaseArray<T> &other);
-        inline void copyReferenceTo(BaseArray<T> &other) const;
+        inline void moveDataTo(BaseArray<T> &other);
+        inline void copyDataTo(BaseArray<T> &other) const;
 
         inline void swap(int idx1, int idx2)
         {
@@ -88,7 +88,7 @@ class ArrayData
         void decrRef();
         int refCount() const;
 
-        void moveReferenceTo(ArrayData<T> &other);
+        void moveDataTo(ArrayData<T> &other);
 };
 
 
@@ -117,7 +117,7 @@ class ArrayDataManager
         ArrayData<T> const &getArrayData() const;
         int refCount() const;
 
-        inline void _moveDataRefTo(ArrayDataManager<T> &other);
+        inline void moveDataTo(ArrayDataManager<T> &other);
         inline bool isSameRef(ArrayDataManager<T> &other);
 };
 
