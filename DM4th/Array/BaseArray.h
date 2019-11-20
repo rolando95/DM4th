@@ -62,7 +62,7 @@ class BaseArray
             this->set(idx2, tmp);
         }
 
-        inline const *data() { return this->_data; }
+        inline *data() { return this->_data; }
 };
 
 template<class T>
