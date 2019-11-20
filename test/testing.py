@@ -36,3 +36,5 @@ if __name__=="__main__":
         os.remove("test")
     if os.path.exists("test.exe"):
         os.remove("test.exe")
+
+    return error_level
