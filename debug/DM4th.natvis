@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="DM4th::NDArray&lt;*&gt;">
+        <Expand>
+            <ArrayItems Condition="_data!=0">
+                <Size>_data.array._size</Size>
+                <ValuePointer>_data.array._data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+    <Type Name="DM4th::_number&lt;*&gt;">
+        <DisplayString>{r} + {i}i</DisplayString>
+    </Type>
+</AutoVisualizer>

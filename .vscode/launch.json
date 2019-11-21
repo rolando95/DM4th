@@ -35,7 +35,9 @@
                 "ignoreFailures": true
               }
             ],
-            "preLaunchTask": "startDebug"
+            "preLaunchTask": "startDebug",
+            "visualizerFile": "${workspaceFolder}/debug/DM4th.natvis",
+            "showDisplayString": true
         }
     ]
 }

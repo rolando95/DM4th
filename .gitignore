@@ -1,5 +1,7 @@
 *.exe
 *.cpp
+*.s
+*.py
 !test/**
 test/**.exe
 *.asm
