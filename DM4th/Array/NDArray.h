@@ -116,10 +116,10 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator||(const NDArray<bool> &other) const;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator!() const;
 
-        bool any(T value);
-        bool all(T value);
-        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type any() { return this->any(true); }
-        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type all() { return this->all(true); }
+        bool any(T value) const ;
+        bool all(T value) const ;
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type any() const { return this->any(true); }
+        template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type all() const { return this->all(true); }
 
         std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
         std::istream& istream(std::istream& stream);

@@ -10,28 +10,28 @@ int main()
         A += 1;
         A += items<number>(2);
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(3,4,5,6,7)));
+        EXPECT_EQ(A,items<number>(3,4,5,6,7));
 
         A -= 1;
         A -= items<number>(3);
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(-1,0,1,2,3)));
+        EXPECT_EQ(A,items<number>(-1,0,1,2,3));
 
         B += items<number>(1,2,3);
         B -= items<number>(1,2,3);
 
-        EXPECT_TRUE(B.isEqualTo(items<number>(0,0,0)));
+        EXPECT_EQ(B,items<number>(0,0,0));
 
         A = items<number>(-1i,0,1,2,3);
         B = items<number>( 5i,4,3,2,1);
 
         A *= B;
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(15)));
+        EXPECT_EQ(A,items<number>(15));
 
         A %= 2;
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(1)));
+        EXPECT_EQ(A,items<number>(1));
 
         A = map<number>([](number x){return x*x;}, range<number>(5)) * 2i;
         A = A / 2i;
@@ -40,11 +40,11 @@ int main()
         A = A + A;
         A = A - A/2;
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(0,1,4,9,16)));
+        EXPECT_EQ(A,items<number>(0,1,4,9,16));
 
         A = A % 2;
 
-        EXPECT_TRUE(A.isEqualTo(items<number>(0,1,0,1,0)));
+        EXPECT_EQ(A,items<number>(0,1,0,1,0));
 
     });
 
@@ -69,14 +69,14 @@ int main()
         A = A*2 + A;
         A /= 3;
 
-        EXPECT_TRUE((A*B).isEqualTo(C));
+        EXPECT_EQ(A*B,C);
 
         A.resize(2,2);
         B = A.reshape(1,4).getCopy().reshape(4,1);
 
         NDArray<number> D = items<number>(18);
 
-        EXPECT_TRUE( (A*B).isEqualTo(D) );
+        EXPECT_EQ(A*B,D);
 
         
     });

@@ -18,7 +18,7 @@ NDArray<number> dummyFunction2(NDArray<number> array)
 int main()
 {
 
-    TEST("NDArray Assignments", []{
+    TEST("NDArray References", []{
         NDArray<number> A, B, C;
         A = range<number>(10);
 
@@ -36,6 +36,7 @@ int main()
         A -= 1;
         A *= 2;
         A /= 2;
+        A %= 1;
         A.resize(3,5);
         A.reshape(15);
         A *= items<number>(2);
@@ -50,17 +51,18 @@ int main()
         B = A.getCopy();
         C = B.getCopy();
 
-        EXPECT_TRUE(A.isEqualTo(B));
-        EXPECT_TRUE(A.isEqualTo(C));
+        EXPECT_EQ(A, B);
+        EXPECT_EQ(A, C);
         EXPECT_EQ(A.refCount(), 1);
         EXPECT_EQ(B.refCount(), 1);
         EXPECT_EQ(C.refCount(), 1);
 
         C(9) = -1;
         B(8) = -2;
-
+        
         EXPECT_FALSE(A.isEqualTo(C));
-        EXPECT_FALSE(A.isEqualTo(B));
+        EXPECT_NE(A, C);
+        EXPECT_NE(A, B);
 
     });
 

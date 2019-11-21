@@ -118,6 +118,7 @@ class ArrayDataManager
         int refCount() const;
 
         inline void moveDataTo(ArrayDataManager<T> &other);
+        inline void copyDataTo(ArrayDataManager<T> &other);
         inline bool isSameRef(ArrayDataManager<T> &other);
 };
 

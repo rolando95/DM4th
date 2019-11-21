@@ -452,6 +452,23 @@ inline void ArrayDataManager<T>::moveDataTo(ArrayDataManager<T> &other)
 }
 
 template<class T>
+inline void ArrayDataManager<T>::copyDataTo(ArrayDataManager<T> &other)
+{
+    if(this->_data != nullptr)
+    {
+        if(other._data == nullptr) other._data = new ArrayData<T>();
+        this->_data->shape.copyDataTo(other._data->shape);
+        this->_data->array.copyDataTo(other._data->array);
+    }
+    else if(other._data != nullptr)
+    {
+        other._data->array.resize(0);
+        other._data->shape.resize(1);
+        other._data->shape(0) = 0;
+    }
+}
+
+template<class T>
 inline bool ArrayDataManager<T>::isSameRef(ArrayDataManager<T> &other)
 {
     return (this->_data == other._data);

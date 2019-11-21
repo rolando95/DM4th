@@ -74,7 +74,7 @@ int main()
         C.set(0, A.get(0));
         A += B; 
         A -= B;
-        EXPECT_EQ(A,C)
+        EXPECT_EQ(A,C);
 
         A.clear(); B.clear(); C.clear();
     });

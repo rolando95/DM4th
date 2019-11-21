@@ -33,7 +33,7 @@ class TEST
             f();
             //clock_t end = clock();
             //double elapsed_secs = double(end - begin) / TO_SECONDS;
-            std::cout<<std::setprecision(15)<<"    [+] Successful";
+            std::cout<<std::setprecision(15)<<"  [+] Successful";
             std::cout<<std::endl;
             //std::cout<< "("<<elapsed_secs<<"s)"<<std::endl;
             success += 1;
@@ -51,7 +51,19 @@ class TEST
 int TEST::failed = 0;
 int TEST::success = 0;
 
-#define EXPECT_TRUE(a)  if(!a)  { std::cout<<"    [ ] Expect true failed.  file:"<<__FILE__<<" line:"<<__LINE__<<" expression:"<<#a<<std::endl; throw 1; }
-#define EXPECT_FALSE(a) if(a)   { std::cout<<"    [ ] Expect false failed. file:"<<__FILE__<<" line:"<<__LINE__<<" expression:"<<#a<<std::endl; throw 1; }
-#define EXPECT_EQ(a,b)  if(a!=b){ std::cout<<"    [ ] Expect EQ failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" expression:"<<#a<<"=="<<#b<<std::endl; throw 1; }
-#define EXPECT_NE(a,b)  if(a==b){ std::cout<<"    [ ] Expect NE failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" expression:"<<#a<<"!="<<#b<<std::endl; throw 1; }
+template<class T>
+bool setAll(const T& a)
+{
+    return a;
+}
+
+template<class T>
+bool setAll(const NDArray<T>& a)
+{
+    return a.all(true);
+}
+
+#define EXPECT_TRUE(a)  if(!(a))             { std::cout<<"  [ ] Expect true failed.  file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_TRUE("<<#a<<")"<<std::endl; throw 1; }
+#define EXPECT_FALSE(a) if(a)                { std::cout<<"  [ ] Expect false failed. file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_FALSE("<<#a<<")"<<std::endl; throw 1; }
+#define EXPECT_EQ(a,b) if(!setAll((a)==(b))) { std::cout<<"  [ ] Expect EQ failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_EQ("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl;throw 1;}
+#define EXPECT_NE(a,b) if( setAll((a)==(b))) { std::cout<<"  [ ] Expect NE failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_NE("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl;throw 1;}
