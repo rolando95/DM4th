@@ -196,9 +196,9 @@ NDArray<T> NDArray<T>::flatten()
 template<class T>
 int NDArray<T>::_partition(bool reverse, const int lo, const int hi)
 {
-    T pivot = this->data_item( (lo+hi)/2 );
+    T pivot = this->data_item(hi);
     int i = lo;
-    for(int j=lo; j<hi; ++j)
+    for(int j=lo; j<=hi; ++j)
     {
         if(
             (reverse && this->data_item(j)>pivot) ||
@@ -1050,7 +1050,7 @@ inline NDArray<bool> NDArray<bool>::operator!() const
 }
 
 template<class T>
-bool NDArray<T>::any(T value)
+bool NDArray<T>::any(T value) const 
 {
     bool result = false;
     for(int j=0; j<this->data_size(); ++j)
@@ -1065,7 +1065,7 @@ bool NDArray<T>::any(T value)
 }
 
 template<class T>
-bool NDArray<T>::all(T value)
+bool NDArray<T>::all(T value) const 
 {
     bool result = true;
     for(int j=0; j<this->data_size(); ++j)
