@@ -56,15 +56,77 @@ int main()
         EXPECT_EQ(A, items<number>(0,3i));
     });
 
+    TEST("NDArray push and pop",[]{
+        NDArray<number> A = items<number>(1,2,3,4,5,6,7);
+        A.push(8);
+        A.push(0,0);
+        A.push(2.5,3);
+
+        EXPECT_EQ(A, items<number>(0,1,2,2.5,3,4,5,6,7,8));
+
+        A.pop();
+        A.pop(3);
+        A.pop(0);
+
+        EXPECT_EQ(A, items<number>(1,2,3,4,5,6,7));
+
+        A.pushArray(items<number>(8,9,10));
+        A.pushArray(items<number>(0,0.3,0.6),0);
+
+        EXPECT_EQ(A, items<number>(0,0.3,0.6,1,2,3,4,5,6,7,8,9,10));
+
+        A.pop(0);
+        A.reshape(6,2);
+        A.popArray(0);
+        A.popArray();
+        A.reshape(8);
+        A.pop();
+        
+        EXPECT_EQ(A, items<number>(1,2,3,4,5,6,7));
+    });
+
     TEST("NDArray other methods",[]{
+
+        // Sort
         NDArray<number> A = items<number>(5,3,7,6,2,1,4);
         A.sort();
         EXPECT_EQ(A,items<number>(1,2,3,4,5,6,7));
         A.sort(true);
         EXPECT_EQ(A,items<number>(7,6,5,4,3,2,1));
 
-        
+        // I/O file
+        A.saveFile("test.txt");
+        NDArray<number> B;
+        B.loadFile("test.txt");
+        EXPECT_EQ(B,items<number>(7,6,5,4,3,2,1));
 
+        // Displacement
+        B.pushArray(items<number>(8,9,10,11,12));
+        B.reshape(2,2,3);
+        EXPECT_EQ(B._getAxisDisplacement(), items<int>(6,3,1));
+
+        // Iterator
+        int j = 0;
+        for(auto &x: A)
+        {
+            EXPECT_EQ(x,7-j);
+            x *= i;
+            ++j;
+        }
+        EXPECT_EQ(A,items<number>(7i,6i,5i,4i,3i,2i,i));
+
+        const NDArray<number> C = A.getCopy();
+
+        // Iterator_const
+        j = 0;
+        for(auto &x: C)
+        {
+            EXPECT_EQ(x,A(j));
+            ++j;
+        }
+        EXPECT_EQ(j,C.data_size());
     });
+
+
     return TEST::ERROR_LEVEL();
 }

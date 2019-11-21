@@ -412,7 +412,7 @@ template<class T>
 NDArray<T> NDArray<T>::popArray(const int pos)
 {
     NDArray<T> result;
-    DM4thAssert( (pos>=0 && pos<this->shape(0)) || pos==END ); 
+    DM4thAssert( (pos>=0 && pos<this->shape(0)) || pos==(int)END ); 
     
     if(this->shapeSize()==1)
     {

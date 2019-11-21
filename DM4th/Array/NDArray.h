@@ -140,8 +140,8 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
 
         iterator begin(){ return iterator(*this); }
         iterator end(){ return iterator(*this, this->data_size()); }
-        iterator_const begin() const{ return iterator(*this); }
-        iterator_const end() const{ return iterator(*this, this->data_size()); }
+        iterator_const begin() const{ return iterator_const(*this); }
+        iterator_const end() const{ return iterator_const(*this, this->data_size()); }
 
         class iterator
         {
@@ -170,7 +170,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
             const T &operator=(const T value) const { return this->_data.data_item(this->_ptr) = value; }
             iterator_const &operator++(){ ++this->_ptr; return *this; }
             iterator_const operator++(int){ iterator_const result(this->_data, this->_ptr); ++this->_ptr; return result; }
-            const T &operator*()  { return this->_data.data_item(this->_ptr); }
+            const T operator*() const { return this->_data.data_item(this->_ptr); }
         };
 
 
