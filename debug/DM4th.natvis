@@ -2,14 +2,27 @@
 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
     <Type Name="DM4th::NDArray&lt;*&gt;">
+    <DisplayString>NDArray</DisplayString>
         <Expand>
-            <ArrayItems Condition="_data!=0">
+            <ArrayItems Condition="_data!=0" >
                 <Size>_data.array._size</Size>
                 <ValuePointer>_data.array._data</ValuePointer>
             </ArrayItems>
         </Expand>
     </Type>
     <Type Name="DM4th::_number&lt;*&gt;">
-        <DisplayString>{r} + {i}i</DisplayString>
+        <DisplayString>r:{r} i:{i}</DisplayString>
+    </Type>
+    <Type Name="DM4th::DM4thInternal::BaseArray&lt;*&gt;">
+        <DisplayString>BaseArray</DisplayString>
+    </Type>
+    <Type Name="DM4th::DM4thInternal::ArrayDataManager&lt;*&gt;">
+        <DisplayString>ArrayDataManager</DisplayString>
+    </Type>
+    <Type Name="DM4th::DM4thInternal::ArrayData&lt;*&gt;">
+        <DisplayString>ArrayData</DisplayString>
+    </Type>
+    <Type Name="DM4th::DM4thInternal::ShapeData">
+        <DisplayString>ShapeData</DisplayString>
     </Type>
 </AutoVisualizer>
