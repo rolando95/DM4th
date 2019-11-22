@@ -31,39 +31,21 @@ inline void BaseArray<T>::reallocArray(int size)
     {
         if (size > this->_top)
         {
-
-            this->_top = sizeAligned(size);
-            T *tmp = new T[this->_top];
+            this->_top = sizeAligned(size);   
+            T *tmp = new T[this->_top];     
             int min = (size < this->_size) ? size : this->_size;
 
-            if(std::is_arithmetic<T>::value || std::is_same<T, number>::value)
-            {
-                memcpy((void*)tmp, (void*)this->_data, sizeof(T)*min);
-                memset((void*)(tmp+min), 0, sizeof(T)*(size-min));
-            }
-            else
-            {
-                for (int j = 0; j < min; ++j)
-                {
-                    tmp[j] = this->_data[j];
-                }
-                for (int j = min; j < size; ++j)
-                {
-                    tmp[j] = T();
-                }
-            }
-
-
-
+            std::copy_n(this->_data, min, tmp);
             delete[] this->_data;
+
+            if(std::is_arithmetic<T>::value) { 
+                std::fill_n(tmp+min, size-min, T()); 
+            }
+            
             this->_data = tmp;
             tmp = nullptr;
-            this->_size = size;
         }
-        else
-        {
-            this->_size = size;
-        }
+        this->_size = size;
     }
 }
 
@@ -308,10 +290,7 @@ template<class T>
 inline void BaseArray<T>::copyDataTo(BaseArray<T> &other) const
 {
     other.resize(this->size());
-    for(int j=0; j<this->size(); ++j)
-    {
-        other.set(j,this->get(j));
-    }
+    std::copy_n(this->_data, this->_size, other._data);
 }
 
 template<class T>

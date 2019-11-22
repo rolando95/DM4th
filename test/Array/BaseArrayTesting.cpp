@@ -12,6 +12,8 @@ int main()
         A.moveDataTo(B);
 
         EXPECT_EQ(A.size(), 0);
+        B.resize(15);
+        B.resize(5);
         EXPECT_EQ(B.size(), 5);
 
         B.copyDataTo(A);
@@ -77,6 +79,47 @@ int main()
         EXPECT_EQ(A,C);
 
         A.clear(); B.clear(); C.clear();
+    });
+
+    TEST("BaseArray Resize", []{
+        DM4thInternal::BaseArray<double> A, B;
+        A.resize(5);
+        B.resize(5);
+        B(0) = 0;
+        B(1) = 0;
+        B(2) = 0;
+        B(3) = 0;
+        B(4) = 0;
+        EXPECT_EQ(A,B);
+        A(2) = -15;
+        B(2) = -15;
+        A.resize(3);
+        A.resize(5);
+        EXPECT_EQ(A,B);
+
+        A.resize(10);
+        B.resize(10);
+        B(5) = 0;
+        B(6) = 0;
+        B(7) = 0;
+        B(8) = 0;
+        B(9) = 0;
+
+        EXPECT_EQ(A,B);
+
+        DM4thInternal::BaseArray<string> C, D;
+        D.resize(3);
+        D(0) = "Hola";
+        D(1) = "Mis";
+        D(2) = "Amigos";
+        D.copyDataTo(C);
+        EXPECT_EQ(C,D);
+        
+        C.resize(5);
+        D.resize(5);
+        D(3) = "";
+        D(4) = "";
+        EXPECT_EQ(C,D);
     });
 
     return TEST::ERROR_LEVEL();

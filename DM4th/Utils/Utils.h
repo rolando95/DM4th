@@ -3,6 +3,7 @@
 #include "_Constants.h"
 #include "../Exceptions/Exceptions.h"
 
+#include <cstring>
 #include <string>
 #include <string.h>
 
@@ -19,6 +20,7 @@
 #include <atomic>
 
 #include <iterator>
+#include<algorithm>
 
 #include <type_traits>
 
