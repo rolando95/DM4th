@@ -36,16 +36,24 @@ inline void BaseArray<T>::reallocArray(int size)
             T *tmp = new T[this->_top];
             int min = (size < this->_size) ? size : this->_size;
 
-            //memcpy((void*)tmp, (void*)this->Array, sizeof(T)*min);
-            for (int j = 0; j < min; ++j)
+            if(std::is_arithmetic<T>::value || std::is_same<T, number>::value)
             {
-                tmp[j] = this->_data[j];
+                memcpy((void*)tmp, (void*)this->_data, sizeof(T)*min);
+                memset((void*)(tmp+min), 0, sizeof(T)*(size-min));
+            }
+            else
+            {
+                for (int j = 0; j < min; ++j)
+                {
+                    tmp[j] = this->_data[j];
+                }
+                for (int j = min; j < size; ++j)
+                {
+                    tmp[j] = T();
+                }
             }
 
-            for (int j = min; j < size; ++j)
-            {
-                tmp[j] = T();
-            }
+
 
             delete[] this->_data;
             this->_data = tmp;
