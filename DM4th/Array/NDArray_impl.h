@@ -594,16 +594,25 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
 
-        result.item(0) = 0;
+        
         
         #if defined DM4thOmpFor
-           #pragma omp parallel for shared(other)
+            T r = 0;
+            #pragma omp parallel for shared(other) reduction(+:r)
+            for(int j=0; j<this->shape(0); ++j)
+            {
+                r += this->item(j)*other.item(j);
+            }
+            result.item(0) = r;
+        #else
+            result.item(0) = 0;
+            for(int j=0; j<this->shape(0); ++j)
+            {
+                result.item(0) += this->item(j)*other.item(j);
+            }
         #endif
 
-        for(int j=0; j<this->shape(0); ++j)
-        {
-            result.item(0) += this->item(j)*other.item(j);
-        }
+
 
     }
     else if(this->shapeSize()<=2 && other.shapeSize()<=2)
