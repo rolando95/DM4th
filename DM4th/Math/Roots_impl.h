@@ -92,7 +92,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
     #if defined DM4thOmpSections
 
         number x1 = seed.real();
-        number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
+        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
         #pragma omp parallel sections shared(x1, y1)
         {
@@ -125,7 +125,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         if(abs(f(x1))<tolerance) return x1;
 
         // Trying to use imaginary seed
-        number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
+        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
         for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/derivative(f,y1);
@@ -149,7 +149,7 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
     #if defined DM4thOmpSections
     
         number x1 = seed.real();
-        number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
+        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
         #pragma omp parallel sections shared(x1, y1)
         {
@@ -182,7 +182,7 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         if(abs(f(x1))<tolerance) return x1;
 
         // Trying to use imaginary seed
-        number y1 = (seed.imag()==0)? 1.00i : number(0,seed.imag());
+        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
         for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
             y1 = y1 - f(y1)/fd(y1);
@@ -211,8 +211,8 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         number x1 = seed1.real();
         number x2;
 
-        number y0 = seed0.imag()==0? 1.00i : seed0.imag();
-        number y1 = seed1.imag()==0? 1.01i : seed1.imag();
+        number y0 = seed0.imag()==0? 1.00_i : seed0.imag();
+        number y1 = seed1.imag()==0? 1.01_i : seed1.imag();
         number y2;
 
         #pragma omp parallel sections shared(x0,x1,x2, y0,y1,y2)
@@ -251,8 +251,8 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         if(abs(f(x2))<tolerance) return x2;
 
         // Trying to use imaginary seed
-        number y0 = seed0.imag()==0? 1.00i : seed0.imag();
-        number y1 = seed1.imag()==0? 1.01i : seed1.imag();
+        number y0 = seed0.imag()==0? 1.00_i : seed0.imag();
+        number y1 = seed1.imag()==0? 1.01_i : seed1.imag();
         number y2;
 
         for(int n=0; n<maxIter && abs(f(y1))>tolerance; ++n){

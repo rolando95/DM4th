@@ -23,10 +23,10 @@ int main()
         A = range<number>(10);
 
         // Ref assignments
-        C = B = dummyFunction(A, 0, -50i);
+        C = B = dummyFunction(A, 0, -50_i);
 
         C(5) = 150;
-        B(2) = 35i;
+        B(2) = 35_i;
 
         // In-place operations
         dummyFunction2(A);

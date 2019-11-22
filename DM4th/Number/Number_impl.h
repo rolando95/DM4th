@@ -23,6 +23,8 @@ inline number operator""_i(unsigned long long int a){
     return number(0,a);
 }
 
+#ifndef DM4thOnlyStandardLiterals
+
 inline number operator""i(unsigned long long int a){
     return number(0,a);
 }
@@ -30,6 +32,8 @@ inline number operator""i(unsigned long long int a){
 inline number operator""i(long double a){
     return number(0,a);
 }
+
+#endif
 
 template<class T>
 inline _number<T> operator-(_number<T> a){

@@ -22,8 +22,8 @@ int main()
 
         EXPECT_EQ(B,items<number>(0,0,0));
 
-        A = items<number>(-1i,0,1,2,3);
-        B = items<number>( 5i,4,3,2,1);
+        A = items<number>(-1_i,0,1,2,3);
+        B = items<number>( 5_i,4,3,2,1);
 
         A *= B;
 
@@ -33,10 +33,10 @@ int main()
 
         EXPECT_EQ(A,items<number>(1));
 
-        A = map<number>([](number x){return x*x;}, range<number>(5)) * 2i;
-        A = A / 2i;
-        A = A + 3i;
-        A = A - 3i;
+        A = map<number>([](number x){return x*x;}, range<number>(5)) * 2_i;
+        A = A / 2_i;
+        A = A + 3_i;
+        A = A - 3_i;
         A = A + A;
         A = A - A/2;
 

@@ -41,19 +41,19 @@ int main()
         EXPECT_EQ(A.shapeSize(), 2);
 
         A.resize(6);
-        A(0) = 0; A(1) = 1i; A(2) = 2i; A(3) = 3i; A(4) = 4i; A(5) = 5i; 
+        A(0) = 0; A(1) = 1_i; A(2) = 2_i; A(3) = 3_i; A(4) = 4_i; A(5) = 5_i; 
 
-        EXPECT_EQ(A, items<number>(0,1i,2i,3i,4i,5i));
+        EXPECT_EQ(A, items<number>(0,1_i,2_i,3_i,4_i,5_i));
 
         A.reshape(2,3);
         EXPECT_EQ(A.shape(), items<int>(2,3));
-        EXPECT_EQ( NDArray<number>(A.subArr(0)), items<number>( 0,1i,2i));
-        EXPECT_EQ( NDArray<number>(A.subArr(1)), items<number>(3i,4i,5i));
+        EXPECT_EQ( NDArray<number>(A.subArr(0)), items<number>( 0,1_i,2_i));
+        EXPECT_EQ( NDArray<number>(A.subArr(1)), items<number>(3_i,4_i,5_i));
 
         A.resize(2,1,1);
         A.reshape(2);
 
-        EXPECT_EQ(A, items<number>(0,3i));
+        EXPECT_EQ(A, items<number>(0,3_i));
     });
 
     TEST("NDArray push and pop",[]{
@@ -113,7 +113,7 @@ int main()
             x *= i;
             ++j;
         }
-        EXPECT_EQ(A,items<number>(7i,6i,5i,4i,3i,2i,i));
+        EXPECT_EQ(A,items<number>(7_i,6_i,5_i,4_i,3_i,2_i,_i));
 
         const NDArray<number> C = A.getCopy();
 

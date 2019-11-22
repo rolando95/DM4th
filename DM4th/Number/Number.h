@@ -142,11 +142,15 @@ inline number operator""_i(long double);
 // Conversion de expresion literal <entero>i a tipo numero
 inline number operator""_i(unsigned long long int);
 
+#ifndef DM4thOnlyStandardLiterals
+
 // Conversion de expresion literal <double>i a tipo numero
 inline number operator""i(long double);
 
 // Conversion de expresion literal <entero>i a tipo numero
 inline number operator""i(unsigned long long int);
+
+#endif
 
 // Cambio a signo negativo
 template <class T>
