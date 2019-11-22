@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MathUtilities.h"
+#include "MathUtils.h"
 
 namespace DM4th
 {

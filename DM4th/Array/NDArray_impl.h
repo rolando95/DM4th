@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NDArray.h"
-#include "NDArrayUtilities.h"
+#include "NDArrayUtils.h"
 
 
 namespace DM4th

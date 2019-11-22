@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseArray_impl.h"
-#include "../Utilities/Utilities.h"
+#include "../Utils/Utils.h"
 
 namespace DM4th
 {

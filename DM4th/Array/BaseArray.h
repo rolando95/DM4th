@@ -1,8 +1,8 @@
 #pragma once
-#include "../Utilities/_Constants.h"
+#include "../Utils/_Constants.h"
 //#include "../Math/Math.h"
-#include "../Utilities/Utilities.h"
-#include "../Utilities/_c_arr_Utilities.h"
+#include "../Utils/Utils.h"
+#include "../Utils/_c_arr_Utils.h"
 #include "../Number.h"
 
 //#define BASEARRAY_STD_VECTOR

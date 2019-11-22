@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "../Utilities/Utilities.h"
+#include "../Utils/Utils.h"
 //#include "../Math/Math.h"
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
 
