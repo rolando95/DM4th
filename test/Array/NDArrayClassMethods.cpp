@@ -95,7 +95,7 @@ int main()
         EXPECT_EQ(A,items<number>(7,6,5,4,3,2,1));
 
         // Reduce 
-        A = items<number>(1,2,3,4,5,6,7,8,9);
+        A = items<number>(1,2,3,4,5,6,7,8,9,10);
         number result = A.reduce([](number a, number b){return a+b;});
         EXPECT_EQ(result, 55);
 
