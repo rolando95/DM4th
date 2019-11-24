@@ -100,6 +100,7 @@ int main()
         EXPECT_EQ(result, 55);
 
         // I/O file
+        A = items<number>(7,6,5,4,3,2,1);
         A.saveFile("test.txt");
         NDArray<number> B;
         B.loadFile("test.txt");
