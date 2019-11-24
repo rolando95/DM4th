@@ -59,7 +59,7 @@ template<class T> template<class U>
 const DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level) const
 {
     if(axis.size()==0) return *this;
-    DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
+    DM4thAssert(axis.rank()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
         return this->_data->array[(int)axis.item(level)].child(axis, level+1);
@@ -71,7 +71,7 @@ template<class T> template<class U>
 DTree<T> &DTree<T>::child(const NDArray<U> &axis, int level)
 {
     if(axis.size()==0) return *this;
-    DM4thAssert(axis.shapeSize()==1 && axis.size()>0);
+    DM4thAssert(axis.rank()==1 && axis.size()>0);
     if(level<axis.size()-1)
     {
         return this->_data->array[(int)axis.item(level)].child(axis, level+1);

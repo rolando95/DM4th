@@ -6,7 +6,7 @@ namespace DM4th
 {
     inline NDArray<number> LU(const NDArray<number> &matrix, const NDArray<number> &rightPart)
     {
-        DM4thAssert(matrix.shapeSize()==2 && matrix.data_size()==(rightPart.size()*rightPart.size()));
+        DM4thAssert(matrix.rank()==2 && matrix.data_size()==(rightPart.size()*rightPart.size()));
 
         int n = rightPart.size();
 
@@ -63,7 +63,7 @@ namespace DM4th
 
     inline NDArray<number> dijkstra(const NDArray<number> &matrix)
     {
-        DM4thAssert(matrix.shapeSize()==2 && matrix.shape(0)==matrix.shape(1));
+        DM4thAssert(matrix.rank()==2 && matrix.shape(0)==matrix.shape(1));
 
         NDArray<number> before; 
         NDArray<number> result = matrix.getCopy();
@@ -89,7 +89,7 @@ namespace DM4th
 
     inline NDArray<number> warshall(const NDArray<number> &matrix)
     {
-        DM4thAssert(matrix.shapeSize()==2 && matrix.shape(0)==matrix.shape(1));
+        DM4thAssert(matrix.rank()==2 && matrix.shape(0)==matrix.shape(1));
 
         NDArray<number> before; 
         NDArray<number> result = matrix.getCopy();

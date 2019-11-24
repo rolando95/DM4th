@@ -17,11 +17,13 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         class SubArray;
 
         NDArray();
+
         template<class ... U> NDArray(T *data, U ... args);
+
         NDArray(T *data, const NDArray<int> &axisArray);
-        //NDArray(const typename NDArray<T>::SubArray &other) { *this = NDArray(other); }
+
         explicit NDArray(const std::string &other);
-        //explicit NDArray(const char *other) { *this = std::string(other); }
+
         template<class U>
         explicit operator NDArray<U>();
         
@@ -31,7 +33,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
 
         void resize(const NDArray<int> &axisArray);
 
-        inline int shapeSize() const;
+        inline int rank() const;
 
         int size() const;
 
@@ -45,7 +47,8 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         NDArray<T> flatten();
         void sort(bool reverse=false, int lo=0, int hi=END);
         template<class U, class V> inline void swap(U idx1, V idx2);
-
+        T reduce(std::function<T(T,T)> f);
+        
         template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
         template<class AXIS> T &item(AXIS x) const;
         template<class AXIS> T &item(const NDArray<AXIS> &axisArray);

@@ -20,7 +20,7 @@ template<class T>
 NDArray<T>::NDArray(T *data, const NDArray<int> &axisArray)
 {
     DM4thAssert(axisArray.size()>0);
-    DM4thAssert(axisArray.shapeSize()==1);
+    DM4thAssert(axisArray.rank()==1);
 
     this->resize(axisArray);
     int size = DM4thNDArrayUtils::mult(axisArray);
@@ -60,7 +60,7 @@ inline void NDArray<T>::resize(int axis1, U ... args)
 template<class T>
 inline void NDArray<T>::resize(int axis1)
 {
-    if(this->shapeSize()<=1) this->_resize1DArray(axis1); // 0 || 1 dim to 1 dim
+    if(this->rank()<=1) this->_resize1DArray(axis1); // 0 || 1 dim to 1 dim
     else
     { // N dim to 1 dim
         int disp = this->_getAxisDisplacement(0);
@@ -84,9 +84,9 @@ inline void NDArray<T>::resize(int axis1)
 template<class T>
 void NDArray<T>::resize(const NDArray<int> &axisArray)
 {
-    DM4thAssert(axisArray.shapeSize()==1);
+    DM4thAssert(axisArray.rank()==1);
 
-    if(this->shapeSize()==1)
+    if(this->rank()==1)
     { //1 dim to N dim
         int oldShape = this->shape(0);
 
@@ -128,7 +128,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
 }
 
 template<class T>
-inline int NDArray<T>::shapeSize() const { return this->_data->shape.size(); }
+inline int NDArray<T>::rank() const { return this->_data->shape.size(); }
 
 template<class T>
 int NDArray<T>::size() const { return this->_data->shape.get(0); }
@@ -157,8 +157,8 @@ inline int NDArray<T>::shape(int axis) const
 template<class T> template<class ... U>
 const NDArray<T> &NDArray<T>::reshape(int axis1, U ... args)
 {
-    //int oldShapeMult = mult(this->shape().data(), this->shapeSize());
-    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->shapeSize());
+    //int oldShapeMult = mult(this->shape().data(), this->rank());
+    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->rank());
     int newShapeMult = DM4thUtils::mult(axis1,args...);
     DM4thAssert(oldShapeMult==newShapeMult);
     
@@ -171,9 +171,9 @@ const NDArray<T> &NDArray<T>::reshape(int axis1, U ... args)
 template<class T>
 const NDArray<T> & NDArray<T>::reshape(NDArray<int> newShape)
 {
-    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->shapeSize());
+    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->rank());
     int newShapeMult = DM4thCArrayUtils::mult(newShape.data(), newShape.size());     
-    DM4thAssert(newShape.shapeSize()==1);    
+    DM4thAssert(newShape.rank()==1);    
     DM4thAssert(oldShapeMult==newShapeMult);
 
     this->_data->shape.resize(newShape.size());
@@ -240,6 +240,20 @@ inline void NDArray<T>::swap(U idx1, V idx2)
     }
 }
 
+template<class T>
+T NDArray<T>::reduce(std::function<T(T,T)> f)
+{
+    if(this->data_size()==0) return 0;
+    if(this->data_size()==1) return this->data_item(0);
+
+    T result = this->data_item(0);
+    for(int j=1; j<this->data_size(); ++j)
+    {
+        result = f(result,this->data_item(j));
+    }
+    return result;
+}
+
 template<class T> template<class AXIS, class ... U>
 T &NDArray<T>::item(AXIS axis, U ... args) const
 { 
@@ -261,18 +275,18 @@ T &NDArray<T>::item(AXIS axis) const
 template<class T> template<class AXIS>
 T &NDArray<T>::item(const NDArray<AXIS> &axisArray)
 {
-    DM4thAssert(axisArray.shapeSize()==1);
-    DM4thAssert(axisArray.size()==this->shapeSize());
+    DM4thAssert(axisArray.rank()==1);
+    DM4thAssert(axisArray.size()==this->rank());
 
     int pos = (int)axisArray.data()[0];
-    for(int j=1; j<this->shapeSize(); ++j)
+    for(int j=1; j<this->rank(); ++j)
     {
         pos = pos*this->_data->shape.get(j) + (int)axisArray.data()[j];
     }
 
     // int *iter = axisArray.data(); 
     // int pos = *iter;
-    // for(int j=1; j<this->shapeSize(); ++j, ++iter)
+    // for(int j=1; j<this->rank(); ++j, ++iter)
     // {
     //     pos = pos*this->_data->shape(j) + *iter;
     // }
@@ -294,7 +308,7 @@ NDArray<T> NDArray<T>::getCopy() const
 template<class T> template<class U>
 void NDArray<T>::push(const U &value, const int pos)
 {
-    DM4thAssert(this->shapeSize()<=1);
+    DM4thAssert(this->rank()<=1);
     DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
     this->resize(this->shape(0)+1);
     //Append
@@ -316,7 +330,7 @@ void NDArray<T>::push(const U &value, const int pos)
 template<class T> template<class U>
 void NDArray<T>::pushArray(const NDArray<U> &other, const int pos){
 
-    if(this->shapeSize()<=1 && other.shapeSize()==1)
+    if(this->rank()<=1 && other.rank()==1)
     {
         int size = other.size();
         int end = this->shape(0);
@@ -343,9 +357,9 @@ void NDArray<T>::pushArray(const NDArray<U> &other, const int pos){
             }
         }
     }
-    else if( (this->shapeSize()==0 || this->shapeSize()==2) && other.shapeSize()==1 ){
+    else if( (this->rank()==0 || this->rank()==2) && other.rank()==1 ){
         int cols;
-        if(this->shapeSize()==0) cols = other.shape(0);
+        if(this->rank()==0) cols = other.shape(0);
         else cols = this->shape(1);
 
         int end = this->shape(0);
@@ -390,7 +404,7 @@ template<class T>
 T NDArray<T>::pop(const int idx)
 {
     T result;
-    DM4thAssert(this->shapeSize()==1 && this->shape(0)>0);
+    DM4thAssert(this->rank()==1 && this->shape(0)>0);
     DM4thAssert( (idx>=0 && idx<this->shape(0)) || idx==END ); 
 
     if(idx==END || idx==this->shape(0)-1)
@@ -414,11 +428,11 @@ NDArray<T> NDArray<T>::popArray(const int pos)
     NDArray<T> result;
     DM4thAssert( (pos>=0 && pos<this->shape(0)) || pos==(int)END ); 
     
-    if(this->shapeSize()==1)
+    if(this->rank()==1)
     {
         result = items<T>(this->pop(pos));
     }else 
-    if(this->shapeSize()==2)
+    if(this->rank()==2)
     {
         result.resize(this->shape(1));
         DM4thAssert(this->shape(0)>0);
@@ -589,7 +603,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         result = *this * other.item(0);
     }
     else
-    if(this->shapeSize()==1 && other.shapeSize()==1)
+    if(this->rank()==1 && other.rank()==1)
     {
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
@@ -615,7 +629,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 
 
     }
-    else if(this->shapeSize()<=2 && other.shapeSize()<=2)
+    else if(this->rank()<=2 && other.rank()<=2)
     {
         DM4thAssert(this->shape(1) == other.shape(0));
         int maxX = this->shape(0);
@@ -1146,7 +1160,7 @@ void NDArray<T>::saveFile(std::string url){
 template<class T>
 inline void NDArray<T>::_resize1DArray(int size)
 {
-    //DM4thAssert(this->shapeSize()<=1); // Can be 0 || 1
+    //DM4thAssert(this->rank()<=1); // Can be 0 || 1
     this->_data->array.resize(size);
     this->_data->shape.resize(1);
     this->_data->shape(0) = size;
@@ -1305,9 +1319,9 @@ void NDArray<T>::SubArray::setShapeRef(int axis, NDArray<int> &shape, NDArray<U>
 template<class T>
 void NDArray<T>::SubArray::setShapeRef(int axis, NDArray<int> &shape)
 {
-    DM4thAssert(axis<=this->_ptr.shapeSize());
+    DM4thAssert(axis<=this->_ptr.rank());
 
-    for(int j=axis; j<this->_ptr.shapeSize(); ++j)
+    for(int j=axis; j<this->_ptr.rank(); ++j)
     {
         shape(j) = this->_ptr.shape(j); // All elemenents of these axis
     }
@@ -1320,13 +1334,13 @@ void NDArray<T>::SubArray::setRef(NDArray<U> first, V... args)
     NDArray<int> oldDisp = this->_ptr._getAxisDisplacement();
 
     NDArray<int> newShape;
-    newShape.resize(this->_ptr.shapeSize());
+    newShape.resize(this->_ptr.rank());
     this->setShapeRef(0,newShape, castToNDArray(first), castToNDArray(args)...);
     this->_subArray.resize(newShape);
     
     NDArray<int> newDisp = this->_subArray._getAxisDisplacement();
 
-    if(this->_ptr.shapeSize()>1)
+    if(this->_ptr.rank()>1)
     {
         for( int j=0; j<first.size(); ++j )
         {
@@ -1384,7 +1398,7 @@ void NDArray<T>::SubArray::slider(
     NDArray<U> first, V ... args
 )
 {
-    if(axis<this->_ptr.shapeSize()-1)
+    if(axis<this->_ptr.rank()-1)
     {
         for(int j=0; j<first.size(); ++j)
         {
@@ -1413,7 +1427,7 @@ void NDArray<T>::SubArray::slider(
     NDArray<int> oldDisp, NDArray<int> newDisp
 )
 {
-    if(axis<this->_ptr.shapeSize()-1)
+    if(axis<this->_ptr.rank()-1)
     {
         for(int j=0; j<this->_ptr.shape(axis); ++j)
         {
@@ -1523,7 +1537,7 @@ void NDArray<T>::_ostream(std::ostream& stream, int shapeIdx, int& c_idx,  int i
         for(int k=0; k<ident; ++k) stream<<" ";
     }
     stream << "[";
-    if(this->shapeSize()>shapeIdx+1) 
+    if(this->rank()>shapeIdx+1) 
     {
         stream<<"\n";
         for(int j=0; j<this->shape(shapeIdx); ++j)

@@ -12,7 +12,7 @@ int main()
 
         EXPECT_EQ(A.data_size(),0);
 
-        EXPECT_TRUE(A.shapeSize()<2);
+        EXPECT_TRUE(A.rank()<2);
         EXPECT_EQ(A.shape(0),0);
 
         EXPECT_EQ(B.data_size(),10);
@@ -38,7 +38,7 @@ int main()
 
         A.reshape(3,10);
         EXPECT_EQ(A.shape(), items<int>(3,10));
-        EXPECT_EQ(A.shapeSize(), 2);
+        EXPECT_EQ(A.rank(), 2);
 
         A.resize(6);
         A(0) = 0; A(1) = 1_i; A(2) = 2_i; A(3) = 3_i; A(4) = 4_i; A(5) = 5_i; 

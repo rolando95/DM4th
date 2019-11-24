@@ -402,7 +402,7 @@ ArrayDataManager<T> const &ArrayDataManager<T>::operator=(const ArrayDataManager
 }
 
 template <class T>
-int ArrayDataManager<T>::shapeSize()
+int ArrayDataManager<T>::rank()
 {
     return this->_data->shape.size();
 }

@@ -110,7 +110,7 @@ class ArrayDataManager
 
         ArrayDataManager<T> const &operator=(const ArrayDataManager<T> &other);
 
-        int shapeSize();
+        int rank();
 
         int shape(int axis);
 
