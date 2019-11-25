@@ -26,6 +26,8 @@
 
 #include <functional>
 
+#include <omp.h>
+
 // Check windows
 #if _WIN32 || _WIN64
     #if _WIN64
@@ -50,13 +52,25 @@
 
 //#define DM4thOmp
 #ifdef DM4thOmp
-    #include <omp.h>
-    #define DM4thOmpFor
-    #define DM4thOmpSections
+    #define IFDM4thOmp(a) if(a)
+#else
+    #define IFDM4thOmp(a) if(false)
+#endif
+
+//Declare number reductions, etc.
+#define DM4thOmpNumber
+
+#ifndef DM4thMinOmpLoops
+    #define DM4thMinOmpLoops 100
 #endif
 
 namespace DM4th
 {
+
+namespace DM4thGlobal
+{
+    static int minOmpLoops = DM4thMinOmpLoops;
+}
 
 constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();

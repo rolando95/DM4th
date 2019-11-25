@@ -19,5 +19,5 @@ for file in testFiles:
 print("\n########### PARALLEL ###########\n")
 for file in testFiles:
     print("\n----- "+file+" -----\n")
-    if(subprocess.call(["g++", file, "-o", "test", "-ggdb3", "-std=c++11", "-Wno-literal-suffix", "-fopenmp", "-D", "DM4thParallel", "-D", "DM4thOnlyStandardLiterals"])): exit(1)  
+    if(subprocess.call(["g++", file, "-o", "test", "-ggdb3", "-std=c++11", "-Wno-literal-suffix", "-fopenmp", "-D", "DM4thParallel", "-D", "DM4thOnlyStandardLiterals", "-D", "DM4thMinOmpLoops=1"])): exit(1)  
     if(subprocess.call(["./test"])): exit(1)

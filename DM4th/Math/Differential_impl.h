@@ -67,18 +67,30 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
             NDArray<number> diffV;
             diffV.resize(v.shape(0)-1);
             
-            #if defined DM4thOmpFor
+            IFDM4thOmp(v.size()>=DM4thGlobal::minOmpLoops)
+            {
+
                 #pragma omp parallel for
-            #endif
-            for(auto j=0; j<v.shape(0)-1; ++j){
-                diffV(j) = (v(j+1) - v(j));
+                for(auto j=0; j<v.shape(0)-1; ++j){
+                    diffV(j) = (v(j+1) - v(j));
+                }
+
+            }else
+            {
+
+               for(auto j=0; j<v.shape(0)-1; ++j){
+                    diffV(j) = (v(j+1) - v(j));
+                }
+
             }
+
             return diff(diffV,iter - 1);
         }else{
             return NDArray<number>();
         }
     }
 }
+
 // Integral
 inline number integral(Function f, const number &a, const number &b, const number subintervals){
     int n = subintervals.real();
@@ -86,12 +98,22 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     
     number s=0;
 
-    #if defined DM4thOmpFor
+    IFDM4thOmp(n>=DM4thGlobal::minOmpLoops)
+    {
+
         #pragma omp parallel for DM4thReductionSum(s)
-    #endif
-    for(int j=0; j<n; ++j){
-        s+=f(a+h*(j+0.5));
+        for(int j=0; j<n; ++j){
+            s+=f(a+h*(j+0.5));
+        }
+
+    }else{
+
+        for(int j=0; j<n; ++j){
+            s+=f(a+h*(j+0.5));
+        }
+
     }
+
     return s*h;
 
     /*

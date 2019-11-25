@@ -498,13 +498,22 @@ inline const NDArray<T> NDArray<T>::operator+=(const NDArray<U> &other)
         T item = this->data_item(0);
         this->resize(other.shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif 
-
-        for(int j=0; j<other.data_size(); ++j)
+        IFDM4thOmp(other.data_size()>=DM4thGlobal::minOmpLoops)
         {
-            this->data_item(j) = item + other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<other.data_size(); ++j)
+            {
+                this->data_item(j) = item + other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<other.data_size(); ++j)
+            {
+                this->data_item(j) = item + other.data_item(j);
+            }   
+
         }
 
     }else if(other.data_size()==1)
@@ -548,13 +557,22 @@ inline const NDArray<T> NDArray<T>::operator-=(const NDArray<U> &other)
         T item = this->data_item(0);
         this->resize(other.shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif 
-
-        for(int j=0; j<other.data_size(); ++j)
+        IFDM4thOmp(other.data_size()>=DM4thGlobal::minOmpLoops)
         {
-            this->data_item(j) = item - other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<other.data_size(); ++j)
+            {
+                this->data_item(j) = item - other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<other.data_size(); ++j)
+            {
+                this->data_item(j) = item - other.data_item(j);
+            }
+
         }
 
     }else if(other.data_size()==1)
@@ -610,7 +628,8 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 
         
         
-        #if defined DM4thOmpFor
+        IFDM4thOmp(this->shape(0)>=DM4thGlobal::minOmpLoops)
+        {
             T r = 0;
             #pragma omp parallel for shared(other) reduction(+:r)
             for(int j=0; j<this->shape(0); ++j)
@@ -618,15 +637,16 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
                 r += this->item(j)*other.item(j);
             }
             result.item(0) = r;
-        #else
+        
+        }else{
+
             result.item(0) = 0;
             for(int j=0; j<this->shape(0); ++j)
             {
                 result.item(0) += this->item(j)*other.item(j);
             }
-        #endif
-
-
+        
+        }
 
     }
     else if(this->rank()<=2 && other.rank()<=2)
@@ -638,18 +658,32 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 
         result.resize(maxX,maxY);
         
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
+        {
 
-        for(int x=0; x<maxX; ++x){
-            for(int y=0; y<maxY; ++y){
-                result.item(x,y) = 0;
-                for(int z=0;z<maxZ; ++z){
-                    result.item(x,y) += this->item(x,z) * other.item(z,y);
+            #pragma omp parallel for shared(other)
+            for(int x=0; x<maxX; ++x){
+                for(int y=0; y<maxY; ++y){
+                    result.item(x,y) = 0;
+                    for(int z=0;z<maxZ; ++z){
+                        result.item(x,y) += this->item(x,z) * other.item(z,y);
+                    }
                 }
             }
+
+        }else{
+
+            for(int x=0; x<maxX; ++x){
+                for(int y=0; y<maxY; ++y){
+                    result.item(x,y) = 0;
+                    for(int z=0;z<maxZ; ++z){
+                        result.item(x,y) += this->item(x,z) * other.item(z,y);
+                    }
+                }
+            }
+
         }
+
     }
     else
     {
@@ -727,14 +761,25 @@ NDArray<bool> NDArray<T>::operator==(T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) == other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) == other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) == other; 
+        }
+
     }
+
+
     return result;
 }
 
@@ -744,14 +789,24 @@ NDArray<bool> NDArray<T>::operator!=(T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) != other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) != other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) != other; 
+        }
     }
+
+
     return result;
 }
 
@@ -761,14 +816,24 @@ NDArray<bool> NDArray<T>::operator> (T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) > other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) > other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) > other; 
+        }
+
     }
+
     return result;
 }
 
@@ -778,14 +843,24 @@ NDArray<bool> NDArray<T>::operator<=(T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) <= other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) <= other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) <= other; 
+        }
+
     }
+
     return result;
 }
 
@@ -795,14 +870,25 @@ NDArray<bool> NDArray<T>::operator>=(T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) >= other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) >= other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) >= other; 
+        }
+
     }
+
+
     return result;
 }
 
@@ -812,14 +898,24 @@ NDArray<bool> NDArray<T>::operator<(T other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) < other; 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) < other; 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) < other; 
+        }
+
     }
+
     return result;
 }
 
@@ -831,15 +927,26 @@ NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) == other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) == other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) == other.data_item(j);
+            }
+
         }
+
     }
+
     else if(this->data_size()==1)
     {
         result = other==this->data_item(0);
@@ -864,14 +971,24 @@ NDArray<bool> NDArray<T>::operator!=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) != other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) != other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) != other.data_item(j);
+            }
+
         }
+
     }
     else if(this->data_size()==1)
     {
@@ -897,14 +1014,25 @@ NDArray<bool> NDArray<T>::operator>(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) > other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) > other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) > other.data_item(j);
+            }
+
         }
+
+
     }
     else if(this->data_size()==1)
     {
@@ -930,14 +1058,25 @@ NDArray<bool> NDArray<T>::operator<=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) <= other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) <= other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) <= other.data_item(j);
+            }
+
         }
+
+
     }
     else if(this->data_size()==1)
     {
@@ -963,14 +1102,24 @@ NDArray<bool> NDArray<T>::operator>=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) >= other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) >= other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) >= other.data_item(j);
+            }
+
         }
+
     }
     else if(this->data_size()==1)
     {
@@ -996,14 +1145,24 @@ NDArray<bool> NDArray<T>::operator<(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        #if defined DM4thOmpFor
-            #pragma omp parallel for shared(other)
-        #endif
-
-        for(int j=0; j<this->data_size(); ++j)
+        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
         {
-            result.data_item(j) = this->data_item(j) < other.data_item(j);
+
+            #pragma omp parallel for shared(other)
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) < other.data_item(j);
+            }
+
+        }else{
+
+            for(int j=0; j<this->data_size(); ++j)
+            {
+                result.data_item(j) = this->data_item(j) < other.data_item(j);
+            }
+
         }
+
     }
     else if(this->data_size()==1)
     {
@@ -1027,14 +1186,24 @@ inline NDArray<bool> NDArray<bool>::operator&&(const NDArray<bool> &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) && other.data_item(j); 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) && other.data_item(j); 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) && other.data_item(j); 
+        }
+
     }
+
     return result;
 }
 
@@ -1044,14 +1213,25 @@ inline NDArray<bool> NDArray<bool>::operator||(const NDArray<bool> &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = this->data_item(j) || other.data_item(j); 
+
+        #pragma omp parallel for shared(other)
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) || other.data_item(j); 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = this->data_item(j) || other.data_item(j); 
+        }
+
     }
+
+
     return result;
 }
 
@@ -1061,14 +1241,24 @@ inline NDArray<bool> NDArray<bool>::operator!() const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for
-    #endif
-
-    for(int j=0; j<this->data_size(); ++j)
+    IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
     {
-        result.data_item(j) = !this->data_item(j); 
+
+        #pragma omp parallel for
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = !this->data_item(j); 
+        }
+
+    }else{
+
+        for(int j=0; j<this->data_size(); ++j)
+        {
+            result.data_item(j) = !this->data_item(j); 
+        }
+
     }
+
     return result;
 }
 

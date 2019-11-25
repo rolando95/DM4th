@@ -72,17 +72,29 @@ namespace DM4th
         {
             before = result.getCopy();
 
-            #if defined DM4thOmpFor
-                #pragma omp parallel for shared(matrix)
-            #endif
-
-            for(int i=0; i<matrix.size(); ++i)
+            IFDM4thOmp(matrix.data_size()>=DM4thGlobal::minOmpLoops)
             {
-                for(int j=0; j<matrix.size(); ++j)
+                #pragma omp parallel for shared(matrix, before, result)
+                for(int i=0; i<matrix.size(); ++i)
                 {
-                    result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
+                    for(int j=0; j<matrix.size(); ++j)
+                    {
+                        result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
+                    }
                 }
+                
+            }else{
+
+                for(int i=0; i<matrix.size(); ++i)
+                {
+                    for(int j=0; j<matrix.size(); ++j)
+                    {
+                        result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
+                    }
+                }
+
             }
+
         }
         return result;
     }
@@ -98,16 +110,29 @@ namespace DM4th
         {
             before = result.getCopy();
 
-            #if defined DM4thOmpFor
-                #pragma omp parallel for shared(matrix)
-            #endif 
 
-            for(int i=0; i<matrix.size(); ++i)
+            IFDM4thOmp(matrix.data_size()>=DM4thGlobal::minOmpLoops)
             {
-                for(int j=0; j<matrix.size(); ++j)
+
+                #pragma omp parallel for shared(matrix, before, result)
+                for(int i=0; i<matrix.size(); ++i)
                 {
-                    result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+                    for(int j=0; j<matrix.size(); ++j)
+                    {
+                        result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+                    }
                 }
+
+            }else{
+
+                for(int i=0; i<matrix.size(); ++i)
+                {
+                    for(int j=0; j<matrix.size(); ++j)
+                    {
+                        result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+                    }
+                }
+
             }
         }
         return result;

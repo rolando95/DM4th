@@ -12,8 +12,10 @@ template <class T>
 class _number
 {
     T r=0, i=0;
-
+    
 public:
+    static int precision;
+
     _number(T a = 0, T b = 0)
     {
         this->real() = (T)a;
@@ -481,7 +483,8 @@ inline _number<T> acsch(_number<T>);
 
 // #endif
 
-#if defined DM4thOmp
+#if defined DM4thOmpNumber
+
 #pragma omp declare reduction(+        \
                               : number \
                               : omp_out = (omp_out + omp_in))
@@ -509,4 +512,5 @@ inline _number<T> acsch(_number<T>);
 #define DM4thReductionMin(...) reduction(min \
                                          : __VA_ARGS__)
 #endif
+
 } // namespace DM4th

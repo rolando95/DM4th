@@ -116,30 +116,35 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
         return false;
     }
 
-#if defined DM4thOmpFor
-    #pragma omp parallel shared(result)
+    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
     {
-        int threads = omp_get_num_threads();
-        int j = omp_get_thread_num();
-        while (j < this->size() && result)
+
+        #pragma omp parallel shared(result)
+        {
+            int threads = omp_get_num_threads();
+            int j = omp_get_thread_num();
+            while (j < this->size() && result)
+            {
+                if (this->_data[j] != other.get(j))
+                {
+                    result = false;
+                }
+                j += threads;
+            }
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
         {
             if (this->_data[j] != other.get(j))
             {
                 result = false;
+                break;
             }
-            j += threads;
         }
+
     }
-#else
-    for (int j = 0; j < this->size(); ++j)
-    {
-        if (this->_data[j] != other.get(j))
-        {
-            result = false;
-            break;
-        }
-    }
-#endif
 
     return result;
 }
@@ -157,13 +162,21 @@ const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) + other.get(j));
+
+        #pragma omp parallel for
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) + other.get(j));
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) + other.get(j));
+        }
     }
 
     return *this;
@@ -173,12 +186,22 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) + (T)other);
+
+        #pragma omp parallel for
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) + (T)other);
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) + (T)other);
+        }
+
     }
 
     return *this;
@@ -188,14 +211,24 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) - (T)other);
+        #pragma omp parallel for
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) - (T)other);
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) - (T)other);
+        }
+
     }
+
+
 
     return *this;
 }
@@ -206,17 +239,25 @@ const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) - (T)other.get(j));
+
+        #pragma omp parallel for shared(other)
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) - (T)other.get(j));
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) - (T)other.get(j));
+        }
+
     }
 
     return *this;
-
 }
 
 template <class T>
@@ -224,14 +265,24 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
 
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) * (T)other);
+
+        #pragma omp parallel for
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) * (T)other);
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) * (T)other);
+        }
+
     }
+
     return *this;
 }
 
@@ -239,14 +290,24 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
-
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
-        this->set(j, this->get(j) / (T)other);
+
+        #pragma omp parallel for
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) / (T)other);
+        }
+    
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, this->get(j) / (T)other);
+        }
+
     }
+
     return *this;
 }
 
@@ -254,14 +315,25 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
-    #if defined DM4thOmpFor
-        #pragma omp parallel for shared(other)
-    #endif
 
-    for (int j = 0; j < this->size(); ++j)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
-        this->set(j, fmod(this->get(j), (T)other));
+        
+        #pragma omp parallel for shared(other)
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, fmod(this->get(j), (T)other));
+        }
+
+    }else{
+
+        for (int j = 0; j < this->size(); ++j)
+        {
+            this->set(j, fmod(this->get(j), (T)other));
+        }
+
     }
+
     return *this;
 }
 
@@ -270,8 +342,7 @@ inline void BaseArray<T>::clear()
 {
     this->_size = 0;
     this->_top = 0;
-    if (this->_data == nullptr)
-        return;
+    if (this->_data == nullptr) return;
     delete[] this->_data;
     this->_data = nullptr;
 }

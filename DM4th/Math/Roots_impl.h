@@ -89,8 +89,8 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         return seed;
     }
 
-    #if defined DM4thOmpSections
-
+    IFDM4thOmp(true)
+    {
         number x1 = seed.real();
         number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
@@ -114,7 +114,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         if(abs(f(x1))<tolerance) return x1;
         if(abs(f(y1))<tolerance) return y1;
 
-    #else
+    }else{
 
         number x1 = seed.real();
 
@@ -133,7 +133,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         
         if(abs(f(y1))<tolerance) return y1;
     
-    #endif
+    }
     
     return NAN;
 }
@@ -146,8 +146,9 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         return seed;
     }
 
-    #if defined DM4thOmpSections
-    
+    IFDM4thOmp(true)
+    {
+
         number x1 = seed.real();
         number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
@@ -171,7 +172,7 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         if(abs(f(x1))<tolerance) return x1;
         if(abs(f(y1))<tolerance) return y1;
 
-    #else
+    }else{
 
         number x1 = seed.real();
 
@@ -189,10 +190,12 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         }
         
         if(abs(f(y1))<tolerance) return y1;
+        return abs(f(x1))<abs(f(y1))? x1:y1; // returns the nearest value  
+
+    }
     
-    #endif
+    return NAN;
     
-    return abs(f(x1))<abs(f(y1))? x1:y1; // returns the nearest value
 }
 
 inline number secantMethod(Function f, number seed0, number seed1, number maxIter, number tolerance){
@@ -206,7 +209,9 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         return seed1;
     }
     
-    #if defined DM4thOmpSections
+    IFDM4thOmp(true)
+    {
+
         number x0 = seed0.real(); 
         number x1 = seed1.real();
         number x2;
@@ -237,7 +242,7 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         if(abs(f(x2))<tolerance) return x2;
         if(abs(f(y2))<tolerance) return y2;
 
-    #else
+    }else{
 
         number x0 = seed0.real(); 
         number x1 = seed1.real();
@@ -261,10 +266,12 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         }
 
         if(abs(f(y2))<tolerance) return y2;
+        return abs(f(x2))<abs(f(y2))? x2:y2; // returns the nearest value
 
-    #endif
+    }
 
-    return abs(f(x2))<abs(f(y2))? x2:y2; // returns the nearest value
+    return NAN;
+    
 }
 
 }
