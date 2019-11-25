@@ -4,6 +4,7 @@
 #include "Tree.h"
 #include "Array.h"
 #include "Number.h"
+#include "Utils/_miscellaneos.h"
 
 using std::string;
 using std::cin;

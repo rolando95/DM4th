@@ -5,7 +5,7 @@
 #else
     #include <cassert>
     #if defined __MINGW32__ || defined __MINGW64__
-        #define DM4thAssert(expression, ...) if( !(expression) ){ asm("int $3"); assert(expression);}
+        #define DM4thAssert(expression) if( !(expression) ){ asm("int $3"); assert(expression);}
     #else
         #define DM4thAssert(expression) assert(expression)
     #endif
