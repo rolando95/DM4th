@@ -1,9 +1,8 @@
 #include "../../DM4th/DM4th.h"
-#include "../DM4thTest.h"
 
 int main()
 {
-    TEST("NDArray Copy and Move Data", []{
+    DM4thTest::TEST("NDArray Copy and Move Data", []{
         NDArray<number> A = linespace<number>(0,10,10,false);
         NDArray<number> B;
 
@@ -29,7 +28,7 @@ int main()
         EXPECT_EQ(B.shape(0), 10);
     });
 
-    TEST("NDArray resize, reshape and shape", []{
+    DM4thTest::TEST("NDArray resize, reshape and shape", []{
         NDArray<number> A;
         EXPECT_EQ(A.shape(), 0);
 
@@ -56,7 +55,7 @@ int main()
         EXPECT_EQ(A, items<number>(0,3_i));
     });
 
-    TEST("NDArray push and pop",[]{
+    DM4thTest::TEST("NDArray push and pop",[]{
         NDArray<number> A = items<number>(1,2,3,4,5,6,7);
         A.push(8);
         A.push(0,0);
@@ -85,7 +84,7 @@ int main()
         EXPECT_EQ(A, items<number>(1,2,3,4,5,6,7));
     });
 
-    TEST("NDArray other methods",[]{
+    DM4thTest::TEST("NDArray other methods",[]{
 
         // Sort
         NDArray<number> A = items<number>(5,3,7,6,2,1,4);
@@ -134,5 +133,5 @@ int main()
     });
 
 
-    return TEST::ERROR_LEVEL();
+    return DM4thTest::TEST::ERROR_LEVEL();
 }

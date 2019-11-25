@@ -1,10 +1,8 @@
 #include "../../DM4th/DM4th.h"
-#include "../DM4thTest.h"
-
 int main()
 {
 
-    TEST("NDArray Vector Aritmethic", []{
+    DM4thTest::TEST("NDArray Vector Aritmethic", []{
         NDArray<number> A = range<number>(5), B = items<number>(0);
 
         A += 1;
@@ -48,7 +46,7 @@ int main()
 
     });
 
-    TEST("NDArray Matrix Aritmethic", []{
+    DM4thTest::TEST("NDArray Matrix Aritmethic", []{
         NDArray<number> A = items<number>(
             1,2,
             2,3,
@@ -81,5 +79,5 @@ int main()
         
     });
 
-    return TEST::ERROR_LEVEL();
+    return DM4thTest::TEST::ERROR_LEVEL();
 }

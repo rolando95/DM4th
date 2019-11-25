@@ -1,9 +1,8 @@
 #include "../../DM4th/DM4th.h"
-#include "../DM4thTest.h"
 
 int main()
 {
-    TEST("NDArray Relational operators", []{
+    DM4thTest::TEST("NDArray Relational operators", []{
         NDArray<number> A = map<number>([](number x){return x%3;}, items<number>(0,1,2,3,4));
         NDArray<number> B = items<number>(0,1,2,0,1);
         
@@ -31,7 +30,7 @@ int main()
         
     });
 
-    TEST("NDArray Logical operators", []{
+    DM4thTest::TEST("NDArray Logical operators", []{
         NDArray<bool> A = items<bool>(true,false,true,false);
         NDArray<bool> B = items<bool>(true,true,false,false);
 
@@ -51,5 +50,5 @@ int main()
         EXPECT_EQ( result, items<bool>(false, false, true, false, false, false, false, false, false, false));
     });
 
-    return TEST::ERROR_LEVEL();
+    return DM4thTest::TEST::ERROR_LEVEL();
 }

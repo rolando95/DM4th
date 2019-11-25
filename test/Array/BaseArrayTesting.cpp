@@ -1,9 +1,8 @@
 #include "../../DM4th/DM4th.h"
-#include "../DM4thTest.h"
 
 int main()
 {
-    TEST("BaseArray References", []{
+    DM4thTest::TEST("BaseArray References", []{
 
         DM4thInternal::BaseArray<number> A, B;
 
@@ -23,7 +22,7 @@ int main()
         B.clear(); A.clear();
     });
 
-    TEST("Base Array EQ NEQ", []{
+    DM4thTest::TEST("Base Array EQ NEQ", []{
         DM4thInternal::BaseArray<number> A, B;
 
         A.resize(10);
@@ -45,7 +44,7 @@ int main()
         A.clear(); B.clear();
     });
 
-    TEST("BaseArray Arithmetic", []{
+    DM4thTest::TEST("BaseArray Arithmetic", []{
         DM4thInternal::BaseArray<number> A, B;
 
         A.resize(10);
@@ -81,7 +80,7 @@ int main()
         A.clear(); B.clear(); C.clear();
     });
 
-    TEST("BaseArray Resize", []{
+    DM4thTest::TEST("BaseArray Resize", []{
         DM4thInternal::BaseArray<double> A, B;
         A.resize(5);
         B.resize(5);
@@ -122,5 +121,5 @@ int main()
         EXPECT_EQ(C,D);
     });
 
-    return TEST::ERROR_LEVEL();
+    return DM4thTest::TEST::ERROR_LEVEL();
 }

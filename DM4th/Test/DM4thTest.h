@@ -4,29 +4,40 @@
 #include<iostream>
 #include <chrono>
 
+#include "../Array.h"
+
+namespace DM4th 
+{
+
+namespace DM4thTest
+{
+    
 class TEST
 {
     static int failed;
     static int success;
     public:
 
-    TEST(const char *name, std::function<void(void)> f, int wait=1000)
+    TEST(const char *name, std::function<void(void)> f, int how_many_times=1)
     {
         #ifdef DM4thParallel
             #pragma omp parallel 
             {
                 #pragma omp single
                 {
-                    std::cout<<"Running test: "<<name<<" (Threads:"<<omp_get_num_threads()<<")"<<std::endl;
+                    std::cout<<"Running test: "<<name<<" (Threads:"<<omp_get_num_threads()<<", Times:"<<how_many_times<<")"<<std::endl;
                 }
             }
         #else
-            std::cout<<"Running test: "<<name<<" (Threads:"<<1<<")"<<std::endl;
+            std::cout<<"Running test: "<<name<<" (Threads:"<<1<<", Times:"<<how_many_times<<")"<<std::endl;
         #endif
         try{
             auto start = std::chrono::steady_clock::now();
 
-            f();
+            for(int j=0; j<how_many_times; ++j)
+            {
+                f();
+            }
 
             auto end = std::chrono::steady_clock::now();
 
@@ -54,12 +65,16 @@ bool setAll(const T& a)
 }
 
 template<class T>
-bool setAll(const NDArray<T>& a)
+bool setAll(const DM4th::NDArray<T>& a)
 {
     return a.all(true);
 }
 
+}
+
 #define EXPECT_TRUE(a)  if(!(a))             { std::cout<<"  [ ] Expect true failed.  file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_TRUE("<<#a<<")"<<std::endl<<std::endl; throw 1; }
 #define EXPECT_FALSE(a) if(a)                { std::cout<<"  [ ] Expect false failed. file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_FALSE("<<#a<<")"<<std::endl<<std::endl; throw 1; }
-#define EXPECT_EQ(a,b) if(!setAll((a)==(b))) { std::cout<<"  [ ] Expect EQ failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_EQ("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl<<std::endl;throw 1;}
-#define EXPECT_NE(a,b) if( setAll((a)==(b))) { std::cout<<"  [ ] Expect NE failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_NE("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl<<std::endl;throw 1;}
+#define EXPECT_EQ(a,b) if(!DM4thTest::setAll((a)==(b))) { std::cout<<"  [ ] Expect EQ failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_EQ("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl<<std::endl;throw 1;}
+#define EXPECT_NE(a,b) if( DM4thTest::setAll((a)==(b))) { std::cout<<"  [ ] Expect NE failed.    file:"<<__FILE__<<" line:"<<__LINE__<<" EXPECT_NE("<<#a<<","<<#b<<")\n"<<(a)<<"\nand\n"<<(b)<<std::endl<<std::endl;throw 1;}
+
+}

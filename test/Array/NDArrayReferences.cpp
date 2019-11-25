@@ -1,5 +1,4 @@
 #include "../../DM4th/DM4th.h"
-#include "../DM4thTest.h"
 
 // Assign value into ref array
 NDArray<number> dummyFunction(NDArray<number> array, int idx, number value)
@@ -18,7 +17,7 @@ NDArray<number> dummyFunction2(NDArray<number> array)
 int main()
 {
 
-    TEST("NDArray References", []{
+    DM4thTest::TEST("NDArray References", []{
         NDArray<number> A, B, C;
         A = range<number>(10);
 
@@ -67,5 +66,5 @@ int main()
     });
 
 
-    return TEST::ERROR_LEVEL();
+    return DM4thTest::TEST::ERROR_LEVEL();
 }
