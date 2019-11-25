@@ -31,7 +31,7 @@ class TEST
             auto end = std::chrono::steady_clock::now();
 
             std::cout<<"  [+] Successful";
-            std::cout << std::setprecision(25) <<" (" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms)" << std::endl<<std::endl;
+            std::cout << std::setprecision(15) <<" (" << double(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count())/(1000*1000) << " ms)" << std::endl<<std::endl;
             success += 1;
         }
         catch(...)
