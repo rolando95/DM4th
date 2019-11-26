@@ -94,7 +94,7 @@ inline T &BaseArray<T>::operator()(int idx)
 }
 
 template <class T>
-const inline T BaseArray<T>::get(int idx) const
+const inline T &BaseArray<T>::get(int idx) const
 {
     DM4thAssert(idx < this->size());
     return this->_data[idx];
@@ -116,7 +116,7 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
         return false;
     }
 
-    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
 
         #pragma omp parallel shared(result)
@@ -162,7 +162,7 @@ const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
 
         #pragma omp parallel for
@@ -186,7 +186,7 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
-    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
 
         #pragma omp parallel for
@@ -211,7 +211,7 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
-    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
         #pragma omp parallel for
         for (int j = 0; j < this->size(); ++j)
@@ -239,7 +239,7 @@ const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    IFDM4thOmp(this->size()>DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
     {
 
         #pragma omp parallel for shared(other)

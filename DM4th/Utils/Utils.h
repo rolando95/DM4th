@@ -67,10 +67,13 @@
 namespace DM4th
 {
 
-namespace DM4thGlobal
+class DM4thGlobal
 {
-    static int minOmpLoops = DM4thMinOmpLoops;
-}
+    public:
+        static int minOmpLoops;
+};
+int DM4thGlobal::minOmpLoops = DM4thMinOmpLoops;
+
 
 constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();
@@ -82,34 +85,95 @@ constexpr int ALL = std::numeric_limits<int>::max();
 namespace DM4thUtils
 {
 
-template<class T>
-T mult(T last){
-    return last;
-}
-template<class T, class ... U>
-T mult(T first, U ... args){
-    return first*mult(args...);
-}
+    template<class T>
+    T mult(T last){
+        return last;
+    }
+    template<class T, class ... U>
+    T mult(T first, U ... args){
+        return first*mult(args...);
+    }
 
 
-template<class T>
-T sum(T last){
-    return last;
-}
-template<class T, class ... U>
-T sum(T first, U ... args){
-    return first+sum(args...);
-}
+    template<class T>
+    T sum(T last){
+        return last;
+    }
+    template<class T, class ... U>
+    T sum(T first, U ... args){
+        return first+sum(args...);
+    }
 
-template<class T>
-int count(T last){
-    return 1;
-}
-template<class T, class ... U>
-int count(T first, U ... args){
-    return 1+count(args...);
-}
+    template<class T>
+    int count(T last){
+        return 1;
+    }
+    template<class T, class ... U>
+    int count(T first, U ... args){
+        return 1+count(args...);
+    }
 
+    /*
+        Loop in parallel over array elements
+    */
+    template<class T>
+    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, int size)
+    {
+        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        {
+            #pragma omp parallel for
+            for(int j=0; j<size; ++j)
+            {
+                f(arr[j], j);
+            }  
+
+        }else{
+            for(int j=0; j<size; ++j)
+            {
+                f(arr[j], j);
+            }
+        }
+    }
+
+    /*
+        Loop in parallel over array elements
+        break parallel loop when return value is false
+    */
+    template<class T>
+    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, int size)
+    {
+        bool result = true;
+
+        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        {
+            #pragma omp parallel shared(result)
+            {
+                int threads = omp_get_num_threads();
+                int j = omp_get_thread_num();
+                while (j < size && result)
+                {
+                    if(!f(arr[j], j))
+                    {
+                        #pragma omp critical
+                        {
+                            result = false;
+                        }
+                    }
+                    j += threads;
+                }
+            }
+
+        }else{
+
+            for(int j=0; j<size; ++j)
+            {
+                if(!f(arr[j], j)) break;
+            }
+
+        }
+
+        return result;
+    }
 }
 
 namespace DM4thInternal 

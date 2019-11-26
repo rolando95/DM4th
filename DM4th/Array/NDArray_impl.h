@@ -1380,7 +1380,7 @@ template<class T>
 inline T &NDArray<T>::data_item(int idx) { return this->_data->array[idx]; }
 
 template<class T>
-inline const T NDArray<T>::data_item(int idx) const { return this->_data->array.get(idx); }
+inline const T &NDArray<T>::data_item(int idx) const { return this->_data->array.get(idx); }
 
 template<class T>
 NDArray<int> NDArray<T>::_getAxisDisplacement() const

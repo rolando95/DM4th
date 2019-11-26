@@ -136,7 +136,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         inline T *data_copy();
         inline const int data_size() const;
         inline T &data_item(int idx);
-        inline const T data_item(int idx) const;
+        inline const T &data_item(int idx) const;
         
         NDArray<int> _getAxisDisplacement() const;
         int _getAxisDisplacement(int axis) const;
