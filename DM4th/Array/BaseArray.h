@@ -63,6 +63,7 @@ class BaseArray
         }
 
         inline T* data() { return this->_data; }
+        inline const T* data() const { return this->_data; }
 };
 
 template<class T>

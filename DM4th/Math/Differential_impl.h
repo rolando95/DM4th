@@ -63,26 +63,17 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
     if(iter<=0) return v;
     else{
 
+
+
         if(v.shape(0) >= 2){
             NDArray<number> diffV;
             diffV.resize(v.shape(0)-1);
             
-            IFDM4thOmp(v.size()>=DM4thGlobal::minOmpLoops)
-            {
-
-                #pragma omp parallel for
-                for(auto j=0; j<v.shape(0)-1; ++j){
-                    diffV(j) = (v(j+1) - v(j));
-                }
-
-            }else
-            {
-
-               for(auto j=0; j<v.shape(0)-1; ++j){
-                    diffV(j) = (v(j+1) - v(j));
-                }
-
-            }
+            DM4thUtils::parallelLoopItems<number>([&](number&item, const int j) {
+                item = (v(j+1) - v(j));
+            },
+            diffV.data(), diffV.data_size()
+            );
 
             return diff(diffV,iter - 1);
         }else{
@@ -97,7 +88,8 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     number h = (b-a)/n;
     
     number s=0;
-
+    
+    // DM4thLoopItems REDUCTION
     IFDM4thOmp(n>=DM4thGlobal::minOmpLoops)
     {
 

@@ -72,6 +72,8 @@ namespace DM4th
         {
             before = result.getCopy();
 
+
+            // DM4thLoopItems MATRIX
             IFDM4thOmp(matrix.data_size()>=DM4thGlobal::minOmpLoops)
             {
                 #pragma omp parallel for shared(matrix, before, result)
@@ -110,7 +112,7 @@ namespace DM4th
         {
             before = result.getCopy();
 
-
+            // DM4thLoopItems MATRIX
             IFDM4thOmp(matrix.data_size()>=DM4thGlobal::minOmpLoops)
             {
 

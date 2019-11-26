@@ -115,38 +115,12 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
     {
         return false;
     }
-
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel shared(result)
-        {
-            int threads = omp_get_num_threads();
-            int j = omp_get_thread_num();
-            while (j < this->size() && result)
-            {
-                if (this->_data[j] != other.get(j))
-                {
-                    result = false;
-                }
-                j += threads;
-            }
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            if (this->_data[j] != other.get(j))
-            {
-                result = false;
-                break;
-            }
-        }
-
-    }
-
-    return result;
+    
+    return DM4thUtils::parallelLoopItemsCond<T>([&](T&item, const int j)->bool {
+            return item == other.get(j);
+        },
+        this->_data, this->_size
+    );
 }
 
 template <class T>
@@ -162,22 +136,11 @@ const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + other.get(j));
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + other.get(j));
-        }
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item += other.get(j);
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -186,23 +149,11 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + (T)other);
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) + (T)other);
-        }
-
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item += other;
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -211,24 +162,11 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-        #pragma omp parallel for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) - (T)other);
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) - (T)other);
-        }
-
-    }
-
-
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item -= other;
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -239,23 +177,11 @@ const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel for shared(other)
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) - (T)other.get(j));
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) - (T)other.get(j));
-        }
-
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item -= other.get(j);
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -265,23 +191,11 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
 
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) * (T)other);
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) * (T)other);
-        }
-
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item *= other;
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -290,23 +204,11 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-
-        #pragma omp parallel for
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) / (T)other);
-        }
-    
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, this->get(j) / (T)other);
-        }
-
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item /= other;
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }
@@ -316,23 +218,11 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
 
-    IFDM4thOmp(this->size()>=DM4thGlobal::minOmpLoops)
-    {
-        
-        #pragma omp parallel for shared(other)
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, fmod(this->get(j), (T)other));
-        }
-
-    }else{
-
-        for (int j = 0; j < this->size(); ++j)
-        {
-            this->set(j, fmod(this->get(j), (T)other));
-        }
-
-    }
+    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
+            item = (T)fmod(item, other);
+        },
+        this->_data, this->_size
+    );
 
     return *this;
 }

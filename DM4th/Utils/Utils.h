@@ -117,7 +117,29 @@ namespace DM4thUtils
         Loop in parallel over array elements
     */
     template<class T>
-    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, int size)
+    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size)
+    {
+        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        {
+            #pragma omp parallel for
+            for(int j=0; j<size; ++j)
+            {
+                f(arr[j], j);
+            }  
+
+        }else{
+            for(int j=0; j<size; ++j)
+            {
+                f(arr[j], j);
+            }
+        }
+    }
+
+    /*
+        Loop in parallel over const array elements
+    */
+    template<class T>
+    inline void parallelLoopItems(const std::function<void(const T& item, const int &idx)> &f, const T* arr, const int size)
     {
         IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
         {
@@ -140,7 +162,7 @@ namespace DM4thUtils
         break parallel loop when return value is false
     */
     template<class T>
-    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, int size)
+    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, const int size)
     {
         bool result = true;
 
@@ -156,6 +178,7 @@ namespace DM4thUtils
                     {
                         #pragma omp critical
                         {
+                            
                             result = false;
                         }
                     }
@@ -167,11 +190,58 @@ namespace DM4thUtils
 
             for(int j=0; j<size; ++j)
             {
-                if(!f(arr[j], j)) break;
+                if(!f(arr[j], j)) 
+                {
+                    result = false;
+                    break;
+                }
             }
 
         }
+        return result;
+    }
 
+    /*
+        Loop in parallel over const array elements
+        break parallel loop when return value is false
+    */
+    template<class T>
+    inline bool parallelLoopItemsCond(const std::function<bool(const T& item, const int &idx)> &f, const T* arr, const int size)
+    {
+        bool result = true;
+
+        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        {
+            #pragma omp parallel shared(result)
+            {
+                int threads = omp_get_num_threads();
+                int j = omp_get_thread_num();
+                while (j < size && result)
+                {
+                    if(!f(arr[j], j))
+                    {
+                        #pragma omp critical
+                        {
+                            
+                            result = false;
+                        }
+                    }
+                    j += threads;
+                }
+            }
+
+        }else{
+
+            for(int j=0; j<size; ++j)
+            {
+                if(!f(arr[j], j)) 
+                {
+                    result = false;
+                    break;
+                }
+            }
+
+        }
         return result;
     }
 }

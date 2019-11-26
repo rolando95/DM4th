@@ -17,6 +17,7 @@ int main()
 
         EXPECT_EQ( C> A, items<bool>(false,true,false,true,false));
         EXPECT_EQ( C>=A, items<bool>(true,true,false,true,true));
+        EXPECT_NE( C>=A, items<bool>(true,false,true,true,true));
         EXPECT_EQ( C< A, items<bool>(false,false,true,false,false));
         EXPECT_EQ( C<=A, items<bool>(true,false,true,false,true));
         EXPECT_EQ( C==A, items<bool>(true,false,false,false,true));
@@ -27,6 +28,8 @@ int main()
         EXPECT_EQ( (A>=4), items<bool>(false,false,false,false,true));
         EXPECT_EQ( (A< 2), items<bool>(true,true,false,false,false));
         EXPECT_EQ( (A<=2), items<bool>(true,true,true,false,false));
+        EXPECT_EQ( (A==2), items<bool>(false,false,true,false,false));
+        EXPECT_EQ( (A!=2), items<bool>(true,true,false,true,true));
         
     });
 

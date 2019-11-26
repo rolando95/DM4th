@@ -33,6 +33,7 @@ inline number factorial2(const number iter)
     int n = abs(round(iter)).real();
     int x = 1;
 
+    // DM4thLoopItems REDUCTION
     IFDM4thOmp(n>=DM4thGlobal::minOmpLoops)
     {
 

@@ -20,6 +20,10 @@ int main()
 
         EXPECT_EQ(B,items<number>(0,0,0));
 
+        NDArray<number> C = items<number>(10);
+        C -= items<number>(1,2,3);
+        EXPECT_EQ(C,items<number>(9,8,7));
+        
         A = items<number>(-1_i,0,1,2,3);
         B = items<number>( 5_i,4,3,2,1);
 
