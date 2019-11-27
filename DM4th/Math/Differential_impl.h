@@ -131,4 +131,19 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     */
 }
 
+// Runge-Kutta 4
+inline number RK4(std::function<number(number,number)> fd, number t0, number w, number tn, number iter)
+{
+    number k1, k2, k3, k4;
+    number h = (tn - t0) / iter;
+    for(number t=0; t<tn; t+=h)
+    {
+        k1 = h * fd(t    , w);
+        k2 = h * fd(t+h/2, w+k1/2);
+        k3 = h * fd(t+h/2, w+k2/2);
+        k4 = h * fd(t+h  , w+k3);
+        w = w + (k1 + 2*k2 + 2*k3 + k4)/6;
+    }
+    return w;
+}
 }

@@ -23,4 +23,9 @@ inline NDArray<number> diff(NDArray<number>, number=1);
 // integral(f, begin, end, subintervals=99)
 inline number integral(Function f, const number&, const number&, const number subintervals=1000);
 
+/* 
+ Runge-Kutta method of order 4
+*/
+inline number RK4(std::function<number(number t,number y)> fd, number t0, number y0, number tn, number iter=100);
+
 }

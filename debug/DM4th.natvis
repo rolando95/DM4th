@@ -14,6 +14,10 @@
         <DisplayString Condition="i==0">{r}</DisplayString>
         <DisplayString Condition="i!=0">{r} + {i}i</DisplayString>
     </Type>
+    <Type Name="DM4th::number">
+        <DisplayString Condition="i==0">{r}</DisplayString>
+        <DisplayString Condition="i!=0">{r} + {i}i</DisplayString>
+    </Type>
     <Type Name="DM4th::DM4thInternal::BaseArray&lt;*&gt;">
         <DisplayString>BaseArray</DisplayString>
     </Type>
