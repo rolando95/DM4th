@@ -21,6 +21,8 @@ inline number operator""_i(unsigned long long int a){
 }
 
 #ifndef DM4thOnlyStandardLiterals
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 inline number operator""i(unsigned long long int a){
     return number(0,a);
@@ -30,6 +32,7 @@ inline number operator""i(long double a){
     return number(0,a);
 }
 
+#pragma GCC diagnostic pop
 #endif
 
 template<class T>

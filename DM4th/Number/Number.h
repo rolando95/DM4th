@@ -3,7 +3,6 @@
 #include <iostream>
 #include "../Utils/Utils.h"
 //#include "../Math/Math.h"
-#pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 namespace DM4th
 {
@@ -144,6 +143,8 @@ inline number operator""_i(long double);
 inline number operator""_i(unsigned long long int);
 
 #ifndef DM4thOnlyStandardLiterals
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
 
 // Conversion de expresion literal <double>i a tipo numero
 inline number operator""i(long double);
@@ -151,6 +152,7 @@ inline number operator""i(long double);
 // Conversion de expresion literal <entero>i a tipo numero
 inline number operator""i(unsigned long long int);
 
+#pragma GCC diagnostic pop
 #endif
 
 // Cambio a signo negativo
