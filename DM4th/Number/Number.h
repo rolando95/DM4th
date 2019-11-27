@@ -14,7 +14,6 @@ class _number
     T r=0, i=0;
     
 public:
-    static int precision;
 
     _number(T a = 0, T b = 0)
     {

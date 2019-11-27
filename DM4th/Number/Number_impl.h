@@ -5,9 +5,6 @@
 namespace DM4th
 {
 
-template<class T>
-int _number<T>::precision = 10;
-
 inline number strTonumber(std::string str){
     number result;
     std::stringstream ss(str);
@@ -47,7 +44,7 @@ std::ostream& operator<<(std::ostream& stream, _number<T> n){
     else if(n.real() == -INF) { stream<<"-INF"; return stream; }
     else if(std::isnan(n.real())) { stream<<"NAN"; return stream; }
 
-    n = round(n,_number<T>::precision); // Es necesario corregir problemas de redondeo
+    n = round(n,DM4thConfig::outputNumberPrecision); // Es necesario corregir problemas de redondeo
     //stream
     if(n==0) { stream<<"0"; return stream; }
 

@@ -603,7 +603,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         result.resize(1);
 
         // ParallelLoopItems REDUCTION //////////////////////////////////////////////
-        IFDM4thOmp(this->shape(0)>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(this->shape(0)>=DM4thConfig::minOmpLoops)
         {
             T r = 0;
             #pragma omp parallel for shared(other) reduction(+:r)
@@ -633,7 +633,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 
         result.resize(maxX,maxY);
         
-        IFDM4thOmp(this->data_size()>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(this->data_size()>=DM4thConfig::minOmpLoops)
         {
 
             #pragma omp parallel for shared(other)

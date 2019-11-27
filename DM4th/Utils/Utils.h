@@ -28,6 +28,8 @@
 
 #include <omp.h>
 
+#include "DM4thConfig.h"
+
 // Check windows
 #if _WIN32 || _WIN64
     #if _WIN64
@@ -60,19 +62,10 @@
 //Declare number reductions, etc.
 #define DM4thOmpNumber
 
-#ifndef DM4thMinOmpLoops
-    #define DM4thMinOmpLoops 100
-#endif
+
 
 namespace DM4th
 {
-
-class DM4thGlobal
-{
-    public:
-        static int minOmpLoops;
-};
-int DM4thGlobal::minOmpLoops = DM4thMinOmpLoops;
 
 
 constexpr int BEGIN = 0;
@@ -119,7 +112,7 @@ namespace DM4thUtils
     template<class T>
     inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size)
     {
-        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
         {
             #pragma omp parallel for
             for(int j=0; j<size; ++j)
@@ -141,7 +134,7 @@ namespace DM4thUtils
     template<class T>
     inline void parallelLoopItems(const std::function<void(const T& item, const int &idx)> &f, const T* arr, const int size)
     {
-        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
         {
             #pragma omp parallel for
             for(int j=0; j<size; ++j)
@@ -166,7 +159,7 @@ namespace DM4thUtils
     {
         bool result = true;
 
-        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
         {
             #pragma omp parallel shared(result)
             {
@@ -210,7 +203,7 @@ namespace DM4thUtils
     {
         bool result = true;
 
-        IFDM4thOmp(size>=DM4thGlobal::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
         {
             #pragma omp parallel shared(result)
             {

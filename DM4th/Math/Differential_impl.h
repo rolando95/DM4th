@@ -90,7 +90,7 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     number s=0;
     
     // DM4thLoopItems REDUCTION
-    IFDM4thOmp(n>=DM4thGlobal::minOmpLoops)
+    IFDM4thOmp(n>=DM4thConfig::minOmpLoops)
     {
 
         #pragma omp parallel for DM4thReductionSum(s)
