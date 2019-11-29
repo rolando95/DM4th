@@ -112,7 +112,7 @@ namespace DM4thUtils
     template<class T>
     inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size)
     {
-        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
         {
             #pragma omp parallel for
             for(int j=0; j<size; ++j)
@@ -134,7 +134,7 @@ namespace DM4thUtils
     template<class T>
     inline void parallelLoopItems(const std::function<void(const T& item, const int &idx)> &f, const T* arr, const int size)
     {
-        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
         {
             #pragma omp parallel for
             for(int j=0; j<size; ++j)
@@ -159,7 +159,7 @@ namespace DM4thUtils
     {
         bool result = true;
 
-        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
         {
             #pragma omp parallel shared(result)
             {
@@ -203,7 +203,7 @@ namespace DM4thUtils
     {
         bool result = true;
 
-        IFDM4thOmp(size>=DM4thConfig::minOmpLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
         {
             #pragma omp parallel shared(result)
             {

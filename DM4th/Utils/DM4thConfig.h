@@ -2,14 +2,14 @@
 namespace DM4thConfig
 {
 
-#ifndef DM4thMinOmpLoops
-    #define DM4thMinOmpLoops 100
+#ifndef DM4thMinParallelLoops
+    #define DM4thMinParallelLoops 100
 #endif
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
-    static int minOmpLoops = DM4thMinOmpLoops;
+    static int minParallelLoops = DM4thMinParallelLoops;
     static int outputNumberPrecision = 10;
 
 #pragma GCC diagnostic pop

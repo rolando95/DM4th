@@ -74,7 +74,7 @@ namespace DM4th
 
 
             // DM4thLoopItems MATRIX
-            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minOmpLoops)
+            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
             {
                 #pragma omp parallel for shared(matrix, before, result)
                 for(int i=0; i<matrix.size(); ++i)
@@ -113,7 +113,7 @@ namespace DM4th
             before = result.getCopy();
 
             // DM4thLoopItems MATRIX
-            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minOmpLoops)
+            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
             {
 
                 #pragma omp parallel for shared(matrix, before, result)

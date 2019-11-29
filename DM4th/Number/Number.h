@@ -113,6 +113,7 @@ public:
 
 
 typedef _number<double> number;
+typedef _number<float> fnumber;
 
 // template<typename T>
 // using enable_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
@@ -136,20 +137,20 @@ static const number _i(0, 1);
 // Convert string to number
 inline number strTonumber(std::string);
 
-// Conversion de expresion literal <double>i a tipo numero
+// Conversion de expresion literal <double>i a tipo number
 inline number operator""_i(long double);
 
-// Conversion de expresion literal <entero>i a tipo numero
+// Conversion de expresion literal <entero>i a tipo number
 inline number operator""_i(unsigned long long int);
 
 #ifndef DM4thOnlyStandardLiterals
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
 
-// Conversion de expresion literal <double>i a tipo numero
+// Conversion de expresion literal <double>i a tipo number
 inline number operator""i(long double);
 
-// Conversion de expresion literal <entero>i a tipo numero
+// Conversion de expresion literal <entero>i a tipo number
 inline number operator""i(unsigned long long int);
 
 #pragma GCC diagnostic pop

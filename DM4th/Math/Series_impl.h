@@ -34,7 +34,7 @@ inline number factorial2(const number iter)
     int x = 1;
 
     // DM4thLoopItems REDUCTION
-    IFDM4thOmp(n>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp(n>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel for DM4thReductionMult(x)
@@ -58,7 +58,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    IFDM4thOmp(v.shape(0)/iter>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp(v.shape(0)/iter>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel for DM4thReductionSum(x)
@@ -81,7 +81,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
 inline number sumatory(Function f,  number begin,  number end, const number increment ){
     number x=0;
 
-    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel  DM4thReductionSum(x)
@@ -110,7 +110,7 @@ inline number sumatory(NDArray<number> v, number begin, number end, number incre
     number x=0;
     if(end==END) end = v.shape(0);
 
-    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel  DM4thReductionSum(x)
@@ -140,7 +140,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    IFDM4thOmp(v.shape(0)/increment>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp(v.shape(0)/increment>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel for DM4thReductionMult(x)
@@ -163,7 +163,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
 inline number product(Function f, number begin, number end, const number increment){
     number x=1;
 
-    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel  DM4thReductionMult(x)
@@ -193,7 +193,7 @@ inline number product(NDArray<number> v, number begin, number end, number increm
     number x=1;
     if(end==END) end = v.shape(0);
 
-    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minOmpLoops)
+    IFDM4thOmp((end-begin)/increment>=DM4thConfig::minParallelLoops)
     {
 
         #pragma omp parallel  DM4thReductionMult(x) shared(v)
