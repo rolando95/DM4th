@@ -11,14 +11,21 @@ namespace DM4th
 
 namespace DM4thTest
 {
-    
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
+    static int failed = 0;
+    static int success = 0;
+
+#pragma GCC diagnostic pop
+
 class TEST
 {
-    static int failed;
-    static int success;
+
     public:
 
-    TEST(const char *name, std::function<void(void)> f, int how_many_times=1)
+    inline TEST(const char *name, std::function<void(void)> f, int how_many_times=1)
     {
         #ifdef DM4thParallel
             #pragma omp parallel 
@@ -43,20 +50,17 @@ class TEST
 
             std::cout<<"  [+] Successful";
             std::cout << std::setprecision(15) <<" (" << double(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count())/(1000*1000) << " ms)" << std::endl<<std::endl;
-            success += 1;
+            DM4thTest::success += 1;
         }
         catch(...)
         {
-            failed += 1;
+            DM4thTest::failed += 1;
             std::cout<< "--TEST FAILED--" <<std::endl;
         }
     }
 
     static int ERROR_LEVEL(){ return (failed)? 1:0; };
 };
-
-int TEST::failed = 0;
-int TEST::success = 0;
 
 template<class T>
 bool setAll(const T& a)

@@ -13,7 +13,6 @@ os:
 
 language: 
   - cpp
-  - python
 
 script:
   - cd test/

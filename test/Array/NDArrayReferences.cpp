@@ -1,4 +1,5 @@
 #include "../../DM4th/DM4th.h"
+#include "../../DM4th/Test/DM4thTest.h"
 
 // Assign value into ref array
 NDArray<number> dummyFunction(NDArray<number> array, int idx, number value)

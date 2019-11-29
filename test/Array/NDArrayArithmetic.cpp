@@ -1,4 +1,6 @@
 #include "../../DM4th/DM4th.h"
+#include "../../DM4th/Test/DM4thTest.h"
+
 int main()
 {
 
