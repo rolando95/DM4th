@@ -17,4 +17,4 @@ language:
 
 script:
   - cd test/
-  - python3 testing.py usevalgrind
+  - sh test.sh usevalgrind
