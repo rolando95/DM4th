@@ -20,6 +20,12 @@
     </Type>
     <Type Name="DM4th::DM4thInternal::BaseArray&lt;*&gt;">
         <DisplayString>BaseArray</DisplayString>
+        <Expand>
+            <ArrayItems Condition="_data!=0" >
+                <Size>_size</Size>
+                <ValuePointer>_data</ValuePointer>
+            </ArrayItems>
+        </Expand>
     </Type>
     <Type Name="DM4th::DM4thInternal::ArrayDataManager&lt;*&gt;">
         <DisplayString>ArrayDataManager</DisplayString>
@@ -29,5 +35,12 @@
     </Type>
     <Type Name="DM4th::DM4thInternal::ShapeData">
         <DisplayString>ShapeData</DisplayString>
+        <Expand>
+            <ArrayItems Condition="_data!=0" >
+                <Size>_size</Size>
+                <ValuePointer>_data</ValuePointer>
+            </ArrayItems>
+        </Expand>
     </Type>
+
 </AutoVisualizer>

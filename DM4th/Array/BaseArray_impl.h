@@ -308,21 +308,27 @@ void ArrayData<T>::moveDataTo(ArrayData<T> &other)
 template <class T>
 void ArrayDataManager<T>::incrRef()
 {
-    if (this->_data == nullptr)
+    #pragma omp critical
     {
-        this->_data = new ArrayData<T>();
+        if (this->_data == nullptr)
+        {
+            this->_data = new ArrayData<T>();
+        }
+        this->_data->incrRef();
     }
-    this->_data->incrRef();
 }
 
 template <class T>
 void ArrayDataManager<T>::decrRef()
 {
-    this->_data->decrRef();
-    if (this->_data->refCount() <= 0)
+    #pragma omp critical
     {
-        delete this->_data;
-        this->_data = nullptr;
+        this->_data->decrRef();
+        if (this->_data->refCount() <= 0)
+        {
+            delete this->_data;
+            this->_data = nullptr;
+        }
     }
 }
 

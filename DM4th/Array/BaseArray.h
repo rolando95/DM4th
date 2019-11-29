@@ -79,7 +79,7 @@ template<class T>
 class ArrayData
 {
     private:
-        std::atomic<int> _ref{0};
+        int _ref = 0;
     public:
 
         ShapeData    shape;
