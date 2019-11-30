@@ -62,17 +62,18 @@ inline number derivative(Function f, const number x0, const number order, const 
 inline NDArray<number> diff(NDArray<number> v, number iter){
     if(iter<=0) return v;
     else{
-
-
-
         if(v.shape(0) >= 2){
             NDArray<number> diffV;
             diffV.resize(v.shape(0)-1);
             
-            DM4thUtils::parallelLoopItems<number>([&](number&item, const int j) {
-                item = (v(j+1) - v(j));
-            },
-            diffV.data(), diffV.data_size()
+            DM4thUtils::parallelLoopItems<int>(
+                0, diffV.data_size(), 1, // from, to, step
+
+                [&](const int &j) 
+                {
+                    diffV(j) = (v(j+1) - v(j));
+                }
+                
             );
 
             return diff(diffV,iter - 1);
@@ -87,12 +88,15 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     int n = subintervals.real();
     number h = (b-a)/n;
     
-    number s = DM4thUtils::parallelLoopReduceS<number, DM4thUtils::ReduceOp::SUM>(
-        [&](number acum, number item)
+    number s = DM4thUtils::parallelLoopReduce<number, int>(
+        DM4thUtils::ReduceOp::SUM, 
+        0, n, 1, // from, to, step
+        
+        [&](const number &acum, const int &j)
         {
-            return acum + f(a+h*(item+0.5));
+            return acum + f(a+h*(j+0.5));
         }
-    , 0, n, 1);
+    );
 
     return s*h;
 

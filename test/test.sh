@@ -25,6 +25,11 @@ do
     g++ $file -o test -ggdb3 -Wall -std=c++11 -pedantic -D DM4thOnlyStandardLiterals -D DM4thParallel -D DM4thMinParallelLoops=1 -fopenmp
     if [ $? -ne 0 ]; then exit 1; fi
 
-    ./test
+    if [ "$1" = "usevalgrind" ]
+    then
+        valgrind  --show-leak-kinds=all --error-exitcode=1  --show-possibly-lost=no ./test
+    else
+        ./test
+    fi
     if [ $? -ne 0 ]; then exit 1; fi
 done

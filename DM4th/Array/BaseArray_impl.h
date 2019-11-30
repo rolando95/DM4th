@@ -93,6 +93,13 @@ inline T &BaseArray<T>::operator()(int idx)
     return this->_data[idx];
 }
 
+template<class T>
+inline T &BaseArray<T>::item(int idx)
+{
+    DM4thAssert(idx < this->size());
+    return this->_data[idx];
+}
+
 template <class T>
 const inline T &BaseArray<T>::get(int idx) const
 {
@@ -115,10 +122,13 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
         return false;
     }
     
-    return DM4thUtils::parallelLoopItemsCond<T>([&](T&item, const int j)->bool {
-            return item == other.get(j);
-        },
-        this->_data, this->_size
+    return DM4thUtils::parallelLoopItemsCond<int>(
+        0, this->_size, 1, //from, to, step
+
+        [&](const int &j)->bool 
+        {
+            return this->get(j) == other.get(j);
+        }
     );
 }
 
@@ -135,10 +145,14 @@ const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item += other.get(j);
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) += other.get(j);
+        }
+       
     );
 
     return *this;
@@ -148,10 +162,13 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item += other;
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) += other;
+        }
     );
 
     return *this;
@@ -161,10 +178,14 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item -= other;
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) -= other;
+        }
+        
     );
 
     return *this;
@@ -176,10 +197,14 @@ const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
     DM4thAssert(this->size() == other.size());
 
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item -= other.get(j);
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) -= other.get(j);
+        }
+
     );
 
     return *this;
@@ -190,10 +215,14 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
 
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item *= other;
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) *= other;
+        }
+
     );
 
     return *this;
@@ -203,10 +232,14 @@ template <class T>
 template <class U>
 const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item /= other;
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->item(j) /= other;
+        }
+    
     );
 
     return *this;
@@ -217,10 +250,14 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
 
-    DM4thUtils::parallelLoopItems<T>([&](T&item, const int j) {
-            item = (T)fmod(item, other);
-        },
-        this->_data, this->_size
+    DM4thUtils::parallelLoopItems<int>(
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->set(j, (T)fmod(this->get(j), other));
+        }
+
     );
 
     return *this;

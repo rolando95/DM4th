@@ -116,7 +116,7 @@ namespace DM4thUtils
         Loop in parallel over range
     */
     template<class T>
-    inline void parallelLoopItemsS(const std::function<void(T& item)> &f, const T from, const T to, const T step=1, bool forceParallel=false)
+    inline void parallelLoopItems(const T &from, const T &to, const T &step, const std::function<void(T& item)> &f, const bool &forceParallel=false)
     {
         #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
         for(T j=from; j<to; j+=step)
@@ -125,37 +125,38 @@ namespace DM4thUtils
         }
     }
 
-    /*
-        Loop in parallel over array elements
-    */
-    template<class T>
-    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size, bool forceParallel=false)
-    {
-        #pragma omp parallel for IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
-        for(int j=0; j<size; ++j)
-        {
-            f(arr[j], j);
-        }  
-    }
+    // /*
+    //     Loop in parallel over array elements
+    // */
+    // template<class T>
+    // inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size, bool forceParallel=false)
+    // {
+    //     #pragma omp parallel for IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
+    //     for(int j=0; j<size; ++j)
+    //     {
+    //         f(arr[j], j);
+    //     }  
+    // }
 
     /*
         Loop in parallel over array elements
         break parallel loop when return value is false
     */
     template<class T>
-    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, const int size, bool forceParallel=false)
+    inline bool parallelLoopItemsCond(const T &from, const T &to, const T &step, const std::function<bool(T& item)> &f, const bool &forceParallel=false)
     {
         bool result = true;
+        T size = (to-from)/step;
 
         IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
         {
             #pragma omp parallel shared(result)
             {
-                int pStep = omp_get_num_threads();
-                int j = omp_get_thread_num();
+                T pStep = omp_get_num_threads()*step;
+                T j = omp_get_thread_num()*step+from;
                 while (j < size && result)
                 {
-                    if(!f(arr[j], j))
+                    if(!f(j))
                     {
                         #pragma omp critical
                         {
@@ -171,7 +172,7 @@ namespace DM4thUtils
 
             for(int j=0; j<size; ++j)
             {
-                if(!f(arr[j], j)) 
+                if(!f(j)) 
                 {
                     result = false;
                     break;
@@ -187,8 +188,8 @@ namespace DM4thUtils
         SUM, SUB, MUL, DIV
     };
 
-    template<class T, ReduceOp op>
-    inline void reduceOp(T& op1, T& op2)
+    template<class T>
+    inline void reduceOp(const ReduceOp &op, T& op1, T& op2)
     {
         switch (op)
         {
@@ -215,60 +216,60 @@ namespace DM4thUtils
         The function must be return the reduce operation to calculate a local value for each thread.
         The reduceFunction must be return the reduce operation of local values.
     */
-    template<class T, ReduceOp op>
-    inline T parallelLoopReduce(const std::function<T(T acum, T item, int idx)> &f, T *arr, const int size, T initValue=0, bool forceParallel=false)
-    {
-        T result = initValue;
+    // template<class T, ReduceOp op>
+    // inline T parallelLoopReduce(const std::function<T(T acum, T item, int idx)> &f, T *arr, const int size, T initValue=0, bool forceParallel=false)
+    // {
+    //     T result = initValue;
 
-        IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
-        {
+    //     IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
+    //     {
 
-            #pragma omp parallel shared(result)
-            {
-                int pStep = omp_get_num_threads();
-                int j = omp_get_thread_num();
+    //         #pragma omp parallel shared(result)
+    //         {
+    //             int pStep = omp_get_num_threads();
+    //             int j = omp_get_thread_num();
 
-                T lResult = initValue;
+    //             T lResult = initValue;
                 
-                // Map
-                while (j < size)
-                {
-                    lResult = f(lResult, arr[j], j);
-                    j += pStep;
-                }
+    //             // Map
+    //             while (j < size)
+    //             {
+    //                 lResult = f(lResult, arr[j], j);
+    //                 j += pStep;
+    //             }
 
-                // Reduce
-                #pragma omp critical
-                {
-                    reduceOp<T, op>(result, lResult);
-                }
-            }
+    //             // Reduce
+    //             #pragma omp critical
+    //             {
+    //                 reduceOp<T, op>(result, lResult);
+    //             }
+    //         }
 
-        }else{
+    //     }else{
 
-            for(int j=0; j<size; ++j)
-            {
-                result = f(result, arr[j], j);
-            }
+    //         for(int j=0; j<size; ++j)
+    //         {
+    //             result = f(result, arr[j], j);
+    //         }
 
-        }
-        return result;
-    }
+    //     }
+    //     return result;
+    // }
 
 
-    template<class T, ReduceOp op>
-    inline T parallelLoopReduceS(const std::function<T(T acum, T item)> &f, const T from, const T to, const T step=1, T initValue=0, bool forceParallel=false)
+    template<class Type, class Iter>
+    inline Type parallelLoopReduce(const ReduceOp &op, const Iter &from, const Iter &to, const Iter &step, const std::function<Type(Type acum, Iter item)> &f, const Type &initValue=0, const bool &forceParallel=false)
     {
-        T result = initValue;
+        Type result = initValue;
 
         IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
         {
             #pragma omp parallel shared(result)
             {
-                T pStep = omp_get_num_threads()*step;
-                T j = omp_get_thread_num()*step+from;
+                Iter pStep = omp_get_num_threads()*step;
+                Iter j = omp_get_thread_num()*step+from;
     
-                T lResult = initValue;
+                Type lResult = initValue;
 
                 while (j < to)
                 {
@@ -278,12 +279,12 @@ namespace DM4thUtils
 
                 #pragma omp critical
                 {
-                    reduceOp<T, op>(result, lResult);
+                    reduceOp<Type>(op, result, lResult);
                 }
             }
 
         }else{
-            for(T j=from; j<to; j+=step)
+            for(Iter j=from; j<to; j+=step)
             {
                 result = f(result, j);
             }

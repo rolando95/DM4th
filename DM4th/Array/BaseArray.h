@@ -31,6 +31,7 @@ class BaseArray
         inline const int size() const;
         inline T &operator[](int idx);
         inline T &operator()(int idx);
+        inline T &item(int idx);
         const inline T &get(int idx) const;
         void inline set(int idx, T value);
 
