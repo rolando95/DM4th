@@ -110,7 +110,6 @@ template <class T>
 template <class U>
 bool BaseArray<T>::operator==(const BaseArray<U> &other) const
 {
-    bool result = true;
     if (this->size() != other.size())
     {
         return false;

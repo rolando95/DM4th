@@ -247,10 +247,48 @@ T NDArray<T>::reduce(std::function<T(T,T)> f)
     if(this->data_size()==1) return this->data_item(0);
 
     T result = this->data_item(0);
+
     for(int j=1; j<this->data_size(); ++j)
     {
-        result = f(result,this->data_item(j));
+        result = f(result, this->data_item(j));
     }
+    return result;
+}
+
+
+template<class T>
+NDArray<T> NDArray<T>::map(std::function<T(T,int)> f)
+{
+    NDArray<T> result;
+    result.resize(this->shape());
+
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        result.data_item(j) = f(this->data_item(j), j);
+    }
+    return result;
+}
+
+template<class T>
+NDArray<T> NDArray<T>::filter(std::function<bool(T, int)> f)
+{
+    NDArray<T> result;
+    result.resize(this->shape());
+
+    int top = 0;
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        if(f(this->data_item(j), j)){ 
+            result.data_item(top) = this->data_item(j);
+            ++top; 
+        }
+    }
+
+    if(top != this->data_size())
+    {
+        result._resize1DArray(top);
+    }
+
     return result;
 }
 
@@ -602,26 +640,13 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
 
-        // ParallelLoopItems REDUCTION //////////////////////////////////////////////
-        IFDM4thOmp(this->shape(0)>=DM4thConfig::minParallelLoops)
-        {
-            T r = 0;
-            #pragma omp parallel for shared(other) reduction(+:r)
-            for(int j=0; j<this->shape(0); ++j)
+        T r = DM4thUtils::parallelLoopReduce<T, DM4thUtils::ReduceOp::SUM>(
+            [&](T op1, T op2, int j)
             {
-                r += this->item(j)*other.item(j);
+                return op1 + this->item(j)*other.item(j);
             }
-            result.item(0) = r;
-        
-        }else{
-
-            result.item(0) = 0;
-            for(int j=0; j<this->shape(0); ++j)
-            {
-                result.item(0) += this->item(j)*other.item(j);
-            }
-        
-        }
+        ,this->data(), this->shape(0));
+        result.item(0) = r;
 
     }
     else if(this->rank()<=2 && other.rank()<=2)

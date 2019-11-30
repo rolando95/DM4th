@@ -86,9 +86,10 @@ int main()
     });
 
     DM4thTest::TEST("NDArray other methods",[]{
+        NDArray<number> A, B;
 
         // Sort
-        NDArray<number> A = items<number>(5,3,7,6,2,1,4);
+        A = items<number>(5,3,7,6,2,1,4);
         A.sort();
         EXPECT_EQ(A,items<number>(1,2,3,4,5,6,7));
         A.sort(true);
@@ -99,10 +100,21 @@ int main()
         number result = A.reduce([](number a, number b){return a+b;});
         EXPECT_EQ(result, 55);
 
+        // Map
+        A = items<number>(1,2,3,4,5,6,7,8,9,10);
+        B = A.map([](number a, number b){ return a-b+15; });
+        EXPECT_EQ(B, items<number>(16,16,16,16,16,16,16,16,16,16));
+        
+        // Filter
+        A = items<number>(1,2,3,4,5,6,7,8,9,10).reshape(5,2);
+        B = A.filter([](number a, number b)->bool { return true; });
+        EXPECT_EQ(B, A);
+        B = A.filter([](number a, number b)->bool { return a>3 && a<7; });
+        EXPECT_EQ(B, items<number>(4,5,6));
+
         // I/O file
         A = items<number>(7,6,5,4,3,2,1);
         A.saveFile("test.txt");
-        NDArray<number> B;
         B.loadFile("test.txt");
         EXPECT_EQ(B,items<number>(7,6,5,4,3,2,1));
 

@@ -129,28 +129,6 @@ namespace DM4thUtils
     }
 
     /*
-        Loop in parallel over const array elements
-    */
-    template<class T>
-    inline void parallelLoopItems(const std::function<void(const T& item, const int &idx)> &f, const T* arr, const int size)
-    {
-        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
-        {
-            #pragma omp parallel for
-            for(int j=0; j<size; ++j)
-            {
-                f(arr[j], j);
-            }  
-
-        }else{
-            for(int j=0; j<size; ++j)
-            {
-                f(arr[j], j);
-            }
-        }
-    }
-
-    /*
         Loop in parallel over array elements
         break parallel loop when return value is false
     */
@@ -163,7 +141,7 @@ namespace DM4thUtils
         {
             #pragma omp parallel shared(result)
             {
-                int threads = omp_get_num_threads();
+                int pStep = omp_get_num_threads();
                 int j = omp_get_thread_num();
                 while (j < size && result)
                 {
@@ -175,7 +153,7 @@ namespace DM4thUtils
                             result = false;
                         }
                     }
-                    j += threads;
+                    j += pStep;
                 }
             }
 
@@ -192,34 +170,67 @@ namespace DM4thUtils
 
         }
         return result;
+    }
+
+
+    enum ReduceOp{
+        SUM, SUB, MUL, DIV
+    };
+
+    template<class T, ReduceOp op>
+    inline void reduceOp(T& op1, T& op2)
+    {
+        switch (op)
+        {
+        case SUM:
+            op1 += op2;
+            break;
+        case SUB:
+            op1 -= op2;
+            break;
+        case MUL:
+            op1 *= op2;
+            break;
+        case DIV:
+            op1 *= op2;
+            break;
+        default:
+            DM4thAssert(false);
+            break;
+        }
     }
 
     /*
-        Loop in parallel over const array elements
-        break parallel loop when return value is false
+        Loop in parallel over array elements.
+        The function must be return the reduce operation to calculate a local value for each thread.
+        The reduceFunction must be return the reduce operation of local values.
     */
-    template<class T>
-    inline bool parallelLoopItemsCond(const std::function<bool(const T& item, const int &idx)> &f, const T* arr, const int size)
+    template<class T, ReduceOp op>
+    inline T parallelLoopReduce(const std::function<T(T acum, T item, int idx)> &f, T *arr, const int size, T initValue=0)
     {
-        bool result = true;
+        T result = initValue;
 
         IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
         {
+
             #pragma omp parallel shared(result)
             {
-                int threads = omp_get_num_threads();
+                int pStep = omp_get_num_threads();
                 int j = omp_get_thread_num();
-                while (j < size && result)
+
+                T lResult = initValue;
+                
+                // Map
+                while (j < size)
                 {
-                    if(!f(arr[j], j))
-                    {
-                        #pragma omp critical
-                        {
-                            
-                            result = false;
-                        }
-                    }
-                    j += threads;
+                    lResult = f(lResult, arr[j], j);
+                    j += pStep;
+                }
+
+                // Reduce
+                #pragma omp critical
+                {
+                    reduceOp<T, op>(result, lResult);
                 }
             }
 
@@ -227,16 +238,49 @@ namespace DM4thUtils
 
             for(int j=0; j<size; ++j)
             {
-                if(!f(arr[j], j)) 
-                {
-                    result = false;
-                    break;
-                }
+                result = f(result, arr[j], j);
             }
 
         }
         return result;
     }
+
+
+    template<class T, ReduceOp op>
+    inline T parallelLoopReduceS(const std::function<T(T acum, T item)> &f, const T from, const T to, const T step=1, T initValue=0)
+    {
+        T result = initValue;
+
+        IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops)
+        {
+            #pragma omp parallel shared(result)
+            {
+                T pStep = omp_get_num_threads()*step;
+                T j = omp_get_thread_num()+from;
+    
+                T lResult = initValue;
+
+                while (j < to)
+                {
+                    lResult = f(lResult, j);
+                    j += pStep;
+                }
+
+                #pragma omp critical
+                {
+                    reduceOp<T, op>(result, lResult);
+                }
+            }
+
+        }else{
+            for(T j=from; j<to; j+=step)
+            {
+                result = f(result, j);
+            }
+
+        }
+        return result;
+    } 
 }
 
 namespace DM4thInternal 

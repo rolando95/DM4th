@@ -37,7 +37,6 @@ int main()
 
         EXPECT_EQ(A,B);
 
-        number value = B.get(9);
         B.set(9, 4);
 
         EXPECT_NE(A,B);

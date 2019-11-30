@@ -47,8 +47,11 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         NDArray<T> flatten();
         void sort(bool reverse=false, int lo=0, int hi=END);
         template<class U, class V> inline void swap(U idx1, V idx2);
-        T reduce(std::function<T(T,T)> f);
-        
+
+        T reduce(std::function<T(T op1, T op2)> f);
+        NDArray<T> map(std::function<T(T item,int idx)> f);
+        NDArray<T> filter(std::function<bool(T item,int idx)> f);
+
         template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
         template<class AXIS> T &item(AXIS x) const;
         template<class AXIS> T &item(const NDArray<AXIS> &axisArray);
