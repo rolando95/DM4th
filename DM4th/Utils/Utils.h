@@ -72,11 +72,17 @@ constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();
 constexpr int ALL = std::numeric_limits<int>::max();
 
-#define _min(a,b) (a<b)? a: b
-#define _max(a,b) (a>b)? a: b
+// #define _min(a,b) (a<b)? a: b
+// #define _max(a,b) (a>b)? a: b
 
 namespace DM4thUtils
 {
+
+    template<class T>
+    inline T min(T a, T b){ return (a<b)? a: b; }
+
+    template<class T>
+    inline T max(T a, T b){ return (a>b)? a: b; }
 
     template<class T>
     T mult(T last){
@@ -107,25 +113,29 @@ namespace DM4thUtils
     }
 
     /*
+        Loop in parallel over range
+    */
+    template<class T>
+    inline void parallelLoopItemsS(const std::function<void(T& item)> &f, const T from, const T to, const T step=1, bool forceParallel=false)
+    {
+        #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
+        for(T j=from; j<to; j+=step)
+        {
+            f(j);
+        }
+    }
+
+    /*
         Loop in parallel over array elements
     */
     template<class T>
-    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size)
+    inline void parallelLoopItems(const std::function<void(T& item, const int &idx)> &f, T* arr, const int size, bool forceParallel=false)
     {
-        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
+        #pragma omp parallel for IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
+        for(int j=0; j<size; ++j)
         {
-            #pragma omp parallel for
-            for(int j=0; j<size; ++j)
-            {
-                f(arr[j], j);
-            }  
-
-        }else{
-            for(int j=0; j<size; ++j)
-            {
-                f(arr[j], j);
-            }
-        }
+            f(arr[j], j);
+        }  
     }
 
     /*
@@ -133,11 +143,11 @@ namespace DM4thUtils
         break parallel loop when return value is false
     */
     template<class T>
-    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, const int size)
+    inline bool parallelLoopItemsCond(const std::function<bool(T& item, const int &idx)> &f, T* arr, const int size, bool forceParallel=false)
     {
         bool result = true;
 
-        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
         {
             #pragma omp parallel shared(result)
             {
@@ -206,11 +216,11 @@ namespace DM4thUtils
         The reduceFunction must be return the reduce operation of local values.
     */
     template<class T, ReduceOp op>
-    inline T parallelLoopReduce(const std::function<T(T acum, T item, int idx)> &f, T *arr, const int size, T initValue=0)
+    inline T parallelLoopReduce(const std::function<T(T acum, T item, int idx)> &f, T *arr, const int size, T initValue=0, bool forceParallel=false)
     {
         T result = initValue;
 
-        IFDM4thOmp(size>=DM4thConfig::minParallelLoops)
+        IFDM4thOmp(size>=DM4thConfig::minParallelLoops || forceParallel)
         {
 
             #pragma omp parallel shared(result)
@@ -247,11 +257,11 @@ namespace DM4thUtils
 
 
     template<class T, ReduceOp op>
-    inline T parallelLoopReduceS(const std::function<T(T acum, T item)> &f, const T from, const T to, const T step=1, T initValue=0)
+    inline T parallelLoopReduceS(const std::function<T(T acum, T item)> &f, const T from, const T to, const T step=1, T initValue=0, bool forceParallel=false)
     {
         T result = initValue;
 
-        IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops)
+        IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
         {
             #pragma omp parallel shared(result)
             {

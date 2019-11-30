@@ -64,7 +64,7 @@ inline void NDArray<T>::resize(int axis1)
     else
     { // N dim to 1 dim
         int disp = this->_getAxisDisplacement(0);
-        int end = _min(axis1, this->shape(0));
+        int end = DM4thUtils::min(axis1, this->shape(0));
         //T* old = this->_data->array._allocAndReturnOldArray(axis1);
         DM4thInternal::BaseArray<T> old;
         this->_data->array.moveDataTo(old);
@@ -93,7 +93,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
         DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         int newDisp = this->_getAxisDisplacement(0);
-        int end = _min(oldShape, this->shape(0));
+        int end = DM4thUtils::min(oldShape, this->shape(0));
         int newj = 0;
         for(int oldj=0; oldj<end; ++oldj, newj+=newDisp)
         {
@@ -112,7 +112,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
 
         if(oldArray.size() == 0) return;
 
-        int end = _min(oldShape.item(0), newShape.item(0));
+        int end = DM4thUtils::min(oldShape.item(0), newShape.item(0));
         for(int j=0; j<end; ++j)
         {
             this->_resize(
@@ -657,33 +657,15 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         int maxZ = other.shape(0);
 
         result.resize(maxX,maxY);
-        
-        IFDM4thOmp(this->data_size()>=DM4thConfig::minParallelLoops)
-        {
 
-            #pragma omp parallel for shared(other)
-            for(int x=0; x<maxX; ++x){
-                for(int y=0; y<maxY; ++y){
-                    result.item(x,y) = 0;
-                    for(int z=0;z<maxZ; ++z){
-                        result.item(x,y) += this->item(x,z) * other.item(z,y);
-                    }
+        DM4thUtils::parallelLoopItemsS<int>([&](int x){
+            for(int y=0; y<maxY; ++y){
+                result.item(x,y) = 0;
+                for(int z=0;z<maxZ; ++z){
+                    result.item(x,y) += this->item(x,z) * other.item(z,y);
                 }
             }
-
-        }else{
-
-            for(int x=0; x<maxX; ++x){
-                for(int y=0; y<maxY; ++y){
-                    result.item(x,y) = 0;
-                    for(int z=0;z<maxZ; ++z){
-                        result.item(x,y) += this->item(x,z) * other.item(z,y);
-                    }
-                }
-            }
-
-        }
-
+        },0, maxX, 1, this->data_size()>=DM4thConfig::minParallelLoops);   
     }
     else
     {
@@ -1471,7 +1453,7 @@ void NDArray<T>::_resize(int axis, int oldDispCount, int newDispCount,
             NDArray<int> &oldShape,  NDArray<int> &newShape,
             const DM4thInternal::BaseArray<T> &oldArray)
 {
-    int end = _min(oldShape.item(axis), newShape.item(axis));
+    int end = DM4thUtils::min(oldShape.item(axis), newShape.item(axis));
     if(axis<oldShape.size()-1 && axis<newShape.size()-1){
         for(int j=0; j<end; ++j)
         {

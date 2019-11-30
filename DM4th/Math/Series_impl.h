@@ -40,22 +40,6 @@ inline number factorial2(const number iter)
         }
     ,1, n+1, 1, 1);
 
-    // IFDM4thOmp(n>=DM4thConfig::minParallelLoops)
-    // {
-
-    //     #pragma omp parallel for DM4thReductionMult(x)
-    //     for(auto i=1; i<=n; ++i){
-    //         x *= i;
-    //     }
-
-    // }else{
-
-    //     for(auto i=1; i<=n; ++i){
-    //         x *= i;
-    //     }
-
-    // }
-
     return number(x,0);
 }
 

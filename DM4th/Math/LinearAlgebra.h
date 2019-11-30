@@ -73,29 +73,35 @@ namespace DM4th
             before = result.getCopy();
 
 
-            // DM4thLoopItems MATRIX
-            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
-            {
-                #pragma omp parallel for shared(matrix, before, result)
-                for(int i=0; i<matrix.size(); ++i)
+            DM4thUtils::parallelLoopItemsS<int>([&](int i){
+                for(int j=0; j<matrix.size(); ++j)
                 {
-                    for(int j=0; j<matrix.size(); ++j)
-                    {
-                        result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
-                    }
+                    result(i,j) = DM4thUtils::min(before(i,j),before(i,k) + before(k,j));
                 }
+            }, 0, matrix.size());
+            // // DM4thLoopItems MATRIX
+            // IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
+            // {
+            //     #pragma omp parallel for shared(matrix, before, result)
+            //     for(int i=0; i<matrix.size(); ++i)
+            //     {
+            //         for(int j=0; j<matrix.size(); ++j)
+            //         {
+            //             result(i,j) = DM4thUtils::min(before(i,j),before(i,k) + before(k,j));
+            //         }
+            //     }
                 
-            }else{
+            // }else{
 
-                for(int i=0; i<matrix.size(); ++i)
-                {
-                    for(int j=0; j<matrix.size(); ++j)
-                    {
-                        result(i,j) = _min(before(i,j),before(i,k) + before(k,j));
-                    }
-                }
+            //     for(int i=0; i<matrix.size(); ++i)
+            //     {
+            //         for(int j=0; j<matrix.size(); ++j)
+            //         {
+            //             result(i,j) = DM4thUtils::min(before(i,j),before(i,k) + before(k,j));
+            //         }
+            //     }
 
-            }
+            // }
 
         }
         return result;
@@ -113,29 +119,36 @@ namespace DM4th
             before = result.getCopy();
 
             // DM4thLoopItems MATRIX
-            IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
-            {
-
-                #pragma omp parallel for shared(matrix, before, result)
-                for(int i=0; i<matrix.size(); ++i)
+            DM4thUtils::parallelLoopItemsS<int>([&](int i){
+                for(int j=0; j<matrix.size(); ++j)
                 {
-                    for(int j=0; j<matrix.size(); ++j)
-                    {
-                        result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
-                    }
+                    result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
                 }
+            }, 0, matrix.size());
 
-            }else{
+            // IFDM4thOmp(matrix.data_size()>=DM4thConfig::minParallelLoops)
+            // {
 
-                for(int i=0; i<matrix.size(); ++i)
-                {
-                    for(int j=0; j<matrix.size(); ++j)
-                    {
-                        result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
-                    }
-                }
+            //     #pragma omp parallel for shared(matrix, before, result)
+            //     for(int i=0; i<matrix.size(); ++i)
+            //     {
+            //         for(int j=0; j<matrix.size(); ++j)
+            //         {
+            //             result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+            //         }
+            //     }
 
-            }
+            // }else{
+
+            //     for(int i=0; i<matrix.size(); ++i)
+            //     {
+            //         for(int j=0; j<matrix.size(); ++j)
+            //         {
+            //             result(i,j) = (before(i,j) || (before(i,k) && before(k,j)))? 1:0;
+            //         }
+            //     }
+
+            // }
         }
         return result;
     }
