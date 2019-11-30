@@ -87,24 +87,12 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     int n = subintervals.real();
     number h = (b-a)/n;
     
-    number s=0;
-    
-    // DM4thLoopItems REDUCTION
-    IFDM4thOmp(n>=DM4thConfig::minParallelLoops)
-    {
-
-        #pragma omp parallel for DM4thReductionSum(s)
-        for(int j=0; j<n; ++j){
-            s+=f(a+h*(j+0.5));
+    number s = DM4thUtils::parallelLoopReduceS<number, DM4thUtils::ReduceOp::SUM>(
+        [&](number acum, number item)
+        {
+            return acum + f(a+h*(item+0.5));
         }
-
-    }else{
-
-        for(int j=0; j<n; ++j){
-            s+=f(a+h*(j+0.5));
-        }
-
-    }
+    , 0, n, 1);
 
     return s*h;
 

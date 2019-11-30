@@ -256,7 +256,7 @@ namespace DM4thUtils
             #pragma omp parallel shared(result)
             {
                 T pStep = omp_get_num_threads()*step;
-                T j = omp_get_thread_num()+from;
+                T j = omp_get_thread_num()*step+from;
     
                 T lResult = initValue;
 
