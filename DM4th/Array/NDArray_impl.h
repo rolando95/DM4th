@@ -103,12 +103,12 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
     }else
     { //N dim to M dim
         NDArray<int> oldShape = this->shape();
-        NDArray<int> oldDisp = this->_getAxisDisplacement();
+        int oldDisp = this->_getAxisDisplacement(0);
 
         DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         NDArray<int> newShape = this->shape();
-        NDArray<int> newDisp = this->_getAxisDisplacement();
+        int newDisp = this->_getAxisDisplacement(0);
 
         if(oldArray.size() == 0) return;
 
@@ -117,8 +117,8 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
         {
             this->_resize(
                 1, 
-                oldDisp.item(0)*j, newDisp.item(0)*j, 
-                oldDisp, newDisp,
+                oldDisp*j, newDisp*j, 
+                // oldDisp, newDisp,
                 oldShape, newShape, 
                 oldArray
             );
@@ -335,11 +335,8 @@ template<class T>
 NDArray<T> NDArray<T>::getCopy() const
 {
     NDArray<T> result;
-    result.resize(this->shape());
-    for(int j=0; j<this->data_size(); ++j)
-    {
-        result.data_item(j) = this->data_item(j);
-    }
+    this->_data->shape.copyDataTo(result._data->shape);
+    this->_data->array.copyDataTo(result._data->array);
     return result;
 }
 
@@ -1529,18 +1526,31 @@ void NDArray<T>::SubArray::_1DSlider(int oldDisp, int newDisp)
 /////////////////////
 template<class T>
 void NDArray<T>::_resize(int axis, int oldDispCount, int newDispCount, 
-            NDArray<int> &oldDisp,  NDArray<int> &newDisp, 
+            // NDArray<int> &oldDisp,  NDArray<int> &newDisp, 
             NDArray<int> &oldShape,  NDArray<int> &newShape,
             const DM4thInternal::BaseArray<T> &oldArray)
 {
     int end = DM4thUtils::min(oldShape.item(axis), newShape.item(axis));
+
+    int oldDisp = 1;
+    for(int j=oldShape.size()-1; j>axis; --j)
+    {
+        oldDisp *= oldShape(j);
+    }
+
+    int newDisp = 1;
+    for(int j=newShape.size()-1; j>axis; --j)
+    {
+        oldDisp *= newShape(j);
+    }
+
     if(axis<oldShape.size()-1 && axis<newShape.size()-1){
         for(int j=0; j<end; ++j)
         {
             this->_resize(
                 axis+1, 
-                oldDispCount+oldDisp.item(axis)*j, newDispCount+newDisp.item(axis)*j,
-                oldDisp, newDisp,
+                oldDispCount+oldDisp*j, newDispCount+newDisp*j,
+                // oldDisp, newDisp,
                 oldShape, newShape,
                 oldArray
             );
@@ -1548,7 +1558,7 @@ void NDArray<T>::_resize(int axis, int oldDispCount, int newDispCount,
     }else{
         for(int j=0; j<end; ++j)
         {
-            this->_data->array[newDispCount+newDisp.item(axis)*j] = oldArray.get(oldDispCount+oldDisp.item(axis)*j);
+            this->_data->array[newDispCount+newDisp*j] = oldArray.get(oldDispCount+oldDisp*j);
         }
     }
 }

@@ -27,6 +27,14 @@ int main()
 
         EXPECT_EQ(B.data_size(), 10);
         EXPECT_EQ(B.shape(0), 10);
+
+        A = items<number>(1,3,2,5).reshape(2,2);
+        B = A.getCopy();
+        EXPECT_EQ(A,B);
+        EXPECT_EQ(A.refCount(),1);
+        EXPECT_EQ(B.refCount(),1);
+        B(0,0) = 2;
+        EXPECT_NE(A,B);
     });
 
     DM4thTest::TEST("NDArray resize, reshape and shape", []{
@@ -54,6 +62,12 @@ int main()
         A.reshape(2);
 
         EXPECT_EQ(A, items<number>(0,3_i));
+
+        A = items<number>(1,2,3,4,5,6).reshape(3,2);
+        A.resize(3,1);
+        A.resize(3,4);
+        A.reshape(12);
+        EXPECT_EQ(A, items<number>(1,0,0,0,3,0,0,0,5,0,0,0));
     });
 
     DM4thTest::TEST("NDArray push and pop",[]{

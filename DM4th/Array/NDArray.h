@@ -257,7 +257,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         int _partition(bool reverse, const int lo, const int hi);
 
         void _resize(int axis, int oldDispCount, int newDispCount,
-            NDArray<int> &oldDisp,  NDArray<int> &newDisp,
+            // NDArray<int> &oldDisp,  NDArray<int> &newDisp,
             NDArray<int> &oldShape,  NDArray<int> &newShape,
             const DM4thInternal::BaseArray<T> &oldArray);
 
