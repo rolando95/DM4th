@@ -40,6 +40,33 @@ D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases 
     ```
 
 ## Ejemplos
+
+* Programa Hola Mundo con `D-M4th`
+
+    - Código
+
+    ```C++
+    #include "DM4th/DM4th.h"
+
+    using namespace std;
+
+    int main()
+    {
+        NDArray<string> hello  = items<string>("Hello", "World");
+        NDArray<number> myList = range<number>(10);
+
+        cout << hello << endl;
+        cout << myList << endl;
+
+        cin.get();
+        return 0;
+    }
+    ```
+    - Salida
+    ```C++
+    ["Hello", "World"]
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    ```
 <details>
 <summary>Operaciones con números complejos</summary>
 
