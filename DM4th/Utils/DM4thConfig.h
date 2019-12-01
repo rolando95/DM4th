@@ -3,7 +3,7 @@ namespace DM4thConfig
 {
 
 #ifndef DM4thMinParallelLoops
-    #define DM4thMinParallelLoops 100
+    #define DM4thMinParallelLoops 25
 #endif
 
 #pragma GCC diagnostic push

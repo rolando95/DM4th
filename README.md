@@ -2,22 +2,21 @@
 [![C++Version](https://img.shields.io/badge/C%2B%2B-11%2C%2014%2C%2017-blue)](C++11,14,17)
 [![Build Status](https://travis-ci.org/rolando95/DM4th.svg?branch=master)](https://travis-ci.org/rolando95/DM4th)
 
-D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases que permitirán un fácil manejo de operaciones con vectores, matrices, arreglos dinámicos de N dimensiones y números complejos. 
+D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de operaciones con vectores, matrices, arreglos dinámicos de N dimensiones y números complejos. 
 
 ![Calculator Screenshot](resources/screenshots/DM4thScreenshot.png)
 
 ## Características
 - Clase tipo `NDArray` que permitirán manejar vectores, matrices y arreglos de N dimensiones.
-  - Modificar el número de elementos y dimensiones de un arreglo con métodos resize() o reshape().
-  - Inserción y eliminación de elementos con push() y pop().
+  - Modificar el número de elementos y dimensiones de un arreglo con métodos `resize()` o `reshape()`.
+  - Inserción y eliminación de elementos con `push()` y `pop()`.
   - Operaciones algebráicas entre arreglos y escalares usando operadores de suma, resta, multiplicación, división, residuo, etc. Ejemplo: `arr1`+`arr2`, `arr1`*`10`, etc.
-  - Operaciones relacionales y lógicas entre arreglos y escalares usando operadores relacionales o lógicos. Ejemplo:  `arr`==`arr2`, `arr`>`arr2`, etc.
+  - Operaciones relacionales y lógicas entre arreglos y escalares usando operadores relacionales o lógicos. Ejemplo:  `arr1`==`arr2`, `arr1`<=`arr2`, `arr`>`4` || `(arr2 + 1)`<`5`, etc.
   - Sistema de conteo de referencias por array que permitirán administrar memoria sin pensar en punteros por parte del programador.
-  - Obtener subArreglos (array slicing) de forma similar a Matlab y Python con el método subArray() y slice().
+  - Obtener subArreglos (array slicing) de forma similar a Matlab y Python con el método `subArray()` y `slice()`.
 
 - Métodos numéricos de utilidad para diferentes operaciones de cálculo diferencial e integral, álgebra lineal, entre otros.
-  - Soluciones de métodos de búsqueda de raíces de función como Newthon-Raphson y el Método de Bairstow con soporte de raíces complejas.
-  - Soporte de resultados con números reales y complejos en todos los métodos incluídos en la librería.
+  - Métodos numéricos con soporte para mostrar resultados con números reales y complejos en la librería.
 
 ## Instalación y compilación
 * D-M4th es un `header-only library`. No es necesario compilar dependencias para instalar. Basta con descargar o clonar la librería dentro de tu proyecto e incluir la cabecera `#include "DM4th/DM4th.h"`.
@@ -195,7 +194,7 @@ D-M4th es una librería escrita en `C++` que provee numerosos métodos y clases 
 
         arr1.resize(4,4);
         arr1(3,0) = -7i;
-        cout << "Resize 5x5:\n" << arr1 << endl;
+        cout << "Resize 4x4:\n" << arr1 << endl;
 
         NDArray<number> arr2 = arr1+arr1;
         cout << "arr2=arr1+arr1:\n" << arr2 << endl;
