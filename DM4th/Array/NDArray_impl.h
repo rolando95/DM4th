@@ -160,7 +160,9 @@ const NDArray<T> &NDArray<T>::reshape(int axis1, U ... args)
     //int oldShapeMult = mult(this->shape().data(), this->rank());
     int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->rank());
     int newShapeMult = DM4thUtils::mult(axis1,args...);
-    DM4thAssert(oldShapeMult==newShapeMult);
+    
+    if(oldShapeMult!=newShapeMult) this->_data->array.resize(newShapeMult);
+    //DM4thAssert(oldShapeMult==newShapeMult);
     
     this->_data->shape.resize(DM4thUtils::count(axis1,args...));
     this->_reshape(0, axis1, args...);
@@ -304,9 +306,9 @@ template<class T> template<class AXIS>
 T &NDArray<T>::item(AXIS axis) const
 {
     int x = (AXIS)axis;
-    DM4thAssert(this->_data->shape.size()==1);
-    DM4thAssert(x<this->_data->array.size());
-    //DM4thAssert( this->_data->shape.size()==1 && x<this->_data->array.size() );
+    if(this->_data->shape.size()>1) return this->_data->array(this->_item(1,x,0));
+    //DM4thAssert(this->_data->shape.size()==1);
+    //DM4thAssert(x<this->_data->array.size());
     return this->_data->array[x];
 }
 
@@ -1586,8 +1588,13 @@ int NDArray<T>::_item(int axis, int pos, int idx, U ... args) const
 template<class T>
 int NDArray<T>::_item(int axis, int pos, int idx) const
 {
-    DM4thAssert(axis+1 == this->_data->shape.size());
+    DM4thAssert(axis+1 <= this->_data->shape.size());
     pos = pos*this->_data->shape.get(axis) + idx;
+
+    if(axis+1 < this->_data->shape.size())
+    {  
+        return _item(axis+1, pos, 0);
+    } 
     return pos;
 }
 
