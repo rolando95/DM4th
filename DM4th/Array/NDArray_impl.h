@@ -146,8 +146,8 @@ template<class T>
 NDArray<int> NDArray<T>::shape() const
 {
     NDArray<int> result;
-    result._resize1DArray(this->_data->shape.size());
-    for(int j=0; j<this->_data->shape.size(); ++j)
+    result._resize1DArray(this->rank());
+    for(int j=0; j<this->rank(); ++j)
     {
         result.item(j) = this->_data->shape.get(j);
     }
@@ -303,6 +303,7 @@ NDArray<T> NDArray<T>::filter(const std::function<bool(T, int)> &f)
 template<class T> template<class AXIS, class ... U>
 inline T &NDArray<T>::item(AXIS axis, U ... args) const
 { 
+    DM4thAssert(DM4thUtils::count(axis,args...)==this->rank());
     const int x = int(axis);
     const int pos = this->_item(1,x,args ...); 
     return this->_data->array(pos);
@@ -312,9 +313,9 @@ template<class T> template<class AXIS>
 inline T &NDArray<T>::item(AXIS axis) const
 {
     const int x = int(axis);
-    if(this->_data->shape.size()>1) return this->_data->array(this->_item(1,x,0));
-    //DM4thAssert(this->_data->shape.size()==1);
-    //DM4thAssert(x<this->_data->array.size());
+    //if(this->_data->shape.size()>1) return this->_data->array(this->_item(1,x,0));
+    DM4thAssert(this->rank()==1);
+    DM4thAssert(x<this->_data->array.size());
     return this->_data->array[x];
 }
 
@@ -1273,9 +1274,9 @@ template<class T>
 NDArray<int> NDArray<T>::_getAxisDisplacement() const
 {
     NDArray<int> result;
-    result._resize1DArray(this->_data->shape.size());
+    result._resize1DArray(this->rank());
     int disp = 1;
-    for(int j=this->_data->shape.size()-1; j>=0; --j)
+    for(int j=this->rank()-1; j>=0; --j)
     {
         result.item(j) = disp;
         disp *= this->_data->shape.get(j);
@@ -1288,7 +1289,7 @@ template<class T>
 inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
 {
     int disp = 1;
-    for(int j=this->_data->shape.size()-1; j>axis; --j)
+    for(int j=this->rank()-1; j>axis; --j)
     {
         disp *= this->_data->shape.get(j);
     }
@@ -1596,13 +1597,13 @@ template<class T> template<class AXIS>
 inline int NDArray<T>::_item(const int &axis, int pos, AXIS x) const
 {
     const int idx = int(x);
-    DM4thAssert(axis+1 <= this->_data->shape.size());
+    //DM4thAssert(axis+1 <= this->_data->shape.size());
     pos = pos*this->_data->shape.get(axis) + idx;
 
-    if(axis+1 < this->_data->shape.size())
-    {  
-        return _item(axis+1, pos, 0);
-    } 
+    // if(axis+1 < this->_data->shape.size())
+    // {  
+    //     return _item(axis+1, pos, 0);
+    // } 
     return pos;
 }
 
@@ -1707,7 +1708,7 @@ void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shape
 
         if(!shapeAllocated)
         {
-            for(int j=0; j<this->_data->shape.size(); ++j)
+            for(int j=0; j<this->rank(); ++j)
             {
                 this->_data->shape.set(j, 0);
             }
