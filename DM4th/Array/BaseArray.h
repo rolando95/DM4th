@@ -26,7 +26,8 @@ class BaseArray
     public:
         BaseArray(int size=0);
         ~BaseArray() { this->clear(); }
-        inline void resize(int size);
+        inline void resize(const int &size);
+        inline void reserve(const int &size);
 
         inline const int size() const;
         inline T &operator[](int idx);

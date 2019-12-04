@@ -128,6 +128,12 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
 }
 
 template<class T>
+inline void NDArray<T>::reserve(const int &size)
+{
+    this->_data->array.reserve(size);
+}
+
+template<class T>
 inline int NDArray<T>::rank() const { return this->_data->shape.size(); }
 
 template<class T>

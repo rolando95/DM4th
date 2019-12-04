@@ -44,6 +44,10 @@ inline void BaseArray<T>::reallocArray(int size)
             
             this->_data = tmp;
             tmp = nullptr;
+        }else{
+            if(std::is_arithmetic<T>::value) { 
+                std::fill_n(_data+this->_size, size-this->_size, T()); 
+            }  
         }
         this->_size = size;
     }
@@ -59,7 +63,7 @@ BaseArray<T>::BaseArray(int size)
 }
 
 template <class T>
-inline void BaseArray<T>::resize(int size)
+inline void BaseArray<T>::resize(const int &size)
 {
     if (size == 0)
     {
@@ -73,6 +77,22 @@ inline void BaseArray<T>::resize(int size)
     else
     {
         this->reallocArray(size);
+    }
+}
+
+template<class T>
+inline void BaseArray<T>::reserve(const int &size)
+{
+    if(size>this->_top)
+    {
+        this->_top = sizeAligned(size);   
+        T *tmp = new T[this->_top];     
+
+        std::copy_n(this->_data, this->_size, tmp);
+        delete[] this->_data;
+
+        this->_data = tmp;
+        tmp = nullptr;
     }
 }
 

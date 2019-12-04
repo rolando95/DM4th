@@ -30,9 +30,10 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class ... U>
         inline void resize(int axis1, U ... args);
         inline void resize(int axis1);
-
         void resize(const NDArray<int> &axisArray);
 
+        inline void reserve(const int &size);
+        
         inline int rank() const;
 
         int size() const;

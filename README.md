@@ -33,10 +33,6 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     ```sh
     g++ -std=c++11 main.cpp
     ```
-    Para un mejor rendimiento, puedes activar el procesamiento multihilo incluído dentro de la librería agregando las banderas `-fopenmp` y `-D DM4thParallel`
-    ```sh
-    g++ -std=c++11 main.cpp -fopenmp -D DM4thParallel
-    ```
 
 ## Ejemplos
 
