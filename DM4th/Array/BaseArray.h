@@ -21,20 +21,20 @@ class BaseArray
         int _top=0;
         T*  _data=nullptr;
 
-        inline void allocArray(int size);
-        inline void reallocArray(int size);
+        inline void allocArray(const int &size);
+        inline void reallocArray(const int &size);
     public:
-        BaseArray(int size=0);
-        ~BaseArray() { this->clear(); }
+        inline BaseArray(const int &size=0);
+        inline ~BaseArray() { this->clear(); }
         inline void resize(const int &size);
         inline void reserve(const int &size);
 
         inline const int size() const;
-        inline T &operator[](int idx);
-        inline T &operator()(int idx);
-        inline T &item(int idx);
-        const inline T &get(int idx) const;
-        void inline set(int idx, T value);
+        inline T &operator[](const int &idx);
+        inline T &operator()(const int &idx);
+        inline T &item(const int &idx);
+        const inline T &get(const int &idx) const;
+        void inline set(const int &idx, const T &value);
 
         void operator=(const BaseArray<T> &other)
         {
@@ -57,7 +57,7 @@ class BaseArray
         inline void moveDataTo(BaseArray<T> &other);
         inline void copyDataTo(BaseArray<T> &other) const;
 
-        inline void swap(int idx1, int idx2)
+        inline void swap(const int &idx1,const int &idx2)
         {
             T tmp = this->get(idx1);
             this->set(idx1, this->get(idx2));
@@ -87,11 +87,11 @@ class ArrayData
         ShapeData    shape;
         BaseArray<T> array;
 
-        void incrRef();
-        void decrRef();
-        int refCount() const;
+        inline void incrRef();
+        inline void decrRef();
+        inline int refCount() const;
 
-        void moveDataTo(ArrayData<T> &other);
+        inline void moveDataTo(ArrayData<T> &other);
 };
 
 
@@ -107,17 +107,17 @@ class ArrayDataManager
         
     public:
 
-        ArrayDataManager();
-        ArrayDataManager(const ArrayDataManager<T> &other);
-        ~ArrayDataManager();
+        inline ArrayDataManager();
+        inline ArrayDataManager(const ArrayDataManager<T> &other);
+        inline ~ArrayDataManager();
 
-        ArrayDataManager<T> const &operator=(const ArrayDataManager<T> &other);
+        inline ArrayDataManager<T> const &operator=(const ArrayDataManager<T> &other);
 
-        int rank();
+        inline int rank();
 
-        int shape(int axis);
+        inline int shape(const int &axis);
 
-        ArrayData<T> const &getArrayData() const;
+        inline ArrayData<T> const &getArrayData() const;
         int refCount() const;
 
         inline void moveDataTo(ArrayDataManager<T> &other);

@@ -16,9 +16,9 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         class iterator_const;
         class SubArray;
 
-        NDArray();
+        inline NDArray();
 
-        template<class ... U> NDArray(T *data, U ... args);
+        template<class ... U> inline NDArray(T *data, U ... args);
 
         NDArray(T *data, const NDArray<int> &axisArray);
 
@@ -28,44 +28,44 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         explicit operator NDArray<U>();
         
         template<class ... U>
-        inline void resize(int axis1, U ... args);
-        inline void resize(int axis1);
+        inline void resize(const int &axis1, U ... args);
+        inline void resize(const int &axis1);
         void resize(const NDArray<int> &axisArray);
 
         inline void reserve(const int &size);
-        
+
         inline int rank() const;
 
         int size() const;
 
         NDArray<int> shape() const;
-        inline int shape(int axis) const;
+        inline int shape(const int &axis) const;
 
         template<class ... U>
-        const NDArray<T> & reshape(int axis1, U ... args);
-        const NDArray<T> & reshape(NDArray<int> newShape);
+        const NDArray<T> & reshape(const int &axis1, U ... args);
+        const NDArray<T> & reshape(const NDArray<int> &newShape);
         
         NDArray<T> flatten();
-        void sort(bool reverse=false, int lo=0, int hi=END);
+        void sort(const bool &reverse=false, int lo=0, int hi=END);
         template<class U, class V> inline void swap(U idx1, V idx2);
 
-        T reduce(std::function<T(T op1, T op2)> f);
-        NDArray<T> map(std::function<T(T item,int idx)> f);
-        NDArray<T> filter(std::function<bool(T item,int idx)> f);
+        T reduce(const std::function<T(T op1, T op2)> &f);
+        NDArray<T> map(const std::function<T(T item,int idx)> &f);
+        NDArray<T> filter(const std::function<bool(T item,int idx)> &f);
 
         template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
-        template<class AXIS> T &item(AXIS x) const;
-        template<class AXIS> T &item(const NDArray<AXIS> &axisArray);
+        template<class AXIS> inline T &item(AXIS x) const;
+        template<class AXIS> inline T &item(const NDArray<AXIS> &axisArray) const;
 
         NDArray<T> getCopy() const;
 
         template<class U>
-        void push(const U &value, const int idx=END);
+        void push(const U &value, const int &idx=END);
         template<class U>
-        void pushArray(const NDArray<U> &other, const int idx=END);
+        void pushArray(const NDArray<U> &other, const int &idx=END);
 
-        T pop(const int idx=END);
-        NDArray<T> popArray(const int idx=END);
+        T pop(const int &idx=END);
+        NDArray<T> popArray(const int &idx=END);
 
         // template<class U, enable_if_is_number(U, _number<U>)>
         // explicit operator U()
@@ -77,7 +77,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
-        template<class U> inline T &operator()(NDArray<U> axisArray);
+        template<class U> inline T &operator()(const NDArray<U> &axisArray);
 
         // template<class U> NDArray<T>::SubArray operator[](NDArray<U> idx);
         // NDArray<T>::SubArray operator[](number idx);
@@ -106,12 +106,12 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         // template<class U> inline bool operator==(const NDArray<U> &other);
         template<class U> inline bool isEqualTo(const NDArray<U> &other) const;
 
-        NDArray<bool> operator==(T other) const;
-        NDArray<bool> operator!=(T other) const;
-        NDArray<bool> operator> (T other) const;
-        NDArray<bool> operator<=(T other) const;
-        NDArray<bool> operator>=(T other) const;
-        NDArray<bool> operator< (T other) const;
+        NDArray<bool> operator==(const T &other) const;
+        NDArray<bool> operator!=(const T &other) const;
+        NDArray<bool> operator> (const T &other) const;
+        NDArray<bool> operator<=(const T &other) const;
+        NDArray<bool> operator>=(const T &other) const;
+        NDArray<bool> operator< (const T &other) const;
 
         NDArray<bool> operator==(const NDArray<T> &other) const;
         NDArray<bool> operator!=(const NDArray<T> &other) const;
@@ -123,27 +123,27 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator||(const NDArray<bool> &other) const;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator!() const;
 
-        bool any(T value) const ;
-        bool all(T value) const ;
+        bool any(const T &value) const ;
+        bool all(const T &value) const ;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type any() const { return this->any(true); }
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value,  bool>::type all() const { return this->all(true); }
 
-        std::ostream& ostream(std::ostream& stream, int ident=2, bool quotes=false) const;
+        std::ostream& ostream(std::ostream& stream, const int &ident=2, const bool &quotes=false) const;
         std::istream& istream(std::istream& stream);
 
-        void loadFile(std::string path);
-        void saveFile(std::string path);
+        void loadFile(const std::string &path);
+        void saveFile(const std::string &path);
 
-        inline void _resize1DArray(int size);
+        inline void _resize1DArray(const int &size);
         inline T *data();
         inline const T *data() const;
         inline T *data_copy();
         inline const int data_size() const;
-        inline T &data_item(int idx);
-        inline const T &data_item(int idx) const;
+        inline T &data_item(const int &idx);
+        inline const T &data_item(const int &idx) const;
         
         NDArray<int> _getAxisDisplacement() const;
-        int _getAxisDisplacement(int axis) const;
+        inline int _getAxisDisplacement(const int &axis) const;
 
         iterator begin(){ return iterator(*this); }
         iterator end(){ return iterator(*this, this->data_size()); }
@@ -188,24 +188,24 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
 
         public:
             template<class ... U>
-            SubArray(NDArray<T> &data, U ... args);
+            inline SubArray(const NDArray<T> &data, U ... args);
             
-            operator NDArray<T>() const;
-            const SubArray &operator=(const SubArray &other);
-            const SubArray &operator=(const T &other);
-            const SubArray &operator=(const NDArray<T> &other);
+            inline operator NDArray<T>() const;
+            inline const SubArray &operator=(const SubArray &other);
+            inline const SubArray &operator=(const T &other);
+            inline const SubArray &operator=(const NDArray<T> &other);
 
             template<class ... U> NDArray<T>::SubArray operator()(U ... args);
-            template<class U> NDArray<T>::SubArray operator[](U idx);
+            template<class U> NDArray<T>::SubArray operator[](const U &idx);
 
         private:
             template<class U, class ... V>
-            void setRef(NDArray<U> first, V... args);
+            void setRef(const NDArray<U> &first, V... args);
 
             template<class U, class ... V>
-            void setShapeRef(int axis, NDArray<int> &shape, NDArray<U> first, V ... args);
+            void setShapeRef(const int &axis, NDArray<int> &shape, const NDArray<U> &first, V ... args);
 
-            void setShapeRef(int axis, NDArray<int> &shape);
+            void setShapeRef(const int &axis, NDArray<int> &shape);
 
             template<class U, class ... V>
             void slider(                
@@ -255,20 +255,20 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
             return stream;
         }
     private:
-        int _partition(bool reverse, const int lo, const int hi);
+        int _partition(const bool &reverse, const int lo, const int hi);
 
-        void _resize(int axis, int oldDispCount, int newDispCount,
+        void _resize(const int &axis, int oldDispCount, int newDispCount,
             // NDArray<int> &oldDisp,  NDArray<int> &newDisp,
             NDArray<int> &oldShape,  NDArray<int> &newShape,
             const DM4thInternal::BaseArray<T> &oldArray);
 
         template<class ... U>
-        void _reshape(int axis, int first, U ... args);
-        void _reshape(int axis, int last);
+        void _reshape(const int &axis, int first, U ... args);
+        void _reshape(const int &axis, int last);
 
-        template<class ... U>
-        int _item(int axis, int pos, int idx, U ... args) const;
-        int _item(int axis, int pos, int idx) const;
+        template<class AXIS, class ... U>
+        inline int _item(const int &axis, int pos, AXIS idx, U ... args) const;
+        template<class AXIS> inline int _item(const int &axis, int pos, AXIS idx) const;
 
         DM4thInternal::BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
 

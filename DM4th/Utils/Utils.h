@@ -79,36 +79,36 @@ namespace DM4thUtils
 {
 
     template<class T>
-    inline T min(T a, T b){ return (a<b)? a: b; }
+    inline T min(const T &a,const T &b){ return (a<b)? a: b; }
 
     template<class T>
-    inline T max(T a, T b){ return (a>b)? a: b; }
+    inline T max(const T &a,const T &b){ return (a>b)? a: b; }
 
     template<class T>
-    T mult(T last){
+    inline T mult(const T &last){
         return last;
     }
     template<class T, class ... U>
-    T mult(T first, U ... args){
+    inline T mult(const T &first, U ... args){
         return first*mult(args...);
     }
 
 
     template<class T>
-    T sum(T last){
+    inline T sum(const T &last){
         return last;
     }
     template<class T, class ... U>
-    T sum(T first, U ... args){
+    inline T sum(const T &first, U ... args){
         return first+sum(args...);
     }
 
     template<class T>
-    int count(T last){
+    inline int count(const T &last){
         return 1;
     }
     template<class T, class ... U>
-    int count(T first, U ... args){
+    inline int count(const T &first, U ... args){
         return 1+count(args...);
     }
 

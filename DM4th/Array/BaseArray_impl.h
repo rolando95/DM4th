@@ -15,7 +15,7 @@ namespace DM4thInternal
 
 
 template <class T>
-inline void BaseArray<T>::allocArray(int size)
+inline void BaseArray<T>::allocArray(const int &size)
 {
     DM4thAssert(!this->_data && size > 0);
     this->_data = new T[size]();
@@ -24,7 +24,7 @@ inline void BaseArray<T>::allocArray(int size)
 }
 
 template <class T>
-inline void BaseArray<T>::reallocArray(int size)
+inline void BaseArray<T>::reallocArray(const int &size)
 {
     DM4thAssert(this->_data && size > 0);
     if (size != _size)
@@ -54,7 +54,7 @@ inline void BaseArray<T>::reallocArray(int size)
 }
 
 template <class T>
-BaseArray<T>::BaseArray(int size)
+inline BaseArray<T>::BaseArray(const int &size)
 {
     if (size > 0)
     {
@@ -100,35 +100,35 @@ template <class T>
 inline const int BaseArray<T>::size() const { return this->_size; }
 
 template <class T>
-inline T &BaseArray<T>::operator[](int idx)
+inline T &BaseArray<T>::operator[](const int &idx)
 {
     DM4thAssert(idx < this->size());
     return this->_data[idx];
 }
 
 template <class T>
-inline T &BaseArray<T>::operator()(int idx)
+inline T &BaseArray<T>::operator()(const int &idx)
 {
     DM4thAssert(idx < this->size());
     return this->_data[idx];
 }
 
 template<class T>
-inline T &BaseArray<T>::item(int idx)
+inline T &BaseArray<T>::item(const int &idx)
 {
     DM4thAssert(idx < this->size());
     return this->_data[idx];
 }
 
 template <class T>
-const inline T &BaseArray<T>::get(int idx) const
+const inline T &BaseArray<T>::get(const int &idx) const
 {
     DM4thAssert(idx < this->size());
     return this->_data[idx];
 }
 
 template <class T>
-void inline BaseArray<T>::set(int idx, T value)
+void inline BaseArray<T>::set(const int &idx, const T &value)
 {
     this->_data[idx] = value;
 }
@@ -326,14 +326,14 @@ inline std::ostream& operator<<(std::ostream& stream, const BaseArray<T> &arr)
 //////////////////// ArrayData
 
 template <class T>
-void ArrayData<T>::incrRef()
+inline void ArrayData<T>::incrRef()
 {
     ++_ref;
     //std::cout<<this<<" INCR+ REF: "<<_ref<<std::endl;
 }
 
 template <class T>
-void ArrayData<T>::decrRef()
+inline void ArrayData<T>::decrRef()
 {
     _ref -= 1;
     //std::cout<<this<<" DECR REF: "<<_ref<<std::endl;
@@ -345,13 +345,13 @@ void ArrayData<T>::decrRef()
 }
 
 template <class T>
-int ArrayData<T>::refCount() const
+inline int ArrayData<T>::refCount() const
 {
     return this->_ref;
 }
 
 template<class T>
-void ArrayData<T>::moveDataTo(ArrayData<T> &other)
+inline void ArrayData<T>::moveDataTo(ArrayData<T> &other)
 {
     this->shape.moveDataTo(other.shape);
     this->array.moveDataTo(other.array);
@@ -396,25 +396,25 @@ int ArrayDataManager<T>::refCount() const
 }
 
 template <class T>
-ArrayDataManager<T>::ArrayDataManager()
+inline ArrayDataManager<T>::ArrayDataManager()
 {
     this->incrRef();
 }
 
 template <class T>
-ArrayDataManager<T>::ArrayDataManager(const ArrayDataManager<T> &other)
+inline ArrayDataManager<T>::ArrayDataManager(const ArrayDataManager<T> &other)
 {
     _data = other._data;
     this->incrRef();
 }
 template <class T>
-ArrayDataManager<T>::~ArrayDataManager()
+inline ArrayDataManager<T>::~ArrayDataManager()
 {
     this->decrRef();
 }
 
 template <class T>
-ArrayDataManager<T> const &ArrayDataManager<T>::operator=(const ArrayDataManager<T> &other)
+inline ArrayDataManager<T> const &ArrayDataManager<T>::operator=(const ArrayDataManager<T> &other)
 {
     if (this->_data == other._data)
         return *this;
@@ -425,19 +425,19 @@ ArrayDataManager<T> const &ArrayDataManager<T>::operator=(const ArrayDataManager
 }
 
 template <class T>
-int ArrayDataManager<T>::rank()
+inline int ArrayDataManager<T>::rank()
 {
     return this->_data->shape.size();
 }
 
 template <class T>
-int ArrayDataManager<T>::shape(int axis)
+inline int ArrayDataManager<T>::shape(const int &axis)
 {
     return this->_data->shape(axis);
 }
 
 template <class T>
-ArrayData<T> const &ArrayDataManager<T>::getArrayData() const
+inline ArrayData<T> const &ArrayDataManager<T>::getArrayData() const
 {
     return *_data;
 }
