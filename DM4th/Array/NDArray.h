@@ -35,8 +35,8 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         inline void reserve(const int &size);
 
         inline int rank() const;
-
-        int size() const;
+        inline int capacity() const;
+        inline int size() const;
 
         NDArray<int> shape() const;
         inline int shape(const int &axis) const;

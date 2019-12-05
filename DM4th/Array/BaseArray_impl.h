@@ -33,7 +33,7 @@ inline void BaseArray<T>::allocArray(const int &size)
     DM4thAssert(!this->_data && size > 0);
     this->_data = new T[size]();
     this->_size = size;
-    this->_top = this->_size;
+    this->_capacity = this->_size;
 }
 
 template <class T>
@@ -42,10 +42,10 @@ inline void BaseArray<T>::reallocArray(const int &size)
     DM4thAssert(this->_data && size > 0);
     if (size != _size)
     {
-        if (size > this->_top)
+        if (size > this->_capacity)
         {
-            this->_top = sizeAligned(size);   
-            T *tmp = new T[this->_top];     
+            this->_capacity = sizeAligned(size);   
+            T *tmp = new T[this->_capacity];     
             int min = (size < this->_size) ? size : this->_size;
 
             std::copy_n(this->_data, min, tmp);
@@ -75,6 +75,12 @@ inline BaseArray<T>::BaseArray(const int &size)
     }
 }
 
+template<class T>
+inline BaseArray<T>::~BaseArray()
+{
+    this->clear();
+}
+
 template <class T>
 inline void BaseArray<T>::resize(const int &size)
 {
@@ -96,10 +102,10 @@ inline void BaseArray<T>::resize(const int &size)
 template<class T>
 inline void BaseArray<T>::reserve(const int &size)
 {
-    if(size>this->_top)
+    if(size>this->_capacity)
     {
-        this->_top = sizeAligned(size);   
-        T *tmp = new T[this->_top];     
+        this->_capacity = sizeAligned(size);   
+        T *tmp = new T[this->_capacity];     
 
         std::copy_n(this->_data, this->_size, tmp);
         delete[] this->_data;
@@ -111,6 +117,10 @@ inline void BaseArray<T>::reserve(const int &size)
 
 template <class T>
 inline const int BaseArray<T>::size() const { return this->_size; }
+
+template <class T>
+inline const int BaseArray<T>::capacity() const { return this->_capacity; }
+
 
 template <class T>
 inline T &BaseArray<T>::operator[](const int &idx)
@@ -300,7 +310,7 @@ template <class T>
 inline void BaseArray<T>::clear()
 {
     this->_size = 0;
-    this->_top = 0;
+    this->_capacity = 0;
     if (this->_data == nullptr) return;
     delete[] this->_data;
     this->_data = nullptr;

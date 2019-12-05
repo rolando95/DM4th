@@ -18,18 +18,21 @@ class BaseArray
 {
     private:
         int _size=0;
-        int _top=0;
+        int _capacity=0;
         T*  _data=nullptr;
 
         inline void allocArray(const int &size);
         inline void reallocArray(const int &size);
     public:
         inline BaseArray(const int &size=0);
-        inline ~BaseArray() { this->clear(); }
+        inline ~BaseArray();
+
         inline void resize(const int &size);
         inline void reserve(const int &size);
 
         inline const int size() const;
+        inline const int capacity() const;
+
         inline T &operator[](const int &idx);
         inline T &operator()(const int &idx);
         inline T &item(const int &idx);
@@ -54,6 +57,7 @@ class BaseArray
         template<class U> const BaseArray<T> &operator%=(const U &other);
         
         inline void clear();
+
         inline void moveDataTo(BaseArray<T> &other);
         inline void copyDataTo(BaseArray<T> &other) const;
 

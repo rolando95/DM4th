@@ -137,6 +137,9 @@ template<class T>
 inline int NDArray<T>::rank() const { return this->_data->shape.size(); }
 
 template<class T>
+inline int NDArray<T>::capacity() const { return this->_data->array.capacity(); }
+
+template<class T>
 int NDArray<T>::size() const { return this->_data->shape.get(0); }
 
 // template<class T>
