@@ -13,6 +13,8 @@ namespace DM4th
 namespace DM4thInternal
 {
 
+using namespace DM4thUtils;
+
 template<class T> 
 class BaseArray
 {
@@ -47,14 +49,21 @@ class BaseArray
         template<class U> bool operator==(const BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const BaseArray<U> &other) const;
         
+        template<class U> const BaseArray<T> &iAdd(const BaseArray<U> &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iSub(const BaseArray<U> &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iAdd(const U &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iSub(const U &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iMult(const U &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iDiv(const U &other, const ParallelSettings &pSettings);
+        template<class U> const BaseArray<T> &iMod(const U &other, const ParallelSettings &pSettings);
         
-        template<class U> const BaseArray<T> &operator+=(const BaseArray<U> &other);
-        template<class U> const BaseArray<T> &operator-=(const BaseArray<U> &other);
-        template<class U> const BaseArray<T> &operator+=(const U &other);
-        template<class U> const BaseArray<T> &operator-=(const U &other);
-        template<class U> const BaseArray<T> &operator*=(const U &other);
-        template<class U> const BaseArray<T> &operator/=(const U &other);
-        template<class U> const BaseArray<T> &operator%=(const U &other);
+        template<class U> inline const BaseArray<T> &operator+=(const BaseArray<U> &other);
+        template<class U> inline const BaseArray<T> &operator-=(const BaseArray<U> &other);
+        template<class U> inline const BaseArray<T> &operator+=(const U &other);
+        template<class U> inline const BaseArray<T> &operator-=(const U &other);
+        template<class U> inline const BaseArray<T> &operator*=(const U &other);
+        template<class U> inline const BaseArray<T> &operator/=(const U &other);
+        template<class U> inline const BaseArray<T> &operator%=(const U &other);
         
         inline void clear();
 
