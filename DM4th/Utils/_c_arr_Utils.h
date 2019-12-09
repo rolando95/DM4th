@@ -16,7 +16,7 @@ T mult(const T* data, int size){
 }
 
 template<class T>
-T sum(T* data, int size){
+T add(T* data, int size){
     T result = 0;
     for(int j=0; j<size; ++j){
         result+=data[j];

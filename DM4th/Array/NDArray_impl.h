@@ -546,6 +546,7 @@ inline const NDArray<T> NDArray<T>::operator+=(const NDArray<U> &other)
         this->resize(other.shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, this->data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -597,6 +598,7 @@ inline const NDArray<T> NDArray<T>::operator-=(const NDArray<U> &other)
         this->resize(other.shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, this->data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -657,14 +659,16 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         DM4thAssert(this->shape(0)==other.shape(0));
         result.resize(1);
 
-        T r = DM4thUtils::parallelLoopReduce<T, int>(
-            DM4thUtils::ReduceOp::SUM, 
+        T r;
+        DM4thUtils::parallelLoopReduce<T, int>(
+            DM4thUtils::OMP_PARALLEL | DM4thUtils::ADD, 
             0, this->shape(0), 1, // from, to, step
 
             [&](const T &acum, const  int &j)
             {
                 return acum + this->item(j)*other.item(j);
-            }
+            },
+            r
         );
         result.item(0) = r;
 
@@ -679,6 +683,7 @@ const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
         result.resize(maxX,maxY);
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, maxX, 1, // from, to, step
             
             [&](int x)
@@ -773,6 +778,7 @@ NDArray<bool> NDArray<T>::operator==(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -792,6 +798,7 @@ NDArray<bool> NDArray<T>::operator!=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -812,6 +819,7 @@ NDArray<bool> NDArray<T>::operator> (const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -831,6 +839,7 @@ NDArray<bool> NDArray<T>::operator<=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -850,6 +859,7 @@ NDArray<bool> NDArray<T>::operator>=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -870,6 +880,7 @@ NDArray<bool> NDArray<T>::operator<(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -891,6 +902,7 @@ NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -927,6 +939,7 @@ NDArray<bool> NDArray<T>::operator!=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -962,6 +975,7 @@ NDArray<bool> NDArray<T>::operator>(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -998,6 +1012,7 @@ NDArray<bool> NDArray<T>::operator<=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1034,6 +1049,7 @@ NDArray<bool> NDArray<T>::operator>=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1069,6 +1085,7 @@ NDArray<bool> NDArray<T>::operator<(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
+            DM4thUtils::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1102,6 +1119,7 @@ inline NDArray<bool> NDArray<bool>::operator&&(const NDArray<bool> &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -1121,6 +1139,7 @@ inline NDArray<bool> NDArray<bool>::operator||(const NDArray<bool> &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -1141,6 +1160,7 @@ inline NDArray<bool> NDArray<bool>::operator!() const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 

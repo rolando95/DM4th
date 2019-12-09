@@ -503,7 +503,7 @@ inline _number<T> acsch(_number<T>);
                               : number \
                               : omp_out = (omp_out < omp_in) ? omp_out : omp_in) initializer(omp_priv = std::numeric_limits<double>::infinity())
 
-#define DM4thReductionSum(...) reduction(+ \
+#define DM4thReductionadd(...) reduction(+ \
                                          : __VA_ARGS__)
 #define DM4thReductionSub(...) reduction(- \
                                          : __VA_ARGS__)

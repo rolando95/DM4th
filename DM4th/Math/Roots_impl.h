@@ -94,7 +94,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         number x1 = seed.real();
         number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
         
-        #pragma omp parallel sections shared(x1, y1)
+        #pragma omp parallel sections shared(x1, y1) num_threads(2)
         {
             #pragma omp section
             {
@@ -220,7 +220,7 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         number y1 = seed1.imag()==0? 1.01_i : seed1.imag();
         number y2;
 
-        #pragma omp parallel sections shared(x0,x1,x2, y0,y1,y2)
+        #pragma omp parallel sections shared(x0,x1,x2, y0,y1,y2) num_threads(2)
         {
             #pragma omp section
             {

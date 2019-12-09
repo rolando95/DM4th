@@ -165,14 +165,18 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
         return false;
     }
     
-    return DM4thUtils::parallelLoopItemsCond<int>(
+    bool result;
+    DM4thUtils::parallelLoopItemsCond<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->_size, 1, //from, to, step
 
         [&](const int &j)->bool 
         {
             return this->get(j) == other.get(j);
-        }
+        },
+        result
     );
+    return result;
 }
 
 template <class T>
@@ -189,6 +193,7 @@ const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
     DM4thAssert(this->size() == other.size());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -206,6 +211,7 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -222,6 +228,7 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -241,6 +248,7 @@ const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
     DM4thAssert(this->size() == other.size());
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -259,6 +267,7 @@ const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -276,6 +285,7 @@ template <class U>
 const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -294,6 +304,7 @@ const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
 
     DM4thUtils::parallelLoopItems<int>(
+        DM4thUtils::OMP_PARALLEL,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 

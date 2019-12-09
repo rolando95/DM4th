@@ -20,7 +20,7 @@ namespace DM4thNDArrayUtils
 
 
     template<class T>
-    T sum(NDArray<T> arr)
+    T add(NDArray<T> arr)
     {
         T result = 0;
         int size = arr.data_size();

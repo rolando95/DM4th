@@ -32,108 +32,139 @@ inline number factorial2(const number iter)
 {
     int n = abs(round(iter)).real();
 
-    return DM4thUtils::parallelLoopReduce<int, int>(
-        DM4thUtils::ReduceOp::MUL, 
+    int result;
+    DM4thUtils::parallelLoopReduce<int, int>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::MUL, 
         1, n+1, 1, // from, to, step
 
         [&](const int &acum, const int &j)
         {
             return acum * j;
-        }
+        },
+        result
 
         , 1 // initialValue
     ); 
+    return result;
 }
 
 inline number sumatory(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    return DM4thUtils::parallelLoopReduce<number, int>(
-        DM4thUtils::ReduceOp::SUM, 
+    number result;
+    
+    DM4thUtils::parallelLoopReduce<number, int>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::ADD, 
         0, v.data_size(), iter, // from, to, step
 
         [&](number acum, number j)
         {
             return acum + f(v((int)j));
-        }
+        },
+        result
     );
 
+    return result;
 }
 
 inline number sumatory(Function f,  number begin,  number end, const number increment ){
     
-    return DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::ReduceOp::SUM, 
+    number result;
+    
+    DM4thUtils::parallelLoopReduce<number, number>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::ADD, 
         begin, end, increment, // from, to, step
 
         [&](const number &acum, const number &j)
         {
             return acum + f(j);
-        }
+        },
+        result
     );
+
+    return result;
 }
 
 inline number sumatory(NDArray<number> v, number begin, number end, number increment){
     if(end==END) end = v.shape(0);
 
-    return DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::ReduceOp::SUM, 
+    number result;
+    
+    DM4thUtils::parallelLoopReduce<number, number>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::ADD, 
         begin, end, increment, // from, to, step
 
         [&](number acum, number j)
         {
             return acum + v((int)j);
-        }
+        },
+        result
     );
+
+    return result;
 }
 
 inline number product(Function f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
-    return DM4thUtils::parallelLoopReduce<number, int>(
-        DM4thUtils::ReduceOp::MUL,
+    number result;
+
+    DM4thUtils::parallelLoopReduce<number, int>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::MUL,
         0, v.data_size(), iter, // from, to, step
 
         [&](number acum, const int &j)
         {
             return acum * f(v((int)j));
-        }
+        },
+        result
 
         , 1 // initialValue
     );
+
+    return result;
 }
 
 inline number product(Function f, number begin, number end, const number increment){
     
-    return DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::ReduceOp::MUL, 
+    number result;
+    
+    DM4thUtils::parallelLoopReduce<number, number>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::MUL, 
         begin, end, increment, // from, to, step
 
         [&](const number &acum, const number &j)
         {
             return acum * f(j);
-        }
+        },
+        result
 
         , 1 // intialValue
     );
+
+    return result;
 }
 
 inline number product(NDArray<number> v, number begin, number end, number increment){
     if(end==END) end = v.shape(0);
 
-    return DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::ReduceOp::MUL,
+    number result;
+    DM4thUtils::parallelLoopReduce<number, number>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::MUL,
         begin, end, increment, // from, to, step
 
         [&](const number &acum, number j)
         {
             return acum * v((int)j);
-        }
+        },
+        result 
 
         , 1 // initialValue
     );
+
+    return result;
 }
 
 }

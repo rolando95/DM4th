@@ -67,6 +67,7 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
             diffV.resize(v.shape(0)-1);
             
             DM4thUtils::parallelLoopItems<int>(
+                DM4thUtils::OMP_PARALLEL,
                 0, diffV.data_size(), 1, // from, to, step
 
                 [&](const int &j) 
@@ -88,14 +89,16 @@ inline number integral(Function f, const number &a, const number &b, const numbe
     int n = subintervals.real();
     number h = (b-a)/n;
     
-    number s = DM4thUtils::parallelLoopReduce<number, int>(
-        DM4thUtils::ReduceOp::SUM, 
+    number s;
+    DM4thUtils::parallelLoopReduce<number, int>(
+        DM4thUtils::OMP_PARALLEL | DM4thUtils::ADD, 
         0, n, 1, // from, to, step
         
         [&](const number &acum, const int &j)
         {
             return acum + f(a+h*(j+0.5));
-        }
+        },
+        s
     );
 
     return s*h;
