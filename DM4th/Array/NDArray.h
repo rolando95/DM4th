@@ -79,15 +79,15 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class ... U> const inline T &operator()(U ... args) const;
         template<class U> inline T &operator()(const NDArray<U> &axisArray);
 
-        template<class U> inline const NDArray<T> iAdd(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings);
-        template<class U> inline const NDArray<T> iSub(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings);
-        template<class U>        const NDArray<T> iMult(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings);
+        template<class U> inline const NDArray<T> iAdd(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        template<class U> inline const NDArray<T> iSub(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        template<class U>        const NDArray<T> iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
 
-        inline const NDArray<T> iAdd(const T &other, const DM4thUtils::ParallelSettings &pSettings);
-        inline const NDArray<T> iSub(const T &other, const DM4thUtils::ParallelSettings &pSettings);
-        inline const NDArray<T> iMult(const T &other, const DM4thUtils::ParallelSettings &pSettings);
-        inline const NDArray<T> iDiv(const T &other, const DM4thUtils::ParallelSettings &pSettings);
-        inline const NDArray<T> iMod(const T &other, const DM4thUtils::ParallelSettings &pSettings);
+        inline const NDArray<T> iAdd(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        inline const NDArray<T> iSub(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        inline const NDArray<T> iMul(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        inline const NDArray<T> iDiv(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        inline const NDArray<T> iMod(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
 
         template<class U> inline const NDArray<T> operator+=(const NDArray<U> &other);
         template<class U> inline const NDArray<T> operator-=(const NDArray<U> &other);

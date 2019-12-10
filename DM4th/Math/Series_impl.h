@@ -34,7 +34,7 @@ inline number factorial2(const number iter)
 
     int result;
     DM4thUtils::parallelLoopReduce<int, int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::MUL, 
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL, 
         1, n+1, 1, // from, to, step
 
         [&](const int &acum, const int &j)
@@ -55,7 +55,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
     number result;
     
     DM4thUtils::parallelLoopReduce<number, int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::ADD, 
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         0, v.data_size(), iter, // from, to, step
 
         [&](number acum, number j)
@@ -73,7 +73,7 @@ inline number sumatory(Function f,  number begin,  number end, const number incr
     number result;
     
     DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::ADD, 
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         begin, end, increment, // from, to, step
 
         [&](const number &acum, const number &j)
@@ -92,7 +92,7 @@ inline number sumatory(NDArray<number> v, number begin, number end, number incre
     number result;
     
     DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::ADD, 
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         begin, end, increment, // from, to, step
 
         [&](number acum, number j)
@@ -112,7 +112,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
     number result;
 
     DM4thUtils::parallelLoopReduce<number, int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::MUL,
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL,
         0, v.data_size(), iter, // from, to, step
 
         [&](number acum, const int &j)
@@ -132,7 +132,7 @@ inline number product(Function f, number begin, number end, const number increme
     number result;
     
     DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::MUL, 
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL, 
         begin, end, increment, // from, to, step
 
         [&](const number &acum, const number &j)
@@ -152,7 +152,7 @@ inline number product(NDArray<number> v, number begin, number end, number increm
 
     number result;
     DM4thUtils::parallelLoopReduce<number, number>(
-        DM4thUtils::EParallelType::OMP_PARALLEL | DM4thUtils::EParallelType::MUL,
+        EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL,
         begin, end, increment, // from, to, step
 
         [&](const number &acum, number j)

@@ -8,7 +8,7 @@ namespace DM4thNDArrayUtils
 {
 
     template<class T>
-    T mult(NDArray<T> arr)
+    T mul(NDArray<T> arr)
     {
         T result = 1;
         int size = arr.data_size();
@@ -88,7 +88,7 @@ template<class T, class ... U>
 NDArray<T> repeat(T value, U ... axisSize)
 {
     NDArray<T> result;
-    unsigned int size = (unsigned int)DM4thUtils::mult(axisSize ...);
+    unsigned int size = (unsigned int)DM4thUtils::mul(axisSize ...);
     result.resize(axisSize...);
 
     for(unsigned int j=0; j<size; ++j)

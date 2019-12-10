@@ -23,7 +23,7 @@ NDArray<T>::NDArray(T *data, const NDArray<int> &axisArray)
     DM4thAssert(axisArray.rank()==1);
 
     this->resize(axisArray);
-    int size = DM4thNDArrayUtils::mult(axisArray);
+    int size = DM4thNDArrayUtils::mul(axisArray);
     for(int j=0; j<size; ++j)
     {
         this->data_item(j) = data[j];
@@ -166,9 +166,9 @@ inline int NDArray<T>::shape(const int &axis) const
 template<class T> template<class ... U>
 const NDArray<T> &NDArray<T>::reshape(const int &axis1, U ... args)
 {
-    //int oldShapeMult = mult(this->shape().data(), this->rank());
-    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->rank());
-    int newShapeMult = DM4thUtils::mult(axis1,args...);
+    //int oldShapeMult = mul(this->shape().data(), this->rank());
+    int oldShapeMult = DM4thCArrayUtils::mul(this->_data->shape.data(), this->rank());
+    int newShapeMult = DM4thUtils::mul(axis1,args...);
     
     if(oldShapeMult!=newShapeMult) this->_data->array.resize(newShapeMult);
     //DM4thAssert(oldShapeMult==newShapeMult);
@@ -182,8 +182,8 @@ const NDArray<T> &NDArray<T>::reshape(const int &axis1, U ... args)
 template<class T>
 const NDArray<T> & NDArray<T>::reshape(const NDArray<int> &newShape)
 {
-    int oldShapeMult = DM4thCArrayUtils::mult(this->_data->shape.data(), this->rank());
-    int newShapeMult = DM4thCArrayUtils::mult(newShape.data(), newShape.size());     
+    int oldShapeMult = DM4thCArrayUtils::mul(this->_data->shape.data(), this->rank());
+    int newShapeMult = DM4thCArrayUtils::mul(newShape.data(), newShape.size());     
     DM4thAssert(newShape.rank()==1);    
     DM4thAssert(oldShapeMult==newShapeMult);
 
@@ -528,7 +528,7 @@ inline T &NDArray<T>::operator()(const NDArray<U> &axisArray){ return this->item
 // -------------------- NDArray-NDArray operations --------------------
 
 template<class T> template<class U>
-inline const NDArray<T> NDArray<T>::iAdd(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iAdd(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     if(this->data_size()==1)
     {
@@ -559,7 +559,7 @@ inline const NDArray<T> NDArray<T>::iAdd(const NDArray<U> &other, const DM4thUti
 }
 
 template<class T> template<class U>
-inline const NDArray<T> NDArray<T>::iSub(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iSub(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     if(this->data_size()==1)
     {
@@ -590,7 +590,7 @@ inline const NDArray<T> NDArray<T>::iSub(const NDArray<U> &other, const DM4thUti
 }
 
 template<class T> template<class U>
-const NDArray<T> NDArray<T>::iMult(const NDArray<U> &other, const DM4thUtils::ParallelSettings &pSettings)
+const NDArray<T> NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {   
     if(this->data_size()==1)
     {
@@ -612,7 +612,7 @@ const NDArray<T> NDArray<T>::iMult(const NDArray<U> &other, const DM4thUtils::Pa
     }
     else if(other.data_size()==1)
     {
-        this->_data->array.iMult((T)other.item(0), pSettings);
+        this->_data->array.iMul((T)other.item(0), pSettings);
         //NDArray<T> result;
         //result = *this * other.item(0);
         //result.moveDataTo(*this);
@@ -625,7 +625,7 @@ const NDArray<T> NDArray<T>::iMult(const NDArray<U> &other, const DM4thUtils::Pa
 
         T r;
         DM4thUtils::parallelLoopReduce<T, int>(
-            pSettings | DM4thUtils::EParallelType::ADD, 
+            pSettings | EDM4thParallelSettings::ADD, 
             0, this->shape(0), 1, // from, to, step
 
             [&](const T &acum, const  int &j)
@@ -678,35 +678,35 @@ const NDArray<T> NDArray<T>::iMult(const NDArray<U> &other, const DM4thUtils::Pa
 // -------------------- NDArray - Scalar operations --------------------
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iAdd(const T &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iAdd(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iAdd(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iSub(const T &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iSub(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iSub(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iMult(const T &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iMul(const T &other, const DM4thParallelSettings &pSettings)
 {
-    this->_data->array.iMult(other, pSettings);
+    this->_data->array.iMul(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iDiv(const T &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iDiv(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iDiv(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iMod(const T &other, const DM4thUtils::ParallelSettings &pSettings)
+inline const NDArray<T> NDArray<T>::iMod(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iMod(other, pSettings);
     return *this;
@@ -717,21 +717,21 @@ inline const NDArray<T> NDArray<T>::iMod(const T &other, const DM4thUtils::Paral
 template<class T> template<class U> 
 inline const NDArray<T> NDArray<T>::operator+=(const NDArray<U> &other)
 {
-    this->iAdd(other, DM4thUtils::EParallelType::OMP_PARALLEL);
+    this->iAdd(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
 }
 
 template<class T> template<class U> 
 inline const NDArray<T> NDArray<T>::operator-=(const NDArray<U> &other)
 {
-    this->iSub(other, DM4thUtils::EParallelType::OMP_PARALLEL);
+    this->iSub(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
 }
 
 template<class T> template<class U> 
 inline const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
 {
-    this->iMult(other, DM4thUtils::EParallelType::OMP_PARALLEL);
+    this->iMul(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
 }
 
@@ -739,14 +739,14 @@ template<class T> template<class U>
 inline NDArray<T> NDArray<T>::operator+(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iAdd(other, DM4thUtils::OMP_PARALLEL);
+    result.iAdd(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
 template<class T>
 inline const NDArray<T> NDArray<T>::operator+=(const T &other)
 {
-    this->_data->array.iAdd(other, DM4thUtils::OMP_PARALLEL);
+    this->_data->array.iAdd(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -754,7 +754,7 @@ template<class T>
 inline const NDArray<T> NDArray<T>::operator+(const T &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iAdd(other, DM4thUtils::OMP_PARALLEL);
+    result.iAdd(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
@@ -764,14 +764,14 @@ template<class T> template<class U>
 inline NDArray<T> NDArray<T>::operator-(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iSub(other, DM4thUtils::OMP_PARALLEL);
+    result.iSub(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
 template<class T>
 inline const NDArray<T> NDArray<T>::operator-=(const T &other)
 {
-    this->_data->array.iSub(other, DM4thUtils::OMP_PARALLEL);
+    this->_data->array.iSub(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -779,7 +779,7 @@ template<class T>
 inline const NDArray<T> NDArray<T>::operator-(const T &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iSub(other, DM4thUtils::OMP_PARALLEL);
+    result.iSub(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
@@ -787,7 +787,7 @@ template<class T> template<class U>
 inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iMult(other, DM4thUtils::OMP_PARALLEL);
+    result.iMul(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
@@ -795,7 +795,7 @@ inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 template<class T>
 const NDArray<T> NDArray<T>::operator*=(const T &other)
 {
-    this->_data->array.iMult(other, DM4thUtils::OMP_PARALLEL);
+    this->_data->array.iMul(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -803,14 +803,14 @@ template<class T>
 inline NDArray<T> NDArray<T>::operator*(const T &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iMult(other, DM4thUtils::OMP_PARALLEL);
+    result.iMul(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
 template<class T>
 inline const NDArray<T> NDArray<T>::operator/=(const T &other)
 {
-    this->_data->array.iDiv(other, DM4thUtils::OMP_PARALLEL);
+    this->_data->array.iDiv(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -818,14 +818,14 @@ template<class T>
 inline NDArray<T> NDArray<T>::operator/(const T &other) const
 {
     NDArray<T> result = this->getCopy();
-    result.iDiv(other, DM4thUtils::OMP_PARALLEL);
+    result.iDiv(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
 template<class T>
 inline const NDArray<T> NDArray<T>::operator%=(const T &other)
 {
-    this->_data->array.iMod(other, DM4thUtils::OMP_PARALLEL);
+    this->_data->array.iMod(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -833,7 +833,7 @@ template<class T>
 inline NDArray<T> NDArray<T>::operator%(const T &other)
 {
     NDArray<T> result = this->getCopy();
-    result.iMod(other, DM4thUtils::OMP_PARALLEL);
+    result.iMod(other, EDM4thParallelSettings::DEFAULT);
     return result;
 }
 
@@ -852,7 +852,7 @@ NDArray<bool> NDArray<T>::operator==(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -872,7 +872,7 @@ NDArray<bool> NDArray<T>::operator!=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -893,7 +893,7 @@ NDArray<bool> NDArray<T>::operator> (const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -913,7 +913,7 @@ NDArray<bool> NDArray<T>::operator<=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -933,7 +933,7 @@ NDArray<bool> NDArray<T>::operator>=(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -954,7 +954,7 @@ NDArray<bool> NDArray<T>::operator<(const T &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -976,7 +976,7 @@ NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1013,7 +1013,7 @@ NDArray<bool> NDArray<T>::operator!=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1049,7 +1049,7 @@ NDArray<bool> NDArray<T>::operator>(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1086,7 +1086,7 @@ NDArray<bool> NDArray<T>::operator<=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1123,7 +1123,7 @@ NDArray<bool> NDArray<T>::operator>=(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1159,7 +1159,7 @@ NDArray<bool> NDArray<T>::operator<(const NDArray<T> &other) const
         result.resize(this->shape());
 
         DM4thUtils::parallelLoopItems<int>(
-            DM4thUtils::EParallelType::OMP_PARALLEL,
+            EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
             [&](const int &j) 
@@ -1193,7 +1193,7 @@ inline NDArray<bool> NDArray<bool>::operator&&(const NDArray<bool> &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -1213,7 +1213,7 @@ inline NDArray<bool> NDArray<bool>::operator||(const NDArray<bool> &other) const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -1234,7 +1234,7 @@ inline NDArray<bool> NDArray<bool>::operator!() const
     result.resize(this->shape());
 
     DM4thUtils::parallelLoopItems<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
         [&](const int &j) 
@@ -1558,7 +1558,7 @@ void NDArray<T>::SubArray::setRef(const NDArray<U> &first, V... args)
         }
         this->_subArray.reshape(realNewShape);
     }else{
-        this->_subArray.reshape(DM4thNDArrayUtils::mult(newShape));
+        this->_subArray.reshape(DM4thNDArrayUtils::mul(newShape));
     }
 
 

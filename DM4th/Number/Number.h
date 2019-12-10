@@ -507,7 +507,7 @@ inline _number<T> acsch(_number<T>);
                                          : __VA_ARGS__)
 #define DM4thReductionSub(...) reduction(- \
                                          : __VA_ARGS__)
-#define DM4thReductionMult(...) reduction(* \
+#define DM4thReductionmul(...) reduction(* \
                                           : __VA_ARGS__)
 #define DM4thReductionMax(...) reduction(max \
                                          : __VA_ARGS__)

@@ -74,7 +74,7 @@ namespace DM4th
 
 
             DM4thUtils::parallelLoopItems<int>(
-                DM4thUtils::EParallelType::OMP_PARALLEL,
+                EDM4thParallelSettings::OMP_PARALLEL,
                 0, matrix.size(), 1, // from, to, step
 
                 [&](const int &i)
@@ -103,7 +103,7 @@ namespace DM4th
 
             // DM4thLoopItems MATRIX
             DM4thUtils::parallelLoopItems<int>(
-                DM4thUtils::EParallelType::OMP_PARALLEL,
+                EDM4thParallelSettings::OMP_PARALLEL,
                 0, matrix.size(), 1, //from, to, step
                 
                 [&](const int &i)

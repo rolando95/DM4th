@@ -167,7 +167,7 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
     
     bool result;
     DM4thUtils::parallelLoopItemsCond<int>(
-        DM4thUtils::EParallelType::OMP_PARALLEL,
+        EDM4thParallelSettings::OMP_PARALLEL,
         0, this->_size, 1, //from, to, step
 
         [&](const int &j)->bool 
@@ -189,7 +189,7 @@ inline bool BaseArray<T>::operator!=(const BaseArray<U> &other) const
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -209,7 +209,7 @@ const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const Parallel
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -226,7 +226,7 @@ const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const ParallelSettings &p
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iSub(const U &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -244,7 +244,7 @@ const BaseArray<T> &BaseArray<T>::iSub(const U &other, const ParallelSettings &p
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -264,7 +264,7 @@ const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const Parallel
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iMult(const U &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParallelSettings &pSettings)
 {
 
     DM4thUtils::parallelLoopItems<int>(
@@ -283,7 +283,7 @@ const BaseArray<T> &BaseArray<T>::iMult(const U &other, const ParallelSettings &
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -301,7 +301,7 @@ const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const ParallelSettings &p
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iMod(const U &other, const ParallelSettings &pSettings)
+const BaseArray<T> &BaseArray<T>::iMod(const U &other, const DM4thParallelSettings &pSettings)
 {
 
     DM4thUtils::parallelLoopItems<int>(
@@ -321,49 +321,49 @@ const BaseArray<T> &BaseArray<T>::iMod(const U &other, const ParallelSettings &p
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
 {
-    this->iAdd(other, DM4thUtils::OMP_PARALLEL);
+    this->iAdd(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator-=(const BaseArray<U> &other)
 {
-    this->iSub(other, DM4thUtils::OMP_PARALLEL);
+    this->iSub(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator+=(const U &other)
 {
-    this->iAdd(other, DM4thUtils::OMP_PARALLEL);
+    this->iAdd(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator-=(const U &other)
 {
-    this->iSub(other, DM4thUtils::OMP_PARALLEL);
+    this->iSub(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator*=(const U &other)
 {
-    this->iMult(other, DM4thUtils::OMP_PARALLEL);
+    this->iMul(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator/=(const U &other)
 {
-    this->iDiv(other, DM4thUtils::OMP_PARALLEL);
+    this->iDiv(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator%=(const U &other)
 {
-    this->iMod(other, DM4thUtils::OMP_PARALLEL);
+    this->iMod(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 

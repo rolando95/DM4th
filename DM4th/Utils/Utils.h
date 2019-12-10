@@ -67,6 +67,25 @@
 namespace DM4th
 {
 
+enum EDM4thParallelSettings
+{
+    DEFAULT = 0,
+
+    // Parallel Type
+    ORDERED          = 1 << 0,
+    OMP_PARALLEL    = 1 << 1,
+    OMP_WORK_SHARED = 1 << 2,
+    PARALLEL_TYPE   = 2*OMP_WORK_SHARED - ORDERED,
+
+    // Reduce operation
+    ADD             = 1 << 3,
+    SUB             = 1 << 4,
+    MUL             = 1 << 5,
+    DIV             = 1 << 6,
+    REDUCE_OP       = 2*DIV - ADD,
+};
+
+typedef unsigned int DM4thParallelSettings;
 
 constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();
@@ -85,12 +104,12 @@ namespace DM4thUtils
     inline T max(const T &a,const T &b){ return (a>b)? a: b; }
 
     template<class T>
-    inline T mult(const T &last){
+    inline T mul(const T &last){
         return last;
     }
     template<class T, class ... U>
-    inline T mult(const T &first, U ... args){
-        return first*mult(args...);
+    inline T mul(const T &first, U ... args){
+        return first*mul(args...);
     }
 
 
@@ -112,29 +131,13 @@ namespace DM4thUtils
         return 1+count(args...);
     }
 
-    enum EParallelType
-    {
-        DEFAULT = 0,
 
-        OMP_SECUENTIAL  = 1 << 0,
-        OMP_PARALLEL    = 1 << 1,
-        OMP_WORK_SHARED = 1 << 2,
-        PARALLEL_TYPE   = 2*OMP_WORK_SHARED-1,
-
-        ADD             = 1 << 3,
-        SUB             = 1 << 4,
-        MUL             = 1 << 5,
-        DIV             = 1 << 6,
-        REDUCE_OP       = 2*DIV-1 - PARALLEL_TYPE,
-    };
-
-    typedef unsigned int ParallelSettings;
 
     template<class T>
-    inline T reduceOp(const ParallelSettings &settings,const T& op1,const T& op2)
+    inline T reduceOp(const DM4thParallelSettings &settings,const T& op1,const T& op2)
     {   
         T result = 0;
-        switch (settings & EParallelType::REDUCE_OP)
+        switch (settings & EDM4thParallelSettings::REDUCE_OP)
         {
         case ADD:
             result = op1 + op2;
@@ -149,6 +152,7 @@ namespace DM4thUtils
             result = op1 / op2;
             break;
         default:
+            DM4thAssert(false);
             break;
         }
 
@@ -160,39 +164,42 @@ namespace DM4thUtils
     */
     template<class T>
     inline void parallelLoopItems(
-        const ParallelSettings &settings, 
+        const DM4thParallelSettings &settings, 
         const T &from, const T &to, const T &step, 
         const std::function<void(T& item)> &f, 
         const bool &forceParallel=false)
     {
-        switch (settings & EParallelType::PARALLEL_TYPE)
+        switch (settings & EDM4thParallelSettings::PARALLEL_TYPE)
         {
+        #if defined(_OPENMP)
 
-        case OMP_WORK_SHARED:
+            case OMP_WORK_SHARED:
 
-            #pragma omp for
-            for(T j=from; j<to; j+=step)
-            {
-                f(j);
-            }
-            break;
+                #pragma omp for
+                for(T j=from; j<to; j+=step)
+                {
+                    f(j);
+                }
+                break;
 
-        case OMP_PARALLEL:
+            case DEFAULT:
+            case OMP_PARALLEL:
+                #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
+                for(T j=from; j<to; j+=step)
+                {
+                    f(j);
+                }
+                break;
 
-            #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
-            for(T j=from; j<to; j+=step)
-            {
-                f(j);
-            }
-            break;
+        #endif
+            case ORDERED:
+            default:
 
-        default:
-
-            for(T j=from; j<to; j+=step)
-            {
-                f(j);
-            }
-            break;
+                for(T j=from; j<to; j+=step)
+                {
+                    f(j);
+                }
+                break;
 
         }
 
@@ -208,7 +215,7 @@ namespace DM4thUtils
     */
     template<class T>
     inline void parallelLoopItemsCond(
-        const ParallelSettings &settings,  
+        const DM4thParallelSettings &settings,  
         const T &from, const T &to, const T &step, 
         const std::function<bool(T& item)> &f, 
         bool &out,
@@ -216,56 +223,73 @@ namespace DM4thUtils
     {
         out = true;
 
-        switch (settings & EParallelType::PARALLEL_TYPE)
+        switch (settings & EDM4thParallelSettings::PARALLEL_TYPE)
         {
 
-                    
-        case OMP_WORK_SHARED:
-            {
-                #pragma omp barrier
+        #if defined(_OPENMP)
 
-                T pStep = omp_get_num_threads()*step;
-                T j = omp_get_thread_num()*step+from;
-
-                while (j < to && out)
+            case OMP_WORK_SHARED:
                 {
-                    if(!f(j))
-                    {
-                        #pragma omp critical
-                        {
-                            out = false;
-                        }
-                    }
-                    j += pStep;
-                }    
+                    #pragma omp barrier
 
-                #pragma omp barrier
-                
-            }
-            break;
+                    T pStep = omp_get_num_threads()*step;
+                    T j = omp_get_thread_num()*step+from;
 
-        case OMP_PARALLEL:
-            {
-                IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
-                {
-                    #pragma omp parallel shared(out)
+                    while (j < to && out)
                     {
-                        T pStep = omp_get_num_threads()*step;
-                        T j = omp_get_thread_num()*step+from;
-                        while (j < to && out)
+                        if(!f(j))
                         {
-                            if(!f(j))
+                            #pragma omp critical
                             {
-                                #pragma omp critical
-                                {
-                                    
-                                    out = false;
-                                }
+                                out = false;
                             }
-                            j += pStep;
+                        }
+                        j += pStep;
+                    }    
+
+                    #pragma omp barrier
+                    
+                }
+                break;
+
+            case OMP_PARALLEL:
+                {
+                    IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
+                    {
+                        #pragma omp parallel shared(out)
+                        {
+                            T pStep = omp_get_num_threads()*step;
+                            T j = omp_get_thread_num()*step+from;
+                            while (j < to && out)
+                            {
+                                if(!f(j))
+                                {
+                                    #pragma omp critical
+                                    {
+                                        
+                                        out = false;
+                                    }
+                                }
+                                j += pStep;
+                            }
+                        }
+                    }else{
+                        for(T j=from; j<to; j+=step)
+                        {
+                            if(!f(j)) 
+                            {
+                                out = false;
+                                break;
+                            }
                         }
                     }
-                }else{
+                }
+                break;
+
+        #endif
+            case ORDERED:
+            default:
+                {
                     for(T j=from; j<to; j+=step)
                     {
                         if(!f(j)) 
@@ -275,24 +299,10 @@ namespace DM4thUtils
                         }
                     }
                 }
+
+                break;
+
             }
-            break;
-
-        default:
-            {
-                for(T j=from; j<to; j+=step)
-                {
-                    if(!f(j)) 
-                    {
-                        out = false;
-                        break;
-                    }
-                }
-            }
-
-            break;
-
-        }
     }
 
     /*
@@ -303,7 +313,7 @@ namespace DM4thUtils
     */
     template<class Type, class Iter>
     inline void parallelLoopReduce(
-        const ParallelSettings &settings,  
+        const DM4thParallelSettings &settings,  
         const Iter &from, const Iter &to, const Iter &step, 
         const std::function<Type(Type acum, Iter item)> &f, 
         Type &out,
@@ -311,8 +321,11 @@ namespace DM4thUtils
         const bool &forceParallel=false)
     {
         out = initValue;
-        switch (settings & EParallelType::PARALLEL_TYPE)
+        switch (settings & EDM4thParallelSettings::PARALLEL_TYPE)
         {
+
+        #if defined(_OPENMP)
+
             case OMP_WORK_SHARED:
             {
                 #pragma omp barrier
@@ -370,6 +383,8 @@ namespace DM4thUtils
             }
             break;
 
+        #endif
+            case ORDERED:
             default:
             {
                 for(Iter j=from; j<to; j+=step)
