@@ -26,7 +26,10 @@
 
 #include <functional>
 
-#include <omp.h>
+#if defined(_OPENMP)
+    #include <omp.h>
+    #define DM4thOmpNumber
+#endif
 
 #include "DM4thConfig.h"
 
@@ -60,7 +63,7 @@
 #endif
 
 //Declare number reductions, etc.
-#define DM4thOmpNumber
+
 
 
 
@@ -395,6 +398,89 @@ namespace DM4thUtils
             break;
         }
     } 
+
+    /*
+        Perform a single thread operation similar to #pragma omp single
+    */
+    inline void singleThreadOperation(
+        const DM4thParallelSettings &settings,
+        const std::function<void(void)> &f)
+    {
+        #pragma omp single
+        {
+            f();
+        }
+    }
+
+    /*
+        Execute an operation in a critical section similar to #pragma omp critical
+    */
+    inline void criticalSection(
+        const DM4thParallelSettings &settings,
+        const std::function<void(void)> &f)
+    {
+        #pragma omp critical
+        {
+            f();
+        }
+    }
+
+    /*
+        
+    */
+    inline void parallelSections(
+        const DM4thParallelSettings &settings,
+        const std::function<void(void)> &f1,
+        const std::function<void(void)> &f2)
+    {
+        switch (settings & EDM4thParallelSettings::PARALLEL_TYPE)
+        {
+        
+        #if defined(_OPENMP)
+        #endif
+            case OMP_WORK_SHARED:
+                {
+                    #pragma omp barrier
+                    #pragma omp sections
+                    {
+                        #pragma omp section
+                        f1();
+                        #pragma omp section
+                        f2();
+                    }
+                    #pragma omp barrier
+                }
+                break;
+
+            case DEFAULT:
+            case OMP_PARALLEL:
+                {
+                    
+                    #pragma omp parallel sections
+                    {
+                        #pragma omp section
+                        {
+                            f1();
+                        }
+                        
+                        #pragma omp section
+                        {
+                            f2();
+                        }
+                        
+                    }               
+                }
+                break;
+
+            case ORDERED:
+            default:
+                {
+                    f1();
+                    f2();
+                }
+                break;
+        }
+    }
 }
 
 namespace DM4thInternal 

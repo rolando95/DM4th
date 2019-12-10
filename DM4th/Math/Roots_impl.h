@@ -89,51 +89,31 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
         return seed;
     }
 
-    IFDM4thOmp(true)
-    {
-        number x1 = seed.real();
-        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
-        
-        #pragma omp parallel sections shared(x1, y1) num_threads(2)
-        {
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
-                    x1 = x1 - f(x1)/derivative(f,x1);
-                }
-            }
-            
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter.real() && (abs(f(y1))>tolerance && abs(f(x1))>tolerance); ++n){
-                    y1 = y1 - f(y1)/derivative(f,y1);
-                }
-            }
-        }
-        
-        if(abs(f(x1))<tolerance) return x1;
-        if(abs(f(y1))<tolerance) return y1;
-
-    }else{
-
-        number x1 = seed.real();
-
-        for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
-            x1 = x1 - f(x1)/derivative(f,x1);
-        }
-
-        if(abs(f(x1))<tolerance) return x1;
-
-        // Trying to use imaginary seed
-        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
-        
-        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
-            y1 = y1 - f(y1)/derivative(f,y1);
-        }
-        
-        if(abs(f(y1))<tolerance) return y1;
+    number x1 = seed.real();
+    number y1 = (seed.imag()==0)? number(0,1) : number(0,seed.imag());
     
-    }
+    DM4thUtils::parallelSections(
+        EDM4thParallelSettings::DEFAULT,
+
+        // Real root
+        [&]()
+        {
+            for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
+                x1 = x1 - f(x1)/derivative(f,x1);
+            }
+        },
+
+        // Complex root
+        [&]()
+        {
+            for(int n=0; n<maxIter.real() && (abs(f(y1))>tolerance && abs(f(x1))>tolerance); ++n){
+                y1 = y1 - f(y1)/derivative(f,y1);
+            }
+        }
+    );
+
+    if(abs(f(x1))<tolerance) return x1;
+    if(abs(f(y1))<tolerance) return y1;
     
     return NAN;
 }
@@ -146,53 +126,31 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
         return seed;
     }
 
-    IFDM4thOmp(true)
-    {
+    number x1 = seed.real();
+    number y1 = (seed.imag()==0)? number(0,1) : number(0,seed.imag());
 
-        number x1 = seed.real();
-        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
-        
-        #pragma omp parallel sections shared(x1, y1)
+    DM4thUtils::parallelSections(
+        EDM4thParallelSettings::DEFAULT,
+
+        // Real root
+        [&]()
         {
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
-                    x1 = x1 - f(x1)/fd(x1);
-                }
+            for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
+                x1 = x1 - f(x1)/fd(x1);
             }
-            
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance && abs(f(x1))>tolerance; ++n){
-                    y1 = y1 - f(y1)/fd(y1);
-                }
+        },
+
+        // Complex Root
+        [&]()
+        {
+            for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance && abs(f(x1))>tolerance; ++n){
+                y1 = y1 - f(y1)/fd(y1);
             }
         }
-        
-        if(abs(f(x1))<tolerance) return x1;
-        if(abs(f(y1))<tolerance) return y1;
+    );
 
-    }else{
-
-        number x1 = seed.real();
-
-        for(int n=0; n<maxIter.real() && abs(f(x1))>tolerance; ++n){
-            x1 = x1 - f(x1)/fd(x1);
-        }
-
-        if(abs(f(x1))<tolerance) return x1;
-
-        // Trying to use imaginary seed
-        number y1 = (seed.imag()==0)? 1.00_i : number(0,seed.imag());
-        
-        for(int n=0; n<maxIter.real() && abs(f(y1))>tolerance; ++n){
-            y1 = y1 - f(y1)/fd(y1);
-        }
-        
-        if(abs(f(y1))<tolerance) return y1;
-        return abs(f(x1))<abs(f(y1))? x1:y1; // returns the nearest value  
-
-    }
+    if(abs(f(x1))<tolerance) return x1;
+    if(abs(f(y1))<tolerance) return y1;
     
     return NAN;
     
@@ -209,66 +167,39 @@ inline number secantMethod(Function f, number seed0, number seed1, number maxIte
         return seed1;
     }
     
-    IFDM4thOmp(true)
-    {
+    number x0 = seed0.real(); 
+    number x1 = seed1.real();
+    number x2;
 
-        number x0 = seed0.real(); 
-        number x1 = seed1.real();
-        number x2;
+    number y0 = seed0.imag()==0? number(0,1) : seed0.imag();
+    number y1 = seed1.imag()==0? number(0,1) : seed1.imag();
+    number y2;
 
-        number y0 = seed0.imag()==0? 1.00_i : seed0.imag();
-        number y1 = seed1.imag()==0? 1.01_i : seed1.imag();
-        number y2;
+    DM4thUtils::parallelSections(
+        EDM4thParallelSettings::DEFAULT,
 
-        #pragma omp parallel sections shared(x0,x1,x2, y0,y1,y2) num_threads(2)
+        // Real root
+        [&]()
         {
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter && abs(f(x1))>tolerance; ++n){
-                    x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));
-                    x0 = x1; x1 = x2;
-                    
-                }
+            for(int n=0; n<maxIter && abs(f(x1))>tolerance; ++n){
+                x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));
+                x0 = x1; x1 = x2;
+                
             }
-            #pragma omp section
-            {
-                for(int n=0; n<maxIter && abs(f(y1))>tolerance && abs(f(x1))>tolerance; ++n){
-                    y2 = y1 - f(y1) * ((y0-y1)/(f(y0) - f(y1)));
-                    y0 = y1; y1 = y2;
-                }
+        },
+
+        // Complex root
+        [&]()
+        {
+            for(int n=0; n<maxIter && abs(f(y1))>tolerance && abs(f(x1))>tolerance; ++n){
+                y2 = y1 - f(y1) * ((y0-y1)/(f(y0) - f(y1)));
+                y0 = y1; y1 = y2;
             }
         }
+    );
 
-        if(abs(f(x2))<tolerance) return x2;
-        if(abs(f(y2))<tolerance) return y2;
-
-    }else{
-
-        number x0 = seed0.real(); 
-        number x1 = seed1.real();
-        number x2;
-
-        for(int n=0; n<maxIter && abs(f(x1))>tolerance; ++n){
-            x2 = x1 - f(x1) * ((x0-x1)/(f(x0) - f(x1)));
-            x0 = x1; x1 = x2;
-        }
-
-        if(abs(f(x2))<tolerance) return x2;
-
-        // Trying to use imaginary seed
-        number y0 = seed0.imag()==0? 1.00_i : seed0.imag();
-        number y1 = seed1.imag()==0? 1.01_i : seed1.imag();
-        number y2;
-
-        for(int n=0; n<maxIter && abs(f(y1))>tolerance; ++n){
-            y2 = y1 - f(y1) * ((y0-y1)/(f(y0) - f(y1)));
-            y0 = y1; y1 = y2;
-        }
-
-        if(abs(f(y2))<tolerance) return y2;
-        return abs(f(x2))<abs(f(y2))? x2:y2; // returns the nearest value
-
-    }
+    if(abs(f(x2))<tolerance) return x2;
+    if(abs(f(y2))<tolerance) return y2;
 
     return NAN;
     

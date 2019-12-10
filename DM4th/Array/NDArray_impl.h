@@ -528,7 +528,7 @@ inline T &NDArray<T>::operator()(const NDArray<U> &axisArray){ return this->item
 // -------------------- NDArray-NDArray operations --------------------
 
 template<class T> template<class U>
-inline const NDArray<T> NDArray<T>::iAdd(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iAdd(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     if(this->data_size()==1)
     {
@@ -559,7 +559,7 @@ inline const NDArray<T> NDArray<T>::iAdd(const NDArray<U> &other, const DM4thPar
 }
 
 template<class T> template<class U>
-inline const NDArray<T> NDArray<T>::iSub(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iSub(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     if(this->data_size()==1)
     {
@@ -590,7 +590,7 @@ inline const NDArray<T> NDArray<T>::iSub(const NDArray<U> &other, const DM4thPar
 }
 
 template<class T> template<class U>
-const NDArray<T> NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
+const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
 {   
     if(this->data_size()==1)
     {
@@ -678,35 +678,35 @@ const NDArray<T> NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelSe
 // -------------------- NDArray - Scalar operations --------------------
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iAdd(const T &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iAdd(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iAdd(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iSub(const T &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iSub(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iSub(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iMul(const T &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iMul(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iMul(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iDiv(const T &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iDiv(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iDiv(other, pSettings);
     return *this;
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::iMod(const T &other, const DM4thParallelSettings &pSettings)
+inline const NDArray<T> &NDArray<T>::iMod(const T &other, const DM4thParallelSettings &pSettings)
 {
     this->_data->array.iMod(other, pSettings);
     return *this;
@@ -715,21 +715,21 @@ inline const NDArray<T> NDArray<T>::iMod(const T &other, const DM4thParallelSett
 // -------------------- NDArray aritmethic operator overloading --------------------
 
 template<class T> template<class U> 
-inline const NDArray<T> NDArray<T>::operator+=(const NDArray<U> &other)
+inline const NDArray<T> &NDArray<T>::operator+=(const NDArray<U> &other)
 {
     this->iAdd(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
 }
 
 template<class T> template<class U> 
-inline const NDArray<T> NDArray<T>::operator-=(const NDArray<U> &other)
+inline const NDArray<T> &NDArray<T>::operator-=(const NDArray<U> &other)
 {
     this->iSub(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
 }
 
 template<class T> template<class U> 
-inline const NDArray<T> NDArray<T>::operator*=(const NDArray<U> &other)
+inline const NDArray<T> &NDArray<T>::operator*=(const NDArray<U> &other)
 {
     this->iMul(other, EDM4thParallelSettings::OMP_PARALLEL);
     return *this;
@@ -744,7 +744,7 @@ inline NDArray<T> NDArray<T>::operator+(const NDArray<U> &other) const
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator+=(const T &other)
+inline const NDArray<T> &NDArray<T>::operator+=(const T &other)
 {
     this->_data->array.iAdd(other, EDM4thParallelSettings::DEFAULT);
     return *this;
@@ -769,7 +769,7 @@ inline NDArray<T> NDArray<T>::operator-(const NDArray<U> &other) const
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator-=(const T &other)
+inline const NDArray<T> &NDArray<T>::operator-=(const T &other)
 {
     this->_data->array.iSub(other, EDM4thParallelSettings::DEFAULT);
     return *this;
@@ -793,7 +793,7 @@ inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 
 
 template<class T>
-const NDArray<T> NDArray<T>::operator*=(const T &other)
+const NDArray<T> &NDArray<T>::operator*=(const T &other)
 {
     this->_data->array.iMul(other, EDM4thParallelSettings::DEFAULT);
     return *this;
@@ -808,7 +808,7 @@ inline NDArray<T> NDArray<T>::operator*(const T &other) const
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator/=(const T &other)
+inline const NDArray<T> &NDArray<T>::operator/=(const T &other)
 {
     this->_data->array.iDiv(other, EDM4thParallelSettings::DEFAULT);
     return *this;
@@ -823,7 +823,7 @@ inline NDArray<T> NDArray<T>::operator/(const T &other) const
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator%=(const T &other)
+inline const NDArray<T> &NDArray<T>::operator%=(const T &other)
 {
     this->_data->array.iMod(other, EDM4thParallelSettings::DEFAULT);
     return *this;

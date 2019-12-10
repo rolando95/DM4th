@@ -448,28 +448,28 @@ inline void ArrayData<T>::moveDataTo(ArrayData<T> &other)
 template <class T>
 void ArrayDataManager<T>::incrRef()
 {
-    #pragma omp critical
-    {
+    DM4thUtils::criticalSection(DEFAULT,
+    [&]{
         if (this->_data == nullptr)
         {
             this->_data = new ArrayData<T>();
         }
         this->_data->incrRef();
-    }
+    });
 }
 
 template <class T>
 void ArrayDataManager<T>::decrRef()
 {
-    #pragma omp critical
-    {
+    DM4thUtils::criticalSection(DEFAULT,
+    [&]{
         this->_data->decrRef();
         if (this->_data->refCount() <= 0)
         {
             delete this->_data;
             this->_data = nullptr;
         }
-    }
+    });
 }
 
 template <class T>
