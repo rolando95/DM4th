@@ -53,6 +53,9 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         NDArray<T> map(const std::function<T(T item,int idx)> &f);
         NDArray<T> filter(const std::function<bool(T item,int idx)> &f);
 
+        template<class ... U> inline T &item(const int &axis1, U ... args) const;
+        inline T &item(const int &axis1) const;
+
         template<class AXIS, class ... U> T &item(AXIS x, U ... args) const;
         template<class AXIS> inline T &item(AXIS x) const;
         template<class AXIS> inline T &item(const NDArray<AXIS> &axisArray) const;
@@ -276,6 +279,10 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class AXIS, class ... U>
         inline int _item(const int &axis, int pos, AXIS idx, U ... args) const;
         template<class AXIS> inline int _item(const int &axis, int pos, AXIS idx) const;
+
+        template<class ... U>
+        inline int _item(const int &axis, int pos, const int &idx, U ... args) const;
+        inline int _item(const int &axis, int pos, const int &idx) const;
 
         DM4thInternal::BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
         

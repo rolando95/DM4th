@@ -346,14 +346,29 @@ inline T &NDArray<T>::item(AXIS axis, U ... args) const
 { 
     DM4thAssert(DM4thUtils::count(axis,args...)==this->rank());
     const int x = int(axis);
-    const int pos = this->_item(1,x,args ...); 
-    return this->_data->array(pos);
+    return this->_data->array(this->_item(1,x,args ...));
+}
+
+template<class T> template<class ... U>
+inline T &NDArray<T>::item(const int &x, U ... args) const
+{ 
+    DM4thAssert(DM4thUtils::count(x,args...)==this->rank());
+    return this->_data->array(this->_item(1,x,args ...));
 }
 
 template<class T> template<class AXIS>
 inline T &NDArray<T>::item(AXIS axis) const
 {
     const int x = int(axis);
+    //if(this->_data->shape.size()>1) return this->_data->array(this->_item(1,x,0));
+    DM4thAssert(this->rank()==1);
+    DM4thAssert(x<this->_data->array.size());
+    return this->_data->array[x];
+}
+
+template<class T>
+inline T &NDArray<T>::item(const int &x) const
+{
     //if(this->_data->shape.size()>1) return this->_data->array(this->_item(1,x,0));
     DM4thAssert(this->rank()==1);
     DM4thAssert(x<this->_data->array.size());
@@ -1746,12 +1761,31 @@ inline int NDArray<T>::_item(const int &axis, int pos, AXIS x, U ... args) const
     return _item(axis+1, pos, args ...);
 }
 
+template<class T> template<class ... U>
+inline int NDArray<T>::_item(const int &axis, int pos, const int  &x, U ... args) const
+{
+    pos = pos*this->_data->shape.get(axis) + x;
+    return _item(axis+1, pos, args ...);
+}
+
 template<class T> template<class AXIS>
 inline int NDArray<T>::_item(const int &axis, int pos, AXIS x) const
 {
-    const int idx = int(x);
     //DM4thAssert(axis+1 <= this->_data->shape.size());
-    pos = pos*this->_data->shape.get(axis) + idx;
+    pos = pos*this->_data->shape.get(axis) + (int)x;
+
+    // if(axis+1 < this->_data->shape.size())
+    // {  
+    //     return _item(axis+1, pos, 0);
+    // } 
+    return pos;
+}
+
+template<class T>
+inline int NDArray<T>::_item(const int &axis, int pos, const int &x) const
+{
+    //DM4thAssert(axis+1 <= this->_data->shape.size());
+    pos = pos*this->_data->shape.get(axis) + x;
 
     // if(axis+1 < this->_data->shape.size())
     // {  

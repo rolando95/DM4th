@@ -39,5 +39,25 @@ int main()
         EXPECT_EQ(data[2], 2);
     });
 
+    DM4thTest::TEST("Subscript", []{
+        NDArray<number> A = items<number>(1,3,5,7,9,11);
+
+        EXPECT_EQ(A(0), 1);
+        EXPECT_EQ(A(1), 3);
+        EXPECT_EQ(A(2), 5);
+        EXPECT_EQ(A(3), 7);
+        EXPECT_EQ(A(4), 9);
+        EXPECT_EQ(A(5), 11);
+
+        A.reshape(3,1,2);
+
+        EXPECT_EQ(A(0,0,0), 1);
+        EXPECT_EQ(A(0,0,1), 3);
+        EXPECT_EQ(A(1,0,0), 5);
+        EXPECT_EQ(A(1,0,1), 7);
+        EXPECT_EQ(A(2,0,0), 9);
+        EXPECT_EQ(A(2,0,1), 11);
+    });
+
     return DM4thTest::TEST::ERROR_LEVEL();
 }
