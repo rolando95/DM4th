@@ -48,7 +48,7 @@ inline number factorial2(const number iter)
     return result;
 }
 
-inline number sumatory(Function f, NDArray<number> v, const number increment){
+inline number sumatory(const std::function<number(number)> &f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
@@ -68,7 +68,7 @@ inline number sumatory(Function f, NDArray<number> v, const number increment){
     return result;
 }
 
-inline number sumatory(Function f,  number begin,  number end, const number increment ){
+inline number sumatory(const std::function<number(number)> &f,  number begin,  number end, const number increment ){
     
     number result;
     
@@ -105,7 +105,7 @@ inline number sumatory(NDArray<number> v, number begin, number end, number incre
     return result;
 }
 
-inline number product(Function f, NDArray<number> v, const number increment){
+inline number product(const std::function<number(number)> &f, NDArray<number> v, const number increment){
     int iter = increment.real();
     DM4thAssert(iter>0);
 
@@ -127,7 +127,7 @@ inline number product(Function f, NDArray<number> v, const number increment){
     return result;
 }
 
-inline number product(Function f, number begin, number end, const number increment){
+inline number product(const std::function<number(number)> &f, number begin, number end, const number increment){
     
     number result;
     

@@ -46,7 +46,7 @@ inline number gamma(number z, number tolerance){
 }
 
 // Derivative
-inline number derivative(Function f, const number x0, const number order, const number h){
+inline number derivative(const std::function<number(number)> &f, const number x0, const number order, const number h){
     number o(std::abs(std::floor(order.real())));
     if(order<=0){
         return f(x0);
@@ -85,7 +85,7 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
 }
 
 // Integral
-inline number integral(Function f, const number &a, const number &b, const number subintervals){
+inline number integral(const std::function<number(number)> &f, const number &a, const number &b, const number subintervals){
     int n = subintervals.real();
     number h = (b-a)/n;
     

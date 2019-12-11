@@ -82,7 +82,7 @@ NDArray<number> bairstowsMethod(NDArray<T> v, number r, number s, number maxIter
 }
 
 // Aproximaciones de raices
-inline number newtonRaphson(Function f, number seed, number maxIter, number tolerance){
+inline number newtonRaphson(const std::function<number(number)> &f, number seed, number maxIter, number tolerance){
     
     if(abs(f(seed))<tolerance) // Input value is root of function
     {
@@ -119,7 +119,7 @@ inline number newtonRaphson(Function f, number seed, number maxIter, number tole
 }
 
 
-inline number newtonRaphson(Function f, Function fd, number seed, number maxIter, number tolerance){
+inline number newtonRaphson(const std::function<number(number)> &f, const std::function<number(number)> &fd, number seed, number maxIter, number tolerance){
 
     if(abs(f(seed))<tolerance) // Input value is root of function
     {
@@ -156,7 +156,7 @@ inline number newtonRaphson(Function f, Function fd, number seed, number maxIter
     
 }
 
-inline number secantMethod(Function f, number seed0, number seed1, number maxIter, number tolerance){
+inline number secantMethod(const std::function<number(number)> &f, number seed0, number seed1, number maxIter, number tolerance){
 
     if(abs(f(seed0))<tolerance) // Input value is root of function
     {

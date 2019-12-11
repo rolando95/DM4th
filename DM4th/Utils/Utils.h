@@ -210,7 +210,7 @@ namespace DM4thUtils
 
     /*
         Loop in parallel over array elements
-        The loop breaks if return value of function callback is false
+        The loop breaks if return value of const std::function<number(number)> &callback is false
 
         If you're using OMP_WORK_SHARED, the 'out' parameter must be shared to get the same result as the other configurations.
         A private 'out' parameter will only calculate an independ result for each thread.

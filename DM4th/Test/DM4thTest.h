@@ -3,7 +3,7 @@
 #include <iomanip>   
 #include<iostream>
 #include <chrono>
-
+#include <omp.h>
 #include "../Array.h"
 
 namespace DM4th 
