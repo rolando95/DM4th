@@ -25,7 +25,7 @@ class TEST
 
     public:
 
-    inline TEST(const char *name, std::function<void(void)> f, int how_many_times=1)
+    inline TEST(const char *name, const std::function<void(void)> &f, const int &how_many_times=1)
     {
         IFDM4thOmp(true)
         {

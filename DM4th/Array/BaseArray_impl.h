@@ -31,9 +31,9 @@ template <class T>
 inline void BaseArray<T>::allocArray(const int &size)
 {
     DM4thAssert(!this->_data && size > 0);
-    this->_data = new T[size]();
+    this->_capacity = sizeAligned(size);
+    this->_data = new T[this->_capacity]();
     this->_size = size;
-    this->_capacity = this->_size;
 }
 
 template <class T>
@@ -79,6 +79,15 @@ template<class T>
 inline BaseArray<T>::~BaseArray()
 {
     this->clear();
+}
+
+template <class T>
+inline void BaseArray<T>::_allocEmpty(const int &size)
+{
+    DM4thAssert(!this->_data && size > 0);
+    this->_data = new T[size];
+    this->_size = size;
+    this->_capacity = this->_size;
 }
 
 template <class T>
@@ -393,6 +402,51 @@ inline void BaseArray<T>::copyDataTo(BaseArray<T> &other) const
     other.resize(this->size());
     std::copy_n(this->_data, this->_size, other._data);
 }
+
+template<class T>
+inline void BaseArray<T>::copyNItemsTo(BaseArray<T> &other, const int &thisFrom, const int &otherFrom, const int &count) const
+{
+    std::cout<<this->size()<<" " <<other.size()<<" "<<thisFrom<< " "<<otherFrom<<" "<<count<<std::endl;
+    DM4thAssert(this->size()>=thisFrom+count && other.size()>=otherFrom+count);
+    std::copy_n(this->_data + thisFrom, count, other._data + otherFrom);
+}
+
+template<class T>
+inline void BaseArray<T>::push(const T &value, const int &idx)
+{
+    DM4thAssert(idx>=0 && idx<=this->size());
+    if(idx==this->size() && this->capacity()>idx)
+    {
+        this->_size += 1;
+        this->set(idx, value);
+    }else
+    {
+        T* tmp = this->_data;
+
+        this->_capacity = sizeAligned(this->size()+1);
+        this->_data = new T[this->_capacity];
+        this->_size += 1;
+
+        std::copy_n(tmp, idx, this->_data);
+        this->set(idx, value);
+        std::copy_n(tmp+idx, this->size()-idx-1, this->_data+idx+1);
+
+        delete[] tmp;
+    }
+}
+
+template<class T>
+inline T BaseArray<T>::pop(const int &idx)
+{
+    DM4thAssert(idx>=0 && idx<=this->size()-1);
+    T result = this->get(idx);
+
+    std::copy_n(this->_data+idx+1, this->size()-idx-1, this->_data+idx);
+    this->_size -= 1;
+
+    return result;
+}
+
 
 template<class T>
 inline std::ostream& operator<<(std::ostream& stream, const BaseArray<T> &arr)

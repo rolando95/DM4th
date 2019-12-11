@@ -53,8 +53,46 @@ NDArray<T>::operator NDArray<U>()
 template<class T> template<class ... U>
 inline void NDArray<T>::resize(const int &axis1, U ... args)
 {
-    NDArray<int> axisArray = items<int>(axis1, args...);
-    this->resize(axisArray);
+
+    if(this->rank()==1)
+    { //1 dim to N dim
+        int oldShape = this->shape(0);
+
+        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
+
+        int newDisp = this->_getAxisDisplacement(0);
+        int end = DM4thUtils::min(oldShape, this->shape(0));
+        int newj = 0;
+        for(int oldj=0; oldj<end; ++oldj, newj+=newDisp)
+        {
+            this->_data->array[newj] = oldArray[oldj];
+        }
+        //delete[] oldArray;
+    }else
+    { //N dim to M dim
+        NDArray<int> oldShape = this->shape();
+        int oldDisp = this->_getAxisDisplacement(0);
+
+        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
+
+        NDArray<int> newShape = this->shape();
+        int newDisp = this->_getAxisDisplacement(0);
+
+        if(oldArray.size() == 0) return;
+
+        int end = DM4thUtils::min(oldShape.item(0), newShape.item(0));
+        for(int j=0; j<end; ++j)
+        {
+            this->_resize(
+                1, 
+                oldDisp*j, newDisp*j, 
+                // oldDisp, newDisp,
+                oldShape, newShape, 
+                oldArray
+            );
+        }
+        //delete[] oldArray;
+    }
 }
 
 template<class T>
@@ -355,23 +393,33 @@ NDArray<T> NDArray<T>::getCopy() const
 template<class T> template<class U>
 void NDArray<T>::push(const U &value, const int &pos)
 {
-    DM4thAssert(this->rank()<=1);
-    DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
-    this->resize(this->shape(0)+1);
-    //Append
-    if(pos >= this->shape(0) || pos==END) 
+    // DM4thAssert(this->rank()<=1);
+    // DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
+    // this->resize(this->shape(0)+1);
+    // //Append
+    // if(pos >= this->shape(0) || pos==END) 
+    // {
+    //     this->_data->array(this->shape(0)-1) = value;
+    // }
+    // //Insert
+    // else 
+    // {
+    //     for(int j=this->shape(0)-1; j > pos; --j)
+    //     {
+    //         this->_data->array(j) = this->_data->array(j-1);
+    //     }
+    //     this->_data->array(pos) = value;
+    // }
+    if(this->rank()!=1)
     {
-        this->_data->array(this->shape(0)-1) = value;
+        this->reshape(this->data_size());
     }
-    //Insert
-    else 
-    {
-        for(int j=this->shape(0)-1; j > pos; --j)
-        {
-            this->_data->array(j) = this->_data->array(j-1);
-        }
-        this->_data->array(pos) = value;
-    }
+
+    if(pos==END) this->_data->array.push((T)value, this->data_size());
+    else this->_data->array.push((T)value, pos);
+
+    this->_data->shape(0) += 1;
+
 }
 
 template<class T> template<class U>
@@ -450,22 +498,30 @@ void NDArray<T>::pushArray(const NDArray<U> &other, const int &pos){
 template<class T>
 T NDArray<T>::pop(const int &idx)
 {
-    T result;
+    
     DM4thAssert(this->rank()==1 && this->shape(0)>0);
     DM4thAssert( (idx>=0 && idx<this->shape(0)) || idx==END ); 
 
-    if(idx==END || idx==this->shape(0)-1)
-    {
-        result = this->item(this->shape(0)-1);
-    }else{
-        T *iter = &this->item(idx);
-        result = *iter;
-        for(int j=0; j<this->shape(0)-idx-1; ++j)
-        {
-            iter[j] = iter[j+1];
-        }
-    }
-    this->resize(this->shape(0)-1);
+    // if(idx==END || idx==this->shape(0)-1)
+    // {
+    //     result = this->item(this->shape(0)-1);
+    // }else{
+    //     T *iter = &this->item(idx);
+    //     result = *iter;
+    //     for(int j=0; j<this->shape(0)-idx-1; ++j)
+    //     {
+    //         iter[j] = iter[j+1];
+    //     }
+    // }
+    // this->resize(this->shape(0)-1);
+    // return result;
+
+    T result;
+    if(idx==END) result = this->_data->array.pop(this->data_size()-1);
+    else result = this->_data->array.pop(idx);
+
+    this->_data->shape(0) -= 1;
+
     return result;
 }
 
@@ -1721,6 +1777,25 @@ DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArra
     {
         this->_data->shape.set(j,axisArray.data()[j]);
     }
+    return oldArray;
+}
+
+template<class T> template<class ... U>
+DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const int &axis1, U ... args)
+{
+    int size = DM4thUtils::mul(axis1, args...);
+    int rank = DM4thUtils::count(axis1, args...);
+    
+    DM4thInternal::BaseArray<T> oldArray;
+    this->_data->array.moveDataTo(oldArray);
+    this->_data->array._allocEmpty(size);
+
+    this->_data->shape.resize(rank);
+    DM4thUtils::initArray(this->_data->shape.data(), axis1, args...);
+    // for(int j=0; j<axisArray.size(); ++j)
+    // {
+    //     this->_data->shape.set(j,axisArray.data()[j]);
+    // }
     return oldArray;
 }
 

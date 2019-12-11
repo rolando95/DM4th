@@ -278,6 +278,9 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         template<class AXIS> inline int _item(const int &axis, int pos, AXIS idx) const;
 
         DM4thInternal::BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
+        
+        template<class ... U>
+        DM4thInternal::BaseArray<T> _allocZeros(const int &axis1, U ... args);
 
         void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
         void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);

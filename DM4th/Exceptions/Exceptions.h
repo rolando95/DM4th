@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef DM4thNoDebug
-    #define DM4thAssert(...) {}
+    #define DM4thAssert(...)
 #else
     #include <cassert>
     #if defined __MINGW32__ || defined __MINGW64__

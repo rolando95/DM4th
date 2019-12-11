@@ -15,6 +15,16 @@
         },
         {
             "type" : "shell",
+            "label": "startReleaseNoAssert",
+            "command": "g++",
+            "args": ["-Wall", "-std=c++11", "-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "DM4thParallel", "-D", "DM4thNoDebug"],
+            "group":{
+                "kind" : "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type" : "shell",
             "label": "startDebug",
             "command": "g++",
             "args": ["-Wall", "-std=c++11", "-pedantic", "-ggdb", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp"],

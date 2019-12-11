@@ -99,7 +99,22 @@ constexpr int ALL = std::numeric_limits<int>::max();
 
 namespace DM4thUtils
 {
+    namespace DM4thInternal {
 
+        template<class T, class ... U>
+        inline void _initArray(T* arr, const int &idx, const T &last)
+        {
+            arr[idx] = last;
+        }
+
+        template<class T, class ... U>
+        inline void _initArray(T* arr, const int &idx, const T &first, U ... args)
+        {
+            arr[idx] = first;
+            _initArray(arr, idx+1, args ...);
+        }
+    }
+    
     template<class T>
     inline T min(const T &a,const T &b){ return (a<b)? a: b; }
 
@@ -134,6 +149,18 @@ namespace DM4thUtils
         return 1+count(args...);
     }
 
+    template<class T, class ... U>
+    inline void initArray(T* arr, const T &last)
+    {
+        arr[0] = last;
+    }
+
+    template<class T, class ... U>
+    inline void initArray(T* arr, const T &first, U ... args)
+    {
+        arr[0] = first;
+        DM4thInternal::_initArray(arr, 1, args ...);
+    }
 
 
     template<class T>

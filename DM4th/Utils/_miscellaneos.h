@@ -13,7 +13,7 @@ inline void print()
 }
 
 template<class T, class ... U>
-void print(T first, U... args)
+void print(const T &first, U... args)
 {
     std::cout<<first<<" ";
     print(args ...);

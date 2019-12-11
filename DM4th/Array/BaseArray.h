@@ -29,6 +29,8 @@ class BaseArray
         inline BaseArray(const int &size=0);
         inline ~BaseArray();
 
+        inline void _allocEmpty(const int &size);
+
         inline void resize(const int &size);
         inline void reserve(const int &size);
 
@@ -69,6 +71,10 @@ class BaseArray
 
         inline void moveDataTo(BaseArray<T> &other);
         inline void copyDataTo(BaseArray<T> &other) const;
+        inline void copyNItemsTo(BaseArray<T> &other, const int &thisFrom, const int &otherFrom, const int &count) const;
+
+        inline void push(const T &value, const int &idx);
+        inline T pop(const int &idx);
 
         inline void swap(const int &idx1,const int &idx2)
         {
