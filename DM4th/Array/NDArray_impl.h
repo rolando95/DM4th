@@ -1461,34 +1461,7 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
 //     return this->setRef<axis-1>(result);
 // }
 
-template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArray<U...>::queryAxisSize(const int &value) const
-{
-    return 1;
-}
 
-template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArray<U...>::queryAxisSize(const NDArray<int> &value) const
-{
-    return value.data_size();
-}
-
-template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArray<U...>::queryAxisSize(const NDArray<bool> &value) const
-{
-    int size = 0;
-    for(int j=0; j<value.data_size(); ++j)
-    {
-        if(value.data_item(j)==true) ++size;
-    }
-    return size;
-}
-
-template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArray<U...>::queryAxisSize(const range<int> &value) const
-{
-    return value.size();
-}
 
 /////////////////////
 template<class T>

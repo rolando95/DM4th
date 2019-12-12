@@ -7,7 +7,7 @@ namespace DM4th
 {
 
 template<class T> class range;
-template<class T, class ...U> class SubArray;
+template<class T, class ... U> class SubArray;
 
 template<typename T>
 class NDArray: public DM4thInternal::ArrayDataManager<T>
@@ -15,7 +15,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
     public:
         class iterator;
         class iterator_const;
-        //class SubArray;
+        template<class, class ...U> friend class SubArray;
 
         inline NDArray();
 
@@ -190,200 +190,34 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
             iterator_const operator++(int){ iterator_const result(this->_data, this->_ptr); ++this->_ptr; return result; }
             const T operator*() const { return this->_data.data_item(this->_ptr); }
         };
-    
-        template<class ... U>
-        class SubArray
-        {
-            NDArray<T> _ptr;
-            std::tuple<U ...> _query;
-            public:
-
-                SubArray(NDArray<T> &data, U... query): _ptr(data), _query(std::tuple<U...>(query ...)){}
-
-                operator NDArray<T>()
-                {
-                    NDArray<T> result;
-                    result.resize(getDataSize());
-                    
-                    iterateOverSubArray([&](const int &j, T& item){
-                        result.data_item(j) = item;
-                    });
-
-                    if(result.data_size()>1) setShape<0>(result,0);
-                    return result;
-                }
-
-                template<class ... V>
-                inline const NDArray<T>::SubArray<U...> &operator=(NDArray<T>::SubArray<V ...> &other)
-                {
-                    NDArray<T> tmp = NDArray<T>(other);
-
-                    if(tmp.data_size()>=this->getDataSize())
-                    {
-                        iterateOverSubArray([&](const int &j, T& item){
-                            item = tmp.data_item(j);
-                        });
-                    }else{
-                        iterateOverSubArray([&](const int &j, T& item){
-                            item = tmp.data_item(j%tmp.data_size());
-                        });
-                    }
-
-
-                    return *this;
-                }
-
-                inline const NDArray<T>::SubArray<U...> &operator=(const T &other)
-                {
-                    iterateOverSubArray([&](const int &j, T& item){
-                        item = other;
-                    });
-
-                    return *this;                   
-                } 
-
-                inline const NDArray<T>::SubArray<U...> &operator=(const NDArray<T> &other)
-                {
-                    if(other.data_size()>=this->getDataSize())
-                    {
-                        iterateOverSubArray([&](const int &j, T& item){
-                            item = other.data_item(j);
-                        });
-                    }else{
-                        iterateOverSubArray([&](const int &j, T& item){
-                            item = other.data_item(j%other.data_size());
-                        });
-                    }
-
-
-                    return *this;                   
-                } 
-                ///////////////////////////////////////////
-
-                inline int getDataSize()
-                {
-                    const int size = getStrideAxis<0>();
-                    return size*queryAxisSize<0>(std::get<0>(this->_query));
-                }
-
-                inline void iterateOverSubArray(const std::function<void(const int &, T&)> &f)
-                {
-                    int idx = 0;
-                    _iterateOverSubArray<0>(idx, 0, f);
-                }
-
-                private:
-
-                template<int axis>
-                inline typename std::enable_if<(axis<std::tuple_size<std::tuple<U...>>::value),void>::type 
-                _iterateOverSubArray(int &idx, const int &disp, const std::function<void(const int&, T&)> &f)
-                {
-                    const int ldisp = this->_ptr._getAxisDisplacement(axis);
-                    iterateOverAxisIdxs<axis>(std::get<axis>(this->_query), [&](const int &j){
-                        _iterateOverSubArray<axis+1>(idx, disp+ldisp*j, f);
-                    });          
-                }
-
-                template<int axis>
-                inline typename std::enable_if<(axis==std::tuple_size<std::tuple<U...>>::value),void>::type 
-                _iterateOverSubArray(int &idx, const int &disp, const std::function<void(const int &, T&)> &f) 
-                {
-                    const int size = this->_ptr._getAxisDisplacement(axis-1);
-                    for(int j=0; j<size; ++j)
-                    {
-                        f(idx, this->_ptr.data_item(disp+j));
-                        ++idx;
-                        //result.data_item(idx++) = this->_ptr.data_item(disp+j);
-                    }
-                    
-                }
-
-                template<int axis>
-                inline void iterateOverAxisIdxs(const int &iter, const std::function<void(int)> &f) const {f(iter);}
-                template<int axis>
-                inline void iterateOverAxisIdxs(const NDArray<int> &iter, const std::function<void(int)> &f) const { for(int j=0; j<iter.data_size(); ++j) f(iter.data_item(j)); }
-                template<int axis>
-                inline void iterateOverAxisIdxs(const NDArray<bool> &iter, const std::function<void(int)> &f) const { for(int j=0; j<iter.data_size(); ++j) if(iter.data_item(j)) f(j); }
-                template<int axis>
-                inline void iterateOverAxisIdxs(const range<int> &iter, const std::function<void(int)> &f) const {for(int j=iter.beginValue(); j<iter.endValue(); j+=iter.stepValue()) f(j);
-                }
-
-                template<int axis>
-                inline typename std::enable_if<(axis<std::tuple_size<std::tuple<U...>>::value-1),int>::type 
-                getStrideAxis() const
-                {
-                    const int size = this->queryAxisSize<axis+1>(std::get<axis+1>(this->_query)); 
-                    return size * this->getStrideAxis<axis+1>();
-                }
-
-                template<int axis>
-                inline typename std::enable_if<(axis==std::tuple_size<std::tuple<U...>>::value-1),int>::type 
-                getStrideAxis() const
-                {
-                    return this->_ptr._getAxisDisplacement(axis); 
-                }
-
-                template<int axis>
-                inline typename std::enable_if<(axis<std::tuple_size<std::tuple<U...>>::value),void>::type 
-                setShape(NDArray<T> &result, const int &rank) const
-                {
-                    const int size = queryAxisSize<axis>(std::get<axis>(this->_query));
-                    if(size>1)
-                    {
-                        setShape<axis+1>(result, rank+1);
-                        result._data->shape(rank) = size;
-                    }else{
-                        setShape<axis+1>(result, rank);
-                    }
-
-                }
-
-                template<int axis>
-                inline typename std::enable_if<(axis==std::tuple_size<std::tuple<U...>>::value),void>::type 
-                setShape(NDArray<T> &result, const int &rank) const
-                {
-                    result._data->shape.resize(rank+this->_ptr.rank()-axis);
-
-                    int k=rank;
-                    for(int j=axis; j<this->_ptr.rank(); ++j, ++k)
-                    {
-                        result._data->shape(k) = this->_ptr.shape(j);
-                    }
-                }
-
-                template<int axis> inline int queryAxisSize(const int &value) const;
-                template<int axis> inline int queryAxisSize(const NDArray<int> &value) const;
-                template<int axis> inline int queryAxisSize(const NDArray<bool> &value) const;
-                template<int axis> inline int queryAxisSize(const range<int> &value) const;
-        };
 
         template<class V, class ... U>
-        SubArray<V, U...> subArr(const V &first, U ... args)
+        SubArray<T, V, U...> subArr(const V &first, U ... args)
         {
-            return SubArray<V, U ...>(*this, first, args...);
+            return SubArray<T, V, U ...>(*this, first, args...);
         }
 
-        SubArray<range<int>> subArr()
+        SubArray<T, range<int>> subArr()
         {
-            return SubArray<range<int>>(*this, range<int>(0,this->size()));
+            return SubArray<T, range<int>>(*this, range<int>(0,this->size()));
         }
 
         template<class V, class ... U>
-        SubArray<V, U...> subArray(const V &first, U ... args)
+        SubArray<T, V, U...> subArray(const V &first, U ... args)
         {
-            return SubArray<V, U ...>(*this, first, args...);
+            return SubArray<T, V, U ...>(*this, first, args...);
         }
 
-        SubArray<range<int>> subArray()
+        SubArray<T, range<int>> subArray()
         {
-            return SubArray<range<int>>(*this, range<int>(0,this->size()));
+            return SubArray<T, range<int>>(*this, range<int>(0,this->size()));
         }
 
-        template<class ...U>
-        friend std::ostream& operator<<(std::ostream& stream, const NDArray<T>::SubArray<U...> &arr){
-            stream<<NDArray<T>(arr);
-            return stream;
-        }
+        // template<class ...U>
+        // friend std::ostream& operator<<(std::ostream& stream, const SubArray<U...> &arr){
+        //     stream<<NDArray<T>(arr);
+        //     return stream;
+        // }
     private:
         int _partition(const bool &reverse, const int lo, const int hi);
 
