@@ -13,7 +13,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
   - Operaciones algebráicas entre arreglos y escalares usando operadores de suma, resta, multiplicación, división, residuo, etc. Ejemplo: `arr1`+`arr2`, `arr1`*`10`, etc.
   - Operaciones relacionales y lógicas entre arreglos y escalares usando operadores relacionales o lógicos. Ejemplo:  `arr1`==`arr2`, `arr1`<=`arr2`, `arr`>`4` || `(arr2 + 1)`<`5`, etc.
   - Sistema de conteo de referencias por array que permitirán administrar memoria sin pensar en punteros por parte del programador.
-  - Obtener subArreglos (array slicing) de forma similar a Matlab y Python con el método `subArray()` y `slice()`.
+  - Obtener subArreglos (array slicing) de forma similar a Matlab y Python con el método `view()` y `slice()`.
 
 - Métodos numéricos de utilidad para diferentes operaciones de cálculo diferencial e integral, álgebra lineal, entre otros.
   - Métodos numéricos con soporte para mostrar resultados con números reales y complejos en la librería.
@@ -464,15 +464,15 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
         cout << "Matrix:\n" << matrix << endl;
 
         cout << "\nGet column 1 of matrix" << endl;
-        NDArray<number> vector = matrix.subArr(slice(0,3), 1);
+        NDArray<number> vector = matrix.view(slice(0,3), 1);
         cout << vector << endl;
 
         cout << "\nSet 1000 to row 2 of matrix" << endl;
-        matrix.subArr(2) = 1000;
+        matrix.view(2) = 1000;
         cout << matrix << endl;
 
         cout << "\nSet 3+2i to column 0 of matrix" << endl;
-        matrix.subArr(slice(0,3), 0) = 3+2i;
+        matrix.view(slice(0,3), 0) = 3+2i;
         cout << matrix << endl;
 
 
@@ -482,7 +482,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
         cout << "arr2:" << arr2 << endl;
 
         cout << "\nSetting 3rd, 4th and 5th elements of arr1 from some elements of arr2" << endl;
-        arr1.subArr(slice(2,5)) = arr2.subArr(slice(2,5));
+        arr1.view(slice(2,5)) = arr2.view(slice(2,5));
         cout << arr1 << endl;
 
         cin.get();

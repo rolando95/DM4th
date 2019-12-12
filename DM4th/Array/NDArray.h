@@ -7,7 +7,7 @@ namespace DM4th
 {
 
 template<class T> class range;
-template<class T, class ... U> class SubArray;
+template<class T, class ... U> class NDArrayView;
 
 template<typename T>
 class NDArray: public DM4thInternal::ArrayDataManager<T>
@@ -15,7 +15,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
     public:
         class iterator;
         class iterator_const;
-        template<class, class ...U> friend class SubArray;
+        template<class, class ...U> friend class NDArrayView;
 
         inline NDArray();
 
@@ -192,32 +192,16 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         };
 
         template<class V, class ... U>
-        SubArray<T, V, U...> subArr(const V &first, U ... args)
+        NDArrayView<T, V, U...> view(const V &first, U ... args)
         {
-            return SubArray<T, V, U ...>(*this, first, args...);
+            return NDArrayView<T, V, U ...>(*this, first, args...);
         }
 
-        SubArray<T, range<int>> subArr()
+        NDArrayView<T, range<int>> view()
         {
-            return SubArray<T, range<int>>(*this, range<int>(0,this->size()));
+            return NDArrayView<T, range<int>>(*this, range<int>(0,this->size()));
         }
 
-        template<class V, class ... U>
-        SubArray<T, V, U...> subArray(const V &first, U ... args)
-        {
-            return SubArray<T, V, U ...>(*this, first, args...);
-        }
-
-        SubArray<T, range<int>> subArray()
-        {
-            return SubArray<T, range<int>>(*this, range<int>(0,this->size()));
-        }
-
-        // template<class ...U>
-        // friend std::ostream& operator<<(std::ostream& stream, const SubArray<U...> &arr){
-        //     stream<<NDArray<T>(arr);
-        //     return stream;
-        // }
     private:
         int _partition(const bool &reverse, const int lo, const int hi);
 

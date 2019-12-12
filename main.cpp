@@ -4,10 +4,8 @@ using namespace std;
 
 int main()
 {
-    NDArray<number> hello  = items<number>(15,20);
+    NDArray<string> hello  = items<string>("Hello", "World");
     NDArray<number> myList = range<number>(10);
-
-    myList.subArr() = hello.subArr();
 
     cout << hello << endl;
     cout << myList << endl;

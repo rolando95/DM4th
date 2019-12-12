@@ -55,8 +55,13 @@ int main()
 
         A.reshape(2,3);
         EXPECT_EQ(A.shape(), items<int>(2,3));
-        EXPECT_EQ( NDArray<number>(A.subArr(0)), items<number>( 0,1_i,2_i));
-        EXPECT_EQ( NDArray<number>(A.subArr(1)), items<number>(3_i,4_i,5_i));
+        EXPECT_EQ( NDArray<number>(A.view(0)), items<number>( 0,1_i,2_i));
+        EXPECT_EQ( NDArray<number>(A.view(1)), items<number>(3_i,4_i,5_i));
+
+        A.reshape(3,1,2);
+        EXPECT_EQ( NDArray<number>(A.view(slice(0,2),0,1)), items<number>(1_i,3_i));   
+
+        A.reshape(2,3);
 
         A.resize(2,1,1);
         A.reshape(2);

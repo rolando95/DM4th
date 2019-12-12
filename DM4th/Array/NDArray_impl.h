@@ -1447,23 +1447,6 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
     return disp;
 }
 
-//////////////////// NEW SubArray
-
-// template<class T> template<class ... U> template<int axis>
-// inline int NDArray<T>::SubArray<U...>::setRef(NDArray<T> &result)
-// {
-//     return this->setRef<axis-1>(result);
-// }
-
-// template<class T> template<class ... U> template<>
-// inline int NDArray<T>::SubArray<U...>::setRef<0>(NDArray<T> &result) const
-// {
-//     return this->setRef<axis-1>(result);
-// }
-
-
-
-/////////////////////
 template<class T>
 void NDArray<T>::_resize(const int &axis, int oldDispCount, int newDispCount, 
             // NDArray<int> &oldDisp,  NDArray<int> &newDisp, 

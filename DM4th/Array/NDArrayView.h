@@ -4,24 +4,24 @@ namespace DM4th
 {
 
     template<class T, class ... U>
-    class SubArray
+    class NDArrayView
     {
         NDArray<T> _ptr;
         std::tuple<U ...> _query;
 
         public:
 
-            SubArray(NDArray<T> &data, U... query): _ptr(data), _query(std::tuple<U...>(query ...)){}
+            NDArrayView(NDArray<T> &data, U... query): _ptr(data), _query(std::tuple<U...>(query ...)){}
 
             operator NDArray<T>();
 
-            inline const SubArray<T, U ...> &operator=(SubArray<T, U ...> &other);
-            inline const SubArray<T, U...> &operator=(const T &other);
-            inline const SubArray<T, U ...> &operator=(const NDArray<T> &other);
+            inline const NDArrayView<T, U ...> &operator=(NDArrayView<T, U ...> &other);
+            inline const NDArrayView<T, U...> &operator=(const T &other);
+            inline const NDArrayView<T, U ...> &operator=(const NDArray<T> &other);
 
-            template<class ... V> inline const SubArray<T, U ...> &operator=(SubArray<T, V ...> &other);
+            template<class ... V> inline const NDArrayView<T, U ...> &operator=(NDArrayView<T, V ...> &other);
             
-            inline void iterateOverSubArray(const std::function<void(const int &, T&)> &f);
+            inline void iterateOverNDArrayView(const std::function<void(const int &, T&)> &f);
 
             inline int getDataSize();
 
@@ -29,17 +29,17 @@ namespace DM4th
             
             template<int axis>
             inline typename std::enable_if<(axis<std::tuple_size<std::tuple<U...>>::value),void>::type 
-            _iterateOverSubArray(int &idx, const int &disp, const std::function<void(const int&, T&)> &f)
+            _iterateOverNDArrayView(int &idx, const int &disp, const std::function<void(const int&, T&)> &f)
             {
                 const int ldisp = this->_ptr._getAxisDisplacement(axis);
                 iterateOverAxisIdxs<axis>(std::get<axis>(this->_query), [&](const int &j){
-                    _iterateOverSubArray<axis+1>(idx, disp+ldisp*j, f);
+                    _iterateOverNDArrayView<axis+1>(idx, disp+ldisp*j, f);
                 });          
             }
 
             template<int axis>
             inline typename std::enable_if<(axis==std::tuple_size<std::tuple<U...>>::value),void>::type 
-            _iterateOverSubArray(int &idx, const int &disp, const std::function<void(const int &, T&)> &f) 
+            _iterateOverNDArrayView(int &idx, const int &disp, const std::function<void(const int &, T&)> &f) 
             {
                 const int size = this->_ptr._getAxisDisplacement(axis-1);
                 for(int j=0; j<size; ++j)
@@ -98,10 +98,16 @@ namespace DM4th
                 result._data->shape.resize(rank+this->_ptr.rank()-axis);
 
                 int k=rank;
-                for(int j=axis; j<this->_ptr.rank(); ++j, ++k)
+                for(int j=axis; j<this->_ptr.rank(); ++j)
                 {
-                    result._data->shape(k) = this->_ptr.shape(j);
+                    if(this->_ptr.shape(j)>1)
+                    {
+                        result._data->shape(k) = this->_ptr.shape(j);
+                        ++k;
+                    }
                 }
+
+                result._data->shape.resize(k);
             }
 
             template<int axis> inline int queryAxisSize(const int &value) const;
@@ -111,7 +117,7 @@ namespace DM4th
     };
 
 template<class T, class ... U>
-inline std::ostream& operator<<(std::ostream& stream, SubArray<T, U...> &arr)
+inline std::ostream& operator<<(std::ostream& stream, NDArrayView<T, U...> &arr)
 {
     stream<<NDArray<T>(arr);
     return stream;
