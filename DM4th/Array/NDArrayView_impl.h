@@ -4,12 +4,12 @@ namespace DM4th
 {
 
 template<class T, class ... U>
-NDArrayView<T, U...>::operator NDArray<T>()
+NDArrayView<T, U...>::operator NDArray<T>() const
 {
     NDArray<T> result;
     result.resize(getDataSize());
     
-    iterateOverNDArrayView([&](const int &j, T& item){
+    iterateOverNDArrayView([&](const int &j, const T& item){
         result.data_item(j) = item;
     });
 
@@ -86,24 +86,35 @@ inline void NDArrayView<T, U ...>::iterateOverNDArrayView(const std::function<vo
 }     
 
 template<class T, class ... U>
-inline int NDArrayView<T, U ...>::getDataSize()
+inline void NDArrayView<T, U ...>::iterateOverNDArrayView(const std::function<void(const int &, const T&)> &f) const
+{
+    int idx = 0;
+    _iterateOverNDArrayView<0>(idx, 0, f);
+}   
+
+template<class T, class ... U>
+inline int NDArrayView<T, U ...>::getDataSize() const
 {
     const int size = getStrideAxis<0>();
     return size*queryAxisSize<0>(std::get<0>(this->_query));
 }
 
+// int
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const int &value) const
 {
+    if(value==ALL) return this->_ptr.shape(axis);
     return 1;
 }
 
+// NDArray
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const NDArray<int> &value) const
 {
     return value.data_size();
 }
 
+// bool
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const NDArray<bool> &value) const
 {
@@ -115,9 +126,19 @@ inline int NDArrayView<T, U...>::queryAxisSize(const NDArray<bool> &value) const
     return size;
 }
 
+// range
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const range<int> &value) const
 {
     return value.size();
 }
+
+// slice
+template<class T, class ... U> template<int axis>
+inline int NDArrayView<T, U...>::queryAxisSize(const slice &value) const
+{
+    const int size =  value.size(this->_ptr, axis);
+    return size;
+}
+
 }

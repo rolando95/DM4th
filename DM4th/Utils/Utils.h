@@ -93,7 +93,7 @@ typedef unsigned int DM4thParallelSettings;
 
 constexpr int BEGIN = 0;
 constexpr int END = std::numeric_limits<int>::max();
-constexpr int ALL = std::numeric_limits<int>::max();
+constexpr int ALL = std::numeric_limits<int>::max() - 1;
 
 // #define _min(a,b) (a<b)? a: b
 // #define _max(a,b) (a>b)? a: b

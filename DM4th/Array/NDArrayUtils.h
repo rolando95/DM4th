@@ -251,7 +251,40 @@ private:
     }
 };
 
-typedef range<int> slice;
+/*
+    
+*/
+class slice
+{
+    const int _begin;
+    const int _end;
+    const int _step;
+
+    public:
+
+        slice(): _begin(BEGIN), _end(END), _step(1){};
+        slice(const int &end): _begin(BEGIN), _end(end), _step(1){};
+        slice(const int &begin, const int &end): _begin(begin), _end(end), _step(1){};
+        slice(const int &begin, const int &end, const int &step): _begin(begin), _end(end), _step(step){};
+
+        template<class T> const int beginValue(const NDArray<T> &arr, const int &axis=0) const { return this->_begin; }
+        template<class T> const int endValue(const NDArray<T> &arr, const int &axis=0)   const 
+        { 
+            return this->_end==END ? arr.shape(axis) : this->_end;
+        }
+
+        template<class T> const int stepValue(const NDArray<T> &arr, const int &axis=0)  const { return this->_step; }
+        
+        template<class T> const int size(const NDArray<T> &arr, const int &axis=0)       const 
+        { 
+            if(this->_step!=1)
+            {
+                const float end = this->endValue(arr,axis);
+                return std::ceil((end - this->_begin) / this->_step);
+            }
+           return this->endValue(arr,axis) - this->_begin;
+        }
+};
 
 template<class T, class U, class ... V>
 void _map(std::function<T(T)> f, NDArray<T> &arr, int axis, U first, V ... args)
