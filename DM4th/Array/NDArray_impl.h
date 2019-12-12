@@ -408,23 +408,6 @@ NDArray<T> NDArray<T>::getCopy() const
 template<class T> template<class U>
 void NDArray<T>::push(const U &value, const int &pos)
 {
-    // DM4thAssert(this->rank()<=1);
-    // DM4thAssert( (pos>=0 && pos<= this->shape(0)) || pos==END);
-    // this->resize(this->shape(0)+1);
-    // //Append
-    // if(pos >= this->shape(0) || pos==END) 
-    // {
-    //     this->_data->array(this->shape(0)-1) = value;
-    // }
-    // //Insert
-    // else 
-    // {
-    //     for(int j=this->shape(0)-1; j > pos; --j)
-    //     {
-    //         this->_data->array(j) = this->_data->array(j-1);
-    //     }
-    //     this->_data->array(pos) = value;
-    // }
     if(this->rank()!=1)
     {
         this->reshape(this->data_size());
@@ -1462,6 +1445,49 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
         disp *= this->_data->shape.get(j);
     }
     return disp;
+}
+
+//////////////////// NEW SubArray
+
+// template<class T> template<class ... U> template<int axis>
+// inline int NDArray<T>::SubArr<U...>::setRef(NDArray<T> &result)
+// {
+//     return this->setRef<axis-1>(result);
+// }
+
+// template<class T> template<class ... U> template<>
+// inline int NDArray<T>::SubArr<U...>::setRef<0>(NDArray<T> &result) const
+// {
+//     return this->setRef<axis-1>(result);
+// }
+
+template<class T> template<class ...U>
+inline int NDArray<T>::SubArr<U...>::queryAxisSize(const int &value) const
+{
+    return 1;
+}
+
+template<class T> template<class ...U>
+inline int NDArray<T>::SubArr<U...>::queryAxisSize(const NDArray<int> &value) const
+{
+    return value.data_size();
+}
+
+template<class T> template<class ...U>
+inline int NDArray<T>::SubArr<U...>::queryAxisSize(const NDArray<bool> &value) const
+{
+    int size = 0;
+    for(int j=0; j<value.data_size(); ++j)
+    {
+        if(value.data_item(j)==true) ++size;
+    }
+    return size;
+}
+
+template<class T> template<class ...U>
+inline int NDArray<T>::SubArr<U...>::queryAxisSize(const range<int> &value) const
+{
+    return value.size();
 }
 
 ///////////////////// SubArray

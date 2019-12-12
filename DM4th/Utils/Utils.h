@@ -6,6 +6,7 @@
 #include <cstring>
 #include <string>
 #include <string.h>
+#include <tuple>
 
 #include <istream>
 #include <iostream>

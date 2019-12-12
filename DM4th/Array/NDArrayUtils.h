@@ -183,7 +183,7 @@ public:
         this->_size = this->_setSize();
     };
 
-    int size() { return this->_size; }
+    int size() const { return this->_size; }
 
     operator NDArray<T>()
     {
@@ -206,19 +206,23 @@ public:
     class iterator
     {
         private:
-            range<T> _data;
+            const range<T> _data;
             T _ptr;
         public:
-            iterator(range<T> &data, T ptr=0) : _data(data), _ptr(ptr) {};
-            bool operator==(iterator other){ return (this->_ptr == other._ptr); }
-            bool operator!=(iterator other){ return !(*this==other); }
+            iterator(const range<T> &data, T ptr=0) : _data(data), _ptr(ptr) {};
+            bool operator==(iterator other) const { return (this->_ptr == other._ptr); }
+            bool operator!=(iterator other) const { return !(*this==other); }
             iterator &operator++(){ this->_ptr+=_data._step; return *this; }
             iterator operator++(int){ iterator result(this->_data, this->_ptr); this->_ptr+=_data._step; return result; }
             const T &operator*(){ return this->_ptr; }
     };
 
-    iterator begin(){ return iterator(*this, this->_begin); }
-    iterator end(){ return iterator(*this, this->_end); }
+    iterator begin() const { return iterator(*this, this->_begin); }
+    iterator end() const { return iterator(*this, this->_end); }
+
+    T beginValue() const { return this->_begin; }
+    T endValue() const { return this->_end; }
+    T stepValue() const { return this->_step; }
 
 
 private:
