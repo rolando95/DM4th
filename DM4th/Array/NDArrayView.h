@@ -46,7 +46,6 @@ private:
         {
             f(idx, this->_ptr.data_item(disp + j));
             ++idx;
-            //result.data_item(idx++) = this->_ptr.data_item(disp+j);
         }
     }
 
@@ -69,7 +68,6 @@ private:
         {
             f(idx, this->_ptr.data_item(disp + j));
             ++idx;
-            //result.data_item(idx++) = this->_ptr.data_item(disp+j);
         }
     }
 

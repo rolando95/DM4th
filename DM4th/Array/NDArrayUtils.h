@@ -256,14 +256,19 @@ private:
 */
 class slice
 {
-    const int _begin;
-    const int _end;
-    const int _step;
+    int _begin;
+    int _end;
+    int _step;
 
     public:
 
         slice(): _begin(BEGIN), _end(END), _step(1){};
-        slice(const int &end): _begin(BEGIN), _end(end), _step(1){};
+        slice(const int &end): _begin(BEGIN), _end(end), _step(1){
+            if(end==ALL)
+            {
+                this->_end = END;
+            }
+        };
         slice(const int &begin, const int &end): _begin(begin), _end(end), _step(1){};
         slice(const int &begin, const int &end, const int &step): _begin(begin), _end(end), _step(step){};
 
