@@ -1450,31 +1450,31 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
 //////////////////// NEW SubArray
 
 // template<class T> template<class ... U> template<int axis>
-// inline int NDArray<T>::SubArr<U...>::setRef(NDArray<T> &result)
+// inline int NDArray<T>::SubArray<U...>::setRef(NDArray<T> &result)
 // {
 //     return this->setRef<axis-1>(result);
 // }
 
 // template<class T> template<class ... U> template<>
-// inline int NDArray<T>::SubArr<U...>::setRef<0>(NDArray<T> &result) const
+// inline int NDArray<T>::SubArray<U...>::setRef<0>(NDArray<T> &result) const
 // {
 //     return this->setRef<axis-1>(result);
 // }
 
 template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArr<U...>::queryAxisSize(const int &value) const
+inline int NDArray<T>::SubArray<U...>::queryAxisSize(const int &value) const
 {
     return 1;
 }
 
 template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArr<U...>::queryAxisSize(const NDArray<int> &value) const
+inline int NDArray<T>::SubArray<U...>::queryAxisSize(const NDArray<int> &value) const
 {
     return value.data_size();
 }
 
 template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArr<U...>::queryAxisSize(const NDArray<bool> &value) const
+inline int NDArray<T>::SubArray<U...>::queryAxisSize(const NDArray<bool> &value) const
 {
     int size = 0;
     for(int j=0; j<value.data_size(); ++j)
@@ -1485,246 +1485,9 @@ inline int NDArray<T>::SubArr<U...>::queryAxisSize(const NDArray<bool> &value) c
 }
 
 template<class T> template<class ...U> template<int axis>
-inline int NDArray<T>::SubArr<U...>::queryAxisSize(const range<int> &value) const
+inline int NDArray<T>::SubArray<U...>::queryAxisSize(const range<int> &value) const
 {
     return value.size();
-}
-
-
-///////////////////// SubArray
-template<class T> template<class ...U>
-inline NDArray<T>::SubArray::SubArray(const NDArray<T> &ptr, U ... args) : _ptr(ptr) {
-    this->setRef( castToNDArray(args) ...);
-}
-
-template<class T>
-inline NDArray<T>::SubArray::operator NDArray<T>() const
-{
-    NDArray<T> result;
-    result.resize(this->_subArray.shape());
-    for(int j=0; j<this->_subArray.data_size(); ++j)
-    {
-        result.data_item(j) = *this->_subArray.data_item(j);
-    }
-    return result;
-}
-
-template<class T>
-inline const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const NDArray<T>::SubArray &other)
-{
-    DM4thAssert(this->_subArray.data_size()==other._subArray.data_size());
-    if(&this->_ptr!=&other._ptr)
-    {
-        for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            *this->_subArray.data_item(j) = *other._subArray.data_item(j);
-        }
-    }else{
-        NDArray<T> tmp;
-        tmp.resize(this->_subArray.shape());
-        for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            tmp.data_item(j) = *other._subArray.data_item(j);
-        }
-                for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            *this->_subArray.data_item(j) = tmp.data_item(j);
-        }
-    }
-    return *this;
-}
-
-template<class T>
-inline const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const T &other)
-{
-    for(int j=0; j<this->_subArray.data_size(); ++j)
-    {
-        *this->_subArray.data_item(j) = other;
-    }
-    return *this;
-}
-
-template<class T>
-inline const typename NDArray<T>::SubArray &NDArray<T>::SubArray::operator=(const NDArray<T> &other)
-{
-    DM4thAssert(this->_subArray.data_size()==other.data_size());
-    if(&this->_ptr!=&other)
-    {
-        for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            *this->_subArray.data_item(j) = other.data_item(j);
-        }
-    }else{
-        NDArray<T> tmp;
-        tmp.resize(this->_subArray.shape());
-        for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            tmp.data_item(j) = other.data_item(j);
-        }
-                for(int j=0; j<this->_subArray.data_size(); ++j)
-        {
-            *this->_subArray.data_item(j) = tmp.data_item(j);
-        }
-    }
-    return *this;
-}
-
-
-template<class T> template<class ... U>
-typename NDArray<T>::SubArray NDArray<T>::SubArray::operator()(U ... args)
-{
-    return NDArray(*this).subArray(args...);
-}
-
-template<class T> template<class U>
-typename NDArray<T>::SubArray NDArray<T>::SubArray::operator[](const U &idx)
-{
-    return NDArray(*this).subArray(idx);
-}
-
-template<class T> template<class U, class ... V>
-void NDArray<T>::SubArray::setShapeRef(const int &axis, NDArray<int> &shape, const NDArray<U> &first, V ... args)
-{
-    shape(axis) = first.size();
-    this->setShapeRef(axis+1, shape, castToNDArray(args) ...);
-}
-
-template<class T>
-void NDArray<T>::SubArray::setShapeRef(const int &axis, NDArray<int> &shape)
-{
-    DM4thAssert(axis<=this->_ptr.rank());
-
-    for(int j=axis; j<this->_ptr.rank(); ++j)
-    {
-        shape(j) = this->_ptr.shape(j); // All elemenents of these axis
-    }
-}
-
-template<class T> template<class U, class ... V>
-void NDArray<T>::SubArray::setRef(const NDArray<U> &first, V... args)
-{
-    NDArray<int> oldShape = this->_ptr.shape();
-    NDArray<int> oldDisp = this->_ptr._getAxisDisplacement();
-
-    NDArray<int> newShape;
-    newShape.resize(this->_ptr.rank());
-    this->setShapeRef(0,newShape, castToNDArray(first), castToNDArray(args)...);
-    this->_subArray.resize(newShape);
-    
-    NDArray<int> newDisp = this->_subArray._getAxisDisplacement();
-
-    if(this->_ptr.rank()>1)
-    {
-        for( int j=0; j<first.size(); ++j )
-        {
-            this->slider(
-                1,
-                oldDisp.item(0)*(int)first(j),
-                newDisp.item(0)*j,
-                oldDisp, newDisp,
-                castToNDArray(args) ...
-            );
-        }
-    }
-    else{
-        DM4thAssert(DM4thUtils::count(first, args...)==1);
-        for( int j=0; j<first.size(); ++j )
-        {
-            this->_1DSlider(first(j),j);
-        }
-    }
-
-
-    NDArray<int> realNewShape;
-    int realSize=0;
-    for(int j=0; j<newShape.size();++j)
-    {
-        if(newShape(j)>1) ++realSize;
-    }
-
-    if(realSize>1)
-    {
-        realNewShape.resize(realSize);
-        realSize=0;
-        for(int j=0; j<newShape.size(); ++j)
-        {
-            if(newShape(j)>1)
-            {
-                realNewShape(realSize) = newShape(j);
-                ++realSize;
-            }
-        }
-        this->_subArray.reshape(realNewShape);
-    }else{
-        this->_subArray.reshape(DM4thNDArrayUtils::mul(newShape));
-    }
-
-
-    
-}
-
-template<class T> template<class U, class ... V>
-void NDArray<T>::SubArray::slider(
-    int axis,
-    int oldDispCount, int newDispCount,
-    NDArray<int> oldDisp, NDArray<int> newDisp,
-    NDArray<U> first, V ... args
-)
-{
-    if(axis<this->_ptr.rank()-1)
-    {
-        for(int j=0; j<first.size(); ++j)
-        {
-            this->slider(
-                axis+1,
-                oldDispCount+oldDisp.item(axis)*(int)first(j),
-                newDispCount+newDisp.item(axis)*j,
-                oldDisp, newDisp,
-                castToNDArray(args) ...
-            );
-        }
-    }else{
-        for(int j=0; j<first.size(); ++j)
-        {
-            int to = newDispCount+newDisp.item(axis)*j;
-            int from = oldDispCount+oldDisp.item(axis)*(int)first(j);
-            this->_subArray.data_item(to) = &this->_ptr.data_item(from);
-        }
-    }
-}
-
-template<class T>
-void NDArray<T>::SubArray::slider(
-    int axis,
-    int oldDispCount, int newDispCount,
-    NDArray<int> oldDisp, NDArray<int> newDisp
-)
-{
-    if(axis<this->_ptr.rank()-1)
-    {
-        for(int j=0; j<this->_ptr.shape(axis); ++j)
-        {
-            this->slider(
-                axis+1,
-                oldDispCount+oldDisp.item(axis)*j,
-                newDispCount+newDisp.item(axis)*j,
-                oldDisp, newDisp
-            );
-        }
-    }else{
-        for(int j=0; j<this->_ptr.shape(axis); ++j)
-        {
-            int to = newDispCount+newDisp.item(axis)*j;
-            int from = oldDispCount+oldDisp.item(axis)*j;
-            this->_subArray.data_item(to) = &this->_ptr.data_item(from);
-        }
-    }
-}
-
-template<class T>
-void NDArray<T>::SubArray::_1DSlider(int oldDisp, int newDisp)
-{
-    this->_subArray.data_item(newDisp) = &this->_ptr.data_item(oldDisp);
 }
 
 /////////////////////

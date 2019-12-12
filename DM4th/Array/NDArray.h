@@ -7,6 +7,7 @@ namespace DM4th
 {
 
 template<class T> class range;
+template<class T, class ...U> class SubArray;
 
 template<typename T>
 class NDArray: public DM4thInternal::ArrayDataManager<T>
@@ -14,7 +15,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
     public:
         class iterator;
         class iterator_const;
-        class SubArray;
+        //class SubArray;
 
         inline NDArray();
 
@@ -189,86 +190,15 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
             iterator_const operator++(int){ iterator_const result(this->_data, this->_ptr); ++this->_ptr; return result; }
             const T operator*() const { return this->_data.data_item(this->_ptr); }
         };
-
-
-        class SubArray
-        {
-            NDArray<T> _ptr;
-            NDArray<T*> _subArray;
-
-        public:
-            template<class ... U>
-            inline SubArray(const NDArray<T> &data, U ... args);
-            
-            inline operator NDArray<T>() const;
-            inline const SubArray &operator=(const SubArray &other);
-            inline const SubArray &operator=(const T &other);
-            inline const SubArray &operator=(const NDArray<T> &other);
-
-            template<class ... U> NDArray<T>::SubArray operator()(U ... args);
-            template<class U> NDArray<T>::SubArray operator[](const U &idx);
-
-        private:
-            template<class U, class ... V>
-            void setRef(const NDArray<U> &first, V... args);
-
-            template<class U, class ... V>
-            void setShapeRef(const int &axis, NDArray<int> &shape, const NDArray<U> &first, V ... args);
-
-            void setShapeRef(const int &axis, NDArray<int> &shape);
-
-            template<class U, class ... V>
-            void slider(                
-                int axis,
-                int oldDispCount, int newDispCount,
-                NDArray<int> oldDisp, NDArray<int> newDisp, NDArray<U> first, V ... args
-            );
-            void slider(                
-                int axis,
-                int oldDispCount, int newDispCount,
-                NDArray<int> oldDisp, NDArray<int> newDisp
-            );
-
-            void _1DSlider(int oldDisp, int newDisp);
-
-            template<class U>
-            NDArray<int> castToNDArray(NDArray<U> value){ return NDArray<int>(value); }
-
-            template<class U>
-            NDArray<int> castToNDArray(range<U> value){ return NDArray<int>(value); }
-
-            NDArray<int> castToNDArray(number value)
-            { 
-                NDArray<int> result;
-                result.resize(1);
-                result(0) = (int)value;
-                return result; 
-            }
-        };
-
-        template<class ...U>
-        SubArray subArr(U ... args)
-        {
-            SubArray result(*this, args ...);
-            return result;
-        }
-
-        template<class ...U>
-        SubArray subArray(U ... args)
-        {
-            SubArray result(*this, args ...);
-            return result;
-        }
-
-        
+    
         template<class ... U>
-        class SubArr
+        class SubArray
         {
             NDArray<T> _ptr;
             std::tuple<U ...> _query;
             public:
 
-                SubArr(NDArray<T> &data, U... query): _ptr(data), _query(std::tuple<U...>(query ...)){}
+                SubArray(NDArray<T> &data, U... query): _ptr(data), _query(std::tuple<U...>(query ...)){}
 
                 operator NDArray<T>()
                 {
@@ -284,7 +214,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
                 }
 
                 template<class ... V>
-                inline const NDArray<T>::SubArr<U...> &operator=(NDArray<T>::SubArr<V ...> &other)
+                inline const NDArray<T>::SubArray<U...> &operator=(NDArray<T>::SubArray<V ...> &other)
                 {
                     NDArray<T> tmp = NDArray<T>(other);
 
@@ -303,7 +233,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
                     return *this;
                 }
 
-                inline const NDArray<T>::SubArr<U...> &operator=(const T &other)
+                inline const NDArray<T>::SubArray<U...> &operator=(const T &other)
                 {
                     iterateOverSubArray([&](const int &j, T& item){
                         item = other;
@@ -312,7 +242,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
                     return *this;                   
                 } 
 
-                inline const NDArray<T>::SubArr<U...> &operator=(const NDArray<T> &other)
+                inline const NDArray<T>::SubArray<U...> &operator=(const NDArray<T> &other)
                 {
                     if(other.data_size()>=this->getDataSize())
                     {
@@ -428,17 +358,29 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
         };
 
         template<class V, class ... U>
-        SubArr<V, U...> query(const V &first, U ... args)
+        SubArray<V, U...> subArr(const V &first, U ... args)
         {
-            return SubArr<V, U ...>(*this, first, args...);
+            return SubArray<V, U ...>(*this, first, args...);
         }
 
-        SubArr<range<int>> query()
+        SubArray<range<int>> subArr()
         {
-            return SubArr<range<int>>(*this, range<int>(0,this->size()));
+            return SubArray<range<int>>(*this, range<int>(0,this->size()));
         }
 
-        friend std::ostream& operator<<(std::ostream& stream, const NDArray<T>::SubArray &arr){
+        template<class V, class ... U>
+        SubArray<V, U...> subArray(const V &first, U ... args)
+        {
+            return SubArray<V, U ...>(*this, first, args...);
+        }
+
+        SubArray<range<int>> subArray()
+        {
+            return SubArray<range<int>>(*this, range<int>(0,this->size()));
+        }
+
+        template<class ...U>
+        friend std::ostream& operator<<(std::ostream& stream, const NDArray<T>::SubArray<U...> &arr){
             stream<<NDArray<T>(arr);
             return stream;
         }
