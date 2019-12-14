@@ -7,10 +7,10 @@ template <class T, class... U>
 class NDArrayView
 {
     NDArray<T> _ptr;
-    std::tuple<U...> _query;
+    std::tuple<U...> _view;
 
 public:
-    NDArrayView(NDArray<T> &data, U... query) : _ptr(data), _query(std::tuple<U...>(query...)) {}
+    NDArrayView(NDArray<T> &data, U... view) : _ptr(data), _view(std::tuple<U...>(view...)) {}
 
     operator NDArray<T>() const;
 
@@ -32,7 +32,7 @@ private:
     _iterateOverNDArrayView(int &idx, const int &disp, const std::function<void(const int &, T &)> &f)
     {
         const int ldisp = this->_ptr._getAxisDisplacement(axis);
-        iterateOverAxisIdxs<axis>(std::get<axis>(this->_query), [&](const int &j) {
+        iterateOverAxisIdxs<axis>(std::get<axis>(this->_view), [&](const int &j) {
             _iterateOverNDArrayView<axis + 1>(idx, disp + ldisp * j, f);
         });
     }
@@ -54,7 +54,7 @@ private:
     _iterateOverNDArrayView(int &idx, const int &disp, const std::function<void(const int &, const T &)> &f) const 
     {
         const int ldisp = this->_ptr._getAxisDisplacement(axis);
-        iterateOverAxisIdxs<axis>(std::get<axis>(this->_query), [&](const int &j) {
+        iterateOverAxisIdxs<axis>(std::get<axis>(this->_view), [&](const int &j) {
             _iterateOverNDArrayView<axis + 1>(idx, disp + ldisp * j, f);
         });
     }
@@ -90,7 +90,7 @@ private:
         }
     }
 
-    // NDArray
+    // NDArray<int>
     template <int axis>
     inline void iterateOverAxisIdxs(const NDArray<int> &iter, const std::function<void(int)> &f) const
     {
@@ -98,7 +98,7 @@ private:
             f(iter.data_item(j));
     }
 
-    // bool
+    // NDArray<bool>
     template <int axis>
     inline void iterateOverAxisIdxs(const NDArray<bool> &iter, const std::function<void(int)> &f) const
     {
@@ -131,7 +131,7 @@ private:
     inline typename std::enable_if<(axis < std::tuple_size<std::tuple<U...>>::value - 1), int>::type
     getStrideAxis() const
     {
-        const int size = this->queryAxisSize<axis + 1>(std::get<axis + 1>(this->_query));
+        const int size = this->queryAxisSize<axis + 1>(std::get<axis + 1>(this->_view));
         return size * this->getStrideAxis<axis + 1>();
     }
 
@@ -146,7 +146,7 @@ private:
     inline typename std::enable_if<(axis < std::tuple_size<std::tuple<U...>>::value), void>::type
     setShape(NDArray<T> &result, const int &rank) const
     {
-        const int size = queryAxisSize<axis>(std::get<axis>(this->_query));
+        const int size = queryAxisSize<axis>(std::get<axis>(this->_view));
         if (size > 1)
         {
             setShape<axis + 1>(result, rank + 1);
@@ -188,6 +188,18 @@ private:
     template <int axis>
     inline int queryAxisSize(const slice &value) const;
 };
+
+// template<class T>
+// class NDArrayView<T, NDArray<bool>>
+// {
+//     NDArray<T> _ptr;
+//     std::tuple<NDArray<bool>> _view;
+
+//     public:
+//         NDArrayView(NDArray<T> &data, const NDArray<bool> &view) : _ptr(data), _view(std::tuple<NDArray<bool>>(view)) {
+//             std::cout<<"BOOL ARRAY"<<std::endl;
+//         }
+// };
 
 template <class T, class... U>
 inline std::ostream &operator<<(std::ostream &stream, const NDArrayView<T, U...> &arr)

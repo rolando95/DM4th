@@ -85,7 +85,7 @@ class NDArray: public DM4thInternal::ArrayDataManager<T>
 
         template<class U> inline const NDArray<T> &iAdd(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
         template<class U> inline const NDArray<T> &iSub(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
-        template<class U>        const NDArray<T> &iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
+        template<class U> inline const NDArray<T> &iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings=DEFAULT);
 
         inline const NDArray<T> &iAdd(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);
         inline const NDArray<T> &iSub(const T &other, const DM4thParallelSettings &pSettings=DEFAULT);

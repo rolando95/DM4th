@@ -96,7 +96,7 @@ template<class T, class ... U>
 inline int NDArrayView<T, U ...>::getDataSize() const
 {
     const int size = getStrideAxis<0>();
-    return size*queryAxisSize<0>(std::get<0>(this->_query));
+    return size*queryAxisSize<0>(std::get<0>(this->_view));
 }
 
 // int
@@ -107,14 +107,14 @@ inline int NDArrayView<T, U...>::queryAxisSize(const int &value) const
     return 1;
 }
 
-// NDArray
+// NDArray<int>
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const NDArray<int> &value) const
 {
     return value.data_size();
 }
 
-// bool
+// NDArray<bool>
 template<class T, class ... U> template<int axis>
 inline int NDArrayView<T, U...>::queryAxisSize(const NDArray<bool> &value) const
 {

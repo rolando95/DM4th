@@ -10,7 +10,7 @@ namespace DM4th
 template <class T>
 class _number
 {
-    T r=0, i=0;
+    T _data[2];
     
 public:
 
@@ -31,24 +31,27 @@ public:
     }
 
     // get set parte real
-    inline const T real() const { return this->r; }
-    inline T &real() { return this->r; };
+    inline const T real() const { return this->_data[0]; }
+    inline T &real() { return this->_data[0]; };
     inline T &real(T a)
     {
-        this->r = a;
-        return this->r;
+        this->_data[0] = a;
+        return this->_data[0];
     }
-    //inline double &real() { return this->r; }
+
+    inline T *data() { return this->_data; }
+
+    //inline double &real() { return this->_data[0]; }
 
     // get set parte imaginaria
-    inline const T imag() const { return this->i; }
-    inline T &imag() { return this->i; };
+    inline const T imag() const { return this->_data[1]; }
+    inline T &imag() { return this->_data[1]; };
     inline T &imag(T a)
     {
-        this->i = a;
-        return this->i;
+        this->_data[1] = a;
+        return this->_data[1];
     }
-    //inline double &imag() { return this->i; }
+    //inline double &imag() { return this->_data[1]; }
 
     // Asignacion de un valor numerico
     template <class U, typename std::enable_if<std::is_arithmetic<U>::value, U>::type>
@@ -63,8 +66,8 @@ public:
     template <class U>
     inline _number operator=(const _number<U> a);
     // {
-    //     this->real((T)a.real());
-    //     this->imag((T)a.imag());
+    //     this->_data[0]eal((T)a.real());
+    //     this->_data[1]mag((T)a.imag());
     //     return *this;
     // }
 

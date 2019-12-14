@@ -198,7 +198,7 @@ inline bool BaseArray<T>::operator!=(const BaseArray<U> &other) const
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -218,7 +218,7 @@ const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const DM4thPar
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -235,7 +235,7 @@ const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParallelSettin
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -253,7 +253,7 @@ const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParallelSettin
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
@@ -273,7 +273,7 @@ const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const DM4thPar
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParallelSettings &pSettings)
 {
 
     DM4thUtils::parallelLoopItems<int>(
@@ -292,7 +292,7 @@ const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParallelSettin
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParallelSettings &pSettings)
 {
     DM4thUtils::parallelLoopItems<int>(
         pSettings,
@@ -310,7 +310,7 @@ const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParallelSettin
 
 template <class T>
 template <class U>
-const BaseArray<T> &BaseArray<T>::iMod(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iMod(const U &other, const DM4thParallelSettings &pSettings)
 {
 
     DM4thUtils::parallelLoopItems<int>(

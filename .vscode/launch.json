@@ -17,7 +17,7 @@
       "preLaunchTask": "startRelease"
     },
     {
-      "name": "Release no assert",
+      "name": "Release no assert & no Parallel",
       "type": "cppvsdbg",
       "request": "launch",
       "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe",

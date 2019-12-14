@@ -51,13 +51,13 @@ class BaseArray
         template<class U> bool operator==(const BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const BaseArray<U> &other) const;
         
-        template<class U> const BaseArray<T> &iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iAdd(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iSub(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iMul(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iDiv(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> const BaseArray<T> &iMod(const U &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iAdd(const U &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iSub(const U &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iMul(const U &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iDiv(const U &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iMod(const U &other, const DM4thParallelSettings &pSettings);
         
         template<class U> inline const BaseArray<T> &operator+=(const BaseArray<U> &other);
         template<class U> inline const BaseArray<T> &operator-=(const BaseArray<U> &other);
