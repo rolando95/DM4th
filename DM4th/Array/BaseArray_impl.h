@@ -152,6 +152,13 @@ inline T &BaseArray<T>::item(const int &idx)
     return this->_data[idx];
 }
 
+template<class T>
+inline const T &BaseArray<T>::item(const int &idx) const
+{
+    DM4thAssert(idx < this->size());
+    return this->_data[idx];
+}
+
 template <class T>
 const inline T &BaseArray<T>::get(const int &idx) const
 {
@@ -175,7 +182,7 @@ bool BaseArray<T>::operator==(const BaseArray<U> &other) const
     }
     
     bool result;
-    DM4thUtils::parallelLoopItemsCond<int>(
+    DM4thParallel::loopCond<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, this->_size, 1, //from, to, step
 
@@ -197,18 +204,17 @@ inline bool BaseArray<T>::operator!=(const BaseArray<U> &other) const
 
 
 template <class T>
-template <class U>
-inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<T> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) += other.get(j);
+            DM4thSIMD::iAddArray(&this->item(j), &other.item(j));
         }
        
     );
@@ -218,15 +224,16 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<U> &other, const D
 
 template <class T>
 template <class U>
-inline const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iAdd(U other, const DM4thParallelSettings &pSettings)
 {
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) += other;
+            //this->item(j) += other;
+            DM4thSIMD::iAddScalar(&this->item(j), (T)other);
         }
     );
 
@@ -235,15 +242,15 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(const U &other, const DM4thParalle
 
 template <class T>
 template <class U>
-inline const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iSub(U other, const DM4thParallelSettings &pSettings)
 {
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) -= other;
+            DM4thSIMD::iSubScalar(&this->item(j), (T)other);
         }
         
     );
@@ -252,18 +259,17 @@ inline const BaseArray<T> &BaseArray<T>::iSub(const U &other, const DM4thParalle
 }
 
 template <class T>
-template <class U>
-inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<T> &other, const DM4thParallelSettings &pSettings)
 {
     DM4thAssert(this->size() == other.size());
 
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) -= other.get(j);
+            DM4thSIMD::iSubArray(&this->item(j), &other.item(j));
         }
 
     );
@@ -273,16 +279,16 @@ inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<U> &other, const D
 
 template <class T>
 template <class U>
-inline const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iMul(U other, const DM4thParallelSettings &pSettings)
 {
 
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) *= other;
+            DM4thSIMD::iMulScalar(&this->item(j), (T)other);
         }
 
     );
@@ -292,15 +298,15 @@ inline const BaseArray<T> &BaseArray<T>::iMul(const U &other, const DM4thParalle
 
 template <class T>
 template <class U>
-inline const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iDiv(U other, const DM4thParallelSettings &pSettings)
 {
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), 1, // from, to, step
+        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
-            this->item(j) /= other;
+            DM4thSIMD::iDivScalar(&this->item(j), (T)other);
         }
     
     );
@@ -310,22 +316,42 @@ inline const BaseArray<T> &BaseArray<T>::iDiv(const U &other, const DM4thParalle
 
 template <class T>
 template <class U>
-inline const BaseArray<T> &BaseArray<T>::iMod(const U &other, const DM4thParallelSettings &pSettings)
+inline const BaseArray<T> &BaseArray<T>::iMod(U other, const DM4thParallelSettings &pSettings)
 {
 
-    DM4thUtils::parallelLoopItems<int>(
+    DM4thParallel::loop<int>(
         pSettings,
         0, this->size(), 1, // from, to, step
         
         [&](const int &j) 
         {
-            this->set(j, (T)fmod(this->get(j), other));
+            this->set(j, std::fmod(this->item(j), (T)other));
         }
 
     );
 
     return *this;
 }
+
+template <>
+template <class U>
+inline const BaseArray<number> &BaseArray<number>::iMod(U other, const DM4thParallelSettings &pSettings)
+{
+
+    DM4thParallel::loop<int>(
+        pSettings,
+        0, this->size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->set(j, DM4th::fmod(this->item(j), (number)other));
+        }
+
+    );
+
+    return *this;
+}
+
 
 template<class T> 
 template<class U> inline const BaseArray<T> &BaseArray<T>::operator+=(const BaseArray<U> &other)
@@ -502,7 +528,7 @@ inline void ArrayData<T>::moveDataTo(ArrayData<T> &other)
 template <class T>
 void ArrayDataManager<T>::incrRef()
 {
-    DM4thUtils::criticalSection(DEFAULT,
+    DM4thParallel::criticalSection(DEFAULT,
     [&]{
         if (this->_data == nullptr)
         {
@@ -515,7 +541,7 @@ void ArrayDataManager<T>::incrRef()
 template <class T>
 void ArrayDataManager<T>::decrRef()
 {
-    DM4thUtils::criticalSection(DEFAULT,
+    DM4thParallel::criticalSection(DEFAULT,
     [&]{
         this->_data->decrRef();
         if (this->_data->refCount() <= 0)

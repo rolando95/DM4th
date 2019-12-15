@@ -20,6 +20,14 @@ inline number operator""_i(unsigned long long int a){
     return number(0,a);
 }
 
+inline numberf operator""_if(long double a){
+    return numberf (0,a);
+}
+
+inline numberf operator""_if(unsigned long long int a){
+    return numberf(0,a);
+}
+
 #ifndef DM4thOnlyStandardLiterals
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
@@ -30,6 +38,14 @@ inline number operator""i(unsigned long long int a){
 
 inline number operator""i(long double a){
     return number(0,a);
+}
+
+inline numberf operator""if(unsigned long long int a){
+    return numberf(0,a);
+}
+
+inline numberf operator""if(long double a){
+    return numberf(0,a);
 }
 
 #pragma GCC diagnostic pop

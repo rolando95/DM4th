@@ -73,7 +73,7 @@ namespace DM4th
             before = result.getCopy();
 
 
-            DM4thUtils::parallelLoopItems<int>(
+            DM4thParallel::loop<int>(
                 EDM4thParallelSettings::OMP_PARALLEL,
                 0, matrix.size(), 1, // from, to, step
 
@@ -102,7 +102,7 @@ namespace DM4th
             before = result.getCopy();
 
             // DM4thLoopItems MATRIX
-            DM4thUtils::parallelLoopItems<int>(
+            DM4thParallel::loop<int>(
                 EDM4thParallelSettings::OMP_PARALLEL,
                 0, matrix.size(), 1, //from, to, step
                 

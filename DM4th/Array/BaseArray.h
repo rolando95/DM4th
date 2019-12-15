@@ -1,8 +1,6 @@
 #pragma once
-#include "../Utils/_Constants.h"
-//#include "../Math/Math.h"
+
 #include "../Utils/Utils.h"
-#include "../Utils/_c_arr_Utils.h"
 #include "../Number.h"
 
 //#define BASEARRAY_STD_VECTOR
@@ -40,6 +38,7 @@ class BaseArray
         inline T &operator[](const int &idx);
         inline T &operator()(const int &idx);
         inline T &item(const int &idx);
+        inline const T &item(const int &idx) const;
         const inline T &get(const int &idx) const;
         void inline set(const int &idx, const T &value);
 
@@ -51,13 +50,13 @@ class BaseArray
         template<class U> bool operator==(const BaseArray<U> &other) const;
         template<class U> inline bool operator!=(const BaseArray<U> &other) const;
         
-        template<class U> inline const BaseArray<T> &iAdd(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iSub(const BaseArray<U> &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iAdd(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iSub(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iMul(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iDiv(const U &other, const DM4thParallelSettings &pSettings);
-        template<class U> inline const BaseArray<T> &iMod(const U &other, const DM4thParallelSettings &pSettings);
+        inline const BaseArray<T> &iAdd(const BaseArray<T> &other, const DM4thParallelSettings &pSettings);
+        inline const BaseArray<T> &iSub(const BaseArray<T> &other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iAdd(U other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iSub(U other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iMul(U other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iDiv(U other, const DM4thParallelSettings &pSettings);
+        template<class U> inline const BaseArray<T> &iMod(U other, const DM4thParallelSettings &pSettings);
         
         template<class U> inline const BaseArray<T> &operator+=(const BaseArray<U> &other);
         template<class U> inline const BaseArray<T> &operator-=(const BaseArray<U> &other);

@@ -52,6 +52,102 @@ int main()
 
     });
 
+    DM4thTest::TEST("NDArray Vector FLOAT Aritmethic", []{
+        NDArray<float> A = range<float>(5), B = items<float>(0);
+
+        A += 1;
+        A += items<float>(2);
+
+        EXPECT_EQ(A,items<float>(3,4,5,6,7));
+
+        A -= 1;
+        A -= items<float>(3);
+
+        EXPECT_EQ(A,items<float>(-1,0,1,2,3));
+
+        B += items<float>(1,2,3);
+        B -= items<float>(1,2,3);
+
+        EXPECT_EQ(B,items<float>(0,0,0));
+
+        NDArray<float> C = items<float>(10);
+        C -= items<float>(1,2,3);
+        EXPECT_EQ(C,items<float>(9,8,7));
+        
+        A = items<float>( 1,0,1,2,3);
+        B = items<float>( 5,4,3,2,1);
+
+        A *= B;
+
+        EXPECT_EQ(A,items<float>(15));
+
+        A %= 2;
+
+        EXPECT_EQ(A,items<float>(1));
+
+        A = map<float>([](float x){return x*x;}, range<float>(5)) * 2;
+        A = A / 2;
+        A = A + 3;
+        A = A - 3;
+        A = A + A;
+        A = A - A/2;
+
+        EXPECT_EQ(A,items<float>(0,1,4,9,16));
+
+        A = A % 2;
+
+        EXPECT_EQ(A,items<float>(0,1,0,1,0));
+
+    });
+
+    DM4thTest::TEST("NDArray Vector DOUBLE Aritmethic", []{
+        NDArray<double> A = range<double>(5), B = items<double>(0);
+
+        A += 1;
+        A += items<double>(2);
+
+        EXPECT_EQ(A,items<double>(3,4,5,6,7));
+
+        A -= 1;
+        A -= items<double>(3);
+
+        EXPECT_EQ(A,items<double>(-1,0,1,2,3));
+
+        B += items<double>(1,2,3);
+        B -= items<double>(1,2,3);
+
+        EXPECT_EQ(B,items<double>(0,0,0));
+
+        NDArray<double> C = items<double>(10);
+        C -= items<double>(1,2,3);
+        EXPECT_EQ(C,items<double>(9,8,7));
+        
+        A = items<double>( 1,0,1,2,3);
+        B = items<double>( 5,4,3,2,1);
+
+        A *= B;
+
+        EXPECT_EQ(A,items<double>(15));
+
+        A %= 2;
+
+        EXPECT_EQ(A,items<double>(1));
+
+        A = map<double>([](double x){return x*x;}, range<double>(5)) * 2;
+        A = A / 2;
+        A = A + 3;
+        A = A - 3;
+        A = A + A;
+        A = A - A/2;
+
+        EXPECT_EQ(A,items<double>(0,1,4,9,16));
+
+        A = A % 2;
+
+        EXPECT_EQ(A,items<double>(0,1,0,1,0));
+
+    });
+
     DM4thTest::TEST("NDArray Matrix Aritmethic", []{
         NDArray<number> A = items<number>(
             1,2,

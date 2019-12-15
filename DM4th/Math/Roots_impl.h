@@ -92,7 +92,7 @@ inline number newtonRaphson(const std::function<number(number)> &f, number seed,
     number x1 = seed.real();
     number y1 = (seed.imag()==0)? number(0,1) : number(0,seed.imag());
     
-    DM4thUtils::parallelSections(
+    DM4thParallel::sections(
         EDM4thParallelSettings::DEFAULT,
 
         // Real root
@@ -129,7 +129,7 @@ inline number newtonRaphson(const std::function<number(number)> &f, const std::f
     number x1 = seed.real();
     number y1 = (seed.imag()==0)? number(0,1) : number(0,seed.imag());
 
-    DM4thUtils::parallelSections(
+    DM4thParallel::sections(
         EDM4thParallelSettings::DEFAULT,
 
         // Real root
@@ -175,7 +175,7 @@ inline number secantMethod(const std::function<number(number)> &f, number seed0,
     number y1 = seed1.imag()==0? number(0,1) : seed1.imag();
     number y2;
 
-    DM4thUtils::parallelSections(
+    DM4thParallel::sections(
         EDM4thParallelSettings::DEFAULT,
 
         // Real root

@@ -116,7 +116,7 @@ public:
 
 
 typedef _number<double> number;
-typedef _number<float> fnumber;
+typedef _number<float> numberf;
 
 // template<typename T>
 // using enable_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
@@ -146,6 +146,12 @@ inline number operator""_i(long double);
 // Conversion de expresion literal <entero>i a tipo number
 inline number operator""_i(unsigned long long int);
 
+// Conversion de expresion literal <float>i a tipo number
+inline numberf operator""_if(long double);
+
+// Conversion de expresion literal <float>i a tipo number
+inline numberf operator""_if(unsigned long long int);
+
 #ifndef DM4thOnlyStandardLiterals
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wliteral-suffix"
@@ -153,8 +159,14 @@ inline number operator""_i(unsigned long long int);
 // Conversion de expresion literal <double>i a tipo number
 inline number operator""i(long double);
 
-// Conversion de expresion literal <entero>i a tipo number
+// Conversion de expresion literal <entero>i a tipo numbers
 inline number operator""i(unsigned long long int);
+
+// Conversion de expresion literal <float>i a tipo number
+inline numberf operator""if(long double);
+
+// Conversion de expresion literal <float>i a tipo number
+inline numberf operator""if(unsigned long long int);
 
 #pragma GCC diagnostic pop
 #endif
