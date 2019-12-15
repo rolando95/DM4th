@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef DM4thNoDebug
+#ifdef NDEBUG
     #define DM4thAssert(...)
 #else
     #include <cassert>

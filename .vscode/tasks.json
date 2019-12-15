@@ -7,7 +7,7 @@
             "type" : "shell",
             "label": "startRelease",
             "command": "g++",
-            "args": ["-Wall", "-std=c++11", "-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "DM4thParallel"],
+            "args": ["-Wall", "-std=c++11", "-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "DM4thAutoParallel"],
             "group":{
                 "kind" : "build",
                 "isDefault": true
@@ -17,7 +17,7 @@
             "type" : "shell",
             "label": "startReleaseNoAssert",
             "command": "g++",
-            "args": ["-Wall", "-std=c++11", "-mavx2","-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "DM4thNoDebug"],
+            "args": ["-Wall", "-std=c++11", "-mavx2","-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "NDEBUG"],
             "group":{
                 "kind" : "build",
                 "isDefault": true
@@ -27,7 +27,7 @@
             "type" : "shell",
             "label": "startDebug",
             "command": "g++",
-            "args": ["-Wall", "-std=c++11", "-mavx2","-pedantic", "-ggdb", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp"],
+            "args": ["-Wall", "-std=c++11","-pedantic", "-ggdb", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp"],
         },
     ]
 }

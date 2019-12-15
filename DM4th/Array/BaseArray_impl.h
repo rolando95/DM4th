@@ -8,12 +8,13 @@ namespace DM4th
 namespace DM4thInternal
 {
 
-//#define sizeAligned(x)   (x + 3) & -4
-//#define sizeAligned(x) (x + 3) & ~0x03
+//#define sizeAligned<T>(x)   (x + 3) & -4
+//#define sizeAligned<T>(x) (x + 3) & ~0x03
 
+template<class T>
 inline int sizeAligned(int n)
 { 
-    //if(n<4) return 4;
+    if(n<=DM4thSIMD::vectorizeSize<T>()) return DM4thSIMD::vectorizeSize<T>();
     
     n--; 
     n |= n >> 1; 
@@ -31,7 +32,7 @@ template <class T>
 inline void BaseArray<T>::allocArray(const int &size)
 {
     DM4thAssert(!this->_data && size > 0);
-    this->_capacity = sizeAligned(size);
+    this->_capacity = sizeAligned<T>(size);
     this->_data = new T[this->_capacity]();
     this->_size = size;
 }
@@ -44,7 +45,7 @@ inline void BaseArray<T>::reallocArray(const int &size)
     {
         if (size > this->_capacity)
         {
-            this->_capacity = sizeAligned(size);   
+            this->_capacity = sizeAligned<T>(size);   
             T *tmp = new T[this->_capacity];     
             int min = (size < this->_size) ? size : this->_size;
 
@@ -113,7 +114,7 @@ inline void BaseArray<T>::reserve(const int &size)
 {
     if(size>this->_capacity)
     {
-        this->_capacity = sizeAligned(size);   
+        this->_capacity = sizeAligned<T>(size);   
         T *tmp = new T[this->_capacity];     
 
         std::copy_n(this->_data, this->_size, tmp);
@@ -210,7 +211,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<T> &other, const D
 
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -228,7 +229,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(U other, const DM4thParallelSettin
 {
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -246,7 +247,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(U other, const DM4thParallelSettin
 {
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -265,7 +266,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<T> &other, const D
 
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -284,7 +285,7 @@ inline const BaseArray<T> &BaseArray<T>::iMul(U other, const DM4thParallelSettin
 
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -302,7 +303,7 @@ inline const BaseArray<T> &BaseArray<T>::iDiv(U other, const DM4thParallelSettin
 {
     DM4thParallel::loop<int>(
         pSettings,
-        0, this->size(), DM4thSIMD::simdArrSize<T>(), // from, to, step
+        0, this->size(), DM4thSIMD::vectorizeSize<T>(), // from, to, step
         
         [&](const int &j) 
         {
@@ -449,7 +450,7 @@ inline void BaseArray<T>::push(const T &value, const int &idx)
     {
         T* tmp = this->_data;
 
-        this->_capacity = sizeAligned(this->size()+1);
+        this->_capacity = sizeAligned<T>(this->size()+1);
         this->_data = new T[this->_capacity];
         this->_size += 1;
 

@@ -5,7 +5,7 @@ echo "\n-------------------- NO PARALLEL --------------------\n"
 for file in "$search_dir"/*/*.cpp
 do
     echo "\n----- $file -----\n"
-    g++ $file -o test -ggdb3 -Wall -std=c++11 -pedantic -D DM4thOnlyStandardLiterals -fopenmp
+    g++ $file -o test -ggdb3 -mavx2 -Wall -std=c++11 -pedantic -D DM4thOnlyStandardLiterals -fopenmp
     if [ $? -ne 0 ]; then exit 1; fi
 
     if [ "$1" = "usevalgrind" ]

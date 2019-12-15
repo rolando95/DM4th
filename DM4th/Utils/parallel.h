@@ -86,27 +86,29 @@ namespace DM4thParallel
         #if defined(_OPENMP)
 
             case OMP_WORK_SHARED:
-
-                #pragma omp for
-                for(T j=from; j<to; j+=step)
                 {
-                    f(j);
+                    #pragma omp for
+                    for(T j=from; j<to; j+=step)
+                    {
+                        f(j);
+                    }
                 }
                 break;
 
             case DEFAULT:
             case OMP_PARALLEL:
-                #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
-                for(T j=from; j<to; j+=step)
                 {
-                    f(j);
+                    #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
+                    for(T j=from; j<to; j+=step)
+                    {
+                        f(j);
+                    }
                 }
                 break;
 
         #endif
             case ORDERED:
             default:
-
                 for(T j=from; j<to; j+=step)
                 {
                     f(j);
@@ -346,7 +348,6 @@ namespace DM4thParallel
         {
         
         #if defined(_OPENMP)
-        #endif
             case OMP_WORK_SHARED:
                 {
                     #pragma omp barrier
@@ -380,7 +381,7 @@ namespace DM4thParallel
                     }               
                 }
                 break;
-
+        #endif
             case ORDERED:
             default:
                 {
