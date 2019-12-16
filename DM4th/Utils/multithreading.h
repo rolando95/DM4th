@@ -28,7 +28,7 @@ enum EDM4thParallelSettings
     DEFAULT = 0,
 
     // Parallel Type
-    ORDERED          = 1 << 0,
+    ORDERED         = 1 << 0,
     OMP_PARALLEL    = 1 << 1,
     OMP_WORK_SHARED = 1 << 2,
     PARALLEL_TYPE   = 2*OMP_WORK_SHARED - ORDERED,

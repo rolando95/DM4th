@@ -1,10 +1,10 @@
 #pragma once
 
-#include "parallel.h"
+#include "multithreading.h"
 #include "simd.h"
 #include "_c_arr_Utils.h"
 #include "_Constants.h"
-
+#include "_miscellaneos.h"
 
 #include <cstring>
 #include <string>
