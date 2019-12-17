@@ -14,7 +14,7 @@ class _number
     
 public:
 
-    _number(T a = 0, T b = 0)
+    _number(const T &a = 0, const T &b = 0)
     {
         this->real() = (T)a;
         this->imag() = (T)b;
