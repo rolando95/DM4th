@@ -1,6 +1,7 @@
 #include "DM4th/DM4th.h"
 
 using namespace std;
+using namespace DM4th;
 
 int main()
 {
