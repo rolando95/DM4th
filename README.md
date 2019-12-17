@@ -47,6 +47,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -74,7 +75,8 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
-    
+    using namespace DM4th;
+
     int main()
     {
         number a = 5+7i;
@@ -111,6 +113,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -148,6 +151,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -206,6 +210,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -280,6 +285,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main(){
         NDArray<number> arr1 = range<number>(10,18,2);
@@ -375,6 +381,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -455,6 +462,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     int main()
     {
@@ -535,6 +543,7 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
+    using namespace DM4th;
 
     number myFunction(number x)
     {
@@ -582,7 +591,8 @@ D-M4th es una librería escrita en `C++` que métodos para un fácil manejo de o
     #include "DM4th/DM4th.h"
 
     using namespace std;
-
+    using namespace DM4th;
+    
     int main()
     {
         NDArray<number> arr1 = identity<number>(10,10);

@@ -4,7 +4,7 @@
 namespace DM4th
 {
 
-namespace DM4thNDArrayUtils
+namespace NDArrayUtils
 {
 
     template<class T>
@@ -123,7 +123,7 @@ NDArray<T> identity(int axis0, U ... axisSize)
         //result.resize(axisSize...);
 
         NDArray<T> axis = items<T>(axis0, axisSize ...);
-        int size = DM4thNDArrayUtils::min<T>(axis);
+        int size =  DM4th::NDArrayUtils::min<T>(axis);
         int disp = result._getAxisDisplacement(0) + 1;
         for(int j=0, idx=0; j<size; ++j, idx+=disp)
         {

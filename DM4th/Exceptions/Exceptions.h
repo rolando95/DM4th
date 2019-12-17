@@ -14,7 +14,7 @@
 #endif
 namespace DM4th
 {
-namespace DM4thInternal
+namespace Internal
 {
 
 inline void __DM4thAssert(bool expression)

@@ -83,23 +83,25 @@ constexpr int ALL = std::numeric_limits<int>::max() - 1;
 // #define _min(a,b) (a<b)? a: b
 // #define _max(a,b) (a>b)? a: b
 
+namespace Internal {
+
+    template<class T, class ... U>
+    inline void _initArray(T* arr, const int &idx, const T &last)
+    {
+        arr[idx] = last;
+    }
+
+    template<class T, class ... U>
+    inline void _initArray(T* arr, const int &idx, const T &first, U ... args)
+    {
+        arr[idx] = first;
+        _initArray(arr, idx+1, args ...);
+    }
+}
+
 namespace DM4thUtils
 {
-    namespace DM4thInternal {
 
-        template<class T, class ... U>
-        inline void _initArray(T* arr, const int &idx, const T &last)
-        {
-            arr[idx] = last;
-        }
-
-        template<class T, class ... U>
-        inline void _initArray(T* arr, const int &idx, const T &first, U ... args)
-        {
-            arr[idx] = first;
-            _initArray(arr, idx+1, args ...);
-        }
-    }
     
     template<class T>
     inline T min(const T &a,const T &b){ return (a<b)? a: b; }
@@ -145,13 +147,13 @@ namespace DM4thUtils
     inline void initArray(T* arr, const T &first, U ... args)
     {
         arr[0] = first;
-        DM4thInternal::_initArray(arr, 1, args ...);
+        DM4th::Internal::_initArray(arr, 1, args ...);
     }
 
 
 }
 
-namespace DM4thInternal 
+namespace Internal 
 {
 
 inline void _handleIstreamSpacesAndNewLines(std::istream &stream)

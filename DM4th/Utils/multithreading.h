@@ -43,7 +43,7 @@ enum EDM4thParallelSettings
 
 typedef unsigned int DM4thParallelSettings;
 
-namespace DM4thParallel
+namespace Parallel
 {
     template<class T>
     inline T reduceOp(const DM4thParallelSettings &settings,const T& op1,const T& op2)

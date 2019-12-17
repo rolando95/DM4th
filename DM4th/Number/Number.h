@@ -64,12 +64,12 @@ public:
 
     // Asignacion de un valor numerico
     template <class U>
-    inline _number operator=(const _number<U> a);
-    // {
-    //     this->_data[0]eal((T)a.real());
-    //     this->_data[1]mag((T)a.imag());
-    //     return *this;
-    // }
+    inline _number operator=(const _number<U> &a)
+    {
+        this->real() = a.real();
+        this->imag() = a.imag();
+        return *this;
+    }
 
     template <class U>
     explicit operator U() { return (U)this->real(); }
@@ -116,7 +116,8 @@ public:
 
 
 typedef _number<double> number;
-typedef _number<float> numberf;
+typedef _number<float> fnumber;
+#define DM4th_i _number<T>(0,1)
 
 // template<typename T>
 // using enable_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value, T>::type;
@@ -133,9 +134,8 @@ using check_if_is_number = typename std::enable_if<std::is_arithmetic<T>::value 
 // Define como constante el valor de i
 static const number i(0, 1);
 static const number _i(0, 1);
-
-
-
+static const number fi(0, 1);
+static const number _fi(0, 1);
 
 // Convert string to number
 inline number strTonumber(std::string);
@@ -147,10 +147,10 @@ inline number operator""_i(long double);
 inline number operator""_i(unsigned long long int);
 
 // Conversion de expresion literal <float>i a tipo number
-inline numberf operator""_if(long double);
+inline fnumber operator""_fi(long double);
 
 // Conversion de expresion literal <float>i a tipo number
-inline numberf operator""_if(unsigned long long int);
+inline fnumber operator""_fi(unsigned long long int);
 
 #ifndef DM4thOnlyStandardLiterals
 #pragma GCC diagnostic push
@@ -163,10 +163,10 @@ inline number operator""i(long double);
 inline number operator""i(unsigned long long int);
 
 // Conversion de expresion literal <float>i a tipo number
-inline numberf operator""if(long double);
+inline fnumber operator""fi(long double);
 
 // Conversion de expresion literal <float>i a tipo number
-inline numberf operator""if(unsigned long long int);
+inline fnumber operator""fi(unsigned long long int);
 
 #pragma GCC diagnostic pop
 #endif

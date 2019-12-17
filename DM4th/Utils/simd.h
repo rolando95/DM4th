@@ -2,7 +2,7 @@
 
 namespace DM4th
 {
-namespace DM4thSIMD
+namespace SIMD
 {
 
 #if defined __AVX2__

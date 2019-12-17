@@ -1,6 +1,9 @@
 #include "../../DM4th/DM4th.h"
 #include "../../DM4th/Test/DM4thTest.h"
 
+using namespace std;
+using namespace DM4th;
+
 int main()
 {
     DM4thTest::TEST("Items & range", []{

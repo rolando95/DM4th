@@ -66,7 +66,7 @@ inline NDArray<number> diff(NDArray<number> v, number iter){
             NDArray<number> diffV;
             diffV.resize(v.shape(0)-1);
             
-            DM4thParallel::loop<int>(
+             DM4th::Parallel::loop<int>(
                 EDM4thParallelSettings::OMP_PARALLEL,
                 0, diffV.data_size(), 1, // from, to, step
 
@@ -90,7 +90,7 @@ inline number integral(const std::function<number(number)> &f, const number &a, 
     number h = (b-a)/n;
     
     number s;
-    DM4thParallel::loopReduce<number, int>(
+     DM4th::Parallel::loopReduce<number, int>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         0, n, 1, // from, to, step
         

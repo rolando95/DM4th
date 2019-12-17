@@ -8,7 +8,7 @@ namespace DM4th
 {
 
 template<class T>
-class DTree: public DM4thInternal::TreeDataManager<DTree,T>
+class DTree: public DM4th::Internal::TreeDataManager<DTree,T>
 {
     public:
         DTree();  

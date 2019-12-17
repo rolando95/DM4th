@@ -23,7 +23,7 @@ NDArray<T>::NDArray(T *data, const NDArray<int> &axisArray)
     DM4thAssert(axisArray.rank()==1);
 
     this->resize(axisArray);
-    int size = DM4thNDArrayUtils::mul(axisArray);
+    int size =  DM4th::NDArrayUtils::mul(axisArray);
     for(int j=0; j<size; ++j)
     {
         this->data_item(j) = data[j];
@@ -58,7 +58,7 @@ inline void NDArray<T>::resize(const int &axis1, U ... args)
     { //1 dim to N dim
         int oldShape = this->shape(0);
 
-        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
+        DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
 
         int newDisp = this->_getAxisDisplacement(0);
         int end = DM4thUtils::min(oldShape, this->shape(0));
@@ -73,7 +73,7 @@ inline void NDArray<T>::resize(const int &axis1, U ... args)
         NDArray<int> oldShape = this->shape();
         int oldDisp = this->_getAxisDisplacement(0);
 
-        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
+        DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
 
         NDArray<int> newShape = this->shape();
         int newDisp = this->_getAxisDisplacement(0);
@@ -104,7 +104,7 @@ inline void NDArray<T>::resize(const int &axis1)
         int disp = this->_getAxisDisplacement(0);
         int end = DM4thUtils::min(axis1, this->shape(0));
         //T* old = this->_data->array._allocAndReturnOldArray(axis1);
-        DM4thInternal::BaseArray<T> old;
+        DM4th::Internal::BaseArray<T> old;
         this->_data->array.moveDataTo(old);
         this->_data->array.resize(axis1);
 
@@ -128,7 +128,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
     { //1 dim to N dim
         int oldShape = this->shape(0);
 
-        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
+        DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         int newDisp = this->_getAxisDisplacement(0);
         int end = DM4thUtils::min(oldShape, this->shape(0));
@@ -143,7 +143,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
         NDArray<int> oldShape = this->shape();
         int oldDisp = this->_getAxisDisplacement(0);
 
-        DM4thInternal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
+        DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
         NDArray<int> newShape = this->shape();
         int newDisp = this->_getAxisDisplacement(0);
@@ -589,7 +589,7 @@ inline const NDArray<T> &NDArray<T>::iAdd(const NDArray<U> &other, const DM4thPa
         T value = this->data_item(0);
         this->resize(other.shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             pSettings,
             0, this->data_size(), 1, // from, to, step
             
@@ -620,7 +620,7 @@ inline const NDArray<T> &NDArray<T>::iSub(const NDArray<U> &other, const DM4thPa
         T value = this->data_item(0);
         this->resize(other.shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             pSettings,
             0, this->data_size(), 1, // from, to, step
             
@@ -652,7 +652,7 @@ const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelS
         T &value = this->data_item(0);
         result.resize(other.shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             pSettings, // from, to, step
             0, other.data_size(), 1,
             [&](const int &j)
@@ -678,7 +678,7 @@ const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelS
         result.resize(1);
 
         T r;
-        DM4thParallel::loopReduce<T, int>(
+         DM4th::Parallel::loopReduce<T, int>(
             pSettings | EDM4thParallelSettings::ADD, 
             0, this->shape(0), 1, // from, to, step
 
@@ -701,7 +701,7 @@ const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelS
 
         result.resize(maxX,maxY);
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             pSettings,
             0, maxX, 1, // from, to, step
             
@@ -905,7 +905,7 @@ NDArray<bool> NDArray<T>::operator==(const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -925,7 +925,7 @@ NDArray<bool> NDArray<T>::operator!=(const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -946,7 +946,7 @@ NDArray<bool> NDArray<T>::operator> (const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -966,7 +966,7 @@ NDArray<bool> NDArray<T>::operator<=(const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -986,7 +986,7 @@ NDArray<bool> NDArray<T>::operator>=(const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -1007,7 +1007,7 @@ NDArray<bool> NDArray<T>::operator<(const T &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -1029,7 +1029,7 @@ NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1066,7 +1066,7 @@ NDArray<bool> NDArray<T>::operator!=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1102,7 +1102,7 @@ NDArray<bool> NDArray<T>::operator>(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1139,7 +1139,7 @@ NDArray<bool> NDArray<T>::operator<=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1176,7 +1176,7 @@ NDArray<bool> NDArray<T>::operator>=(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1212,7 +1212,7 @@ NDArray<bool> NDArray<T>::operator<(const NDArray<T> &other) const
     {
         result.resize(this->shape());
 
-        DM4thParallel::loop<int>(
+         DM4th::Parallel::loop<int>(
             EDM4thParallelSettings::OMP_PARALLEL,
             0, result.data_size(), 1, // from, to, step
             
@@ -1246,7 +1246,7 @@ inline NDArray<bool> NDArray<bool>::operator&&(const NDArray<bool> &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -1266,7 +1266,7 @@ inline NDArray<bool> NDArray<bool>::operator||(const NDArray<bool> &other) const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -1287,7 +1287,7 @@ inline NDArray<bool> NDArray<bool>::operator!() const
     NDArray<bool> result;
     result.resize(this->shape());
 
-    DM4thParallel::loop<int>(
+     DM4th::Parallel::loop<int>(
         EDM4thParallelSettings::OMP_PARALLEL,
         0, result.data_size(), 1, // from, to, step
         
@@ -1345,12 +1345,12 @@ std::istream& NDArray<T>::istream(std::istream& stream)
     int c_size = 0;
     std::queue<T> values;
     bool shapeAllocated = false;
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
 
     DM4thAssert(stream.peek()=='['); stream.get();
     
     this->_istream(stream, values, 0, c_size, shapeAllocated);
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
 
     DM4thAssert(stream.peek()==']'); stream.get();
 
@@ -1451,7 +1451,7 @@ template<class T>
 void NDArray<T>::_resize(const int &axis, int oldDispCount, int newDispCount, 
             // NDArray<int> &oldDisp,  NDArray<int> &newDisp, 
             NDArray<int> &oldShape,  NDArray<int> &newShape,
-            const DM4thInternal::BaseArray<T> &oldArray)
+            const DM4th::Internal::BaseArray<T> &oldArray)
 {
     int end = DM4thUtils::min(oldShape.item(axis), newShape.item(axis));
 
@@ -1541,7 +1541,7 @@ inline int NDArray<T>::_item(const int &axis, int pos, const int &x) const
 }
 
 template<class T>
-DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArray)
+Internal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArray)
 {
     int count = 1;
     for(int j=0; j<axisArray.size(); ++j)
@@ -1549,7 +1549,7 @@ DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArra
         count*= axisArray.data()[j];
     }
     //T* oldArray = this->_data->array._allocAndReturnOldArray(count);
-    DM4thInternal::BaseArray<T> oldArray;
+    DM4th::Internal::BaseArray<T> oldArray;
     this->_data->array.moveDataTo(oldArray);
     this->_data->array.resize(count);
     this->_data->shape.resize(axisArray.size());
@@ -1561,12 +1561,12 @@ DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const NDArray<int> &axisArra
 }
 
 template<class T> template<class ... U>
-DM4thInternal::BaseArray<T> NDArray<T>::_allocZeros(const int &axis1, U ... args)
+Internal::BaseArray<T> NDArray<T>::_allocZeros(const int &axis1, U ... args)
 {
     int size = DM4thUtils::mul(axis1, args...);
     int rank = DM4thUtils::count(axis1, args...);
     
-    DM4thInternal::BaseArray<T> oldArray;
+    DM4th::Internal::BaseArray<T> oldArray;
     this->_data->array.moveDataTo(oldArray);
     this->_data->array._allocEmpty(size);
 
@@ -1618,15 +1618,15 @@ template<class T>
 void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated)
 {
     int size=0;
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()=='[')
     {
         while (true)
         {
-            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+            DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
             DM4thAssert(stream.peek()=='['); stream.get();
 
-            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+            DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']') break; //This dim is empty
 
             this->_istream(stream, values, shapeIdx+1, c_size, shapeAllocated);
@@ -1634,7 +1634,7 @@ void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shape
             
             DM4thAssert(stream.peek()==']'); stream.get();
 
-            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+            DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else DM4thAssert(false);
@@ -1644,7 +1644,7 @@ void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shape
         T value;
         while (true)
         {
-            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+            DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']') { break;} //This dim is empty
             
             stream>>value;
@@ -1652,7 +1652,7 @@ void NDArray<T>::_istream(std::istream& stream, std::queue<T> &values, int shape
             size += 1;
             c_size += 1;
             
-            DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+            DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
             if(stream.peek()==']'){ break; }
             else if(stream.peek()==',') { stream.get(); }
             else DM4thAssert(false);

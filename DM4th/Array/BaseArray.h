@@ -8,7 +8,7 @@
 namespace DM4th
 {
 
-namespace DM4thInternal
+namespace Internal
 {
 
 using namespace DM4thUtils;

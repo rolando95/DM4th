@@ -20,12 +20,12 @@ inline number operator""_i(unsigned long long int a){
     return number(0,a);
 }
 
-inline numberf operator""_if(long double a){
-    return numberf (0,a);
+inline fnumber operator""_fi(long double a){
+    return fnumber (0,a);
 }
 
-inline numberf operator""_if(unsigned long long int a){
-    return numberf(0,a);
+inline fnumber operator""_fi(unsigned long long int a){
+    return fnumber(0,a);
 }
 
 #ifndef DM4thOnlyStandardLiterals
@@ -40,12 +40,12 @@ inline number operator""i(long double a){
     return number(0,a);
 }
 
-inline numberf operator""if(unsigned long long int a){
-    return numberf(0,a);
+inline fnumber operator""fi(unsigned long long int a){
+    return fnumber(0,a);
 }
 
-inline numberf operator""if(long double a){
-    return numberf(0,a);
+inline fnumber operator""fi(long double a){
+    return fnumber(0,a);
 }
 
 #pragma GCC diagnostic pop
@@ -179,11 +179,11 @@ template<class T>
 std::istream& operator>>(std::istream& stream, _number<T> &n)
 {
     T tmp;
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     while(true)
     {
         stream>>tmp;
-        DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+        DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
         if(stream.peek()=='i')
         {
             n.imag() = tmp;
@@ -635,7 +635,7 @@ inline _number<T> pow(_number<T> n1,_number<T> n2){
     }
     else{
         _number<T> exponent = n2*ln(n1);
-        return std::pow(e,exponent.real())*(std::cos(exponent.imag())+std::sin(exponent.imag())*i);
+        return std::pow(e,exponent.real())*(std::cos(exponent.imag())+std::sin(exponent.imag())*DM4th_i);
     }
 }
 
@@ -665,7 +665,7 @@ inline _number<T> ln(_number<T> n){
         return _number<T>(std::log(n.real()),0);
     }
     else{
-        return std::log(abs(n).real())+arg(n)*i;
+        return std::log(abs(n).real())+arg(n)*DM4th_i;
     }
 }
 
@@ -685,10 +685,10 @@ inline _number<T> log(const U &n1, const _number<T> &n2)
 }
 
 template<class T>
-inline _number<T> sin(_number<T> n){return (isReal(n))?std::sin(n.real()) : (pow(e,i*n)-pow(e,-i*n))/(2*i);}
+inline _number<T> sin(_number<T> n){return (isReal(n))?std::sin(n.real()) : (pow(e,DM4th_i*n)-pow(e,-DM4th_i*n))/(2*DM4th_i);}
 
 template<class T>
-inline _number<T> cos(_number<T> n){return (isReal(n))?std::cos(n.real()) : (pow(e,i*n)+pow(e,-i*n))/2;}
+inline _number<T> cos(_number<T> n){return (isReal(n))?std::cos(n.real()) : (pow(e,DM4th_i*n)+pow(e,-DM4th_i*n))/2;}
 
 template<class T>
 inline _number<T> tan(_number<T> n){
@@ -702,9 +702,9 @@ template<class T> inline _number<T> cot(_number<T> n){return 1/tan(n);}
 template<class T> inline _number<T> sec(_number<T> n){return 1/cos(n);}
 template<class T> inline _number<T> csc(_number<T> n){return 1/sin(n);}
 
-template<class T> inline _number<T> asin(_number<T> n){return -i*ln(i*n+sqrt(1-n*n));}
+template<class T> inline _number<T> asin(_number<T> n){return -DM4th_i*ln(DM4th_i*n+sqrt(1-n*n));}
 template<class T> inline _number<T> acos(_number<T> n){return pi/2-asin(n);}
-template<class T> inline _number<T> atan(_number<T> n){return i/2*(ln(1-i*n)-ln(1+i*n));}
+template<class T> inline _number<T> atan(_number<T> n){return DM4th_i/2*(ln(1-DM4th_i*n)-ln(1+DM4th_i*n));}
 template<class T> inline _number<T> acot(_number<T> n){return atan(1/n);}
 template<class T> inline _number<T> asec(_number<T> n){return acos(1/n);}
 template<class T> inline _number<T> acsc(_number<T> n){return asin(1/n);}

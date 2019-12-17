@@ -320,16 +320,16 @@ std::istream& DTree<T>::istream(std::istream& stream)
     T value;
 
     // Lee corchete abierto
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!='{') DM4thAssert(false);
     stream.get();
 
     // Obtiene la clave "value"
-    DM4thInternal::_handleStringInQuotes(stream,inStr);
+    DM4th::Internal::_handleStringInQuotes(stream,inStr);
     if(inStr!="value") DM4thAssert(false);
 
     // Lee los dos puntos
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!=':') DM4thAssert(false);
     stream.get();
 
@@ -338,27 +338,27 @@ std::istream& DTree<T>::istream(std::istream& stream)
     t.item() = value;
 
     // Lee la comma
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!=',') DM4thAssert(false);
     stream.get();
 
     // Obtiene la clave "child"
-    DM4thInternal::_handleStringInQuotes(stream,inStr);
+    DM4th::Internal::_handleStringInQuotes(stream,inStr);
     if(inStr!="child") DM4thAssert(false);
 
     // Lee los dos puntos
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!=':') DM4thAssert(false);
     stream.get();
 
     // Lee el corchete abierto
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!='[') DM4thAssert(false);
     stream.get();
 
     // Lee iterativamente los hijos del nodo
     while(true){
-        DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+        DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
 
         // El nodo no tiene hijos
         if(stream.peek()==']'){stream.get();break;}
@@ -368,7 +368,7 @@ std::istream& DTree<T>::istream(std::istream& stream)
         lT.istream(stream);
         trees.push(lT);
 
-        DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+        DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
         // Siguiente dato en la lista de hijos
         if(stream.peek()==']'){stream.get();break;}
         else if(stream.peek()==',') stream.get();
@@ -376,10 +376,10 @@ std::istream& DTree<T>::istream(std::istream& stream)
     }
 
     // Lee el corchete cerrado
-    DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    DM4th::Internal::_handleIstreamSpacesAndNewLines(stream);
     if(stream.peek()!='}') DM4thAssert(false);
     stream.get();
-    //DM4thInternal::_handleIstreamSpacesAndNewLines(stream);
+    //Internal::_handleIstreamSpacesAndNewLines(stream);
 
     t.resize(trees.size());
     for(int j=0; j<t.size(); ++j)

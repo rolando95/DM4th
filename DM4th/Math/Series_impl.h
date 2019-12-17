@@ -33,7 +33,7 @@ inline number factorial2(const number iter)
     int n = abs(round(iter)).real();
 
     int result;
-    DM4thParallel::loopReduce<int, int>(
+     DM4th::Parallel::loopReduce<int, int>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL, 
         1, n+1, 1, // from, to, step
 
@@ -54,7 +54,7 @@ inline number sumatory(const std::function<number(number)> &f, NDArray<number> v
 
     number result;
     
-    DM4thParallel::loopReduce<number, int>(
+     DM4th::Parallel::loopReduce<number, int>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         0, v.data_size(), iter, // from, to, step
 
@@ -72,7 +72,7 @@ inline number sumatory(const std::function<number(number)> &f,  number begin,  n
     
     number result;
     
-    DM4thParallel::loopReduce<number, number>(
+     DM4th::Parallel::loopReduce<number, number>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         begin, end, increment, // from, to, step
 
@@ -91,7 +91,7 @@ inline number sumatory(NDArray<number> v, number begin, number end, number incre
 
     number result;
     
-    DM4thParallel::loopReduce<number, number>(
+     DM4th::Parallel::loopReduce<number, number>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::ADD, 
         begin, end, increment, // from, to, step
 
@@ -111,7 +111,7 @@ inline number product(const std::function<number(number)> &f, NDArray<number> v,
 
     number result;
 
-    DM4thParallel::loopReduce<number, int>(
+     DM4th::Parallel::loopReduce<number, int>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL,
         0, v.data_size(), iter, // from, to, step
 
@@ -131,7 +131,7 @@ inline number product(const std::function<number(number)> &f, number begin, numb
     
     number result;
     
-    DM4thParallel::loopReduce<number, number>(
+     DM4th::Parallel::loopReduce<number, number>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL, 
         begin, end, increment, // from, to, step
 
@@ -151,7 +151,7 @@ inline number product(NDArray<number> v, number begin, number end, number increm
     if(end==END) end = v.shape(0);
 
     number result;
-    DM4thParallel::loopReduce<number, number>(
+     DM4th::Parallel::loopReduce<number, number>(
         EDM4thParallelSettings::OMP_PARALLEL | EDM4thParallelSettings::MUL,
         begin, end, increment, // from, to, step
 

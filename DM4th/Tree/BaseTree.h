@@ -5,7 +5,7 @@
 namespace DM4th
 {
 
-namespace DM4thInternal
+namespace Internal
 {
 
 template<template<class> class Tree, class T>

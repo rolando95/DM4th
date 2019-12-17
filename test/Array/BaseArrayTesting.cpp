@@ -1,11 +1,15 @@
 #include "../../DM4th/DM4th.h"
 #include "../../DM4th/Test/DM4thTest.h"
 
+using namespace std;
+using namespace DM4th;
+
+
 int main()
 {
     DM4thTest::TEST("BaseArray References", []{
 
-        DM4thInternal::BaseArray<number> A, B;
+        DM4th::Internal::BaseArray<number> A, B;
 
         A.resize(5);
 
@@ -24,7 +28,7 @@ int main()
     });
 
     DM4thTest::TEST("Base Array EQ NEQ", []{
-        DM4thInternal::BaseArray<number> A, B;
+        DM4th::Internal::BaseArray<number> A, B;
 
         A.resize(10);
         B.resize(10);
@@ -45,7 +49,7 @@ int main()
     });
 
     DM4thTest::TEST("BaseArray Arithmetic", []{
-        DM4thInternal::BaseArray<number> A, B;
+        DM4th::Internal::BaseArray<number> A, B;
 
         A.resize(10);
         for(int j=0; j<A.size(); ++j)
@@ -68,7 +72,7 @@ int main()
         }
 
         
-        DM4thInternal::BaseArray<number> C;
+        DM4th::Internal::BaseArray<number> C;
         C = A;
         C.set(0,-1);
         EXPECT_NE(C,A);
@@ -81,7 +85,7 @@ int main()
     });
 
     DM4thTest::TEST("BaseArray Resize", []{
-        DM4thInternal::BaseArray<double> A, B;
+        DM4th::Internal::BaseArray<double> A, B;
         A.resize(5);
         B.resize(5);
         B(0) = 0;
@@ -106,7 +110,7 @@ int main()
 
         EXPECT_EQ(A,B);
 
-        DM4thInternal::BaseArray<string> C, D;
+        DM4th::Internal::BaseArray<string> C, D;
         D.resize(3);
         D(0) = "Hola";
         D(1) = "Mis";

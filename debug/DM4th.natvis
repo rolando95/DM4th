@@ -18,7 +18,7 @@
         <DisplayString Condition="_data[1]==0">{_data[0]}</DisplayString>
         <DisplayString Condition="_data[1]!=0">{_data[0]} + {_data[1]}i</DisplayString>
     </Type>
-    <Type Name="DM4th::DM4thInternal::BaseArray&lt;*&gt;">
+    <Type Name="DM4th::Internal::BaseArray&lt;*&gt;">
         <DisplayString>BaseArray</DisplayString>
         <Expand>
             <ArrayItems Condition="_data!=0" >
@@ -27,13 +27,13 @@
             </ArrayItems>
         </Expand>
     </Type>
-    <Type Name="DM4th::DM4thInternal::ArrayDataManager&lt;*&gt;">
+    <Type Name="DM4th::Internal::ArrayDataManager&lt;*&gt;">
         <DisplayString>ArrayDataManager</DisplayString>
     </Type>
-    <Type Name="DM4th::DM4thInternal::ArrayData&lt;*&gt;">
+    <Type Name="DM4th::Internal::ArrayData&lt;*&gt;">
         <DisplayString>ArrayData</DisplayString>
     </Type>
-    <Type Name="DM4th::DM4thInternal::ShapeData">
+    <Type Name="DM4th::Internal::ShapeData">
         <DisplayString>ShapeData</DisplayString>
         <Expand>
             <ArrayItems Condition="_data!=0" >
