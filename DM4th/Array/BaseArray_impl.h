@@ -446,8 +446,13 @@ inline void BaseArray<T>::push(const T &value, const int &idx)
     {
         this->_size += 1;
         this->set(idx, value);
-    }else
+    }else if(this->capacity()>this->size()+1)
     {
+        this->_size += 1;
+        std::copy_backward(this->_data+idx, this->_data+_size-1, this->_data+_size);
+        this->set(idx, value);
+        
+    }else{
         T* tmp = this->_data;
 
         this->_capacity = sizeAligned<T>(this->size()+1);

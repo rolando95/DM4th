@@ -78,10 +78,9 @@ public:
 
     explicit operator std::string()
     {
-        std::ostringstream strs;
-        strs << *this;
-        std::string str = strs.str();
-        return str;
+        std::ostringstream ss;
+        ss << *this;
+        return ss.str();
     };
 
     void loadFile(std::string url)

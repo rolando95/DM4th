@@ -26,8 +26,9 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         explicit NDArray(const std::string &other);
 
         template<class U>
-        explicit operator NDArray<U>();
-        
+        explicit operator NDArray<U>() const;
+        explicit operator std::string() const;
+
         template<class ... U>
         inline void resize(const int &axis1, U ... args);
         inline void resize(const int &axis1);
@@ -64,7 +65,7 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         NDArray<T> getCopy() const;
 
         template<class U>
-        void push(const U &value, const int &idx=END);
+        inline void push(const U &value, const int &idx=END);
         template<class U>
         void pushArray(const NDArray<U> &other, const int &idx=END);
 

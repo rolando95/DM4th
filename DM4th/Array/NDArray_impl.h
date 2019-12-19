@@ -39,7 +39,7 @@ NDArray<T>::NDArray(const std::string &str)
 }
 
 template<class T> template<class U>
-NDArray<T>::operator NDArray<U>()
+NDArray<T>::operator NDArray<U>() const
 {
     NDArray<U> result;
     result.resize(this->shape());
@@ -48,6 +48,14 @@ NDArray<T>::operator NDArray<U>()
         result.data_item(j) = (U)this->data_item(j);
     }
     return result;
+}
+
+template<class T>
+NDArray<T>::operator std::string() const
+{
+    std::stringstream ss;
+    ss << *this;
+    return ss.str();
 }
 
 template<class T> template<class ... U>
