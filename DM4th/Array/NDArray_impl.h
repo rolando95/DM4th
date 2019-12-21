@@ -802,7 +802,7 @@ inline NDArray<T> NDArray<T>::operator+(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iAdd(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 template<class T>
@@ -813,11 +813,11 @@ inline const NDArray<T> &NDArray<T>::operator+=(const T &other)
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator+(const T &other) const
+inline NDArray<T> NDArray<T>::operator+(const T &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iAdd(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 
@@ -827,7 +827,7 @@ inline NDArray<T> NDArray<T>::operator-(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iSub(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 template<class T>
@@ -838,11 +838,11 @@ inline const NDArray<T> &NDArray<T>::operator-=(const T &other)
 }
 
 template<class T>
-inline const NDArray<T> NDArray<T>::operator-(const T &other) const
+inline NDArray<T> NDArray<T>::operator-(const T &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iSub(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 template<class T> template<class U>
@@ -850,7 +850,7 @@ inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iMul(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 
@@ -866,7 +866,7 @@ inline NDArray<T> NDArray<T>::operator*(const T &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iMul(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 template<class T>
@@ -881,7 +881,7 @@ inline NDArray<T> NDArray<T>::operator/(const T &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iDiv(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 template<class T>
@@ -892,11 +892,11 @@ inline const NDArray<T> &NDArray<T>::operator%=(const T &other)
 }
 
 template<class T>
-inline NDArray<T> NDArray<T>::operator%(const T &other)
+inline NDArray<T> NDArray<T>::operator%(const T &other) const
 {
     NDArray<T> result = this->getCopy();
     result.iMod(other, EDM4thParallelSettings::DEFAULT);
-    return result;
+    return std::move(result);
 }
 
 // template<class T> template<class U>

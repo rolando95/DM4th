@@ -8,7 +8,7 @@ namespace DM4th
 {
 
 template <class T>
-class _number
+class alignas(sizeof(T)*2) _number
 {
     T _data[2];
     

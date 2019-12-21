@@ -1,5 +1,5 @@
 #include <immintrin.h>
-
+#include "../Number/Number_impl.h"
 namespace DM4th
 {
 namespace SIMD
@@ -14,19 +14,19 @@ namespace SIMD
     }
 
     template<>
-    inline void iAddArray<float>(float *arr1, const float *arr2)
-    {
-        __m256 mArr1 = _mm256_loadu_ps(arr1);
-        __m256 mArr2 = _mm256_loadu_ps(arr2);
-        _mm256_storeu_ps(arr1, _mm256_add_ps(mArr1, mArr2));   
-    }
-
-    template<>
     inline void iAddArray<double>(double *arr1, const double *arr2)
     {
         __m256d mArr1 = _mm256_loadu_pd(arr1);
         __m256d mArr2 = _mm256_loadu_pd(arr2);
         _mm256_storeu_pd(arr1, _mm256_add_pd(mArr1, mArr2)); 
+    }
+
+    template<>
+    inline void iAddArray<float>(float *arr1, const float *arr2)
+    {
+        __m256 mArr1 = _mm256_loadu_ps(arr1);
+        __m256 mArr2 = _mm256_loadu_ps(arr2);
+        _mm256_storeu_ps(arr1, _mm256_add_ps(mArr1, mArr2));   
     }
 
     // ADD SCALAR
@@ -60,19 +60,19 @@ namespace SIMD
     }
 
     template<>
-    inline void iSubArray<float>(float *arr1, const float *arr2)
-    {
-        __m256 mArr1 = _mm256_loadu_ps(arr1);
-        __m256 mArr2 = _mm256_loadu_ps(arr2);
-        _mm256_storeu_ps(arr1, _mm256_sub_ps(mArr1, mArr2));   
-    }
-
-    template<>
     inline void iSubArray<double>(double *arr1, const double *arr2)
     {
         __m256d mArr1 = _mm256_loadu_pd(arr1);
         __m256d mArr2 = _mm256_loadu_pd(arr2);
         _mm256_storeu_pd(arr1, _mm256_sub_pd(mArr1, mArr2)); 
+    }
+
+    template<>
+    inline void iSubArray<float>(float *arr1, const float *arr2)
+    {
+        __m256 mArr1 = _mm256_loadu_ps(arr1);
+        __m256 mArr2 = _mm256_loadu_ps(arr2);
+        _mm256_storeu_ps(arr1, _mm256_sub_ps(mArr1, mArr2));   
     }
 
     // SUB SCALAR
@@ -159,19 +159,19 @@ namespace SIMD
     }
 
     template<>
-    inline void iAddArray<float>(float *arr1, const float *arr2)
-    {
-        __m128 mArr1 = _mm_loadu_ps(arr1);
-        __m128 mArr2 = _mm_loadu_ps(arr2);
-        _mm_storeu_ps(arr1, _mm_add_ps(mArr1, mArr2));   
-    }
-
-    template<>
     inline void iAddArray<double>(double *arr1, const double *arr2)
     {
         __m128d mArr1 = _mm_loadu_pd(arr1);
         __m128d mArr2 = _mm_loadu_pd(arr2);
         _mm_storeu_pd(arr1, _mm_add_pd(mArr1, mArr2)); 
+    }
+
+    template<>
+    inline void iAddArray<float>(float *arr1, const float *arr2)
+    {
+        __m128 mArr1 = _mm_loadu_ps(arr1);
+        __m128 mArr2 = _mm_loadu_ps(arr2);
+        _mm_storeu_ps(arr1, _mm_add_ps(mArr1, mArr2));   
     }
 
     // ADD SCALAR
@@ -205,19 +205,19 @@ namespace SIMD
     }
 
     template<>
-    inline void iSubArray<float>(float *arr1, const float *arr2)
-    {
-        __m128 mArr1 = _mm_loadu_ps(arr1);
-        __m128 mArr2 = _mm_loadu_ps(arr2);
-        _mm_storeu_ps(arr1, _mm_sub_ps(mArr1, mArr2));   
-    }
-
-    template<>
     inline void iSubArray<double>(double *arr1, const double *arr2)
     {
         __m128d mArr1 = _mm_loadu_pd(arr1);
         __m128d mArr2 = _mm_loadu_pd(arr2);
         _mm_storeu_pd(arr1, _mm_sub_pd(mArr1, mArr2)); 
+    }
+
+    template<>
+    inline void iSubArray<float>(float *arr1, const float *arr2)
+    {
+        __m128 mArr1 = _mm_loadu_ps(arr1);
+        __m128 mArr2 = _mm_loadu_ps(arr2);
+        _mm_storeu_ps(arr1, _mm_sub_ps(mArr1, mArr2));   
     }
 
     // SUB SCALAR
@@ -290,9 +290,9 @@ namespace SIMD
     }
 
     // SIMD SIZE
-    template<class T> inline int vectorizeSize        (){ return 1; }
-    template<>        inline int vectorizeSize<double>(){ return 2; }
-    template<>        inline int vectorizeSize<float> (){ return 4; }
+    template<class T> inline int vectorizeSize         (){ return 1; }
+    template<>        inline int vectorizeSize<double> (){ return 2; }
+    template<>        inline int vectorizeSize<float>  (){ return 4; }
 #endif
 
 

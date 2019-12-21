@@ -20,8 +20,7 @@ int main()
 
         EXPECT_EQ(A,items<number>(-1,0,1,2,3));
 
-        B += items<number>(1,2,3);
-        B -= items<number>(1,2,3);
+        B = B + items<number>(1,2,3) - items<number>(1,2,3);
 
         EXPECT_EQ(B,items<number>(0,0,0));
 
@@ -184,5 +183,13 @@ int main()
         
     });
 
+    DM4thTest::TEST("rvalue", [&](){
+        NDArray<number> A = items<number>(1,3,5,7,9);
+        NDArray<number> B = A*2/2 + 1 - 2 + A;
+
+        EXPECT_EQ(A, items<number>(1,3,5,7,9));
+        EXPECT_EQ(B, items<number>(1,5,9,13,17));
+
+    });
     return DM4thTest::TEST::ERROR_LEVEL();
 }

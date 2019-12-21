@@ -109,11 +109,11 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         inline const NDArray<T> &operator%=(const T &other);
 
 
-        inline const NDArray<T> operator+(const T &other) const;
-        inline const NDArray<T> operator-(const T &other) const;
+        inline NDArray<T> operator+(const T &other) const;
+        inline NDArray<T> operator-(const T &other) const;
         inline NDArray<T> operator*(const T &other) const;
         inline NDArray<T> operator/(const T &other) const;
-        inline NDArray<T> operator%(const T &other);
+        inline NDArray<T> operator%(const T &other) const;
 
         // template<class U> inline bool operator==(const NDArray<U> &other);
         template<class U> inline bool isEqualTo(const NDArray<U> &other) const;
@@ -231,6 +231,70 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         void _ostream(std::ostream& stream, int shapeIdx, int& c_idx, int ident, bool quotes) const;
         void _istream(std::istream& stream, std::queue<T> &values, int shapeIdx, int& c_size, bool &shapeAllocated);
 };
+
+template<class T, class U>
+inline typename std::enable_if<std::is_convertible<U,T>::value, NDArray<T>>::type
+operator+(NDArray<T> &&lhs, const NDArray<U> &rhs)
+{
+    lhs.iAdd(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if<std::is_convertible<U,T>::value, NDArray<T>>::type
+operator-(NDArray<T> &&lhs, const NDArray<U> &rhs)
+{
+    lhs.iSub(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if<std::is_convertible<U,T>::value, NDArray<T>>::type
+operator*(NDArray<T> &&lhs, const NDArray<U> &rhs)
+{
+    lhs.iMul(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if< std::is_convertible<U,T>::value || std::is_arithmetic<U>::value, NDArray<T>>::type 
+operator+(NDArray<T> &&lhs, const U &rhs)
+{
+    lhs.iAdd(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if< std::is_convertible<U,T>::value || std::is_arithmetic<U>::value, NDArray<T>>::type 
+operator-(NDArray<T> &&lhs, const U &rhs)
+{
+    lhs.iSub(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if< std::is_convertible<U,T>::value || std::is_arithmetic<U>::value, NDArray<T>>::type 
+operator*(NDArray<T> &&lhs, const U &rhs)
+{
+    lhs.iMul(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if< std::is_convertible<U,T>::value || std::is_arithmetic<U>::value, NDArray<T>>::type 
+operator/(NDArray<T> &&lhs, const U &rhs)
+{
+    lhs.iDiv(rhs, DEFAULT);
+    return std::move(lhs);
+}
+
+template<class T, class U>
+inline typename std::enable_if< std::is_convertible<U,T>::value || std::is_arithmetic<U>::value, NDArray<T>>::type 
+operator%(NDArray<T> &&lhs, const T &rhs)
+{
+    lhs.iMod(rhs, DEFAULT);
+    return std::move(lhs);
+}
 
 template<class T>
 inline std::ostream& operator<<(std::ostream& stream, const NDArray<T> &arr);
