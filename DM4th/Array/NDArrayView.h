@@ -15,7 +15,11 @@ public:
     operator NDArray<T>() const;
 
     inline const NDArrayView<T, U...> &operator=(NDArrayView<T, U...> &other);
-    inline const NDArrayView<T, U...> &operator=(const T &other);
+
+    template<class V>
+    inline typename std::enable_if< std::is_convertible<V,T>::value, const NDArrayView<T, U...>>::type 
+    &operator=(const V &other);
+
     inline const NDArrayView<T, U...> &operator=(const NDArray<T> &other);
 
     template <class... V>
@@ -245,7 +249,10 @@ class NDArrayView<T, NDArray<bool>>
             }
             return *this;
         }
-        inline const NDArrayView<T, NDArray<bool>> &operator=(const T &other)
+
+        template<class U>
+        inline typename std::enable_if< std::is_convertible<U,T>::value, const NDArrayView<T, NDArray<bool>>>::type 
+        &operator=(const U &other)
         {
             if(this->_ptr.data_size()==this->_view.data_size())
             {

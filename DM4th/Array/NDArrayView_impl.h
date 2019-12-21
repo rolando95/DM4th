@@ -53,8 +53,9 @@ inline const NDArrayView<T, U ...> &NDArrayView<T, U ...>::operator=(NDArrayView
     return *this;
 }
 
-template<class T, class ... U>
-inline const NDArrayView<T, U...> &NDArrayView<T, U...>::operator=(const T &other)
+template<class T, class ... U> template<class V>
+inline typename std::enable_if< std::is_convertible<V,T>::value, const NDArrayView<T, U...>>::type 
+&NDArrayView<T, U...>::operator=(const V &other)
 {
     iterateOverNDArrayView([&](const int &j, T& item){
         item = other;
