@@ -190,6 +190,9 @@ int main()
         EXPECT_EQ(A, items<number>(1,3,5,7,9));
         EXPECT_EQ(B, items<number>(1,5,9,13,17));
 
+        B = (B * 2 - B) * A;
+
+        EXPECT_EQ(B, items<number>(305));
     });
     return DM4thTest::TEST::ERROR_LEVEL();
 }
