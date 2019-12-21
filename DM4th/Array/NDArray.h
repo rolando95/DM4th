@@ -198,9 +198,9 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
             return NDArrayView<T, V, U ...>(*this, first, args...);
         }
 
-        NDArrayView<T, range<int>> view()
+        NDArrayView<T, int> view()
         {
-            return NDArrayView<T, range<int>>(*this, range<int>(0,this->size()));
+            return NDArrayView<T, int>(*this, ALL);
         }
 
     private:
