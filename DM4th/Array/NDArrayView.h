@@ -189,17 +189,164 @@ private:
     inline int queryAxisSize(const slice &value) const;
 };
 
-// template<class T>
-// class NDArrayView<T, NDArray<bool>>
-// {
-//     NDArray<T> _ptr;
-//     std::tuple<NDArray<bool>> _view;
+template<class T>
+class NDArrayView<T, NDArray<bool>>
+{
+    NDArray<T> _ptr;
+    NDArray<bool> _view;
 
-//     public:
-//         NDArrayView(NDArray<T> &data, const NDArray<bool> &view) : _ptr(data), _view(std::tuple<NDArray<bool>>(view)) {
-//             std::cout<<"BOOL ARRAY"<<std::endl;
-//         }
-// };
+    public:
+        NDArrayView(NDArray<T> &data, const NDArray<bool> &view) : _ptr(data), _view(view) {}
+
+        operator NDArray<T>() const {
+            NDArray<T> result;
+
+            if(this->_ptr.data_size()==this->_view.data_size())
+            {
+                result.resize(this->_ptr.shape());
+                int size = this->queryAxisSize();
+                result._data->shape(0) -= (result.shape(0) - size);
+                result._data->array.resize(DM4th::NDArrayUtils::mul(result.shape()));
+                iterateOverNDArrayView([&](const int &j, const T& item){
+                    result.data_item(j) = item;
+                });
+
+            }else{
+                NDArray<T> r = this->_ptr;
+                result = NDArrayView<T, NDArray<bool>, int>(r, this->_view, ALL);
+            }
+            return result;
+        };
+
+        inline const NDArrayView<T, NDArray<bool>> &operator=(NDArrayView<T, NDArray<bool>> &other)
+        {
+            if(this->_ptr.data_size()==this->_view.data_size())
+            {
+                int size = queryAxisSize();
+                
+                NDArray<T> tmp = other;
+
+                if(tmp.data_size()==size)
+                {
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = tmp.data_item(j);
+                    });
+                }else{
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = tmp.data_item(j%tmp.data_size());
+                    });
+                }
+
+
+            }else
+            {
+                NDArray<T> r = this->_ptr;
+                NDArrayView<T, NDArray<bool>, int>(r, this->_view, ALL) = other;
+            }
+            return *this;
+        }
+        inline const NDArrayView<T, NDArray<bool>> &operator=(const T &other)
+        {
+            if(this->_ptr.data_size()==this->_view.data_size())
+            {
+                iterateOverNDArrayView([&](const int &j, T& item){
+                    item = other;
+                });
+            }else
+            {
+                NDArray<T> r = this->_ptr;
+                NDArrayView<T, NDArray<bool>, int>(r, this->_view, ALL) = other;
+            }  
+            return *this;  
+        }
+
+        inline const NDArrayView<T, NDArray<bool>> &operator=(const NDArray<T> &other)
+        {
+            if(this->_ptr.data_size()==this->_view.data_size())
+            {
+                int size = queryAxisSize();
+                
+                if(other.data_size()==size)
+                {
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = other.data_item(j);
+                    });
+                }else{
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = other.data_item(j%other.data_size());
+                    });
+                }
+            }else
+            {
+                NDArray<T> r = this->_ptr;
+                NDArrayView<T, NDArray<bool>, int>(r, this->_view, ALL) = other;
+            }
+            return *this;            
+        }
+
+        template <class... V>
+        inline const NDArrayView<T, NDArray<bool>> &operator=(NDArrayView<T, V...> &other)
+        {
+            if(this->_ptr.data_size()==this->_view.data_size())
+            {
+                int size = queryAxisSize();
+                
+                NDArray<T> tmp = other;
+
+                if(tmp.data_size()==size)
+                {
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = tmp.data_item(j);
+                    });
+                }else{
+                    iterateOverNDArrayView([&](const int &j, T& item){
+                        item = tmp.data_item(j%tmp.data_size());
+                    });
+                }
+            }else
+            {
+                NDArray<T> r = this->_ptr;
+                NDArrayView<T, NDArray<bool>, int>(r, this->_view, ALL) = other;
+            }   
+        }
+
+        inline void iterateOverNDArrayView(const std::function<void(const int &, T &)> &f)
+        {
+            int idx = 0;
+            for(int j=0; j<this->_view.size(); ++j)
+            {
+                if(_view.data_item(j)==true)
+                {
+                    f(idx, this->_ptr.data_item(j));
+                    ++idx;
+                }
+            }
+        }
+        inline void iterateOverNDArrayView(const std::function<void(const int &, const T &)> &f) const
+        {
+            int idx = 0;
+            for(int j=0; j<this->_view.size(); ++j)
+            {
+                if(_view.data_item(j)==true)
+                {
+                    f(idx, this->_ptr.data_item(j));
+                    ++idx;
+                }
+            }
+        }
+
+    private:
+
+        inline int queryAxisSize() const
+        {
+            int size = 0;
+            for(int j=0; j<_view.data_size(); ++j)
+            {
+                if(_view.data_item(j)==true) ++size;
+            }
+            return size;
+        }
+};
 
 template <class T, class... U>
 inline std::ostream &operator<<(std::ostream &stream, const NDArrayView<T, U...> &arr)
