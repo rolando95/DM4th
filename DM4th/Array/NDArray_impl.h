@@ -651,65 +651,78 @@ inline const NDArray<T> &NDArray<T>::iSub(const NDArray<U> &other, const DM4thPa
     return *this;
 }
 
-template<class T> template<class U>
-const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelSettings &pSettings)
+template<class T>
+const NDArray<T> &NDArray<T>::mul_asig(const NDArray<T> &lhs, const NDArray<T> &rhs, const DM4thParallelSettings &pSettings)
 {   
-    if(this->data_size()==1)
+    if(lhs.data_size()==1)
     {
-        NDArray<T> result;
-        T &value = this->data_item(0);
-        result.resize(other.shape());
+        DM4th::Parallel::singleThreadOperationIfWorkShared(
+            pSettings,
+            [&]{this->resize(rhs.shape());}
+        );
 
          DM4th::Parallel::loop<int>(
             pSettings, // from, to, step
-            0, other.data_size(), 1,
+            0, rhs.data_size(), 1,
             [&](const int &j)
             {
-                this->data_item(j) = other.data_item(j) * value;
+                this->data_item(j) = lhs.data_item(0) * rhs.data_item(j);
             }
-
+        );
+    }
+    else if(rhs.data_size()==1)
+    {
+        DM4th::Parallel::singleThreadOperationIfWorkShared(
+            pSettings,
+            [&]{this->resize(lhs.shape());}
         );
 
-        result.moveDataTo(*this);
+        DM4th::Parallel::loop<int>(
+            pSettings, // from, to, step
+            0, lhs.data_size(), 1,
+            [&](const int &j)
+            {
+                this->data_item(j) = lhs.data_item(j) * rhs.data_item(0);
+            }
+        );
     }
-    else if(other.data_size()==1)
+    else if(lhs.rank()==1 && rhs.rank()==1)
     {
-        this->_data->array.iMul((T)other.item(0), pSettings);
-        //NDArray<T> result;
-        //result = *this * other.item(0);
-        //result.moveDataTo(*this);
-    }
-    else if(this->rank()==1 && other.rank()==1)
-    {
-        NDArray<T> result;
-        DM4thAssert(this->shape(0)==other.shape(0));
-        result.resize(1);
+        DM4thAssert(lhs.shape(0)==rhs.shape(0));
 
-        T r;
+        DM4th::Parallel::singleThreadOperationIfWorkShared(
+            pSettings,
+            [&]{ this->resize(1); }
+        );
+        
+
          DM4th::Parallel::loopReduce<T, int>(
             pSettings | EDM4thParallelSettings::ADD, 
-            0, this->shape(0), 1, // from, to, step
+            0, lhs.shape(0), 1, // from, to, step
 
             [&](const T &acum, const  int &j)
             {
-                return acum + this->item(j)*other.item(j);
+                return acum + lhs.item(j)*rhs.item(j);
             },
-            r
+            this->item(0)
         );
-        result.item(0) = r;
-        result.moveDataTo(*this);
     }
-    else if(this->rank()<=2 && other.rank()<=2)
+
+    else if(lhs.rank()<=2 && rhs.rank()<=2)
     {
         NDArray<T> result;
-        DM4thAssert(this->shape(1) == other.shape(0));
-        int maxX = this->shape(0);
-        int maxY = other.shape(1);
-        int maxZ = other.shape(0);
+        DM4thAssert(lhs.shape(1) == rhs.shape(0));
+        int maxX = lhs.shape(0);
+        int maxY = rhs.shape(1);
+        int maxZ = rhs.shape(0);
 
-        result.resize(maxX,maxY);
+        DM4th::Parallel::singleThreadOperationIfWorkShared(
+            pSettings,
+            [&]{ this->resize(maxX,maxY); }
+        );
 
-         DM4th::Parallel::loop<int>(
+
+        DM4th::Parallel::loop<int>(
             pSettings,
             0, maxX, 1, // from, to, step
             
@@ -717,17 +730,16 @@ const NDArray<T> &NDArray<T>::iMul(const NDArray<U> &other, const DM4thParallelS
             {
                 for(int y=0; y<maxY; ++y)
                 {
-                    result.item(x,y) = 0;
+                    this->item(x,y) = 0;
                     for(int z=0;z<maxZ; ++z)
                     {
-                        result.item(x,y) += this->item(x,z) * other.item(z,y);
+                        this->item(x,y) += lhs.item(x,z) * rhs.item(z,y);
                     }
                 }
             }
-            
             ,this->data_size()>=DM4thConfig::minParallelLoops
         );   
-        result.moveDataTo(*this);
+        //result.moveDataTo(*this);
     }
     else
     {
@@ -779,21 +791,24 @@ inline const NDArray<T> &NDArray<T>::iMod(const T &other, const DM4thParallelSet
 template<class T> template<class U> 
 inline const NDArray<T> &NDArray<T>::operator+=(const NDArray<U> &other)
 {
-    this->iAdd(other, EDM4thParallelSettings::OMP_PARALLEL);
+    this->iAdd(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> template<class U> 
 inline const NDArray<T> &NDArray<T>::operator-=(const NDArray<U> &other)
 {
-    this->iSub(other, EDM4thParallelSettings::OMP_PARALLEL);
+    this->iSub(other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
 template<class T> template<class U> 
 inline const NDArray<T> &NDArray<T>::operator*=(const NDArray<U> &other)
 {
-    this->iMul(other, EDM4thParallelSettings::OMP_PARALLEL);
+    //this->iMul(other, EDM4thParallelSettings::DEFAULT);
+    NDArray<T> tmp;
+    this->moveDataTo(tmp);
+    this->mul_asig(tmp, other, EDM4thParallelSettings::DEFAULT);
     return *this;
 }
 
@@ -848,8 +863,8 @@ inline NDArray<T> NDArray<T>::operator-(const T &other) const
 template<class T> template<class U>
 inline NDArray<T> NDArray<T>::operator*(const NDArray<U> &other) const
 {
-    NDArray<T> result = this->getCopy();
-    result.iMul(other, EDM4thParallelSettings::DEFAULT);
+    NDArray<T> result;
+    result.mul_asig(*this, other, EDM4thParallelSettings::DEFAULT);
     return std::move(result);
 }
 
@@ -865,6 +880,7 @@ template<class T>
 inline NDArray<T> NDArray<T>::operator*(const T &other) const
 {
     NDArray<T> result = this->getCopy();
+    //result.mul_asig(*this, other, EDM4thParallelSettings::DEFAULT);
     result.iMul(other, EDM4thParallelSettings::DEFAULT);
     return std::move(result);
 }

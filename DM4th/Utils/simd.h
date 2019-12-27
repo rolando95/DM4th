@@ -8,140 +8,140 @@ namespace SIMD
 #if defined __AVX2__
     // AVX2 ADD ARRAY
     template<class T>
-    inline void iAddArray(T *arr1, const T *arr2)
+    inline void addArray(T *r, T *lhs, const T *rhs)
     {
-        arr1[0] += arr2[0];
+        r[0] = lhs[0] + rhs[0];
     }
 
     template<>
-    inline void iAddArray<double>(double *arr1, const double *arr2)
+    inline void addArray<double>(double *r, double *lhs, const double *rhs)
     {
-        __m256d mArr1 = _mm256_loadu_pd(arr1);
-        __m256d mArr2 = _mm256_loadu_pd(arr2);
-        _mm256_storeu_pd(arr1, _mm256_add_pd(mArr1, mArr2)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_loadu_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_add_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iAddArray<float>(float *arr1, const float *arr2)
+    inline void addArray<float>(float *r, float *lhs, const float *rhs)
     {
-        __m256 mArr1 = _mm256_loadu_ps(arr1);
-        __m256 mArr2 = _mm256_loadu_ps(arr2);
-        _mm256_storeu_ps(arr1, _mm256_add_ps(mArr1, mArr2));   
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_loadu_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_add_ps(mlhs, mrhs));   
     }
 
     // ADD SCALAR
     template<class T>
-    inline void iAddScalar(T *arr, const T &scalar)
+    inline void addScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] += scalar;
+        r[0] = lhs[0] + rhs;
     }
 
     template<>
-    inline void iAddScalar<double>(double *arr, const double &scalar)
+    inline void addScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m256d mArr = _mm256_loadu_pd(arr);
-        __m256d mNum = _mm256_set1_pd(scalar);
-        _mm256_storeu_pd(arr, _mm256_add_pd(mArr, mNum)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_set1_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_add_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iAddScalar<float>(float *arr, const float &scalar)
+    inline void addScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m256 mArr = _mm256_loadu_ps(arr);
-        __m256 mNum = _mm256_set1_ps(scalar);
-        _mm256_storeu_ps(arr, _mm256_add_ps(mArr, mNum)); 
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_set1_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_add_ps(mlhs, mrhs)); 
     }
 
     // SUB ARRAY
     template<class T>
-    inline void iSubArray(T *arr1, const T *arr2)
+    inline void subArray(T *r, T *lhs, const T *rhs)
     {
-        arr1[0] -= arr2[0];
+        r[0] = lhs[0] - rhs[0];
     }
 
     template<>
-    inline void iSubArray<double>(double *arr1, const double *arr2)
+    inline void subArray<double>(double *r, double *lhs, const double *rhs)
     {
-        __m256d mArr1 = _mm256_loadu_pd(arr1);
-        __m256d mArr2 = _mm256_loadu_pd(arr2);
-        _mm256_storeu_pd(arr1, _mm256_sub_pd(mArr1, mArr2)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_loadu_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_sub_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iSubArray<float>(float *arr1, const float *arr2)
+    inline void subArray<float>(float *r, float *lhs, const float *rhs)
     {
-        __m256 mArr1 = _mm256_loadu_ps(arr1);
-        __m256 mArr2 = _mm256_loadu_ps(arr2);
-        _mm256_storeu_ps(arr1, _mm256_sub_ps(mArr1, mArr2));   
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_loadu_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_sub_ps(mlhs, mrhs));   
     }
 
     // SUB SCALAR
     template<class T>
-    inline void iSubScalar(T *arr, const T &scalar)
+    inline void subScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] -= scalar;
+        r[0] = lhs[0] - rhs;
     }
 
     template<>
-    inline void iSubScalar<double>(double *arr, const double &scalar)
+    inline void subScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m256d mArr = _mm256_loadu_pd(arr);
-        __m256d mNum = _mm256_set1_pd(scalar);
-        _mm256_storeu_pd(arr, _mm256_sub_pd(mArr, mNum)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_set1_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_sub_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iSubScalar<float>(float *arr, const float &scalar)
+    inline void subScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m256 mArr = _mm256_loadu_ps(arr);
-        __m256 mNum = _mm256_set1_ps(scalar);
-        _mm256_storeu_ps(arr, _mm256_sub_ps(mArr, mNum)); 
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_set1_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_sub_ps(mlhs, mrhs)); 
     }
 
     // MUL SCALAR
     template<class T>
-    inline void iMulScalar(T *arr, const T &scalar)
+    inline void mulScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] *= scalar;
+        r[0] = lhs[0] * rhs;
     }
 
     template<>
-    inline void iMulScalar<double>(double *arr, const double &scalar)
+    inline void mulScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m256d mArr = _mm256_loadu_pd(arr);
-        __m256d mNum = _mm256_set1_pd(scalar);
-        _mm256_storeu_pd(arr, _mm256_mul_pd(mArr, mNum)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_set1_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_mul_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iMulScalar<float>(float *arr, const float &scalar)
+    inline void mulScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m256 mArr = _mm256_loadu_ps(arr);
-        __m256 mNum = _mm256_set1_ps(scalar);
-        _mm256_storeu_ps(arr, _mm256_mul_ps(mArr, mNum)); 
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_set1_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_mul_ps(mlhs, mrhs)); 
     }
 
     // DIV SCALAR
     template<class T>
-    inline void iDivScalar(T *arr, const T &scalar)
+    inline void divScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] /= scalar;
+        r[0] = lhs[0] / rhs;
     }
 
     template<>
-    inline void iDivScalar<double>(double *arr, const double &scalar)
+    inline void divScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m256d mArr = _mm256_loadu_pd(arr);
-        __m256d mNum = _mm256_set1_pd(scalar);
-        _mm256_storeu_pd(arr, _mm256_div_pd(mArr, mNum)); 
+        __m256d mlhs = _mm256_loadu_pd(lhs);
+        __m256d mrhs = _mm256_set1_pd(rhs);
+        _mm256_storeu_pd(r, _mm256_div_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iDivScalar<float>(float *arr, const float &scalar)
+    inline void divScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m256 mArr = _mm256_loadu_ps(arr);
-        __m256 mNum = _mm256_set1_ps(scalar);
-        _mm256_storeu_ps(arr, _mm256_div_ps(mArr, mNum)); 
+        __m256 mlhs = _mm256_loadu_ps(lhs);
+        __m256 mrhs = _mm256_set1_ps(rhs);
+        _mm256_storeu_ps(r, _mm256_div_ps(mlhs, mrhs)); 
     }
 
     // SIMD SIZE
@@ -153,140 +153,140 @@ namespace SIMD
 
     // ADD ARRAY
     template<class T>
-    inline void iAddArray(T *arr1, const T *arr2)
+    inline void addArray(T *r, T *lhs, const T *rhs)
     {
-        arr1[0] += arr2[0];
+        r[0] = lhs[0] + rhs[0];
     }
 
     template<>
-    inline void iAddArray<double>(double *arr1, const double *arr2)
+    inline void addArray<double>(double *r, double *lhs, const double *rhs)
     {
-        __m128d mArr1 = _mm_loadu_pd(arr1);
-        __m128d mArr2 = _mm_loadu_pd(arr2);
-        _mm_storeu_pd(arr1, _mm_add_pd(mArr1, mArr2)); 
+        __m128d mlhs1 = _mm_loadu_pd(lhs);
+        __m128d mlhs2 = _mm_loadu_pd(rhs);
+        _mm_storeu_pd(r, _mm_add_pd(mlhs1, mlhs2)); 
     }
 
     template<>
-    inline void iAddArray<float>(float *arr1, const float *arr2)
+    inline void addArray<float>(float *r, float *lhs, const float *rhs)
     {
-        __m128 mArr1 = _mm_loadu_ps(arr1);
-        __m128 mArr2 = _mm_loadu_ps(arr2);
-        _mm_storeu_ps(arr1, _mm_add_ps(mArr1, mArr2));   
+        __m128 mlhs1 = _mm_loadu_ps(lhs);
+        __m128 mlhs2 = _mm_loadu_ps(rhs);
+        _mm_storeu_ps(r, _mm_add_ps(mlhs1, mlhs2));   
     }
 
     // ADD SCALAR
     template<class T>
-    inline void iAddScalar(T *arr, const T &scalar)
+    inline void addScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] += scalar;
+        r[0] = lhs[0] + rhs;
     }
 
     template<>
-    inline void iAddScalar<double>(double *arr, const double &scalar)
+    inline void addScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m128d mArr = _mm_loadu_pd(arr);
-        __m128d mNum = _mm_set1_pd(scalar);
-        _mm_storeu_pd(arr, _mm_add_pd(mArr, mNum)); 
+        __m128d mlhs = _mm_loadu_pd(lhs);
+        __m128d mrhs = _mm_set1_pd(rhs);
+        _mm_storeu_pd(r, _mm_add_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iAddScalar<float>(float *arr, const float &scalar)
+    inline void addScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m128 mArr = _mm_loadu_ps(arr);
-        __m128 mNum = _mm_set1_ps(scalar);
-        _mm_storeu_ps(arr, _mm_add_ps(mArr, mNum)); 
+        __m128 mlhs = _mm_loadu_ps(lhs);
+        __m128 mrhs = _mm_set1_ps(rhs);
+        _mm_storeu_ps(r, _mm_add_ps(mlhs, mrhs)); 
     }
 
     // SUB ARRAY
     template<class T>
-    inline void iSubArray(T *arr1, const T *arr2)
+    inline void subArray(T *r, T *lhs, const T *rhs)
     {
-        arr1[0] -= arr2[0];
+        r[0] = lhs[0] - rhs[0];
     }
 
     template<>
-    inline void iSubArray<double>(double *arr1, const double *arr2)
+    inline void subArray<double>(double *r, double *lhs, const double *rhs)
     {
-        __m128d mArr1 = _mm_loadu_pd(arr1);
-        __m128d mArr2 = _mm_loadu_pd(arr2);
-        _mm_storeu_pd(arr1, _mm_sub_pd(mArr1, mArr2)); 
+        __m128d mlhs1 = _mm_loadu_pd(lhs);
+        __m128d mlhs2 = _mm_loadu_pd(rhs);
+        _mm_storeu_pd(r, _mm_sub_pd(mlhs1, mlhs2)); 
     }
 
     template<>
-    inline void iSubArray<float>(float *arr1, const float *arr2)
+    inline void subArray<float>(float *r, float *lhs, const float *rhs)
     {
-        __m128 mArr1 = _mm_loadu_ps(arr1);
-        __m128 mArr2 = _mm_loadu_ps(arr2);
-        _mm_storeu_ps(arr1, _mm_sub_ps(mArr1, mArr2));   
+        __m128 mlhs1 = _mm_loadu_ps(lhs);
+        __m128 mlhs2 = _mm_loadu_ps(rhs);
+        _mm_storeu_ps(r, _mm_sub_ps(mlhs1, mlhs2));   
     }
 
     // SUB SCALAR
     template<class T>
-    inline void iSubScalar(T *arr, const T &scalar)
+    inline void subScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] -= scalar;
+        r[0] = lhs[0] - rhs;
     }
 
     template<>
-    inline void iSubScalar<double>(double *arr, const double &scalar)
+    inline void subScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m128d mArr = _mm_loadu_pd(arr);
-        __m128d mNum = _mm_set1_pd(scalar);
-        _mm_storeu_pd(arr, _mm_sub_pd(mArr, mNum)); 
+        __m128d mlhs = _mm_loadu_pd(lhs);
+        __m128d mrhs = _mm_set1_pd(rhs);
+        _mm_storeu_pd(r, _mm_sub_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iSubScalar<float>(float *arr, const float &scalar)
+    inline void subScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m128 mArr = _mm_loadu_ps(arr);
-        __m128 mNum = _mm_set1_ps(scalar);
-        _mm_storeu_ps(arr, _mm_sub_ps(mArr, mNum)); 
+        __m128 mlhs = _mm_loadu_ps(lhs);
+        __m128 mrhs = _mm_set1_ps(rhs);
+        _mm_storeu_ps(r, _mm_sub_ps(mlhs, mrhs)); 
     }
 
     // MUL SCALAR
     template<class T>
-    inline void iMulScalar(T *arr, const T &scalar)
+    inline void mulScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] *= scalar;
+        r[0] = lhs[0] * rhs;
     }
 
     template<>
-    inline void iMulScalar<double>(double *arr, const double &scalar)
+    inline void mulScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m128d mArr = _mm_loadu_pd(arr);
-        __m128d mNum = _mm_set1_pd(scalar);
-        _mm_storeu_pd(arr, _mm_mul_pd(mArr, mNum)); 
+        __m128d mlhs = _mm_loadu_pd(lhs);
+        __m128d mrhs = _mm_set1_pd(rhs);
+        _mm_storeu_pd(r, _mm_mul_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iMulScalar<float>(float *arr, const float &scalar)
+    inline void mulScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m128 mArr = _mm_loadu_ps(arr);
-        __m128 mNum = _mm_set1_ps(scalar);
-        _mm_storeu_ps(arr, _mm_mul_ps(mArr, mNum)); 
+        __m128 mlhs = _mm_loadu_ps(lhs);
+        __m128 mrhs = _mm_set1_ps(rhs);
+        _mm_storeu_ps(r, _mm_mul_ps(mlhs, mrhs)); 
     }
 
     // DIV SCALAR
     template<class T>
-    inline void iDivScalar(T *arr, const T &scalar)
+    inline void divScalar(T *r, T *lhs, const T &rhs)
     {
-        arr[0] /= scalar;
+        r[0] = lhs[0] / rhs;
     }
 
     template<>
-    inline void iDivScalar<double>(double *arr, const double &scalar)
+    inline void divScalar<double>(double *r, double *lhs, const double &rhs)
     {
-        __m128d mArr = _mm_loadu_pd(arr);
-        __m128d mNum = _mm_set1_pd(scalar);
-        _mm_storeu_pd(arr, _mm_div_pd(mArr, mNum)); 
+        __m128d mlhs = _mm_loadu_pd(lhs);
+        __m128d mrhs = _mm_set1_pd(rhs);
+        _mm_storeu_pd(r, _mm_div_pd(mlhs, mrhs)); 
     }
 
     template<>
-    inline void iDivScalar<float>(float *arr, const float &scalar)
+    inline void divScalar<float>(float *r, float *lhs, const float &rhs)
     {
-        __m128 mArr = _mm_loadu_ps(arr);
-        __m128 mNum = _mm_set1_ps(scalar);
-        _mm_storeu_ps(arr, _mm_div_ps(mArr, mNum)); 
+        __m128 mlhs = _mm_loadu_ps(lhs);
+        __m128 mrhs = _mm_set1_ps(rhs);
+        _mm_storeu_ps(r, _mm_div_ps(mlhs, mrhs)); 
     }
 
     // SIMD SIZE

@@ -215,7 +215,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<T> &other, const D
         
         [&](const int &j) 
         {
-             DM4th::SIMD::iAddArray(&this->item(j), &other.item(j));
+             DM4th::SIMD::addArray(&this->item(j), &this->item(j), &other.item(j));
         }
        
     );
@@ -234,7 +234,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(U other, const DM4thParallelSettin
         [&](const int &j) 
         {
             //this->item(j) += other;
-             DM4th::SIMD::iAddScalar(&this->item(j), (T)other);
+             DM4th::SIMD::addScalar(&this->item(j), &this->item(j), (T)other);
         }
     );
 
@@ -251,7 +251,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(U other, const DM4thParallelSettin
         
         [&](const int &j) 
         {
-             DM4th::SIMD::iSubScalar(&this->item(j), (T)other);
+             DM4th::SIMD::subScalar(&this->item(j), &this->item(j), (T)other);
         }
         
     );
@@ -270,7 +270,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<T> &other, const D
         
         [&](const int &j) 
         {
-             DM4th::SIMD::iSubArray(&this->item(j), &other.item(j));
+             DM4th::SIMD::subArray(&this->item(j), &this->item(j), &other.item(j));
         }
 
     );
@@ -289,7 +289,7 @@ inline const BaseArray<T> &BaseArray<T>::iMul(U other, const DM4thParallelSettin
         
         [&](const int &j) 
         {
-             DM4th::SIMD::iMulScalar(&this->item(j), (T)other);
+             DM4th::SIMD::mulScalar(&this->item(j), &this->item(j), (T)other);
         }
 
     );
@@ -307,7 +307,7 @@ inline const BaseArray<T> &BaseArray<T>::iDiv(U other, const DM4thParallelSettin
         
         [&](const int &j) 
         {
-             DM4th::SIMD::iDivScalar(&this->item(j), (T)other);
+             DM4th::SIMD::divScalar(&this->item(j), &this->item(j), (T)other);
         }
     
     );

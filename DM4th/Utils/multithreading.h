@@ -120,8 +120,56 @@ namespace Parallel
     }
 
     /*
+        Loop in parallel over range
+    */
+    template<class T>
+    inline void loop(
+        const DM4thParallelSettings &settings, 
+        const T &from, const T &to, const T &step, 
+        const std::function<void(T& item, T &thread_id)> &f, 
+        const bool &forceParallel=false)
+    {
+        switch (settings & EDM4thParallelSettings::PARALLEL_TYPE)
+        {
+        #if defined(_OPENMP)
+
+            case OMP_WORK_SHARED:
+                {
+                    #pragma omp for
+                    for(T j=from; j<to; j+=step)
+                    {
+                        f(j, omp_get_thread_num());
+                    }
+                }
+                break;
+
+            case DEFAULT:
+            case OMP_PARALLEL:
+                {
+                    #pragma omp parallel for IFDM4thOmp((to-from)/step>=DM4thConfig::minParallelLoops || forceParallel)
+                    for(T j=from; j<to; j+=step)
+                    {
+                        f(j, omp_get_thread_num());
+                    }
+                }
+                break;
+
+        #endif
+            case ORDERED:
+            default:
+                for(T j=from; j<to; j+=step)
+                {
+                    f(j, 0);
+                }
+                break;
+
+        }
+
+    }
+
+    /*
         Loop in parallel over array elements
-        The loop breaks if return value of const std::function<number(number)> &callback is false
+        The loop breaks if return value of const std::function<bool(T)> &callback is false
 
         If you're using OMP_WORK_SHARED, the 'out' parameter must be shared to get the same result as the other configurations.
         A private 'out' parameter will only calculate an independ result for each thread.
@@ -321,6 +369,27 @@ namespace Parallel
         {
             f();
         }
+    }
+
+    /*
+        Perform a single thread operation only if DM4thParallelSettings is OMP_WORK_SHARED 
+
+    */
+    inline void singleThreadOperationIfWorkShared(
+        const DM4thParallelSettings &settings,
+        const std::function<void(void)> &f)
+    {
+        if( (settings & EDM4thParallelSettings::PARALLEL_TYPE) == OMP_WORK_SHARED)
+        {
+            #pragma omp single
+            {
+                f();
+            }
+        }else
+        {
+            f();
+        }
+
     }
 
     /*
