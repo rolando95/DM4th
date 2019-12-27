@@ -654,6 +654,7 @@ inline const NDArray<T> &NDArray<T>::iSub(const NDArray<U> &other, const DM4thPa
 template<class T>
 const NDArray<T> &NDArray<T>::mul_asig(const NDArray<T> &lhs, const NDArray<T> &rhs, const DM4thParallelSettings &pSettings)
 {   
+    DM4thAssert(this->_data!=lhs._data && this->_data!=rhs._data);
     if(lhs.data_size()==1)
     {
         DM4th::Parallel::singleThreadOperationIfWorkShared(
