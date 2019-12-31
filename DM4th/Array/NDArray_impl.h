@@ -87,8 +87,7 @@ inline void NDArray<T>::resize(const int &axis1, U ... args)
 
         DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axis1, args...));
 
-        DM4th::Internal::BaseArray<int> newShape;
-        this->data_shape().copyDataTo(newShape);
+        const DM4th::Internal::BaseArray<int> &newShape = this->data_shape();
         int newDisp = this->_getAxisDisplacement(0);
 
         if(oldArray.size() == 0) return;
@@ -159,8 +158,7 @@ void NDArray<T>::resize(const NDArray<int> &axisArray)
 
         DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
-        Internal::BaseArray<int> newShape;
-        this->data_shape().copyDataTo(newShape);
+        const DM4th::Internal::BaseArray<int> &newShape = this->data_shape();
         int newDisp = this->_getAxisDisplacement(0);
 
         if(oldArray.size() == 0) return;
@@ -206,8 +204,7 @@ void NDArray<T>::resize(const DM4th::Internal::BaseArray<int> &axisArray)
 
         DM4th::Internal::BaseArray<T> oldArray(this->_allocZeros(axisArray));
 
-        DM4th::Internal::BaseArray<int> newShape;
-        this->data_shape().copyDataTo(newShape);
+        const DM4th::Internal::BaseArray<int> &newShape = this->data_shape();
 
         int newDisp = this->_getAxisDisplacement(0);
 
