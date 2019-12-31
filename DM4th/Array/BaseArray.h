@@ -37,6 +37,7 @@ class BaseArray
 
         inline T &operator[](const int &idx);
         inline T &operator()(const int &idx);
+        inline const T &operator()(const int &idx) const ;
         inline T &item(const int &idx);
         inline const T &item(const int &idx) const;
         const inline T &get(const int &idx) const;

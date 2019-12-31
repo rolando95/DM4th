@@ -146,6 +146,13 @@ inline T &BaseArray<T>::operator()(const int &idx)
     return this->_data[idx];
 }
 
+template <class T>
+inline const T &BaseArray<T>::operator()(const int &idx) const
+{
+    DM4thAssert(idx < this->size());
+    return this->_data[idx];
+}
+
 template<class T>
 inline T &BaseArray<T>::item(const int &idx)
 {

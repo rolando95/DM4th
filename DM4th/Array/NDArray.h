@@ -22,6 +22,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         template<class ... U> inline NDArray(T *data, U ... args);
 
         NDArray(T *data, const NDArray<int> &axisArray);
+        
+        NDArray(const DM4th::Internal::BaseArray<T> &other);
 
         explicit NDArray(const std::string &other);
 
@@ -33,6 +35,7 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         inline void resize(const int &axis1, U ... args);
         inline void resize(const int &axis1);
         void resize(const NDArray<int> &axisArray);
+        void resize(const DM4th::Internal::BaseArray<int> &axisArray);
 
         inline void reserve(const int &size);
 
@@ -41,6 +44,9 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         inline int size() const;
 
         NDArray<int> shape() const;
+        
+        const DM4th::Internal::BaseArray<int> &data_shape() const;
+        
         inline int shape(const int &axis) const;
 
         template<class ... U>
@@ -63,6 +69,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         template<class AXIS> inline T &item(const NDArray<AXIS> &axisArray) const;
 
         NDArray<T> getCopy() const;
+
+        template<class U> inline NDArray<U> getCopy() const;
 
         template<class U>
         inline void push(const U &value, const int &idx=END);
@@ -208,7 +216,7 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
 
         void _resize(const int &axis, int oldDispCount, int newDispCount,
             // NDArray<int> &oldDisp,  NDArray<int> &newDisp,
-            NDArray<int> &oldShape,  NDArray<int> &newShape,
+            const Internal::BaseArray<int> &oldShape,  const Internal::BaseArray<int> &newShape,
             const DM4th::Internal::BaseArray<T> &oldArray);
 
         template<class ... U>
@@ -224,7 +232,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         inline int _item(const int &axis, int pos, const int &idx) const;
 
         DM4th::Internal::BaseArray<T> _allocZeros(const NDArray<int> &axisArray);
-        
+        DM4th::Internal::BaseArray<T> _allocZeros(const DM4th::Internal::BaseArray<int> &axisArray);
+
         template<class ... U>
         DM4th::Internal::BaseArray<T> _allocZeros(const int &axis1, U ... args);
 

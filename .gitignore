@@ -15,3 +15,4 @@ local/**
 !.vscode/c_cpp_properties.json
 bash.exe.stackdump
 main.cpp
+test/test

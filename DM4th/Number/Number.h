@@ -72,9 +72,9 @@ public:
     }
 
     template <class U>
-    explicit operator U() { return (U)this->real(); }
+    explicit operator U() const { return (U)this->real(); }
 
-    inline explicit operator int() { return (int)std::round(this->real()); }
+    inline explicit operator int() const { return (int)std::round(this->real()); }
 
     explicit operator std::string()
     {
