@@ -146,6 +146,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator||(const NDArray<bool> &other) const;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator!() const;
 
+        T dot(const NDArray<T> &other, const DM4thParallelSettings &pSettings=DEFAULT) const;
+        
         const NDArray<T> &iSin(const DM4thParallelSettings &pSettings=DEFAULT);
         const NDArray<T> &iCos(const DM4thParallelSettings &pSettings=DEFAULT);
         const NDArray<T> &iTan(const DM4thParallelSettings &pSettings=DEFAULT);

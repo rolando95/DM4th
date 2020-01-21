@@ -1408,6 +1408,26 @@ inline NDArray<bool> NDArray<bool>::operator!() const
 }
 
 template<class T>
+T NDArray<T>::dot(const NDArray<T> &other, const DM4thParallelSettings &pSettings) const
+{
+    DM4thAssert(this->data_size()==other.data_size());
+
+    T result;
+    DM4th::Parallel::loopReduce<T, int>(
+        pSettings | EDM4thParallelSettings::ADD, 
+        0, this->data_size(), 1, // from, to, step
+
+        [&](const T &acum, const  int &j)
+        {
+            return acum + this->data_item(j)*other.data_item(j);
+        },
+        result
+    );
+
+    return result;
+}
+
+template<class T>
 const NDArray<T> &NDArray<T>::iSin(const DM4thParallelSettings &pSettings)
 {
     DM4th::Parallel::loop<int>(
