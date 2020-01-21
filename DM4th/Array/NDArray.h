@@ -59,6 +59,7 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
 
         T reduce(const std::function<T(T op1, T op2)> &f);
         NDArray<T> map(const std::function<T(T item,int idx)> &f);
+        const NDArray<T> &iMap(const std::function<T(T item,int idx)> &f);
         NDArray<T> filter(const std::function<bool(T item,int idx)> &f);
 
         template<class ... U> inline T &item(const int &axis1, U ... args) const;
@@ -139,9 +140,18 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         NDArray<bool> operator<=(const NDArray<T> &other) const;
         NDArray<bool> operator>=(const NDArray<T> &other) const;
         NDArray<bool> operator< (const NDArray<T> &other) const;
+
+
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator&&(const NDArray<bool> &other) const;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator||(const NDArray<bool> &other) const;
         template<class U=T> inline typename std::enable_if<std::is_same<U,bool>::value, NDArray<bool>>::type operator!() const;
+
+        const NDArray<T> &iSin(const DM4thParallelSettings &pSettings=DEFAULT);
+        const NDArray<T> &iCos(const DM4thParallelSettings &pSettings=DEFAULT);
+        const NDArray<T> &iTan(const DM4thParallelSettings &pSettings=DEFAULT);
+        const NDArray<T> &iCot(const DM4thParallelSettings &pSettings=DEFAULT);
+        const NDArray<T> &iSec(const DM4thParallelSettings &pSettings=DEFAULT);
+        const NDArray<T> &iCsc(const DM4thParallelSettings &pSettings=DEFAULT);
 
         bool any(const T &value) const ;
         bool all(const T &value) const ;

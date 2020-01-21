@@ -385,6 +385,17 @@ NDArray<T> NDArray<T>::map(const std::function<T(T,int)> &f)
 }
 
 template<class T>
+const NDArray<T> &NDArray<T>::iMap(const std::function<T(T,int)> &f)
+{
+    for(int j=0; j<this->data_size(); ++j)
+    {
+        this->data_item(j) = f(this->data_item(j), j);
+    }
+
+    return *this;
+}
+
+template<class T>
 NDArray<T> NDArray<T>::filter(const std::function<bool(T, int)> &f)
 {
     NDArray<T> result;
@@ -1115,6 +1126,7 @@ NDArray<bool> NDArray<T>::operator<(const T &other) const
     return result;
 }
 
+
 template<class T>
 NDArray<bool> NDArray<T>::operator==(const NDArray<T> &other) const
 {
@@ -1393,6 +1405,109 @@ inline NDArray<bool> NDArray<bool>::operator!() const
     );
 
     return result;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iSin(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->data_item(j) = sin(this->data_item(j));
+        }
+        
+    ); 
+
+    return *this;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iCos(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->data_item(j) = cos(this->data_item(j));
+        }
+        
+    ); 
+
+    return *this;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iTan(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            T item = this->data_item(j);
+            this->data_item(j) = tan(item);
+        }
+        
+    ); 
+
+    return *this;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iCot(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->data_item(j) = 1.0/tan(this->data_item(j));
+        }
+        
+    ); 
+
+    return *this;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iSec(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->data_item(j) = 1.0/cos(this->data_item(j));
+        }
+        
+    ); 
+
+    return *this;
+}
+
+template<class T>
+const NDArray<T> &NDArray<T>::iCsc(const DM4thParallelSettings &pSettings)
+{
+    DM4th::Parallel::loop<int>(
+        pSettings,
+        0, this->data_size(), 1, // from, to, step
+        
+        [&](const int &j) 
+        {
+            this->data_item(j) = 1.0/sin(this->data_item(j));
+        }
+        
+    ); 
+
+    return *this;
 }
 
 template<class T>
