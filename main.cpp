@@ -10,7 +10,9 @@ int main()
     NDArray<number> myList = range<number>(10);
 
     cout << hello << endl;
-    cout << myList << endl;
+    cout << myList.mean() << endl;
+    cout << myList.max() << endl;
+    cout << myList.min() << endl;
 
     cin.get();
     return 0;

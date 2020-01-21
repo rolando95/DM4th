@@ -336,7 +336,7 @@ NDArray<U> map(std::function<U(T)> f, NDArray<T> args)
 }
 
 template<class T>
-NDArray<T> linespace(T begin, T end, number num, bool endPoint=true)
+NDArray<T> linspace(T begin, T end, number num, bool endPoint=true)
 {
     int size = (int)num;
     DM4thAssert(size>0);

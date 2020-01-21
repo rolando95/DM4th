@@ -38,7 +38,9 @@ enum EDM4thParallelSettings
     SUB             = 1 << 4,
     MUL             = 1 << 5,
     DIV             = 1 << 6,
-    REDUCE_OP       = 2*DIV - ADD,
+    MAX             = 1 << 7,
+    MIN             = 1 << 8,
+    REDUCE_OP       = 2*MIN - ADD,
 };
 
 typedef unsigned int DM4thParallelSettings;
@@ -62,6 +64,12 @@ namespace Parallel
             break;
         case DIV:
             result = op1 / op2;
+            break;
+        case MAX:
+            result = op1 > op2? op1 : op2;
+            break;
+        case MIN:
+            result = op1 < op2? op1 : op2;
             break;
         default:
             DM4thAssert(false);

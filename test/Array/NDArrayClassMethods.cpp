@@ -7,7 +7,7 @@ using namespace DM4th;
 int main()
 {
     DM4thTest::TEST("NDArray Copy and Move Data", []{
-        NDArray<number> A = linespace<number>(0,10,10,false);
+        NDArray<number> A = linspace<number>(0,10,10,false);
         NDArray<number> B;
 
         // Move

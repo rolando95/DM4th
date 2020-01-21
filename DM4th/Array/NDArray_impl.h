@@ -1428,6 +1428,60 @@ T NDArray<T>::dot(const NDArray<T> &other, const DM4thParallelSettings &pSetting
 }
 
 template<class T>
+T NDArray<T>::mean(const DM4thParallelSettings &pSettings) const
+{
+    T result;
+    DM4th::Parallel::loopReduce<T, int>(
+        pSettings | EDM4thParallelSettings::ADD, 
+        0, this->data_size(), 1, // from, to, step
+
+        [&](const T &acum, const  int &j)
+        {
+            return acum + this->data_item(j);
+        },
+        result
+    );
+
+    return result / this->data_size();
+}
+
+template<class T>
+T NDArray<T>::max(const DM4thParallelSettings &pSettings) const
+{
+    T result;
+    DM4th::Parallel::loopReduce<T, int>(
+        pSettings | EDM4thParallelSettings::MAX, 
+        0, this->data_size(), 1, // from, to, step
+
+        [&](const T &acum, const  int &j)
+        {
+            return acum > this->data_item(j)? acum : this->data_item(j);
+        },
+        result, -INF
+    );
+
+    return result;
+}
+
+template<class T>
+T NDArray<T>::min(const DM4thParallelSettings &pSettings) const
+{
+    T result;
+    DM4th::Parallel::loopReduce<T, int>(
+        pSettings | EDM4thParallelSettings::MIN, 
+        0, this->data_size(), 1, // from, to, step
+
+        [&](const T &acum, const  int &j)
+        {
+            return acum < this->data_item(j)? acum : this->data_item(j);
+        },
+        result, INF
+    );
+
+    return result;
+}
+
+template<class T>
 const NDArray<T> &NDArray<T>::iSin(const DM4thParallelSettings &pSettings)
 {
     DM4th::Parallel::loop<int>(
