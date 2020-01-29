@@ -499,7 +499,7 @@ namespace Parallel
                     c[i*cCols+j] = 0;
                     for(int k=0; k<maxK; ++k)
                     {
-                        c[i*cCols+j] = a[i*aCols+k] * b[k*bCols+j];
+                        c[i*cCols+j] += a[i*aCols+k] * b[k*bCols+j];
                     }
                 }
             }
