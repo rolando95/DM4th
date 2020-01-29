@@ -14,7 +14,7 @@ namespace Internal
 template<class T>
 inline int sizeAligned(int n)
 { 
-    if(n<= DM4th::SIMD::vectorizeSize<T>()) return  DM4th::SIMD::vectorizeSize<T>();
+    if(n<= DM4th::SIMD::Vec<T>::size()) return  DM4th::SIMD::Vec<T>::size();
     
     n--; 
     n |= n >> 1; 
@@ -218,7 +218,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(const BaseArray<T> &other, const D
 
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
@@ -236,7 +236,7 @@ inline const BaseArray<T> &BaseArray<T>::iAdd(U other, const DM4thParallelSettin
 {
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
@@ -254,7 +254,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(U other, const DM4thParallelSettin
 {
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
@@ -273,7 +273,7 @@ inline const BaseArray<T> &BaseArray<T>::iSub(const BaseArray<T> &other, const D
 
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
@@ -292,7 +292,7 @@ inline const BaseArray<T> &BaseArray<T>::iMul(U other, const DM4thParallelSettin
 
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
@@ -310,7 +310,7 @@ inline const BaseArray<T> &BaseArray<T>::iDiv(U other, const DM4thParallelSettin
 {
      DM4th::Parallel::loop<int>(
         pSettings,
-        0, this->size(),  DM4th::SIMD::vectorizeSize<T>(), // from, to, step
+        0, this->size(),  DM4th::SIMD::Vec<T>::size(), // from, to, step
         
         [&](const int &j) 
         {
