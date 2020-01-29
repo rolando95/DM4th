@@ -1,7 +1,6 @@
 #pragma once
 
 #include "multithreading.h"
-#include "simd.h"
 #include "_c_arr_Utils.h"
 #include "_Constants.h"
 #include "_miscellaneos.h"

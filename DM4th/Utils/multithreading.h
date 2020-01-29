@@ -20,6 +20,8 @@
 #include <functional>
 #include "../Exceptions/Exceptions.h"
 
+#include "simd.h"
+
 namespace DM4th
 {
 
@@ -466,6 +468,80 @@ namespace Parallel
                     f2();
                 }
                 break;
+        }
+    }
+
+    /*
+        Performs a Parallel non-square matrix dot operation
+        Each matrix must be allocated in memory
+
+        c = dot(a,b)
+    */
+   namespace internal {
+
+   }
+
+    template<class T>
+    inline void non_square_matrix_dot_operation(
+        const DM4thParallelSettings &settings,
+        const T *a, const int aRows, const int aCols, 
+        const T *b, const int bRows, const int bCols, 
+              T *c, const int cRows, const int cCols
+    )
+    {
+        int maxI = aRows;
+        int maxJ = bCols;
+        int maxK = bRows;
+
+        if( (settings & EDM4thParallelSettings::PARALLEL_TYPE) == ORDERED)
+        {
+            // Ordered version
+            for(int i=0; i<maxI; ++i)
+            {
+                for(int j=0; j<maxJ; ++j)
+                {
+                    c[i*cCols+j] = 0;
+                    for(int k=0; k<maxK; ++k)
+                    {
+                        c[i*cCols+j] = a[i*aCols+k] * b[k*bCols+j];
+                    }
+                }
+            }
+
+
+        }else{
+
+            // Parallel version
+            int maxV = maxJ - maxJ%SIMD::Vec<T>::size();
+
+            DM4th::Parallel::loop<int>(
+                settings,
+                0,maxI,1, // from, to, step
+                
+                [&](int i)
+                {
+                    // vectorizable loop
+                    for (int j = 0; j < maxV; j += SIMD::Vec<T>::size()) {    
+                        SIMD::Vec<T> m0; m0.set1(0);
+                        for (int k = 0; k < maxK; k++) {
+                            SIMD::Vec<T> m1; m1.set1(a[i*aCols+k]);
+                            SIMD::Vec<T> m2 = b+k*bCols+j;
+                            SIMD::Vec<T> m3 = m1*m2;
+                            m0 = m0 + m3;
+                        }
+                        m0.storeu_To(c+i*cCols+j);
+                    }
+
+                    // non-vectorizable loop
+                    for(int j = maxV; j<maxJ; ++j)
+                    {
+                        c[i*cCols+j] = 0;
+                        for (int k = 0; k < maxK; k++) {
+                            c[i*cCols+j] += a[i*aCols+k] * b[k*bCols+j];
+                        }
+                    }
+                }
+            );
         }
     }
 }

@@ -791,36 +791,19 @@ const NDArray<T> &NDArray<T>::mul_asig(const NDArray<T> &lhs, const NDArray<T> &
 
     else if(lhs.rank()<=2 && rhs.rank()<=2)
     {
-        NDArray<T> result;
         DM4thAssert(lhs.shape(1) == rhs.shape(0));
-        int maxX = lhs.shape(0);
-        int maxY = rhs.shape(1);
-        int maxZ = rhs.shape(0);
 
         DM4th::Parallel::singleThreadOperationIfWorkShared(
             pSettings,
-            [&]{ this->resize(maxX,maxY); }
+            [&]{ this->resize(lhs.shape(0),rhs.shape(1)); }
         );
 
-
-        DM4th::Parallel::loop<int>(
+        DM4th::Parallel::non_square_matrix_dot_operation(
             pSettings,
-            0, maxX, 1, // from, to, step
-            
-            [&](int x)
-            {
-                for(int y=0; y<maxY; ++y)
-                {
-                    this->item(x,y) = 0;
-                    for(int z=0;z<maxZ; ++z)
-                    {
-                        this->item(x,y) += lhs.item(x,z) * rhs.item(z,y);
-                    }
-                }
-            }
-            ,this->data_size()>=DM4thConfig::minParallelLoops
-        );   
-        //result.moveDataTo(*this);
+            lhs.data(), lhs.shape(0), lhs.shape(1),
+            rhs.data(), rhs.shape(0), rhs.shape(1),
+            this->data(), this->shape(0), this->shape(1)
+        );
     }
     else
     {
