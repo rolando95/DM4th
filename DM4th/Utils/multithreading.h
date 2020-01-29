@@ -477,10 +477,6 @@ namespace Parallel
 
         c = dot(a,b)
     */
-   namespace internal {
-
-   }
-
     template<class T>
     inline void non_square_matrix_dot_operation(
         const DM4thParallelSettings &settings,
