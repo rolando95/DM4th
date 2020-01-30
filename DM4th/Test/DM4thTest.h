@@ -27,8 +27,7 @@ class TEST
 
     inline TEST(const char *name, const std::function<void(void)> &f, const int &how_many_times=1)
     {
-        IFDM4thOmp(true)
-        {
+        #if defined(_OPENMP)
             #pragma omp parallel 
             {
                 #pragma omp single
@@ -36,10 +35,9 @@ class TEST
                     std::cout<<"Running test: "<<name<<" (Threads:"<<omp_get_num_threads()<<", Times:"<<how_many_times<<")"<<std::endl;
                 }
             }
-        }else{
+        #else
             std::cout<<"Running test: "<<name<<" (Threads:"<<1<<", Times:"<<how_many_times<<")"<<std::endl;
-        }
-        
+        #endif
         try{
             auto start = std::chrono::steady_clock::now();
 

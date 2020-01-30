@@ -375,10 +375,14 @@ namespace Parallel
         const DM4thParallelSettings &settings,
         const std::function<void(void)> &f)
     {
-        #pragma omp single
-        {
+        #if defined(_OPENMP)
+            #pragma omp single
+            {
+                f();
+            }
+        #else
             f();
-        }
+        #endif
     }
 
     /*
@@ -389,6 +393,8 @@ namespace Parallel
         const DM4thParallelSettings &settings,
         const std::function<void(void)> &f)
     {
+        #if defined(_OPENMP)
+
         if( (settings & EDM4thParallelSettings::PARALLEL_TYPE) == OMP_WORK_SHARED)
         {
             #pragma omp single
@@ -400,6 +406,9 @@ namespace Parallel
             f();
         }
 
+        #else
+            f();
+        #endif
     }
 
     /*
@@ -409,10 +418,16 @@ namespace Parallel
         const DM4thParallelSettings &settings,
         const std::function<void(void)> &f)
     {
+        #if defined(_OPENMP)
+
         #pragma omp critical
         {
             f();
         }
+
+        #else
+            f();
+        #endif
     }
 
     /*
