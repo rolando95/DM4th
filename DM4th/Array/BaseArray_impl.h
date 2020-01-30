@@ -86,9 +86,9 @@ template <class T>
 inline void BaseArray<T>::_allocEmpty(const int &size)
 {
     DM4thAssert(!this->_data && size > 0);
-    this->_data = new T[size];
+    this->_capacity = sizeAligned<T>(size);
+    this->_data = new T[this->_capacity];
     this->_size = size;
-    this->_capacity = this->_size;
 }
 
 template <class T>

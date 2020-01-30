@@ -179,6 +179,13 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         
         NDArray<int> _getAxisDisplacement() const;
         inline int _getAxisDisplacement(const int &axis) const;
+        
+        /*
+            This method will be realloc the array with empty elements
+            Use this only if you don't have any data store
+        */
+        template<class ...U>
+        inline void _resizeEmpty(U... axisSize);
 
         iterator begin(){ return iterator(*this); }
         iterator end(){ return iterator(*this, this->data_size()); }

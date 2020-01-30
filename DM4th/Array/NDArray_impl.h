@@ -1713,6 +1713,22 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
     return disp;
 }
 
+template<class T> template<class ...U>
+inline void NDArray<T>::_resizeEmpty(U... axisSize)
+{   
+    this->_data->shape.clear();
+    this->_data->array.clear();
+    
+    this->_data->shape._allocEmpty(DM4thUtils::count(axisSize...));
+    this->_data->array._allocEmpty(DM4thUtils::mul(axisSize...));
+
+    int idx = 0;
+    for(const int axis : {axisSize...})
+    {
+        this->_data->shape(idx) = axis;
+    }
+}
+
 template<class T>
 void NDArray<T>::_resize(const int &axis, int oldDispCount, int newDispCount, 
             // NDArray<int> &oldDisp,  NDArray<int> &newDisp, 

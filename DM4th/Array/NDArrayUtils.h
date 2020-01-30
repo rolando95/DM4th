@@ -108,6 +108,14 @@ NDArray<T> zeros(U ... axisSize)
 }
 
 template<class T, class ...U>
+NDArray<T> empty(U ... axisSize)
+{
+    NDArray<T> result;
+    result._resizeEmpty(axisSize...);
+    return result;
+}
+
+template<class T, class ...U>
 NDArray<T> ones(U ... axisSize)
 {
     return repeat<T>(1, axisSize...);
