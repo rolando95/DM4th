@@ -1725,7 +1725,7 @@ inline void NDArray<T>::_resizeEmpty(U... axisSize)
     int idx = 0;
     for(const int axis : {axisSize...})
     {
-        this->_data->shape(idx) = axis;
+        this->_data->shape(idx++) = axis;
     }
 }
 
