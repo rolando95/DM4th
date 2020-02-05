@@ -164,7 +164,7 @@ inline NDArray<T> diff(NDArray<T> v, T iter=1){
     else{
         if(v.shape(0) >= 2){
             NDArray<T> diffV;
-            diffV.resize(v.shape(0)-1);
+            diffV._resizeEmpty(v.shape(0)-1);
             
              DM4th::Parallel::loop<int>(
                 EDM4thParallelSettings::DEFAULT,

@@ -185,7 +185,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
             Use this only if you don't have any data store
         */
         template<class ...U>
-        inline void _resizeEmpty(U... axisSize);
+        inline void _resizeEmpty(const int &first, U... axisSize);
+        inline void _resizeEmpty(const DM4th::Internal::BaseArray<int> &axisArray);
 
         iterator begin(){ return iterator(*this); }
         iterator end(){ return iterator(*this, this->data_size()); }

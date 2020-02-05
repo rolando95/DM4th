@@ -7,7 +7,7 @@ template<class T, class ... U>
 NDArrayView<T, U...>::operator NDArray<T>() const
 {
     NDArray<T> result;
-    result.resize(getDataSize());
+    result._resizeEmpty(getDataSize());
     
     iterateOverNDArrayView([&](const int &j, const T& item){
         result.data_item(j) = item;

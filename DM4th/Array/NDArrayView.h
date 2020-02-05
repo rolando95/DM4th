@@ -207,7 +207,7 @@ class NDArrayView<T, NDArray<bool>>
 
             if(this->_ptr.data_size()==this->_view.data_size())
             {
-                result.resize(this->_ptr.data_shape());
+                result._resizeEmpty(this->_ptr.data_shape());
                 int size = this->queryAxisSize();
                 result._data->shape(0) -= (result.shape(0) - size);
                 result._data->array.resize(DM4th::NDArrayUtils::mul(result.data_shape()));

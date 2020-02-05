@@ -10,7 +10,7 @@ namespace DM4th
 template<class A, class B, class C>
 NDArray<number> quadratic(const A &a, const B &b, const C &c){
     NDArray<number> roots;
-    roots.resize(2);
+    roots._resizeEmpty(2);
     number square = sqrt(b*b - 4*a*c);
     roots(0) = (-b+square)/(2*a);
     roots(1) = (-b-square)/(2*a);

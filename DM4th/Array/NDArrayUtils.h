@@ -79,7 +79,7 @@ NDArray<T> items(T first, U ... args)
 {
     NDArray<T> result;
     int size = DM4thUtils::count(first, args...);
-    result.resize(size);
+    result._resizeEmpty(size);
     _items(result, 0, first, args...);
     return result;
 }
@@ -89,7 +89,7 @@ NDArray<T> repeat(T value, U ... axisSize)
 {
     NDArray<T> result;
     unsigned int size = (unsigned int)DM4thUtils::mul(axisSize ...);
-    result.resize(axisSize...);
+    result._resizeEmpty(axisSize...);
 
     for(unsigned int j=0; j<size; ++j)
     {
@@ -128,7 +128,7 @@ NDArray<T> identity(int axis0, U ... axisSize)
     if(DM4thUtils::count(axis0, axisSize...)>1)
     {
         result = zeros<T>(axis0, axisSize ...);
-        //result.resize(axisSize...);
+        //result._resizeEmpty(axisSize...);
 
         NDArray<T> axis = items<T>(axis0, axisSize ...);
         int size =  DM4th::NDArrayUtils::min<T>(axis);
@@ -198,7 +198,7 @@ public:
         int size = this->_size;
         NDArray<T> result;
         T j = this->_begin;
-        result.resize(size);
+        result._resizeEmpty(size);
         int idx=0;
         
         while(idx<size)
@@ -314,7 +314,7 @@ NDArray<T> map(std::function<T(T)> f, T first, U ... args)
 {
     NDArray<T> result;
     int size = DM4thUtils::count(first, args ...);
-    result.resize(size);
+    result._resizeEmpty(size);
     _map(f, result, 0, first, args...);
     return result;
 }
@@ -323,7 +323,7 @@ template<class T>
 NDArray<T> map(std::function<T(T)> f, NDArray<T> args)
 {
     NDArray<T> result;
-    result.resize(args.data_size());
+    result._resizeEmpty(args.data_size());
     for(int j=0; j<args.data_size(); ++j)
     {
         result(j) = f(args(j));
@@ -335,7 +335,7 @@ template<class T, class U>
 NDArray<U> map(std::function<U(T)> f, NDArray<T> args)
 {
     NDArray<U> result;
-    result.resize(args.data_size());
+    result._resizeEmpty(args.data_size());
     for(int j=0; j<args.data_size(); ++j)
     {
         result(j) = f(args(j));
@@ -350,7 +350,7 @@ NDArray<T> linspace(T begin, T end, number num, bool endPoint=true)
     DM4thAssert(size>0);
     T step = (T)((end-begin) / (num-(endPoint?1:0)));
     NDArray<T> result;
-    result.resize(size);
+    result._resizeEmpty(size);
 
     T iter = begin;
     for(int j=0; j<size; ++j)
