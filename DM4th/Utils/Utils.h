@@ -108,32 +108,24 @@ namespace DM4thUtils
     template<class T>
     inline T max(const T &a,const T &b){ return (a>b)? a: b; }
 
-    template<class T>
-    inline T mul(const T &last){
-        return last;
-    }
     template<class T, class ... U>
     inline T mul(const T &first, U ... args){
-        return first*mul(args...);
+        T result = 1;
+        for(const T &x: {first, (T)args...}) result *= x;
+        return result;
     }
 
-
-    template<class T>
-    inline T add(const T &last){
-        return last;
-    }
     template<class T, class ... U>
     inline T add(const T &first, U ... args){
-        return first+add(args...);
+        T result = 0;
+        for(const T &x: {first, (T)args...}) result += x;
+        return result;
     }
 
-    template<class T>
-    inline int count(const T &last){
-        return 1;
-    }
     template<class T, class ... U>
     inline int count(const T &first, U ... args){
-        return 1+count(args...);
+        const std::size_t result = sizeof...(args);
+        return result+1;
     }
 
     template<class T, class ... U>

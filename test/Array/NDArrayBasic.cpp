@@ -40,6 +40,16 @@ int main()
         EXPECT_EQ(data[0], 0);
         EXPECT_EQ(data[1], 1);
         EXPECT_EQ(data[2], 2);
+
+        NDArray<number> _A = {1,2,3};
+        EXPECT_EQ(_A(0), 1);
+        EXPECT_EQ(_A(1), 2);
+        EXPECT_EQ(_A(2), 3);
+
+        _A = {5,6,7};
+        EXPECT_EQ(_A(0), 5);
+        EXPECT_EQ(_A(1), 6);
+        EXPECT_EQ(_A(2), 7);
     });
 
     DM4thTest::TEST("Subscript", []{

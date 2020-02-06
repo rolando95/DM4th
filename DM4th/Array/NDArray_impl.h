@@ -46,6 +46,17 @@ NDArray<T>::NDArray(const std::string &str)
     ss >> *this;
 }
 
+template<class T> template<class ...U>
+NDArray<T>::NDArray(T first, U... args)
+{
+    this->_resizeEmpty(DM4thUtils::count(first,args...));
+    int idx = 0;
+    for(const T &x: {(T)first, (T)args...})
+    {
+        this->data_item(idx++) = x;
+    }
+}
+
 template<class T> template<class U>
 NDArray<T>::operator NDArray<U>() const
 {
@@ -656,6 +667,17 @@ NDArray<T> NDArray<T>::popArray(const int &pos)
     
     this->resize(this->shape(0)-1, this->shape(1));
     return result;
+}
+
+template<class T>
+inline void NDArray<T>::operator=(const std::initializer_list<T> &args)
+{
+    this->_resizeEmpty(args.size());
+    int idx = 0;
+    for(const T &x: args)
+    {
+        this->data_item(idx++) = x;
+    }
 }
 
 template<class T> template<class ... U>
@@ -1723,7 +1745,7 @@ inline void NDArray<T>::_resizeEmpty(const int &first, U... axisSize)
     this->_data->array._allocEmpty(DM4thUtils::mul(first, axisSize...));
 
     int idx = 0;
-    for(const int axis : {first, axisSize...})
+    for(const int &axis : {first, (int)axisSize...})
     {
         this->_data->shape(idx++) = axis;
     }

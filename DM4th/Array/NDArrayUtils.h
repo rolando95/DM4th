@@ -8,7 +8,7 @@ namespace NDArrayUtils
 {
 
     template<class T>
-    T mul(NDArray<T> arr)
+    inline T mul(NDArray<T> arr)
     {
         T result = 1;
         int size = arr.data_size();
@@ -20,7 +20,7 @@ namespace NDArrayUtils
 
 
     template<class T>
-    T add(NDArray<T> arr)
+    inline T add(NDArray<T> arr)
     {
         T result = 0;
         int size = arr.data_size();
@@ -31,7 +31,7 @@ namespace NDArrayUtils
     }
 
     template<class T>
-    T min(NDArray<T> arr)
+    inline T min(NDArray<T> arr)
     {
         T result = INF;
         int size = arr.data_size();
@@ -45,7 +45,7 @@ namespace NDArrayUtils
     }
 
     template<class T>
-    T max(NDArray<T> arr)
+    inline T max(NDArray<T> arr)
     {
         T result = -INF;
         int size = arr.data_size();
@@ -60,32 +60,26 @@ namespace NDArrayUtils
 
 
     template<class T>
-    int count(NDArray<T> arr){ return arr.data_size(); }
+    inline int count(NDArray<T> arr){ return arr.data_size(); }
 
 }
-
-template<class T, class U, class ... V>
-void _items(NDArray<T> &arr, int axis, U first, V ... args)
-{
-    arr.data_item(axis) = (T)first;
-    _items(arr, axis+1, args...);
-}
-
-template<class T>
-void _items(NDArray<T> &arr, int axis){}
 
 template<class T, class ... U>
-NDArray<T> items(T first, U ... args)
+inline NDArray<T> items(T first, U ... args)
 {
     NDArray<T> result;
     int size = DM4thUtils::count(first, args...);
     result._resizeEmpty(size);
-    _items(result, 0, first, args...);
+    int idx = 0;
+    for(const T &item: {first, T(args)...})
+    {
+        result.data_item(idx++) = item;
+    }
     return result;
 }
 
 template<class T, class ... U>
-NDArray<T> repeat(T value, U ... axisSize)
+inline NDArray<T> repeat(T value, U ... axisSize)
 {
     NDArray<T> result;
     unsigned int size = (unsigned int)DM4thUtils::mul(axisSize ...);
@@ -102,13 +96,13 @@ NDArray<T> repeat(T value, U ... axisSize)
 
 
 template<class T, class ...U>
-NDArray<T> zeros(U ... axisSize)
+inline NDArray<T> zeros(U ... axisSize)
 {
     return repeat<T>(0, axisSize...);
 }
 
 template<class T, class ...U>
-NDArray<T> empty(U ... axisSize)
+inline NDArray<T> empty(U ... axisSize)
 {
     NDArray<T> result;
     result._resizeEmpty(axisSize...);
@@ -116,13 +110,13 @@ NDArray<T> empty(U ... axisSize)
 }
 
 template<class T, class ...U>
-NDArray<T> ones(U ... axisSize)
+inline NDArray<T> ones(U ... axisSize)
 {
     return repeat<T>(1, axisSize...);
 }
 
 template<class T, class ...U>
-NDArray<T> identity(int axis0, U ... axisSize)
+inline NDArray<T> identity(int axis0, U ... axisSize)
 {
     NDArray<T> result;
     if(DM4thUtils::count(axis0, axisSize...)>1)
@@ -149,7 +143,7 @@ NDArray<T> identity(int axis0, U ... axisSize)
 }
 
 template<class T>
-NDArray<T> sort(NDArray<T> arr, bool reverse=false)
+inline NDArray<T> sort(NDArray<T> arr, bool reverse=false)
 {
     NDArray<T> result = arr.getCopy();
     result.sort(reverse);
@@ -299,23 +293,18 @@ class slice
         }
 };
 
-template<class T, class U, class ... V>
-void _map(std::function<T(T)> f, NDArray<T> &arr, int axis, U first, V ... args)
-{
-    arr.data_item(axis) = (T)f(first);
-    _map(f, arr, axis+1, args...);
-}
-
-template<class T>
-void _map(std::function<T(T)> f, NDArray<T> &arr, int axis){}
-
 template<class T, class ... U>
 NDArray<T> map(std::function<T(T)> f, T first, U ... args)
 {
     NDArray<T> result;
     int size = DM4thUtils::count(first, args ...);
     result._resizeEmpty(size);
-    _map(f, result, 0, first, args...);
+    //_map(f, result, 0, first, args...);
+    int idx=0;
+    for(const T &item : {first, (T)args...})
+    {
+        result.data_item(idx++) =  f(item);
+    }
     return result;
 }
 
@@ -326,7 +315,7 @@ NDArray<T> map(std::function<T(T)> f, NDArray<T> args)
     result._resizeEmpty(args.data_size());
     for(int j=0; j<args.data_size(); ++j)
     {
-        result(j) = f(args(j));
+        result.data_item(j) = f(args.data_item(j));
     }
     return result;
 }
@@ -338,7 +327,7 @@ NDArray<U> map(std::function<U(T)> f, NDArray<T> args)
     result._resizeEmpty(args.data_size());
     for(int j=0; j<args.data_size(); ++j)
     {
-        result(j) = f(args(j));
+        result.data_item(j) = f(args.data_item(j));
     }
     return result;
 }

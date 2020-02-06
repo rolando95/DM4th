@@ -18,7 +18,11 @@ void print(const T &first, U... args)
     std::cout<<first<<" ";
     print(args ...);
 }
-
+// template<class ... U>
+// inline void print( U... args)
+// {
+//     std::cout<<(args<<...)<<"\n";
+// }
 
 inline void input()
 {
