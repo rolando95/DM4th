@@ -520,7 +520,7 @@ namespace Parallel
             }
 
 
-        }else{
+        }else if (SIMD::Vec<T>::size() > 1){
 
             // Parallel version
             int maxV = maxJ - maxJ%SIMD::Vec<T>::size();
@@ -553,6 +553,24 @@ namespace Parallel
                     }
                 }
             );
+        }else{
+
+            DM4th::Parallel::loop<int>(
+                settings,
+                0,maxI,1, // from, to, step
+                
+                [&](int i)
+                {
+                    // non-vectorizable loop
+                    for(int j = 0; j<maxJ; ++j)
+                    {
+                        c[i*cCols+j] = 0;
+                        for (int k = 0; k < maxK; k++) {
+                            c[i*cCols+j] += a[i*aCols+k] * b[k*bCols+j];
+                        }
+                    }
+                }
+            ); 
         }
     }
 }

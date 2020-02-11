@@ -183,6 +183,39 @@ int main()
         
     });
 
+    DM4thTest::TEST("NDArray Matrix FLOAT Aritmethic", []{
+        NDArray<float> A = items<float>(
+            1,2,
+            2,3,
+            1,5
+        ).reshape(3,2);
+
+        NDArray<float> B = items<float>(
+            3,2,5,
+            4,5,4
+        ).reshape(2,3);
+
+        NDArray<float> C = items<float>(
+            11,12,13,
+            18,19,22,
+            23,27,25
+        ).reshape(3,3);
+
+        A = A*2 + A;
+        A /= 3;
+
+        EXPECT_EQ(A*B,C);
+
+        A.resize(2,2);
+        B = A.reshape(1,4).getCopy().reshape(4,1);
+
+        NDArray<float> D = items<float>(18);
+
+        EXPECT_EQ(A*B,D);
+
+        
+    });
+
     DM4thTest::TEST("rvalue", [&](){
         NDArray<number> A = items<number>(1,3,5,7,9);
         NDArray<number> B = A*2/2 + 1 - 2 + A;
