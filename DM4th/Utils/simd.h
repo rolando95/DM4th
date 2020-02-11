@@ -36,8 +36,9 @@ class Vec
 };
 
 
+#if !defined DM4thNoSIMD
 
-#if defined __AVX2__
+#if defined __AVX2__ 
 
     template<>
     class Vec<float>
@@ -160,6 +161,8 @@ class Vec
     };
 
 #endif
+
+#endif
     // ADD ARRAY
     template<class T>
     inline void addArray(T *r, T *lhs, const T *rhs)
@@ -214,5 +217,7 @@ class Vec
         (mlhs/mrhs).storeu_To(r); 
     }
 }
+
+
 
 }
