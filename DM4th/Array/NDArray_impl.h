@@ -57,6 +57,22 @@ NDArray<T>::NDArray(T first, U... args)
     }
 }
 
+template<class T>
+NDArray<T>::NDArray(const std::initializer_list<std::initializer_list<T>> &args)
+{
+    this->_resizeEmpty(args.size(), args.begin()->size());
+    int idx = 0;
+    for(const auto &row : args)
+    {
+        DM4thAssert(row.size()==args.begin()->size());
+
+        for(const T &cell : row)
+        {
+            this->data_item(idx++) = cell;
+        }
+    }
+}
+
 template<class T> template<class U>
 NDArray<T>::operator NDArray<U>() const
 {
@@ -677,6 +693,22 @@ inline void NDArray<T>::operator=(const std::initializer_list<T> &args)
     for(const T &x: args)
     {
         this->data_item(idx++) = x;
+    }
+}
+
+template<class T>
+inline void NDArray<T>::operator=(const std::initializer_list<std::initializer_list<T>> &args)
+{
+    this->_resizeEmpty(args.size(), args.begin()->size());
+    int idx = 0;
+    for(const auto &row : args)
+    {
+        DM4thAssert(row.size()==args.begin()->size());
+
+        for(const T &cell : row)
+        {
+            this->data_item(idx++) = cell;
+        }
     }
 }
 
@@ -1738,11 +1770,23 @@ inline int NDArray<T>::_getAxisDisplacement(const int &axis) const
 template<class T> template<class ...U>
 inline void NDArray<T>::_resizeEmpty(const int &first, U... axisSize)
 {   
-    this->_data->shape.clear();
-    this->_data->array.clear();
+    if(DM4thUtils::count(first, axisSize...) > this->_data->shape.capacity())
+    {
+        this->_data->shape.clear();
+        this->_data->shape._allocEmpty(DM4thUtils::count(first, axisSize...));
+    }else{
+        this->_data->shape.resize(DM4thUtils::count(first, axisSize...));
+    }
     
-    this->_data->shape._allocEmpty(DM4thUtils::count(first, axisSize...));
-    this->_data->array._allocEmpty(DM4thUtils::mul(first, axisSize...));
+    if(DM4thUtils::mul(first, axisSize...) > this->capacity())
+    {
+        this->_data->array.clear();
+        this->_data->array._allocEmpty(DM4thUtils::mul(first, axisSize...));
+    }else
+    {
+        this->_data->array.resize(DM4thUtils::mul(first, axisSize...));
+    }
+
 
     int idx = 0;
     for(const int &axis : {first, (int)axisSize...})
@@ -1754,11 +1798,23 @@ inline void NDArray<T>::_resizeEmpty(const int &first, U... axisSize)
 template<class T>
 inline void NDArray<T>::_resizeEmpty(const DM4th::Internal::BaseArray<int> &axisArray)
 {
-    this->_data->shape.clear();
-    this->_data->array.clear();
-    
-    this->_data->shape._allocEmpty(axisArray.size());
-    this->_data->array._allocEmpty(DM4thCArrayUtils::mul(axisArray.data(), axisArray.size()));
+    if(axisArray.size() > this->_data->shape.capacity())
+    {
+        this->_data->shape.clear();
+        this->_data->shape._allocEmpty(axisArray.size());
+    }else
+    {
+        this->_data->shape.resize(axisArray.size());
+    }
+
+    if(DM4thCArrayUtils::mul(axisArray.data(), axisArray.size()) > this->capacity())
+    {
+        this->_data->array.clear();
+        this->_data->array._allocEmpty(DM4thCArrayUtils::mul(axisArray.data(), axisArray.size()));
+    }else
+    {
+        this->_data->array.resize(DM4thCArrayUtils::mul(axisArray.data(), axisArray.size()));
+    }
 
     for(int idx=0; idx<axisArray.size(); ++idx)
     {

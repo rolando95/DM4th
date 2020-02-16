@@ -30,6 +30,8 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
         template<class ...U>
         NDArray(T first, U... args);
 
+        NDArray(const std::initializer_list<std::initializer_list<T>> &args);
+
         template<class U>
         explicit operator NDArray<U>() const;
         explicit operator std::string() const;
@@ -92,6 +94,7 @@ class NDArray: public DM4th::Internal::ArrayDataManager<T>
 
         //inline void operator=(const T &other){ this->resize(1); this->item(0)=other; } 
         inline void operator=(const std::initializer_list<T> &args);
+        inline void operator=(const std::initializer_list<std::initializer_list<T>> &args);
 
         template<class ... U> inline T &operator()(U ... args);
         template<class ... U> const inline T &operator()(U ... args) const;
