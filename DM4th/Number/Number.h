@@ -14,14 +14,7 @@ class alignas(sizeof(T)*2) _number
     
 public:
 
-    _number(const T &a = 0, const T &b = 0)
-    {
-        this->real() = (T)a;
-        this->imag() = (T)b;
-    }
-
-    // template<class U>
-    // _number(U=0, U=0);
+    inline _number(const T &a = 0, const T &b = 0): _data{a,b} {}; 
 
     explicit _number(std::string str)
     {
@@ -73,6 +66,9 @@ public:
 
     template <class U>
     explicit operator U() const { return (U)this->real(); }
+
+    template <class U>
+    explicit operator _number<U>() const { return _number<U>((U)this->real(), (U)this->imag()); }
 
     inline explicit operator int() const { return (int)std::round(this->real()); }
 

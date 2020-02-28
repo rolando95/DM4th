@@ -25,6 +25,16 @@
         },
         {
             "type" : "shell",
+            "label": "startReleaseNoAssert17",
+            "command": "g++",
+            "args": ["-Wall", "-std=c++17", "-mavx2","-pedantic", "-O2", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp", "-D", "NDEBUG"],
+            "group":{
+                "kind" : "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type" : "shell",
             "label": "startDebug",
             "command": "g++",
             "args": ["-Wall", "-std=c++11","-pedantic", "-ggdb", "-o", "${fileBasenameNoExtension}.exe", "${file}", "-fopenmp"],

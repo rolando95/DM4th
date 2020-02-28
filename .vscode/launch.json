@@ -29,6 +29,18 @@
       "preLaunchTask": "startReleaseNoAssert"
     },
     {
+      "name": "Release no assert & no Parallel C++17",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true,
+      "preLaunchTask": "startReleaseNoAssert17"
+    },
+    {
       "name": "Debug",
       "type": "cppdbg",
       "request": "launch",
