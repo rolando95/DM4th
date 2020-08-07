@@ -52,7 +52,7 @@ namespace DM4th
     {
         this->_resizeEmpty(DM4thUtils::count(first, args...));
         int idx = 0;
-        for (const T &x : {(T)first, (T)args...})
+        for (const T &x :{ (T)first, (T)args... })
         {
             this->data_item(idx++) = x;
         }
@@ -267,13 +267,19 @@ namespace DM4th
     }
 
     template <class T>
-    inline int NDArray<T>::rank() const { return this->_data->shape.size(); }
+    inline int NDArray<T>::rank() const {
+        return this->_data->shape.size();
+    }
 
     template <class T>
-    inline int NDArray<T>::capacity() const { return this->_data->array.capacity(); }
+    inline int NDArray<T>::capacity() const {
+        return this->_data->array.capacity();
+    }
 
     template <class T>
-    int NDArray<T>::size() const { return this->_data->shape.get(0); }
+    int NDArray<T>::size() const {
+        return this->_data->shape.get(0);
+    }
 
     // template<class T>
     // int NDArray<T>::itemsCount() const { return this->_data->array.size(); }
@@ -744,15 +750,21 @@ namespace DM4th
 
     template <class T>
     template <class... U>
-    inline T &NDArray<T>::operator()(U... args) { return this->item(args...); }
+    inline T &NDArray<T>::operator()(U... args) {
+        return this->item(args...);
+    }
 
     template <class T>
     template <class... U>
-    const inline T &NDArray<T>::operator()(U... args) const { return this->item(args...); }
+    const inline T &NDArray<T>::operator()(U... args) const {
+        return this->item(args...);
+    }
 
     template <class T>
     template <class U>
-    inline T &NDArray<T>::operator()(const NDArray<U> &axisArray) { return this->item(axisArray); }
+    inline T &NDArray<T>::operator()(const NDArray<U> &axisArray) {
+        return this->item(axisArray);
+    }
 
     // -------------------- NDArray-NDArray operations --------------------
 
@@ -1712,10 +1724,14 @@ namespace DM4th
     }
 
     template <class T>
-    inline T *NDArray<T>::data() { return &this->_data->array[0]; }
+    inline T *NDArray<T>::data() {
+        return &this->_data->array[0];
+    }
 
     template <class T>
-    inline const T *NDArray<T>::data() const { return &this->_data->array[0]; }
+    inline const T *NDArray<T>::data() const {
+        return &this->_data->array[0];
+    }
 
     template <class T>
     inline T *NDArray<T>::data_copy()
@@ -1729,13 +1745,19 @@ namespace DM4th
     }
 
     template <class T>
-    inline const int NDArray<T>::data_size() const { return this->_data->array.size(); }
+    inline const int NDArray<T>::data_size() const {
+        return this->_data->array.size();
+    }
 
     template <class T>
-    inline T &NDArray<T>::data_item(const int &idx) { return this->_data->array[idx]; }
+    inline T &NDArray<T>::data_item(const int &idx) {
+        return this->_data->array[idx];
+    }
 
     template <class T>
-    inline const T &NDArray<T>::data_item(const int &idx) const { return this->_data->array.get(idx); }
+    inline const T &NDArray<T>::data_item(const int &idx) const {
+        return this->_data->array.get(idx);
+    }
 
     template <class T>
     NDArray<int> NDArray<T>::_getAxisDisplacement() const
@@ -1788,7 +1810,7 @@ namespace DM4th
         }
 
         int idx = 0;
-        for (const int &axis : {first, (int)axisSize...})
+        for (const int &axis :{ first, (int)axisSize... })
         {
             this->_data->shape(idx++) = axis;
         }
@@ -1825,9 +1847,9 @@ namespace DM4th
 
     template <class T>
     void NDArray<T>::_resize(const int &axis, int oldDispCount, int newDispCount,
-                             // NDArray<int> &oldDisp,  NDArray<int> &newDisp,
-                             const Internal::BaseArray<int> &oldShape, const Internal::BaseArray<int> &newShape,
-                             const DM4th::Internal::BaseArray<T> &oldArray)
+        // NDArray<int> &oldDisp,  NDArray<int> &newDisp,
+        const Internal::BaseArray<int> &oldShape, const Internal::BaseArray<int> &newShape,
+        const DM4th::Internal::BaseArray<T> &oldArray)
     {
         int end = DM4thUtils::min(oldShape.item(axis), newShape.item(axis));
 
@@ -2103,7 +2125,7 @@ namespace DM4th
         DM4thAssert(
             size > 0 &&
             (this->_data->shape.get(shapeIdx) == 0 ||
-             this->_data->shape.get(shapeIdx) == size));
+                this->_data->shape.get(shapeIdx) == size));
         this->_data->shape.set(shapeIdx, size);
     }
 
